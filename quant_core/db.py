@@ -11,12 +11,13 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 
 # Supabase 클라이언트 싱글톤 캐시
+_supabase_client = None
 _last_error = None
 
 
 def get_supabase_diagnostics() -> Dict[str, Any]:
     """Supabase 연결 상태 상세 진단 정보 반환"""
-    global _last_error
+    global _supabase_client, _last_error
     url = os.environ.get("SUPABASE_URL", "") or os.environ.get("supabase_url", "")
     key = os.environ.get("SUPABASE_KEY", "") or os.environ.get("SUPABASE_ANON_KEY", "") or os.environ.get("supabase_key", "")
 
