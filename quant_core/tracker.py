@@ -17,6 +17,24 @@ from .db import db_load_history, db_upsert_history_items, is_supabase_enabled
 HISTORY_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'recommendation_history.json')
 
 
+CURRENT_STRATEGY_VERSION = "v1.0.0"
+CURRENT_STRATEGY_RULES = {
+    "min_score": 68,
+    "min_rr": 1.20,
+    "holding_days": 20,
+    "risk_model": "dynamic_volume_profile",
+    "fee_slippage_pct": 0.25
+}
+
+def get_iso_timestamp() -> str:
+    """현재 시점의 ISO 8601 타임스탬프 (KST 기준) 반환"""
+    try:
+        kst = pytz.timezone('Asia/Seoul')
+        return datetime.now(kst).isoformat()
+    except Exception:
+        return datetime.now().isoformat()
+
+
 def get_ny_market_date_str() -> str:
     """미국 동부 뉴욕 증시(US/Eastern) 거래일 날짜 문자열 반환"""
     try:
@@ -57,21 +75,33 @@ def normalize_factor_tag(tag: str) -> str:
 def load_history() -> List[Dict[str, Any]]:
     """
     과거 추천 이력을 불러옵니다.
+    - strategy_version이 없는 기존 레코드는 'legacy'로 명시 마이그레이션
+    - recommendation_id 고유 식별자 보장
     1. Supabase 클라우드 DB 연결 가능 시 우선 조회
     2. 미연결 또는 빈 데이터 시 로컬 JSON 파일 폴백
     3. 로컬 데이터가 존재하고 DB가 비어있을 시 자동 클라우드 마이그레이션
     """
+    def _sanitize_item(it: Dict[str, Any]) -> Dict[str, Any]:
+        if not it.get('strategy_version'):
+            it['strategy_version'] = 'legacy'
+        if not it.get('recommendation_id'):
+            it['recommendation_id'] = f"{it.get('date')}_{it.get('ticker')}_{it.get('strategy_version')}"
+        if 'fee_slippage_pct' not in it:
+            it['fee_slippage_pct'] = 0.25
+        return it
+
     if is_supabase_enabled():
         db_items = db_load_history()
         if db_items:
-            return db_items
+            return [_sanitize_item(i) for i in db_items]
 
     # 로컬 JSON 폴백
     local_items = []
     if os.path.exists(HISTORY_FILE):
         try:
             with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
-                local_items = json.load(f)
+                raw_items = json.load(f)
+                local_items = [_sanitize_item(i) for i in raw_items]
         except Exception:
             local_items = []
 
@@ -107,18 +137,27 @@ def save_history(history: List[Dict[str, Any]]):
 def record_daily_recommendations(recs: List[Dict[str, Any]]):
     """
     오늘 퀀트 엔진이 선별한 추천 종목들을 성과 추적 데이터베이스에 기록합니다.
-    (이미 오늘 기록된 종목은 중복 방지)
+    (동일 날짜·종목이라도 전략 버전이 다르면 고유 저장 지원: date + ticker + strategy_version)
     """
     history = load_history()
     today_str = get_ny_market_date_str()
-    existing_keys = {f"{item['date']}_{item['ticker']}" for item in history}
+    existing_keys = {
+        f"{item['date']}_{item['ticker']}_{item.get('strategy_version', 'legacy')}"
+        for item in history
+    }
     
     added_count = 0
     for r in recs:
         rec_date_val = r.get('date') or today_str
-        key = f"{rec_date_val}_{r['ticker']}"
-        if key not in existing_keys:
+        strat_ver = r.get('strategy_version') or CURRENT_STRATEGY_VERSION
+        rec_id = f"{rec_date_val}_{r['ticker']}_{strat_ver}"
+
+        if rec_id not in existing_keys:
             history.append({
+                'recommendation_id': rec_id,
+                'strategy_version': strat_ver,
+                'recommended_at': r.get('recommended_at', get_iso_timestamp()),
+                'market_date': rec_date_val,
                 'date': rec_date_val,
                 'ticker': r['ticker'],
                 'name': r['name'],
@@ -131,12 +170,19 @@ def record_daily_recommendations(recs: List[Dict[str, Any]]):
                 'ai_score': r.get('total_score', 80),
                 'tags': r.get('tags', []),
                 'pattern_status': r.get('pattern_status', '진입 적기'),
+                'rules': r.get('rules', CURRENT_STRATEGY_RULES.copy()),
+                'market_context': r.get('market_context', {'regime': '정상장세'}),
+                'fee_slippage_pct': float(r.get('fee_slippage_pct', 0.25)),
                 'status': 'HOLD',  # HOLD, WIN_TARGET1, WIN_TARGET2, STOP_LOSS
                 'max_price': r['current_price'],
                 'current_price': r['current_price'],
                 'current_pnl_pct': 0.0,
-                'hit_success': False
+                'realized_pnl_pct': None,
+                'realized_pnl_net_pct': None,
+                'hit_success': False,
+                'is_completed': False
             })
+            existing_keys.add(rec_id)
             added_count += 1
             
     if added_count > 0:
@@ -179,16 +225,17 @@ def diagnose_failure_reason(item: Dict[str, Any], df_after: pd.DataFrame, df_ful
     }
 
 
-def get_adaptive_factor_weights() -> Dict[str, Any]:
+def get_adaptive_factor_weights(strategy_version: str = CURRENT_STRATEGY_VERSION) -> Dict[str, Any]:
     """
     과거 추천 이력의 성공/실패 데이터를 바탕으로:
-    1. 각 팩터별 승률 및 가중치 보너스(+)/페널티(-) 계산
+    1. 각 팩터별 승률 및 가중치 보너스(+)/페널티(-) 계산 (1종목당 중복 태그 원천 제거)
     2. 최근 14일 내 손절 이탈 종목(쿨다운 대상) 식별
-    3. 최근 손절/실패 원인 기술 감사 로그 생성
+    3. 전략 버전(strategy_version)별 분리 필터링 적용
     """
     history = load_history()
     if not history:
         return {
+            'strategy_version': strategy_version,
             'factor_adjustments': {},
             'cooldown_tickers': {},
             'failure_notes': [],
@@ -213,7 +260,7 @@ def get_adaptive_factor_weights() -> Dict[str, Any]:
         except Exception:
             days_ago = 999
 
-        # 최근 14일(약 10거래일) 이내 손절 이탈 종목 쿨다운 등록
+        # 최근 14일(약 10거래일) 이내 손절 이탈 종목 쿨다운 등록 (포트폴리오 리스크 방어망: 전체 이력 대상)
         if is_completed and not hit_success and days_ago <= 14:
             cooldown_tickers[t] = {
                 'ticker': t,
@@ -232,10 +279,20 @@ def get_adaptive_factor_weights() -> Dict[str, Any]:
                     'tag': item.get('tags', [''])[0]
                 })
 
-        # 팩터별 성패 집계 (정규화 버킷 적용)
+        # 전략 버전 분리: 요청된 전략 버전(v1.0.0 등)만 선별 집계 (서로 다른 룰셋 간 팩터 통계 오염 방지)
+        if strategy_version and strategy_version != 'all':
+            item_ver = item.get('strategy_version', 'legacy')
+            if item_ver != strategy_version:
+                continue
+
+        # 팩터별 성패 집계 (정규화 버킷 적용 & 1추천당 중복 태그 set으로 원천 제거)
         if is_completed:
-            for tag in item.get('tags', []):
-                norm_tag = normalize_factor_tag(tag)
+            normalized_tags = {
+                normalize_factor_tag(tag)
+                for tag in item.get('tags', [])
+                if tag
+            }
+            for norm_tag in normalized_tags:
                 if norm_tag not in factor_stats:
                     factor_stats[norm_tag] = {'total': 0, 'wins': 0, 'losses': 0}
                 factor_stats[norm_tag]['total'] += 1
@@ -244,28 +301,58 @@ def get_adaptive_factor_weights() -> Dict[str, Any]:
                 else:
                     factor_stats[norm_tag]['losses'] += 1
 
-    # 팩터 가중치 조정값 산출 (통계적 왜곡 방지: 최소 10회 이상 표본 누적 시에만 유의미한 가중치 보정)
-    MIN_SAMPLE_THRESHOLD = 10
+    # 팩터 가중치 조정값 산출 (통계적 과적합 방지: 표본 단계별 보정 상한 적용)
+    # - 0~29건: 실험 단계, 가중치 변경 금지 (0점 고정)
+    # - 30~99건: 참고 단계 (오차범위 ±18%p) -> 최대 ±2점 극히 제한 보정
+    # - 100~299건: 1차 평가 가능 단계 (오차범위 ±10%p) -> 최대 ±5점 제한 보정
+    # - 300건 이상: 통계적 안정 단계 -> 전체 반영
     factor_adjustments = {}
     boosted_factors = []
     penalized_factors = []
 
     for tag, stats in factor_stats.items():
         total = stats['total']
-        if total >= MIN_SAMPLE_THRESHOLD:
-            win_rate = (stats['wins'] / total) * 100
-            if win_rate >= 70:
-                adj = 5 if win_rate >= 80 else 3
-                factor_adjustments[tag] = adj
-                boosted_factors.append({'tag': tag, 'win_rate': round(win_rate, 1), 'adj': f"+{adj}점 (우수 팩터 가산)"})
-            elif win_rate <= 40:
-                adj = -10 if win_rate <= 25 else -6
-                factor_adjustments[tag] = adj
-                penalized_factors.append({'tag': tag, 'win_rate': round(win_rate, 1), 'adj': f"{adj}점 (실패율 과다 감점)"})
-            else:
-                factor_adjustments[tag] = 0
+        if total < 30:
+            # 0~29건: 실험 단계, 가중치 동결
+            factor_adjustments[tag] = 0
+            continue
+
+        win_rate = (stats['wins'] / total) * 100
+        if win_rate >= 70:
+            raw_adj = 5 if win_rate >= 80 else 3
+        elif win_rate <= 40:
+            raw_adj = -10 if win_rate <= 25 else -6
+        else:
+            raw_adj = 0
+
+        if total < 100:
+            # 30~99건: 참고 단계 (오차 ±18%p, ±2점 제한)
+            adj = max(-2, min(2, raw_adj))
+        elif total < 300:
+            # 100~299건: 1차 평가 단계 (오차 ±10%p, ±5점 제한)
+            adj = max(-5, min(5, raw_adj))
+        else:
+            # 300건 이상: 통계적 안정 단계
+            adj = raw_adj
+
+        factor_adjustments[tag] = adj
+        if adj > 0:
+            boosted_factors.append({
+                'tag': tag,
+                'win_rate': round(win_rate, 1),
+                'adj': f"+{adj}점 (표본 {total}건)",
+                'samples': total
+            })
+        elif adj < 0:
+            penalized_factors.append({
+                'tag': tag,
+                'win_rate': round(win_rate, 1),
+                'adj': f"{adj}점 (표본 {total}건)",
+                'samples': total
+            })
 
     return {
+        'strategy_version': strategy_version,
         'factor_adjustments': factor_adjustments,
         'cooldown_tickers': cooldown_tickers,
         'failure_notes': failure_notes[-5:],
@@ -274,31 +361,45 @@ def get_adaptive_factor_weights() -> Dict[str, Any]:
     }
 
 
-def evaluate_and_learn_from_history() -> Dict[str, Any]:
+def evaluate_and_learn_from_history(strategy_version: str = CURRENT_STRATEGY_VERSION) -> Dict[str, Any]:
     """
     과거에 추천했던 모든 종목들의 실제 주가를 야후 파이낸스로 재조회하여:
-    1. 실제 목표가에 도달했는지(적중 여부)
-    2. 손절/실패 시 실패 원인 기술 분석 및 감사 로그 작성
-    3. 팩터별 실시간 승률 및 피드백 반영
+    1. 실제 목표가 도달/손절선 이탈 여부 실시간 판정
+    2. 전략 버전(strategy_version)별 독립 성과 집계 (v1.0.0, legacy 분리)
+    3. 팩터별 실시간 승률(태그 중복 제거) 및 기대값/Profit Factor 산출
     """
     history = load_history()
     if not history:
         return {
+            'strategy_version': strategy_version,
+            'selected_version': strategy_version,
+            'available_versions': [CURRENT_STRATEGY_VERSION],
             'total_recs': 0,
             'completed_count': 0,
             'ongoing_count': 0,
+            'wins': 0,
+            'losses': 0,
             'win_rate': 0.0,
             'avg_return': 0.0,
+            'avg_return_net': 0.0,
+            'avg_win': 0.0,
+            'avg_loss': 0.0,
+            'expected_value': 0.0,
+            'profit_factor': 0.0,
+            'profit_factor_display': "0.00",
+            'sample_tier': "실험 단계 (0~29건)",
+            'sample_tier_desc': "표본 축적 단계로, 통계적 왜곡 방지를 위해 가중치 변경이 동결되어 있습니다.",
+            'sample_error_margin': "±20%p 이상",
             'history_items': [],
             'best_factors': [],
-            'adaptive_weights': get_adaptive_factor_weights()
+            'adaptive_weights': get_adaptive_factor_weights(strategy_version=strategy_version)
         }
-        
-    unique_tickers = list(set([item['ticker'] for item in history]))
+
+    # 보유 중인 종목들의 최신 시세 일괄 수집
+    unique_tickers = list(set([item['ticker'] for item in history if not item.get('is_completed')]))
     today_str = datetime.now().strftime('%Y-%m-%d')
     today_date = datetime.now().date()
-    
-    # 최신 시세 일괄 수집
+
     stock_dfs = {}
     for t in unique_tickers:
         try:
@@ -309,38 +410,21 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
                 stock_dfs[t] = df
         except Exception:
             pass
-            
-    completed_samples = 0
-    wins = 0
-    total_pnls = []
-    factor_hits = {}
-    ongoing_count = 0
-    
+
+    # 1. 진행 중인 종목들의 목표가/손절가 도달 판정 업데이트
     for item in history:
+        if item.get('is_completed'):
+            continue
+
         t = item['ticker']
-        rec_p = item['rec_price']
-        t1 = item['target_price']
-        sl = item['stop_loss']
+        rec_p = float(item.get('rec_price', 0.0))
+        t1 = float(item.get('target_price', 0.0)) if item.get('target_price') else 0.0
+        sl = float(item.get('stop_loss', 0.0)) if item.get('stop_loss') else 0.0
         rec_date_str = item.get('date', today_str)
         try:
             rec_date = datetime.strptime(rec_date_str, '%Y-%m-%d').date()
         except Exception:
             rec_date = today_date
-            
-        if item.get('is_completed'):
-            completed_samples += 1
-            if item.get('hit_success'):
-                wins += 1
-            realized = item.get('realized_pnl_pct')
-            if realized is not None:
-                total_pnls.append(realized)
-            for tag in item.get('tags', []):
-                if tag not in factor_hits:
-                    factor_hits[tag] = {'total': 0, 'wins': 0}
-                factor_hits[tag]['total'] += 1
-                if item.get('hit_success'):
-                    factor_hits[tag]['wins'] += 1
-            continue
 
         if t in stock_dfs:
             df = stock_dfs[t]
@@ -350,20 +434,16 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
             pnl_pct = ((curr_p / rec_p) - 1) * 100
             item['current_pnl_pct'] = round(pnl_pct, 2)
             
-            # 추천일 이후(date > rec_date)의 실제 거래일 봉만 필터링!
             df_after = df[df.index.date > rec_date].sort_index()
             
             if df_after.empty:
                 item['status'] = '⏳ 실시간 추적 중 (오늘 등록)'
                 item['hit_success'] = False
                 item['is_completed'] = False
-                ongoing_count += 1
             else:
                 after_high = float(df_after['High'].max())
-                after_low = float(df_after['Low'].min())
                 item['max_price'] = round(after_high, 2)
                 
-                # 일자별(시간순) 순차 판정: 목표가 vs 손절가 선후 관계 판별
                 resolved = False
                 for bar_date, row in df_after.iterrows():
                     bar_high = float(row['High'])
@@ -371,9 +451,9 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
                     
                     hit_t = bar_high >= t1
                     hit_s = bar_low <= sl
+                    fee_pct = float(item.get('fee_slippage_pct', 0.25))
                     
                     if hit_t and hit_s:
-                        # 동일 일봉 내 동시 도달: 보수적 리스크 원칙에 따라 손절 우선 처리
                         item['hit_success'] = False
                         item['status'] = '⚠️ 변동성 손절 이탈 (동일봉 도달)'
                         item['is_completed'] = True
@@ -381,10 +461,9 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
                         item['exit_date'] = str(bar_date.date())
                         realized_pnl = round(((sl / rec_p) - 1) * 100, 2)
                         item['realized_pnl_pct'] = realized_pnl
+                        item['realized_pnl_net_pct'] = round(realized_pnl - fee_pct, 2)
                         diagnosis = diagnose_failure_reason(item, df_after.loc[:bar_date], df)
                         item['failure_reason'] = diagnosis['full_diagnosis']
-                        completed_samples += 1
-                        total_pnls.append(realized_pnl)
                         resolved = True
                         break
                     elif hit_s:
@@ -395,10 +474,9 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
                         item['exit_date'] = str(bar_date.date())
                         realized_pnl = round(((sl / rec_p) - 1) * 100, 2)
                         item['realized_pnl_pct'] = realized_pnl
+                        item['realized_pnl_net_pct'] = round(realized_pnl - fee_pct, 2)
                         diagnosis = diagnose_failure_reason(item, df_after.loc[:bar_date], df)
                         item['failure_reason'] = diagnosis['full_diagnosis']
-                        completed_samples += 1
-                        total_pnls.append(realized_pnl)
                         resolved = True
                         break
                     elif hit_t:
@@ -409,22 +487,21 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
                         item['exit_date'] = str(bar_date.date())
                         realized_pnl = round(((t1 / rec_p) - 1) * 100, 2)
                         item['realized_pnl_pct'] = realized_pnl
+                        item['realized_pnl_net_pct'] = round(realized_pnl - fee_pct, 2)
                         item['failure_reason'] = None
-                        completed_samples += 1
-                        wins += 1
-                        total_pnls.append(realized_pnl)
                         resolved = True
                         break
                         
                 if not resolved:
-                    # 20거래일(약 1개월) 경과 시 기간 만료 청산
                     if len(df_after) >= 20:
                         exit_p = curr_p
                         realized_pnl = round(((exit_p / rec_p) - 1) * 100, 2)
+                        fee_pct = float(item.get('fee_slippage_pct', 0.25))
                         item['is_completed'] = True
                         item['exit_price'] = round(exit_p, 2)
                         item['exit_date'] = str(df_after.index[-1].date())
                         item['realized_pnl_pct'] = realized_pnl
+                        item['realized_pnl_net_pct'] = round(realized_pnl - fee_pct, 2)
                         item['hit_success'] = (exit_p >= rec_p)
                         item['status'] = '기간 만료 마감'
                         if not item['hit_success']:
@@ -432,29 +509,104 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
                             item['failure_reason'] = diagnosis['full_diagnosis']
                         else:
                             item['failure_reason'] = None
-                        completed_samples += 1
-                        if item['hit_success']:
-                            wins += 1
-                        total_pnls.append(realized_pnl)
                     else:
                         item['status'] = f'📈 보유 {len(df_after)}일차 추적 중'
                         item['hit_success'] = False
                         item['is_completed'] = False
-                        ongoing_count += 1
-                    
-                if item.get('is_completed'):
-                    for tag in item.get('tags', []):
-                        if tag not in factor_hits:
-                            factor_hits[tag] = {'total': 0, 'wins': 0}
-                        factor_hits[tag]['total'] += 1
-                        if item['hit_success']:
-                            factor_hits[tag]['wins'] += 1
-                            
+
     save_history(history)
-    
+
+    # 2. 존재하는 모든 전략 버전 식별
+    available_versions = sorted(list({item.get('strategy_version', 'legacy') for item in history}))
+    if CURRENT_STRATEGY_VERSION not in available_versions:
+        available_versions.insert(0, CURRENT_STRATEGY_VERSION)
+
+    # 3. 요청된 전략 버전 필터링 (버전별 독립 평가)
+    if strategy_version and strategy_version != 'all':
+        eval_items = [it for it in history if it.get('strategy_version', 'legacy') == strategy_version]
+    else:
+        eval_items = history
+
+    completed_items = [it for it in eval_items if it.get('is_completed', False)]
+    completed_samples = len(completed_items)
+    ongoing_count = len([it for it in eval_items if not it.get('is_completed', False)])
+    wins = len([it for it in completed_items if it.get('hit_success', False)])
+    losses = completed_samples - wins
+
+    total_pnls = [float(it['realized_pnl_pct']) for it in completed_items if it.get('realized_pnl_pct') is not None]
+    total_net_pnls = []
+    fee_list = []
+    for it in completed_items:
+        fee = float(it.get('fee_slippage_pct', 0.25))
+        fee_list.append(fee)
+        pnl = it.get('realized_pnl_pct')
+        if pnl is not None:
+            total_net_pnls.append(pnl - fee)
+
+    avg_fee = float(np.mean(fee_list)) if fee_list else 0.25
     win_rate = (wins / completed_samples * 100) if completed_samples > 0 else 0.0
-    avg_return = np.mean(total_pnls) if total_pnls else 0.0
-    
+    avg_return = float(np.mean(total_pnls)) if total_pnls else 0.0
+    avg_return_net = float(np.mean(total_net_pnls)) if total_net_pnls else 0.0
+
+    # 팩터별 승률 집계 (1추천당 중복 태그 set으로 원천 제거)
+    factor_hits = {}
+    for it in completed_items:
+        normalized_tags = {
+            normalize_factor_tag(tag)
+            for tag in it.get('tags', [])
+            if tag
+        }
+        for norm_tag in normalized_tags:
+            if norm_tag not in factor_hits:
+                factor_hits[norm_tag] = {'total': 0, 'wins': 0}
+            factor_hits[norm_tag]['total'] += 1
+            if it.get('hit_success', False):
+                factor_hits[norm_tag]['wins'] += 1
+
+    win_pnls = [p for p in total_pnls if p > 0]
+    loss_pnls = [p for p in total_pnls if p <= 0]
+    avg_win = float(np.mean(win_pnls)) if win_pnls else 0.0
+    avg_loss = float(np.mean(loss_pnls)) if loss_pnls else 0.0
+
+    sum_win = float(sum(win_pnls)) if win_pnls else 0.0
+    sum_loss = float(abs(sum(loss_pnls))) if loss_pnls else 0.0
+
+    if sum_loss > 0:
+        profit_factor = round(sum_win / sum_loss, 2)
+        profit_factor_display = f"{profit_factor:.2f}"
+    elif sum_win > 0:
+        profit_factor = 99.9
+        profit_factor_display = "손실 없음 (∞)"
+    else:
+        profit_factor = 0.0
+        profit_factor_display = "0.00"
+
+    # 기대값 산출 (거래비용 avg_fee 동적 차감)
+    if completed_samples > 0:
+        p_win = wins / completed_samples
+        p_loss = losses / completed_samples
+        expected_value = round((p_win * avg_win) - (p_loss * abs(avg_loss)) - avg_fee, 2)
+    else:
+        expected_value = 0.0
+
+    # 표본 수에 따른 통계적 신뢰도 단계
+    if completed_samples < 30:
+        sample_tier = "실험 단계 (0~29건)"
+        sample_tier_desc = "표본 축적 단계로, 통계적 왜곡 방지를 위해 가중치 변경이 동결되어 있습니다."
+        sample_error_margin = "±20%p 이상"
+    elif completed_samples < 100:
+        sample_tier = "참고 단계 (30~99건)"
+        sample_tier_desc = "성과 추세 파악이 가능하며, 팩터 가중치는 최대 ±2점으로 극히 제한 보정됩니다."
+        sample_error_margin = "대략 ±18%p"
+    elif completed_samples < 300:
+        sample_tier = "1차 평가 단계 (100~299건)"
+        sample_tier_desc = "전략의 유효성 검증이 가능하며, 팩터 가중치는 최대 ±5점으로 제한 보정됩니다."
+        sample_error_margin = "대략 ±10%p"
+    else:
+        sample_tier = "통계적 안정 단계 (300건 이상)"
+        sample_tier_desc = "시장 환경별 세부 분석 및 가중치 능동 보정이 유효한 단계입니다."
+        sample_error_margin = "±5%p 이내"
+
     best_factors = []
     for tag, counts in factor_hits.items():
         if counts['total'] >= 1:
@@ -465,17 +617,31 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
                 'count': counts['total']
             })
     best_factors.sort(key=lambda x: x['win_rate'], reverse=True)
-    
-    adaptive_weights = get_adaptive_factor_weights()
-    
+
+    adaptive_weights = get_adaptive_factor_weights(strategy_version=strategy_version)
+
     return {
-        'total_recs': len(history),
+        'strategy_version': CURRENT_STRATEGY_VERSION,
+        'strategy_rules': CURRENT_STRATEGY_RULES,
+        'selected_version': strategy_version,
+        'available_versions': available_versions,
+        'total_recs': len(eval_items),
         'completed_count': completed_samples,
         'ongoing_count': ongoing_count,
         'wins': wins,
+        'losses': losses,
         'win_rate': round(win_rate, 1),
         'avg_return': round(avg_return, 1),
-        'history_items': history[::-1],
+        'avg_return_net': round(avg_return_net, 1),
+        'avg_win': round(avg_win, 2),
+        'avg_loss': round(avg_loss, 2),
+        'expected_value': expected_value,
+        'profit_factor': profit_factor,
+        'profit_factor_display': profit_factor_display,
+        'sample_tier': sample_tier,
+        'sample_tier_desc': sample_tier_desc,
+        'sample_error_margin': sample_error_margin,
+        'history_items': eval_items[::-1],
         'best_factors': best_factors[:4],
         'adaptive_weights': adaptive_weights
     }

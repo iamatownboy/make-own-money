@@ -331,7 +331,7 @@ def test_supabase_fallback_and_deduplication(monkeypatch, tmp_path):
     assert saved_data[0]['ticker'] == 'NVDA'
 
 
-# 9. 최근 14일 내 손절 종목 쿨다운 및 팩터 가중치 보정(N>=10) 검증
+# 9. 최근 14일 내 손절 종목 쿨다운 및 표본 단계별(Tiered) 팩터 가중치 보정 상한 검증
 def test_cooldown_and_adaptive_weights(monkeypatch, tmp_path):
     test_hist_file = str(tmp_path / "test_history.json")
     monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
@@ -351,31 +351,684 @@ def test_cooldown_and_adaptive_weights(monkeypatch, tmp_path):
             'tags': ['급락패턴'],
             'is_completed': True,
             'hit_success': False,
-            'failure_reason': '기술적 손절선 하방 이탈'
+            'failure_reason': '기술적 손절선 하방 이탈',
+            'strategy_version': 'v1.0.0'
         }
     ]
     
-    # 특정 정규화 태그에 대해 10회 이상 성공 데이터 생성 -> 가중치 가산 대상
-    for idx in range(11):
+    # 1. 20건 생성 (표본 < 30건): 가중치 동결 (adjustment == 0)
+    for idx in range(20):
         mock_history.append({
             'date': '2026-01-01',
-            'ticker': f'WIN_{idx}',
+            'ticker': f'WIN_SMALL_{idx}',
             'name': f'윈_{idx}',
             'rec_price': 50.0,
             'target_price': 60.0,
             'stop_loss': 47.0,
-            'tags': ['월가괴리_25이상'],
+            'tags': ['소표본태그'],
             'is_completed': True,
-            'hit_success': True
+            'hit_success': True,
+            'strategy_version': 'v1.0.0'
+        })
+
+    # 2. 40건 생성 (30 <= 표본 < 100건): 최대 ±2점 제한 보정
+    for idx in range(40):
+        mock_history.append({
+            'date': '2026-01-01',
+            'ticker': f'WIN_MID_{idx}',
+            'name': f'윈_{idx}',
+            'rec_price': 50.0,
+            'target_price': 60.0,
+            'stop_loss': 47.0,
+            'tags': ['중표본태그'],
+            'is_completed': True,
+            'hit_success': True,  # 승률 100%이지만 40건이므로 최대 +2점
+            'strategy_version': 'v1.0.0'
+        })
+
+    # 3. 120건 생성 (100 <= 표본 < 300건): 최대 ±5점 보정
+    for idx in range(120):
+        mock_history.append({
+            'date': '2026-01-01',
+            'ticker': f'WIN_LARGE_{idx}',
+            'name': f'윈_{idx}',
+            'rec_price': 50.0,
+            'target_price': 60.0,
+            'stop_loss': 47.0,
+            'tags': ['대표본태그'],
+            'is_completed': True,
+            'hit_success': True,
+            'strategy_version': 'v1.0.0'
         })
 
     save_history(mock_history)
-    weights = get_adaptive_factor_weights()
+    weights = get_adaptive_factor_weights(strategy_version='v1.0.0')
 
     # 1. 쿨다운 검증
     assert 'BAD_STOCK' in weights['cooldown_tickers']
     assert weights['cooldown_tickers']['BAD_STOCK']['penalty'] == -12
 
-    # 2. 팩터 보정 검증 (11회 표본, 100% 승률 -> +5점 가산)
-    assert '월가괴리_25이상' in weights['factor_adjustments']
-    assert weights['factor_adjustments']['월가괴리_25이상'] >= 3
+    # 2. 표본 단계별 보정 제한 검증
+    # 표본 20건 (30미만) -> 가중치 0점 (동결)
+    assert weights['factor_adjustments'].get('소표본태그', 0) == 0
+
+    # 표본 40건 (30~99건) -> 100% 승률이라도 +2점으로 상한 제한
+    assert weights['factor_adjustments']['중표본태그'] == 2
+
+    # 표본 120건 (100~299건) -> 100% 승률 시 +5점으로 보정
+    assert weights['factor_adjustments']['대표본태그'] == 5
+
+
+# 10. 전략 버전 (v1.0.0) 및 룰셋 메타데이터 기록 검증
+def test_strategy_version_and_metadata(monkeypatch, tmp_path):
+    test_hist_file = str(tmp_path / "test_history.json")
+    monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
+    monkeypatch.setattr("quant_core.tracker.is_supabase_enabled", lambda: False)
+
+    from quant_core.tracker import CURRENT_STRATEGY_VERSION, CURRENT_STRATEGY_RULES
+
+    assert CURRENT_STRATEGY_VERSION == "v1.0.0"
+    assert CURRENT_STRATEGY_RULES['min_score'] == 68
+    assert CURRENT_STRATEGY_RULES['min_rr'] == 1.20
+    assert CURRENT_STRATEGY_RULES['holding_days'] == 20
+
+    item = {
+        'date': '2026-09-17',
+        'ticker': 'TSM',
+        'name': 'TSMC',
+        'current_price': 417.0,
+        'bull_target_1': 440.0,
+        'stop_loss': 400.0,
+        'tags': ['피보나치지지']
+    }
+    history = record_daily_recommendations([item])
+    assert len(history) == 1
+    rec = history[0]
+    assert rec['strategy_version'] == "v1.0.0"
+    assert 'rules' in rec
+    assert rec['rules']['min_score'] == 68
+    assert rec['fee_slippage_pct'] == 0.25
+    assert 'recommended_at' in rec
+
+
+# 11. 기대값 (Expected Value) 및 Profit Factor 정밀 계산 검증
+def test_expectancy_and_profit_factor_calculation(monkeypatch, tmp_path):
+    test_hist_file = str(tmp_path / "test_history.json")
+    monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
+    monkeypatch.setattr("quant_core.tracker.is_supabase_enabled", lambda: False)
+
+    # 10개 표본 생성: 7승 (+10%씩), 3패 (-5%씩)
+    # 총 이익: +70%, 총 손실: 15% -> Profit Factor = 70 / 15 = 4.67
+    # 승률: 70%, 패배율: 30%
+    # 기대값 = (0.7 * 10%) - (0.3 * 5%) - 0.25%(수수료) = 7.0 - 1.5 - 0.25 = +5.25%
+    mock_history = []
+    for idx in range(7):
+        mock_history.append({
+            'date': '2026-01-01',
+            'ticker': f'WIN_{idx}',
+            'name': f'윈_{idx}',
+            'rec_price': 100.0,
+            'target_price': 110.0,
+            'stop_loss': 95.0,
+            'is_completed': True,
+            'hit_success': True,
+            'realized_pnl_pct': 10.0,
+            'fee_slippage_pct': 0.25,
+            'strategy_version': 'v1.0.0'
+        })
+    for idx in range(3):
+        mock_history.append({
+            'date': '2026-01-01',
+            'ticker': f'LOSS_{idx}',
+            'name': f'로스_{idx}',
+            'rec_price': 100.0,
+            'target_price': 110.0,
+            'stop_loss': 95.0,
+            'is_completed': True,
+            'hit_success': False,
+            'realized_pnl_pct': -5.0,
+            'fee_slippage_pct': 0.25,
+            'strategy_version': 'v1.0.0'
+        })
+
+    save_history(mock_history)
+    
+    class MockTicker:
+        def __init__(self, ticker):
+            pass
+        def history(self, *args, **kwargs):
+            return pd.DataFrame()
+
+    monkeypatch.setattr("yfinance.Ticker", MockTicker)
+    
+    # 완료 표본 평가 (네트워크 호출 없이 순수 수학 계산 검증)
+    res = evaluate_and_learn_from_history()
+    
+    assert res['completed_count'] == 10
+    assert res['wins'] == 7
+    assert res['win_rate'] == 70.0
+    assert res['profit_factor'] == 4.67
+    assert res['expected_value'] == 5.25
+    assert '실험 단계' in res['sample_tier']
+    assert res['avg_win'] == 10.0
+    assert res['avg_loss'] == -5.0
+
+
+# 12. 전략 버전별 통계 및 가중치 독립 격리 검증 (데이터 오염 방지)
+def test_strategy_version_isolation(monkeypatch, tmp_path):
+    test_hist_file = str(tmp_path / "test_history.json")
+    monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
+    monkeypatch.setattr("quant_core.tracker.is_supabase_enabled", lambda: False)
+
+    mock_data = [
+        # v1.0.0 버전 레코드 4개 (3승 1패)
+        {
+            'date': '2026-02-01', 'ticker': 'V1_W1', 'name': 'V1승1', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 10.0,
+            'strategy_version': 'v1.0.0', 'tags': ['피보나치골든포켓']
+        },
+        {
+            'date': '2026-02-01', 'ticker': 'V1_W2', 'name': 'V1승2', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 10.0,
+            'strategy_version': 'v1.0.0', 'tags': ['피보나치골든포켓']
+        },
+        {
+            'date': '2026-02-01', 'ticker': 'V1_W3', 'name': 'V1승3', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 10.0,
+            'strategy_version': 'v1.0.0', 'tags': ['빗각추세선돌파']
+        },
+        {
+            'date': '2026-02-01', 'ticker': 'V1_L1', 'name': 'V1패1', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': False, 'realized_pnl_pct': -5.0,
+            'strategy_version': 'v1.0.0', 'tags': ['빗각추세선돌파']
+        },
+        # legacy 구버전 레코드 3개 (1승 2패)
+        {
+            'date': '2025-12-01', 'ticker': 'LEG_W1', 'name': '구승1', 'rec_price': 50.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 8.0,
+            'strategy_version': 'legacy', 'tags': ['피보나치골든포켓']
+        },
+        {
+            'date': '2025-12-01', 'ticker': 'LEG_L1', 'name': '구패1', 'rec_price': 50.0,
+            'is_completed': True, 'hit_success': False, 'realized_pnl_pct': -6.0,
+            'strategy_version': 'legacy', 'tags': ['피보나치골든포켓']
+        },
+        {
+            'date': '2025-12-01', 'ticker': 'LEG_L2', 'name': '구패2', 'rec_price': 50.0,
+            'is_completed': True, 'hit_success': False, 'realized_pnl_pct': -7.0,
+            'strategy_version': 'legacy', 'tags': ['빗각추세선돌파']
+        }
+    ]
+    save_history(mock_data)
+
+    class MockTicker:
+        def __init__(self, ticker): pass
+        def history(self, *args, **kwargs): return pd.DataFrame()
+    monkeypatch.setattr("yfinance.Ticker", MockTicker)
+
+    # 1. v1.0.0 필터 집계: 총 4건, 3승 1패 (승률 75.0%)
+    res_v1 = evaluate_and_learn_from_history(strategy_version='v1.0.0')
+    assert res_v1['completed_count'] == 4
+    assert res_v1['wins'] == 3
+    assert res_v1['losses'] == 1
+    assert res_v1['win_rate'] == 75.0
+
+    # 2. legacy 필터 집계: 총 3건, 1승 2패 (승률 33.3%)
+    res_leg = evaluate_and_learn_from_history(strategy_version='legacy')
+    assert res_leg['completed_count'] == 3
+    assert res_leg['wins'] == 1
+    assert res_leg['losses'] == 2
+    assert res_leg['win_rate'] == 33.3
+
+    # 3. all 전체 집계: 총 7건, 4승 3패
+    res_all = evaluate_and_learn_from_history(strategy_version='all')
+    assert res_all['completed_count'] == 7
+    assert res_all['wins'] == 4
+    assert res_all['losses'] == 3
+
+
+# 13. 1종목 내 다중 정규화 동의어 태그 중복 집계 원천 차단 검증
+def test_tag_deduplication_in_single_recommendation(monkeypatch, tmp_path):
+    test_hist_file = str(tmp_path / "test_history.json")
+    monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
+    monkeypatch.setattr("quant_core.tracker.is_supabase_enabled", lambda: False)
+
+    # 1개 종목에 '월가목표+35%'와 '월가괴리_25이상'이 둘 다 들어있음
+    # 둘 다 normalize_factor_tag()를 거치면 '월가괴리_25이상'이 됨
+    mock_data = [{
+        'date': '2026-03-10',
+        'ticker': 'DUP_TAG_STOCK',
+        'name': '중복태그종목',
+        'rec_price': 100.0,
+        'is_completed': True,
+        'hit_success': True,
+        'realized_pnl_pct': 12.0,
+        'strategy_version': 'v1.0.0',
+        'tags': ['월가목표+35%', '월가괴리_25이상']  # 동의어 태그 2개
+    }]
+    save_history(mock_data)
+
+    class MockTicker:
+        def __init__(self, ticker): pass
+        def history(self, *args, **kwargs): return pd.DataFrame()
+    monkeypatch.setattr("yfinance.Ticker", MockTicker)
+
+    # evaluate_and_learn_from_history 실행 시 factor_stats에서 표본수가 1건이어야 함 (2건이 아님)
+    res = evaluate_and_learn_from_history(strategy_version='v1.0.0')
+    factor_stats = res['adaptive_weights']['factor_adjustments']
+
+    # get_adaptive_factor_weights로 직접 확인
+    weights = get_adaptive_factor_weights(strategy_version='v1.0.0')
+    # 표본수가 1건이므로 가중치는 0(동결)이어야 함
+    assert weights['factor_adjustments'].get('월가괴리_25이상', 0) == 0
+
+
+# 14. 동일 날짜·종목에 대한 다중 전략 버전 추천 동시 보존 검증
+def test_multi_strategy_same_date_ticker_storage(monkeypatch, tmp_path):
+    test_hist_file = str(tmp_path / "test_history.json")
+    monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
+    monkeypatch.setattr("quant_core.tracker.is_supabase_enabled", lambda: False)
+
+    # 동일 날짜, 동일 종목이지만 전략 버전이 다름
+    rec_v1 = {
+        'date': '2026-09-17',
+        'ticker': 'NVDA',
+        'name': '엔비디아',
+        'current_price': 120.0,
+        'bull_target_1': 135.0,
+        'stop_loss': 114.0,
+        'strategy_version': 'v1.0.0'
+    }
+    rec_v2 = {
+        'date': '2026-09-17',
+        'ticker': 'NVDA',
+        'name': '엔비디아',
+        'current_price': 120.0,
+        'bull_target_1': 140.0,
+        'stop_loss': 116.0,
+        'strategy_version': 'v1.1.0'
+    }
+
+    # v1.0.0 등록
+    hist1 = record_daily_recommendations([rec_v1])
+    assert len(hist1) == 1
+
+    # v1.1.0 등록 -> 충돌 없이 2건 모두 보존되어야 함
+    hist2 = record_daily_recommendations([rec_v2])
+    assert len(hist2) == 2
+
+    # 파일에서 직접 확인
+    saved = load_history()
+    assert len(saved) == 2
+    versions = {s['strategy_version'] for s in saved}
+    assert versions == {'v1.0.0', 'v1.1.0'}
+    assert saved[0]['recommendation_id'] != saved[1]['recommendation_id']
+
+
+# 15. 실시간-백테스트 패턴 판정 단일 소스 (evaluate_pattern_match) 검증
+def test_evaluate_pattern_match_unified_logic():
+    from quant_core.screener import evaluate_pattern_match
+    from quant_core.indicators import calculate_all_indicators
+
+    df = make_dummy_ohlcv(days=120, base_price=100.0)
+    df = calculate_all_indicators(df)
+
+    # 피보나치, 빗각 추세선, 다이버전스, 자동(Supertrend/EMA) 각각 단일 소스 판정 호출
+    fibo_res = evaluate_pattern_match(df, 'fibonacci')
+    assert isinstance(fibo_res, (bool, np.bool_))
+
+    trend_res = evaluate_pattern_match(df, 'trendline')
+    assert isinstance(trend_res, (bool, np.bool_))
+
+    div_res = evaluate_pattern_match(df, 'divergence')
+    assert isinstance(div_res, (bool, np.bool_))
+
+    auto_res = evaluate_pattern_match(df, 'auto')
+    assert isinstance(auto_res, (bool, np.bool_))
+
+
+# 16. 무손실(Loss 0건) 시 Profit Factor 무한대(손실 없음) 안전 표기 검증
+def test_zero_loss_profit_factor_infinity_display(monkeypatch, tmp_path):
+    test_hist_file = str(tmp_path / "test_history.json")
+    monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
+    monkeypatch.setattr("quant_core.tracker.is_supabase_enabled", lambda: False)
+
+    mock_data = [
+        {
+            'date': '2026-03-01', 'ticker': 'PERF_1', 'name': '완벽1', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 10.0,
+            'strategy_version': 'v1.0.0'
+        },
+        {
+            'date': '2026-03-01', 'ticker': 'PERF_2', 'name': '완벽2', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 15.0,
+            'strategy_version': 'v1.0.0'
+        }
+    ]
+    save_history(mock_data)
+
+    class MockTicker:
+        def __init__(self, ticker): pass
+        def history(self, *args, **kwargs): return pd.DataFrame()
+    monkeypatch.setattr("yfinance.Ticker", MockTicker)
+
+    res = evaluate_and_learn_from_history(strategy_version='v1.0.0')
+    assert res['losses'] == 0
+    assert res['wins'] == 2
+    assert res['profit_factor'] == 99.9
+    assert res['profit_factor_display'] == "손실 없음 (∞)"
+
+
+# 17. 기록별 동적 슬리피지·수수료 (fee_slippage_pct) 차감 반영 검증
+def test_dynamic_fee_slippage_calculation(monkeypatch, tmp_path):
+    test_hist_file = str(tmp_path / "test_history.json")
+    monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
+    monkeypatch.setattr("quant_core.tracker.is_supabase_enabled", lambda: False)
+
+    # 2개 표본: 둘 다 +10% 이익
+    # item1: 수수료 0.10% -> 순이익 +9.90%
+    # item2: 수수료 0.50% -> 순이익 +9.50%
+    # 평균 수수료 = 0.30%
+    # 평균 순이익 = (9.90 + 9.50) / 2 = +9.70%
+    mock_data = [
+        {
+            'date': '2026-03-01', 'ticker': 'FEE_LOW', 'name': '저비용', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 10.0,
+            'fee_slippage_pct': 0.10, 'strategy_version': 'v1.0.0'
+        },
+        {
+            'date': '2026-03-01', 'ticker': 'FEE_HIGH', 'name': '고비용', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 10.0,
+            'fee_slippage_pct': 0.50, 'strategy_version': 'v1.0.0'
+        }
+    ]
+    save_history(mock_data)
+
+    class MockTicker:
+        def __init__(self, ticker): pass
+        def history(self, *args, **kwargs): return pd.DataFrame()
+    monkeypatch.setattr("yfinance.Ticker", MockTicker)
+
+    res = evaluate_and_learn_from_history(strategy_version='v1.0.0')
+    assert res['avg_return'] == 10.0
+    assert res['avg_return_net'] == 9.70
+    assert res['expected_value'] == 9.70
+
+
+# 18. Supabase API 키 JWT 역할(Role) 안전 감지 검증
+def test_jwt_role_inspection():
+    import base64
+    from quant_core.db import inspect_jwt_role
+
+    def make_fake_jwt(role_name: str) -> str:
+        header = base64.urlsafe_b64encode(b'{"alg":"HS256","typ":"JWT"}').decode().rstrip('=')
+        payload = base64.urlsafe_b64encode(f'{{"role":"{role_name}"}}'.encode()).decode().rstrip('=')
+        signature = "dummy_signature"
+        return f"{header}.{payload}.{signature}"
+
+    service_key = make_fake_jwt("service_role")
+    anon_key = make_fake_jwt("anon")
+
+    assert inspect_jwt_role(service_key) == "service_role"
+    assert inspect_jwt_role(anon_key) == "anon"
+    assert inspect_jwt_role("invalid_key_format") == "unknown"
+    assert inspect_jwt_role("") == "unknown"
+
+
+# 19. anon 키 설정 시 가짜 연결 차단 및 권한 부족 상태 검증 (RLS Default Deny 보호)
+def test_supabase_diagnostics_anon_key_blocks_enabled(monkeypatch):
+    import base64
+    from quant_core.db import get_supabase_diagnostics, is_supabase_enabled
+
+    def make_fake_jwt(role_name: str) -> str:
+        header = base64.urlsafe_b64encode(b'{"alg":"HS256","typ":"JWT"}').decode().rstrip('=')
+        payload = base64.urlsafe_b64encode(f'{{"role":"{role_name}"}}'.encode()).decode().rstrip('=')
+        return f"{header}.{payload}.sig"
+
+    anon_key = make_fake_jwt("anon")
+
+    monkeypatch.setenv("SUPABASE_URL", "https://mock.supabase.co")
+    monkeypatch.setenv("SUPABASE_KEY", anon_key)
+
+    class MockTable:
+        def select(self, *args, **kwargs):
+            return self
+        def limit(self, *args, **kwargs):
+            return self
+        def execute(self):
+            # anon 키는 비공개 RLS 정책에 의해 SELECT 403 차단 시뮬레이션
+            raise Exception("403 Forbidden: RLS policy denies access")
+
+    class MockClient:
+        def table(self, name):
+            return MockTable()
+
+    monkeypatch.setattr("quant_core.db.get_supabase_client", lambda: MockClient())
+
+    diag = get_supabase_diagnostics(force_refresh=True)
+    assert diag['key_role'] == "anon"
+    assert diag['is_service_role'] is False
+    assert diag['can_write'] is False
+    assert diag['is_healthy'] is False
+    # RLS 권한이 부족하므로 가짜 연결을 차단하고 is_supabase_enabled()는 False를 반환해야 함
+    assert is_supabase_enabled() is False
+
+
+# 20. 구형 DB 제약조건으로의 조용한 덮어쓰기 폴백 배제 및 명확한 오류 반환 검증
+def test_db_upsert_strict_compound_key_no_silent_overwrite(monkeypatch):
+    from quant_core.db import db_upsert_history_items
+
+    class MockTable:
+        def upsert(self, records, on_conflict=None):
+            # 복합키 on_conflict="date,ticker,strategy_version" 실패 시뮬레이션 (구버전 스키마)
+            if on_conflict == "date,ticker,strategy_version":
+                raise Exception("column 'strategy_version' not in unique constraint")
+            # 만약 구버전 키로 조용히 시도하려 하면 호출되면 안 됨
+            raise AssertionError("구형 키(date,ticker)로 조용히 폴백 시도됨! 엄격한 무손실 원칙 위반.")
+
+    class MockClient:
+        def table(self, name):
+            return MockTable()
+
+    monkeypatch.setattr("quant_core.db.get_supabase_client", lambda: MockClient())
+
+    items = [{
+        'date': '2026-09-17',
+        'ticker': 'NVDA',
+        'strategy_version': 'v1.0.0',
+        'rec_price': 120.0
+    }]
+
+    # 복합키 제약조건이 없으면 date,ticker로 덮어쓰지 않고 명확히 False 반환
+    success = db_upsert_history_items(items)
+    assert success is False
+
+
+# 21. supabase_schema.sql 마이그레이션 순서 (기본값 없이 추가 -> legacy 백필 -> v1.0.0 설정) 검증
+def test_supabase_schema_migration_backfill_order():
+    sql_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "supabase_schema.sql")
+    assert os.path.exists(sql_path)
+
+    with open(sql_path, "r", encoding="utf-8") as f:
+        sql_content = f.read()
+
+    # 1. ADD COLUMN 시 DEFAULT 'v1.0.0'이 바로 붙지 않고 기본값 없이 추가되는지 검증
+    assert "ADD COLUMN IF NOT EXISTS strategy_version VARCHAR(32);" in sql_content
+
+    # 2. 기존 행을 'legacy'로 백필하는 UPDATE 문 존재 검증
+    assert "SET strategy_version = 'legacy'" in sql_content
+
+    # 3. recommendation_id 백필 문 존재 검증
+    assert "SET recommendation_id = date || '_' || ticker || '_' || strategy_version" in sql_content
+
+    # 4. 순서 검증: 백필(legacy) 후에 신규 행 DEFAULT 'v1.0.0' 설정이 나와야 함
+    pos_add = sql_content.find("ADD COLUMN IF NOT EXISTS strategy_version VARCHAR(32);")
+    pos_backfill = sql_content.find("SET strategy_version = 'legacy'")
+    pos_default_v1 = sql_content.find("ALTER COLUMN strategy_version SET DEFAULT 'v1.0.0'")
+    pos_unique = sql_content.find("ADD CONSTRAINT unique_date_ticker_version")
+
+    assert pos_add < pos_backfill, "컬럼 추가가 백필보다 먼저 나와야 합니다."
+    assert pos_backfill < pos_default_v1, "기존 행 legacy 백필이 DEFAULT v1.0.0 설정보다 반드시 먼저 실행되어야 합니다."
+    assert pos_default_v1 < pos_unique, "DEFAULT 및 NOT NULL 설정 후 복합 UNIQUE 제약조건이 적용되어야 합니다."
+
+    # 5. 직전 스키마 적용으로 오염된 2026-09-17 이전 과거 행의 복구 조건 포함 여부 검증
+    assert "date < '2026-09-17'" in sql_content, "v1.0.0 도입일 이전 과거 행에 대한 안전 복구 조건이 포함되어야 합니다."
+    assert "rules IS NULL" in sql_content, "구버전 메타데이터(rules 부재) 과거 행에 대한 안전 복구 조건이 포함되어야 합니다."
+
+    # 6. 무손실 전용 헬스체크 테이블(system_health_check) 정의 검증
+    assert "CREATE TABLE IF NOT EXISTS system_health_check" in sql_content
+    assert "Service Role Manage Health Check" in sql_content
+
+
+# 22. authenticated 역할 등 쓰기 권한이 없는 키에 대한 실제 Write Probe 차단 실증 검증
+def test_write_probe_authenticated_key_rejection(monkeypatch):
+    import base64
+    from quant_core.db import get_supabase_diagnostics, is_supabase_enabled
+
+    def make_fake_jwt(role_name: str) -> str:
+        header = base64.urlsafe_b64encode(b'{"alg":"HS256","typ":"JWT"}').decode().rstrip('=')
+        payload = base64.urlsafe_b64encode(f'{{"role":"{role_name}"}}'.encode()).decode().rstrip('=')
+        return f"{header}.{payload}.sig"
+
+    auth_key = make_fake_jwt("authenticated")
+    monkeypatch.setenv("SUPABASE_URL", "https://mock.supabase.co")
+    monkeypatch.setenv("SUPABASE_KEY", auth_key)
+
+    class MockTable:
+        def select(self, *args, **kwargs):
+            return self
+        def limit(self, *args, **kwargs):
+            return self
+        def eq(self, *args, **kwargs):
+            return self
+        def delete(self, *args, **kwargs):
+            return self
+        def execute(self):
+            # SELECT는 성공 (authenticated 허용)
+            return type('Response', (), {'data': [{'id': 1}]})()
+        def upsert(self, records, on_conflict=None):
+            # WRITE는 RLS 정책에 의해 403 차단 시뮬레이션 (service_role만 통과)
+            raise Exception("403 Forbidden: RLS policy denies insert/upsert for authenticated role")
+
+    class MockClient:
+        def table(self, name):
+            return MockTable()
+
+    monkeypatch.setattr("quant_core.db.get_supabase_client", lambda: MockClient())
+
+    diag = get_supabase_diagnostics(force_refresh=True)
+    # 읽기는 성공했지만 실제 쓰기 프로브에서 차단되었으므로 can_write는 False여야 함
+    assert diag['can_read'] is True
+    assert diag['can_write'] is False
+    assert diag['is_healthy'] is False
+    assert is_supabase_enabled() is False
+    assert "쓰기 권한 부족" in diag['status_message']
+
+
+# 23. 전용 system_health_check 테이블을 통한 무손실 쓰기 점검 실증 검증
+def test_write_probe_dedicated_health_check_table_success(monkeypatch):
+    import base64
+    from quant_core.db import get_supabase_diagnostics, is_supabase_enabled
+
+    def make_fake_jwt(role_name: str) -> str:
+        header = base64.urlsafe_b64encode(b'{"alg":"HS256","typ":"JWT"}').decode().rstrip('=')
+        payload = base64.urlsafe_b64encode(f'{{"role":"{role_name}"}}'.encode()).decode().rstrip('=')
+        return f"{header}.{payload}.sig"
+
+    svc_key = make_fake_jwt("service_role")
+    monkeypatch.setenv("SUPABASE_URL", "https://mock.supabase.co")
+    monkeypatch.setenv("SUPABASE_KEY", svc_key)
+
+    recorded_calls = []
+
+    class MockHealthCheckTable:
+        def __init__(self, name):
+            self.name = name
+
+        def select(self, *args, **kwargs):
+            return self
+        def limit(self, *args, **kwargs):
+            return self
+        def eq(self, col, val):
+            recorded_calls.append(("eq", self.name, col, val))
+            return self
+        def delete(self):
+            recorded_calls.append(("delete", self.name))
+            return self
+        def upsert(self, records, on_conflict=None):
+            recorded_calls.append(("upsert", self.name, records))
+            return self
+        def execute(self):
+            return type('Response', (), {'data': [{'id': 1}]})()
+
+    class MockClient:
+        def table(self, name):
+            return MockHealthCheckTable(name)
+
+    monkeypatch.setattr("quant_core.db.get_supabase_client", lambda: MockClient())
+
+    diag = get_supabase_diagnostics(force_refresh=True)
+    assert diag['can_read'] is True
+    assert diag['can_write'] is True
+    assert diag['is_healthy'] is True
+    assert is_supabase_enabled() is True
+
+    # system_health_check 테이블에 upsert 및 delete가 순차 호출되었는지 확인 (비즈니스 테이블 침범 없음)
+    table_names = [call[1] for call in recorded_calls]
+    assert "system_health_check" in table_names
+    assert "daily_recommendation_cache" not in table_names
+
+
+# 24. system_health_check 테이블 부재 시 비즈니스 테이블 접근 차단 및 스키마 미적용 안전 반환 검증
+def test_write_probe_missing_health_check_table_blocks_and_never_touches_business_tables(monkeypatch):
+    import base64
+    from quant_core.db import get_supabase_diagnostics, is_supabase_enabled
+
+    def make_fake_jwt(role_name: str) -> str:
+        header = base64.urlsafe_b64encode(b'{"alg":"HS256","typ":"JWT"}').decode().rstrip('=')
+        payload = base64.urlsafe_b64encode(f'{{"role":"{role_name}"}}'.encode()).decode().rstrip('=')
+        return f"{header}.{payload}.sig"
+
+    svc_key = make_fake_jwt("service_role")
+    monkeypatch.setenv("SUPABASE_URL", "https://mock.supabase.co")
+    monkeypatch.setenv("SUPABASE_KEY", svc_key)
+
+    business_table_mutations = []
+
+    class MockStrictClient:
+        def table(self, name):
+            if name == "system_health_check":
+                class MissingTable:
+                    def upsert(self, *args, **kwargs):
+                        # 테이블 부재 에러 발생 (PostgreSQL error 42P01)
+                        raise Exception('relation "system_health_check" does not exist (PostgreSQL error 42P01)')
+                return MissingTable()
+
+            class BusinessTable:
+                def select(self, *args, **kwargs):
+                    return self
+                def limit(self, *args, **kwargs):
+                    return self
+                def upsert(self, records, on_conflict=None):
+                    business_table_mutations.append(("upsert", name, records))
+                    return self
+                def delete(self):
+                    business_table_mutations.append(("delete", name))
+                    return self
+                def execute(self):
+                    return type('Response', (), {'data': [{'id': 1}]})()
+
+            return BusinessTable()
+
+    monkeypatch.setattr("quant_core.db.get_supabase_client", lambda: MockStrictClient())
+
+    diag = get_supabase_diagnostics(force_refresh=True)
+    # 1. 읽기는 통과했으나 전용 테이블이 없으므로 can_write는 False, is_healthy는 False여야 함
+    assert diag['can_read'] is True
+    assert diag['can_write'] is False
+    assert diag['is_healthy'] is False
+    assert is_supabase_enabled() is False
+    assert "스키마 미적용" in diag['status_message']
+
+    # 2. 핵심 안전성 검증: 비즈니스 테이블(daily_recommendation_cache 등)에 대한 쓰기/삭제 시도가 0건이어야 함
+    assert len(business_table_mutations) == 0, "전용 헬스체크 테이블 부재 시 비즈니스 테이블에 폴백하여 데이터를 건드려서는 안 됩니다."

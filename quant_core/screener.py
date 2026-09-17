@@ -132,85 +132,110 @@ CORE_UNIVERSE = [
 RECOMMENDATION_CACHE_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'daily_recommendations.json')
 
 
+def evaluate_pattern_match(df_slice: pd.DataFrame, pattern_type: str = 'auto') -> bool:
+    """
+    실시간 스크리너와 과거 백테스팅이 100% 동일하게 공유하는 단일 진입 패턴 판정 함수 (Single Source of Truth)
+    - df_slice: 해당 판정 시점까지의 과거 데이터 슬라이스 (미래 정보 유입 Look-Ahead Bias 완전 차단)
+    """
+    if len(df_slice) < 25:
+        return False
+
+    if pattern_type == 'fibonacci':
+        fib = calculate_fibonacci_levels(df_slice, window=60)
+        return bool(fib.get('is_in_golden_pocket') or fib.get('is_at_fib_382'))
+    elif pattern_type == 'trendline':
+        tl = detect_trendline_breakout(df_slice, window=50)
+        return bool(tl.get('is_breakout') or tl.get('is_approaching'))
+    elif pattern_type == 'divergence':
+        div = detect_bullish_divergence(df_slice, window=30)
+        return bool(div.get('has_divergence'))
+    elif pattern_type == 'auto':
+        if len(df_slice) < 2:
+            return False
+        curr_bar = df_slice.iloc[-1]
+        prev_bar = df_slice.iloc[-2]
+        close_curr = float(curr_bar['Close'])
+        open_curr = float(curr_bar['Open'])
+        low_curr = float(curr_bar['Low'])
+        st_curr = curr_bar.get('Supertrend_Direction', 0)
+        st_prev = prev_bar.get('Supertrend_Direction', 0)
+        ema20 = curr_bar.get('EMA_21', close_curr)
+        is_st_turn = (st_curr == 1 and st_prev == -1)
+        is_ema_bounce = (low_curr <= ema20 * 1.01 and close_curr > ema20 and close_curr > open_curr)
+        return bool(is_st_turn or is_ema_bounce)
+    return False
+
+
+def get_market_context_regime() -> Dict[str, Any]:
+    """
+    실시간 나스닥 지수(QQQ)를 바탕으로 실제 거시 시장 레짐(Market Regime)을 산출합니다.
+    """
+    try:
+        df_mkt = yf.Ticker("QQQ").history(period="3mo", interval="1d")
+        if df_mkt.empty or len(df_mkt) < 20:
+            return {'regime': '정상장세', 'nasdaq_trend': '중립', 'volatility': '보통'}
+
+        close = df_mkt['Close']
+        curr_p = float(close.iloc[-1])
+        ma20 = float(close.tail(20).mean())
+        ma50 = float(close.tail(min(50, len(close))).mean())
+        ret_20d = float(((curr_p / close.iloc[-20]) - 1) * 100)
+
+        if curr_p >= ma20 and ma20 >= ma50:
+            regime = "강세 상승장"
+            trend = "상승 우위"
+        elif curr_p < ma20 and curr_p < ma50 and ret_20d < -5.0:
+            regime = "약세 조정장"
+            trend = "하락 경계"
+        else:
+            regime = "박스권 횡보장"
+            trend = "중립 관망"
+
+        return {
+            'regime': regime,
+            'nasdaq_trend': trend,
+            'qqq_20d_return': round(ret_20d, 1),
+            'above_20ma': bool(curr_p >= ma20)
+        }
+    except Exception:
+        return {'regime': '정상장세', 'nasdaq_trend': '중립', 'volatility': '보통'}
+
+
 def backtest_pattern_reliability(df: pd.DataFrame, pattern_type: str = 'auto', holding_days: int = 20) -> Dict[str, Any]:
     """
-    해당 종목의 과거 데이터(2년)에서 실제 스크리너 핵심 진입 패턴과 동일한 조건이
-    발생했던 실제 시점들을 전수 시뮬레이션하여 20거래일 후 승률(Win Rate)과 평균 수익률을 정직하게 산출합니다.
-    - pattern_type:
-      * 'fibonacci': 과거 피보나치 되돌림 0.5~0.618 지지 양봉 시점 전수 검증
-      * 'trendline': 과거 하락 빗각 추세선 돌파 시점 전수 검증
-      * 'divergence': 과거 RSI 저점 상승 & 주가 저점 하락 다이버전스 시점 전수 검증
-      * 'auto': Supertrend 상승 전환 및 20EMA 눌림목 지지 양봉 검증
+    해당 종목의 과거 데이터(2년)에서 실제 스크리너 핵심 진입 패턴(evaluate_pattern_match)과 100% 동일한 조건이
+    발생했던 실제 시점들을 전수 시뮬레이션하여 20거래일 후 승률(Win Rate)과 평균 수익률을 산출합니다.
     """
     if len(df) < 60:
         return {'sample_count': 0, 'win_rate': None, 'avg_return': None, 'status': '데이터 부족 (검증 불가)', 'pattern_tested': pattern_type}
-        
+
     data = df.copy()
     signals = []
-    
-    # 과거 진입 시그널 탐색 (최소 25거래일 이전 데이터 필요)
-    for i in range(25, len(data) - holding_days):
-        close_curr = float(data['Close'].iloc[i])
-        open_curr = float(data['Open'].iloc[i])
-        low_curr = float(data['Low'].iloc[i])
-        
-        is_hit = False
-        
-        if pattern_type == 'fibonacci':
-            # 과거 i 시점 기준 직전 25거래일 스윙 고점/저점 피보나치 골든포켓 지지 양봉
-            high_prev = float(data['High'].iloc[i-25:i].max())
-            low_prev = float(data['Low'].iloc[i-25:i].min())
-            diff = high_prev - low_prev
-            if diff > 0:
-                fib_500 = high_prev - (diff * 0.500)
-                fib_618 = high_prev - (diff * 0.618)
-                if low_curr <= fib_500 * 1.01 and close_curr >= fib_618 * 0.99 and close_curr > open_curr:
-                    is_hit = True
-                    
-        elif pattern_type == 'trendline':
-            # 과거 20거래일 하락 빗각 돌파 양봉
-            high_20 = float(data['High'].iloc[i-20:i-1].max())
-            high_prev = float(data['High'].iloc[i-1])
-            if high_20 > high_prev and close_curr > high_prev and close_curr > open_curr:
-                is_hit = True
-                
-        elif pattern_type == 'divergence':
-            # RSI 다이버전스 (주가 저점 하락 & RSI 저점 상승)
-            if 'RSI_14' in data.columns and i >= 14:
-                rsi_curr = float(data['RSI_14'].iloc[i])
-                rsi_prev = float(data['RSI_14'].iloc[i-5:i].min())
-                price_prev = float(data['Low'].iloc[i-5:i].min())
-                if low_curr < price_prev and rsi_curr > rsi_prev and rsi_curr < 45 and close_curr > open_curr:
-                    is_hit = True
-                    
-        else:
-            # Supertrend 전환 또는 20EMA 눌림목 반등
-            st_curr = data['Supertrend_Direction'].iloc[i] if 'Supertrend_Direction' in data else 0
-            st_prev = data['Supertrend_Direction'].iloc[i-1] if 'Supertrend_Direction' in data else 0
-            ema20 = data['EMA_21'].iloc[i] if 'EMA_21' in data else close_curr
-            is_st_turn = (st_curr == 1 and st_prev == -1)
-            is_ema_bounce = (low_curr <= ema20 * 1.01 and close_curr > ema20 and close_curr > open_curr)
-            if is_st_turn or is_ema_bounce:
-                is_hit = True
-                
-        if is_hit:
+
+    # 과거 진입 시그널 탐색: 과거 i 시점까지의 데이터 슬라이스만으로 evaluate_pattern_match 평가
+    for i in range(30, len(data) - holding_days):
+        df_slice = data.iloc[:i + 1]
+        if evaluate_pattern_match(df_slice, pattern_type):
+            close_curr = float(data['Close'].iloc[i])
             exit_price = float(data['Close'].iloc[i + holding_days])
-            ret = ((exit_price / close_curr) - 1) * 100
-            signals.append(ret)
-            
+            gross_ret = ((exit_price / close_curr) - 1) * 100
+            net_ret = gross_ret - 0.25  # 왕복 거래 수수료 및 슬리피지(0.25%) 차감
+            signals.append(net_ret)
+
     if not signals:
         return {'sample_count': 0, 'win_rate': None, 'avg_return': None, 'status': '과거 2년 동일 시그널 부재', 'pattern_tested': pattern_type}
-        
+
     wins = [r for r in signals if r > 0]
     win_rate = (len(wins) / len(signals)) * 100
     avg_ret = np.mean(signals)
-    
+
     return {
         'sample_count': len(signals),
         'win_rate': round(win_rate, 1),
         'avg_return': round(avg_ret, 1),
-        'status': '검증 완료',
-        'pattern_tested': pattern_type
+        'status': '검증 완료 (비용 0.25% 차감)',
+        'pattern_tested': pattern_type,
+        'fee_slippage_applied': True
     }
 
 
@@ -245,12 +270,12 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
         divergence = detect_bullish_divergence(df, window=30)
         reversal_candle = detect_candlestick_reversal(df)
         
-        # 감지된 추천 핵심 패턴 유형 판별 (실제 추천 패턴과 100% 동일한 조건 백테스트)
-        if fib.get('is_in_golden_pocket') or fib.get('is_at_fib_382'):
+        # 감지된 추천 핵심 패턴 유형 판별 (실제 추천 패턴과 100% 동일한 단일 판정 함수 evaluate_pattern_match 사용)
+        if evaluate_pattern_match(df, 'fibonacci'):
             primary_pattern = 'fibonacci'
-        elif trendline.get('is_breakout') or trendline.get('is_approaching'):
+        elif evaluate_pattern_match(df, 'trendline'):
             primary_pattern = 'trendline'
-        elif divergence.get('has_divergence'):
+        elif evaluate_pattern_match(df, 'divergence'):
             primary_pattern = 'divergence'
         else:
             primary_pattern = 'auto'
@@ -480,6 +505,9 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
             'stop_loss_pct': stop_loss_pct,
             'risk_reward_ratio': risk_reward_ratio,
             'is_qualified': is_qualified,
+            'strategy_version': 'v1.0.0',
+            'rules': {'min_score': 68, 'min_rr': 1.20, 'holding_days': 20},
+            'fee_slippage_pct': 0.25,
             'atr': pred.get('atr', round(curr_price * 0.03, 2)),
             'updated_at': datetime.now().strftime('%Y-%m-%d %H:%M')
         }
@@ -558,6 +586,11 @@ def run_full_market_scan(force_refresh: bool = False) -> List[Dict[str, Any]]:
     qualified_results = [r for r in results if r.get('is_qualified', False)]
     qualified_results.sort(key=lambda x: x['total_score'], reverse=True)
     top_picks = qualified_results[:7]
+
+    # 실시간 나스닥 거시 시장 레짐 산출 및 추천 메타데이터에 부착
+    market_context = get_market_context_regime()
+    for p in top_picks:
+        p['market_context'] = market_context
     
     try:
         def np_encoder(obj):
