@@ -156,19 +156,41 @@ def db_upsert_history_items(items: List[Dict[str, Any]]) -> bool:
                 "current_price": float(it.get("current_price", 0.0)) if it.get("current_price") else None,
                 "current_pnl_pct": float(it.get("current_pnl_pct", 0.0)),
                 "realized_pnl_pct": float(it.get("realized_pnl_pct", 0.0)) if it.get("realized_pnl_pct") is not None else None,
+                "realized_pnl_net_pct": float(it.get("realized_pnl_net_pct", 0.0)) if it.get("realized_pnl_net_pct") is not None else None,
                 "hit_success": bool(it.get("hit_success", False)),
                 "is_completed": bool(it.get("is_completed", False)),
                 "failure_reason": it.get("failure_reason"),
                 "exit_price": float(it.get("exit_price", 0.0)) if it.get("exit_price") else None,
-                "exit_date": str(it.get("exit_date", "")) if it.get("exit_date") else None
+                "exit_date": str(it.get("exit_date", "")) if it.get("exit_date") else None,
+                "strategy_version": it.get("strategy_version", "v1.0.0"),
+                "rules": it.get("rules"),
+                "market_context": it.get("market_context"),
+                "fee_slippage_pct": float(it.get("fee_slippage_pct", 0.25))
             }
             records.append(rec)
 
-        client.table("recommendation_history").upsert(
-            records,
-            on_conflict="date,ticker"
-        ).execute()
-        return True
+        try:
+            client.table("recommendation_history").upsert(
+                records,
+                on_conflict="date,ticker"
+            ).execute()
+            return True
+        except Exception as full_err:
+            # 신규 컬럼이 아직 마이그레이션되지 않은 기존 테이블의 경우 구버전 필드만으로 2차 시도
+            fallback_records = []
+            for r in records:
+                fb = dict(r)
+                fb.pop("strategy_version", None)
+                fb.pop("rules", None)
+                fb.pop("market_context", None)
+                fb.pop("fee_slippage_pct", None)
+                fb.pop("realized_pnl_net_pct", None)
+                fallback_records.append(fb)
+            client.table("recommendation_history").upsert(
+                fallback_records,
+                on_conflict="date,ticker"
+            ).execute()
+            return True
     except Exception as e:
         print(f"[DB] Supabase 추천 이력 업서트 실패: {e}")
         return False

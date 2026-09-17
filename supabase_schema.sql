@@ -22,14 +22,26 @@ CREATE TABLE IF NOT EXISTS recommendation_history (
     current_price NUMERIC,
     current_pnl_pct NUMERIC,
     realized_pnl_pct NUMERIC,
+    realized_pnl_net_pct NUMERIC,
     hit_success BOOLEAN DEFAULT FALSE,
     is_completed BOOLEAN DEFAULT FALSE,
     failure_reason TEXT,
     exit_price NUMERIC,
     exit_date DATE,
+    strategy_version VARCHAR(32) DEFAULT 'v1.0.0',
+    rules JSONB,
+    market_context JSONB,
+    fee_slippage_pct NUMERIC DEFAULT 0.25,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     CONSTRAINT unique_date_ticker UNIQUE (date, ticker)
 );
+
+-- 기존 테이블이 있을 경우 신규 컬럼 자동 추가 (안전 마이그레이션)
+ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS strategy_version VARCHAR(32) DEFAULT 'v1.0.0';
+ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS rules JSONB;
+ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS market_context JSONB;
+ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS fee_slippage_pct NUMERIC DEFAULT 0.25;
+ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS realized_pnl_net_pct NUMERIC;
 
 -- 2. 당일 추천 종목 스캔 캐시 테이블
 CREATE TABLE IF NOT EXISTS daily_recommendation_cache (

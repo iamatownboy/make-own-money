@@ -17,6 +17,24 @@ from .db import db_load_history, db_upsert_history_items, is_supabase_enabled
 HISTORY_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'recommendation_history.json')
 
 
+CURRENT_STRATEGY_VERSION = "v1.0.0"
+CURRENT_STRATEGY_RULES = {
+    "min_score": 68,
+    "min_rr": 1.20,
+    "holding_days": 20,
+    "risk_model": "dynamic_volume_profile",
+    "fee_slippage_pct": 0.25
+}
+
+def get_iso_timestamp() -> str:
+    """현재 시점의 ISO 8601 타임스탬프 (KST 기준) 반환"""
+    try:
+        kst = pytz.timezone('Asia/Seoul')
+        return datetime.now(kst).isoformat()
+    except Exception:
+        return datetime.now().isoformat()
+
+
 def get_ny_market_date_str() -> str:
     """미국 동부 뉴욕 증시(US/Eastern) 거래일 날짜 문자열 반환"""
     try:
@@ -119,6 +137,9 @@ def record_daily_recommendations(recs: List[Dict[str, Any]]):
         key = f"{rec_date_val}_{r['ticker']}"
         if key not in existing_keys:
             history.append({
+                'strategy_version': r.get('strategy_version', CURRENT_STRATEGY_VERSION),
+                'recommended_at': r.get('recommended_at', get_iso_timestamp()),
+                'market_date': rec_date_val,
                 'date': rec_date_val,
                 'ticker': r['ticker'],
                 'name': r['name'],
@@ -131,11 +152,17 @@ def record_daily_recommendations(recs: List[Dict[str, Any]]):
                 'ai_score': r.get('total_score', 80),
                 'tags': r.get('tags', []),
                 'pattern_status': r.get('pattern_status', '진입 적기'),
+                'rules': r.get('rules', CURRENT_STRATEGY_RULES.copy()),
+                'market_context': r.get('market_context', {'market_regime': '정상장세'}),
+                'fee_slippage_pct': r.get('fee_slippage_pct', 0.25),
                 'status': 'HOLD',  # HOLD, WIN_TARGET1, WIN_TARGET2, STOP_LOSS
                 'max_price': r['current_price'],
                 'current_price': r['current_price'],
                 'current_pnl_pct': 0.0,
-                'hit_success': False
+                'realized_pnl_pct': None,
+                'realized_pnl_net_pct': None,
+                'hit_success': False,
+                'is_completed': False
             })
             added_count += 1
             
@@ -244,26 +271,55 @@ def get_adaptive_factor_weights() -> Dict[str, Any]:
                 else:
                     factor_stats[norm_tag]['losses'] += 1
 
-    # 팩터 가중치 조정값 산출 (통계적 왜곡 방지: 최소 10회 이상 표본 누적 시에만 유의미한 가중치 보정)
-    MIN_SAMPLE_THRESHOLD = 10
+    # 팩터 가중치 조정값 산출 (통계적 과적합 방지: 표본 단계별 보정 상한 적용)
+    # - 0~29건: 실험 단계, 가중치 변경 금지 (0점 고정)
+    # - 30~99건: 참고 단계 (오차범위 ±18%p) -> 최대 ±2점 극히 제한 보정
+    # - 100~299건: 1차 평가 가능 단계 (오차범위 ±10%p) -> 최대 ±5점 제한 보정
+    # - 300건 이상: 통계적 안정 단계 -> 전체 반영
     factor_adjustments = {}
     boosted_factors = []
     penalized_factors = []
 
     for tag, stats in factor_stats.items():
         total = stats['total']
-        if total >= MIN_SAMPLE_THRESHOLD:
-            win_rate = (stats['wins'] / total) * 100
-            if win_rate >= 70:
-                adj = 5 if win_rate >= 80 else 3
-                factor_adjustments[tag] = adj
-                boosted_factors.append({'tag': tag, 'win_rate': round(win_rate, 1), 'adj': f"+{adj}점 (우수 팩터 가산)"})
-            elif win_rate <= 40:
-                adj = -10 if win_rate <= 25 else -6
-                factor_adjustments[tag] = adj
-                penalized_factors.append({'tag': tag, 'win_rate': round(win_rate, 1), 'adj': f"{adj}점 (실패율 과다 감점)"})
-            else:
-                factor_adjustments[tag] = 0
+        if total < 30:
+            # 0~29건: 실험 단계, 가중치 동결
+            factor_adjustments[tag] = 0
+            continue
+
+        win_rate = (stats['wins'] / total) * 100
+        if win_rate >= 70:
+            raw_adj = 5 if win_rate >= 80 else 3
+        elif win_rate <= 40:
+            raw_adj = -10 if win_rate <= 25 else -6
+        else:
+            raw_adj = 0
+
+        if total < 100:
+            # 30~99건: 참고 단계 (오차 ±18%p, ±2점 제한)
+            adj = max(-2, min(2, raw_adj))
+        elif total < 300:
+            # 100~299건: 1차 평가 단계 (오차 ±10%p, ±5점 제한)
+            adj = max(-5, min(5, raw_adj))
+        else:
+            # 300건 이상: 통계적 안정 단계
+            adj = raw_adj
+
+        factor_adjustments[tag] = adj
+        if adj > 0:
+            boosted_factors.append({
+                'tag': tag,
+                'win_rate': round(win_rate, 1),
+                'adj': f"+{adj}점 (표본 {total}건)",
+                'samples': total
+            })
+        elif adj < 0:
+            penalized_factors.append({
+                'tag': tag,
+                'win_rate': round(win_rate, 1),
+                'adj': f"{adj}점 (표본 {total}건)",
+                'samples': total
+            })
 
     return {
         'factor_adjustments': factor_adjustments,
@@ -381,6 +437,7 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
                         item['exit_date'] = str(bar_date.date())
                         realized_pnl = round(((sl / rec_p) - 1) * 100, 2)
                         item['realized_pnl_pct'] = realized_pnl
+                        item['realized_pnl_net_pct'] = round(realized_pnl - item.get('fee_slippage_pct', 0.25), 2)
                         diagnosis = diagnose_failure_reason(item, df_after.loc[:bar_date], df)
                         item['failure_reason'] = diagnosis['full_diagnosis']
                         completed_samples += 1
@@ -395,6 +452,7 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
                         item['exit_date'] = str(bar_date.date())
                         realized_pnl = round(((sl / rec_p) - 1) * 100, 2)
                         item['realized_pnl_pct'] = realized_pnl
+                        item['realized_pnl_net_pct'] = round(realized_pnl - item.get('fee_slippage_pct', 0.25), 2)
                         diagnosis = diagnose_failure_reason(item, df_after.loc[:bar_date], df)
                         item['failure_reason'] = diagnosis['full_diagnosis']
                         completed_samples += 1
@@ -409,6 +467,7 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
                         item['exit_date'] = str(bar_date.date())
                         realized_pnl = round(((t1 / rec_p) - 1) * 100, 2)
                         item['realized_pnl_pct'] = realized_pnl
+                        item['realized_pnl_net_pct'] = round(realized_pnl - item.get('fee_slippage_pct', 0.25), 2)
                         item['failure_reason'] = None
                         completed_samples += 1
                         wins += 1
@@ -425,6 +484,7 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
                         item['exit_price'] = round(exit_p, 2)
                         item['exit_date'] = str(df_after.index[-1].date())
                         item['realized_pnl_pct'] = realized_pnl
+                        item['realized_pnl_net_pct'] = round(realized_pnl - item.get('fee_slippage_pct', 0.25), 2)
                         item['hit_success'] = (exit_p >= rec_p)
                         item['status'] = '기간 만료 마감'
                         if not item['hit_success']:
@@ -455,6 +515,47 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
     win_rate = (wins / completed_samples * 100) if completed_samples > 0 else 0.0
     avg_return = np.mean(total_pnls) if total_pnls else 0.0
     
+    # 정밀 퀀트 통계: 기대값(Expected Value), Profit Factor, 수수료 차감 순손익
+    losses = completed_samples - wins
+    win_pnls = [p for p in total_pnls if p > 0]
+    loss_pnls = [p for p in total_pnls if p <= 0]
+    
+    avg_win = float(np.mean(win_pnls)) if win_pnls else 0.0
+    avg_loss = float(np.mean(loss_pnls)) if loss_pnls else 0.0
+    
+    sum_win = float(sum(win_pnls)) if win_pnls else 0.0
+    sum_loss = float(abs(sum(loss_pnls))) if loss_pnls else 0.0
+    profit_factor = round(sum_win / sum_loss, 2) if sum_loss > 0 else (99.9 if sum_win > 0 else 0.0)
+    
+    # 1회 추천당 통계적 기대값: (승률 * 평균수익) - (패배율 * 평균손실) - 0.25%(수수료/슬리피지)
+    if completed_samples > 0:
+        p_win = wins / completed_samples
+        p_loss = losses / completed_samples
+        expected_value = round((p_win * avg_win) - (p_loss * abs(avg_loss)) - 0.25, 2)
+    else:
+        expected_value = 0.0
+        
+    total_net_pnls = [p - 0.25 for p in total_pnls]
+    avg_return_net = round(float(np.mean(total_net_pnls)), 2) if total_net_pnls else 0.0
+    
+    # 표본 수에 따른 통계적 신뢰도 단계 판정 (과최적화 방지 안내)
+    if completed_samples < 30:
+        sample_tier = "실험 단계 (0~29건)"
+        sample_tier_desc = "표본 축적 단계로, 통계적 왜곡 방지를 위해 가중치 변경이 동결되어 있습니다."
+        sample_error_margin = "±20%p 이상"
+    elif completed_samples < 100:
+        sample_tier = "참고 단계 (30~99건)"
+        sample_tier_desc = "성과 추세 파악이 가능하며, 팩터 가중치는 최대 ±2점으로 극히 제한 보정됩니다."
+        sample_error_margin = "대략 ±18%p"
+    elif completed_samples < 300:
+        sample_tier = "1차 평가 단계 (100~299건)"
+        sample_tier_desc = "전략의 유효성 검증이 가능하며, 팩터 가중치는 최대 ±5점으로 제한 보정됩니다."
+        sample_error_margin = "대략 ±10%p"
+    else:
+        sample_tier = "통계적 안정 단계 (300건 이상)"
+        sample_tier_desc = "시장 환경별 세부 분석 및 가중치 능동 보정이 유효한 단계입니다."
+        sample_error_margin = "±5%p 이내"
+    
     best_factors = []
     for tag, counts in factor_hits.items():
         if counts['total'] >= 1:
@@ -469,12 +570,23 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
     adaptive_weights = get_adaptive_factor_weights()
     
     return {
+        'strategy_version': CURRENT_STRATEGY_VERSION,
+        'strategy_rules': CURRENT_STRATEGY_RULES,
         'total_recs': len(history),
         'completed_count': completed_samples,
         'ongoing_count': ongoing_count,
         'wins': wins,
+        'losses': losses,
         'win_rate': round(win_rate, 1),
         'avg_return': round(avg_return, 1),
+        'avg_return_net': avg_return_net,
+        'avg_win': round(avg_win, 2),
+        'avg_loss': round(avg_loss, 2),
+        'expected_value': expected_value,
+        'profit_factor': profit_factor,
+        'sample_tier': sample_tier,
+        'sample_tier_desc': sample_tier_desc,
+        'sample_error_margin': sample_error_margin,
         'history_items': history[::-1],
         'best_factors': best_factors[:4],
         'adaptive_weights': adaptive_weights

@@ -195,8 +195,9 @@ def backtest_pattern_reliability(df: pd.DataFrame, pattern_type: str = 'auto', h
                 
         if is_hit:
             exit_price = float(data['Close'].iloc[i + holding_days])
-            ret = ((exit_price / close_curr) - 1) * 100
-            signals.append(ret)
+            gross_ret = ((exit_price / close_curr) - 1) * 100
+            net_ret = gross_ret - 0.25  # 왕복 거래 수수료 및 슬리피지(0.25%) 차감
+            signals.append(net_ret)
             
     if not signals:
         return {'sample_count': 0, 'win_rate': None, 'avg_return': None, 'status': '과거 2년 동일 시그널 부재', 'pattern_tested': pattern_type}
@@ -209,8 +210,9 @@ def backtest_pattern_reliability(df: pd.DataFrame, pattern_type: str = 'auto', h
         'sample_count': len(signals),
         'win_rate': round(win_rate, 1),
         'avg_return': round(avg_ret, 1),
-        'status': '검증 완료',
-        'pattern_tested': pattern_type
+        'status': '검증 완료 (비용 0.25% 차감)',
+        'pattern_tested': pattern_type,
+        'fee_slippage_applied': True
     }
 
 
@@ -480,6 +482,9 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
             'stop_loss_pct': stop_loss_pct,
             'risk_reward_ratio': risk_reward_ratio,
             'is_qualified': is_qualified,
+            'strategy_version': 'v1.0.0',
+            'rules': {'min_score': 68, 'min_rr': 1.20, 'holding_days': 20},
+            'fee_slippage_pct': 0.25,
             'atr': pred.get('atr', round(curr_price * 0.03, 2)),
             'updated_at': datetime.now().strftime('%Y-%m-%d %H:%M')
         }

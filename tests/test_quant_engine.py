@@ -331,7 +331,7 @@ def test_supabase_fallback_and_deduplication(monkeypatch, tmp_path):
     assert saved_data[0]['ticker'] == 'NVDA'
 
 
-# 9. 최근 14일 내 손절 종목 쿨다운 및 팩터 가중치 보정(N>=10) 검증
+# 9. 최근 14일 내 손절 종목 쿨다운 및 표본 단계별(Tiered) 팩터 가중치 보정 상한 검증
 def test_cooldown_and_adaptive_weights(monkeypatch, tmp_path):
     test_hist_file = str(tmp_path / "test_history.json")
     monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
@@ -355,16 +355,44 @@ def test_cooldown_and_adaptive_weights(monkeypatch, tmp_path):
         }
     ]
     
-    # 특정 정규화 태그에 대해 10회 이상 성공 데이터 생성 -> 가중치 가산 대상
-    for idx in range(11):
+    # 1. 20건 생성 (표본 < 30건): 가중치 동결 (adjustment == 0)
+    for idx in range(20):
         mock_history.append({
             'date': '2026-01-01',
-            'ticker': f'WIN_{idx}',
+            'ticker': f'WIN_SMALL_{idx}',
             'name': f'윈_{idx}',
             'rec_price': 50.0,
             'target_price': 60.0,
             'stop_loss': 47.0,
-            'tags': ['월가괴리_25이상'],
+            'tags': ['소표본태그'],
+            'is_completed': True,
+            'hit_success': True
+        })
+
+    # 2. 40건 생성 (30 <= 표본 < 100건): 최대 ±2점 제한 보정
+    for idx in range(40):
+        mock_history.append({
+            'date': '2026-01-01',
+            'ticker': f'WIN_MID_{idx}',
+            'name': f'윈_{idx}',
+            'rec_price': 50.0,
+            'target_price': 60.0,
+            'stop_loss': 47.0,
+            'tags': ['중표본태그'],
+            'is_completed': True,
+            'hit_success': True  # 승률 100%이지만 40건이므로 최대 +2점
+        })
+
+    # 3. 120건 생성 (100 <= 표본 < 300건): 최대 ±5점 보정
+    for idx in range(120):
+        mock_history.append({
+            'date': '2026-01-01',
+            'ticker': f'WIN_LARGE_{idx}',
+            'name': f'윈_{idx}',
+            'rec_price': 50.0,
+            'target_price': 60.0,
+            'stop_loss': 47.0,
+            'tags': ['대표본태그'],
             'is_completed': True,
             'hit_success': True
         })
@@ -376,6 +404,105 @@ def test_cooldown_and_adaptive_weights(monkeypatch, tmp_path):
     assert 'BAD_STOCK' in weights['cooldown_tickers']
     assert weights['cooldown_tickers']['BAD_STOCK']['penalty'] == -12
 
-    # 2. 팩터 보정 검증 (11회 표본, 100% 승률 -> +5점 가산)
-    assert '월가괴리_25이상' in weights['factor_adjustments']
-    assert weights['factor_adjustments']['월가괴리_25이상'] >= 3
+    # 2. 표본 단계별 보정 제한 검증
+    # 표본 20건 (30미만) -> 가중치 0점 (동결)
+    assert weights['factor_adjustments'].get('소표본태그', 0) == 0
+
+    # 표본 40건 (30~99건) -> 100% 승률이라도 +2점으로 상한 제한
+    assert weights['factor_adjustments']['중표본태그'] == 2
+
+    # 표본 120건 (100~299건) -> 100% 승률 시 +5점으로 보정
+    assert weights['factor_adjustments']['대표본태그'] == 5
+
+
+# 10. 전략 버전 (v1.0.0) 및 룰셋 메타데이터 기록 검증
+def test_strategy_version_and_metadata(monkeypatch, tmp_path):
+    test_hist_file = str(tmp_path / "test_history.json")
+    monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
+    monkeypatch.setattr("quant_core.tracker.is_supabase_enabled", lambda: False)
+
+    from quant_core.tracker import CURRENT_STRATEGY_VERSION, CURRENT_STRATEGY_RULES
+
+    assert CURRENT_STRATEGY_VERSION == "v1.0.0"
+    assert CURRENT_STRATEGY_RULES['min_score'] == 68
+    assert CURRENT_STRATEGY_RULES['min_rr'] == 1.20
+    assert CURRENT_STRATEGY_RULES['holding_days'] == 20
+
+    item = {
+        'date': '2026-09-17',
+        'ticker': 'TSM',
+        'name': 'TSMC',
+        'current_price': 417.0,
+        'bull_target_1': 440.0,
+        'stop_loss': 400.0,
+        'tags': ['피보나치지지']
+    }
+    history = record_daily_recommendations([item])
+    assert len(history) == 1
+    rec = history[0]
+    assert rec['strategy_version'] == "v1.0.0"
+    assert 'rules' in rec
+    assert rec['rules']['min_score'] == 68
+    assert rec['fee_slippage_pct'] == 0.25
+    assert 'recommended_at' in rec
+
+
+# 11. 기대값 (Expected Value) 및 Profit Factor 정밀 계산 검증
+def test_expectancy_and_profit_factor_calculation(monkeypatch, tmp_path):
+    test_hist_file = str(tmp_path / "test_history.json")
+    monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
+    monkeypatch.setattr("quant_core.tracker.is_supabase_enabled", lambda: False)
+
+    # 10개 표본 생성: 7승 (+10%씩), 3패 (-5%씩)
+    # 총 이익: +70%, 총 손실: 15% -> Profit Factor = 70 / 15 = 4.67
+    # 승률: 70%, 패배율: 30%
+    # 기대값 = (0.7 * 10%) - (0.3 * 5%) - 0.25%(수수료) = 7.0 - 1.5 - 0.25 = +5.25%
+    mock_history = []
+    for idx in range(7):
+        mock_history.append({
+            'date': '2026-01-01',
+            'ticker': f'WIN_{idx}',
+            'name': f'윈_{idx}',
+            'rec_price': 100.0,
+            'target_price': 110.0,
+            'stop_loss': 95.0,
+            'is_completed': True,
+            'hit_success': True,
+            'realized_pnl_pct': 10.0,
+            'fee_slippage_pct': 0.25
+        })
+    for idx in range(3):
+        mock_history.append({
+            'date': '2026-01-01',
+            'ticker': f'LOSS_{idx}',
+            'name': f'로스_{idx}',
+            'rec_price': 100.0,
+            'target_price': 110.0,
+            'stop_loss': 95.0,
+            'is_completed': True,
+            'hit_success': False,
+            'realized_pnl_pct': -5.0,
+            'fee_slippage_pct': 0.25
+        })
+
+    save_history(mock_history)
+    
+    class MockTicker:
+        def __init__(self, ticker):
+            pass
+        def history(self, *args, **kwargs):
+            return pd.DataFrame()
+
+    monkeypatch.setattr("yfinance.Ticker", MockTicker)
+    
+    # 완료 표본 평가 (네트워크 호출 없이 순수 수학 계산 검증)
+    res = evaluate_and_learn_from_history()
+    
+    assert res['completed_count'] == 10
+    assert res['wins'] == 7
+    assert res['win_rate'] == 70.0
+    assert res['profit_factor'] == 4.67
+    assert res['expected_value'] == 5.25
+    assert '실험 단계' in res['sample_tier']
+    assert res['avg_win'] == 10.0
+    assert res['avg_loss'] == -5.0

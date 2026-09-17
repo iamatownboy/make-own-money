@@ -368,7 +368,8 @@ with tab_rec:
             else:
                 fail_hint = "폴백 모드"
             db_badge = f'<span style="font-size:11px; background:#1e293b; color:#94a3b8; padding:2px 8px; border-radius:12px; border:1px solid #475569; font-weight:500; margin-left:8px;" title="{diag.get("last_error", "")}">⚪ 로컬 스토리지 모드 ({fail_hint})</span>'
-        st.markdown(f"<h3 style='margin:0; font-weight:800; color:#ffffff; display:flex; align-items:center;'>오늘의 나스닥 퀀트 유망주 Top 7 {db_badge}</h3>", unsafe_allow_html=True)
+        version_badge = '<span style="font-size:11px; background:#1e293b; color:#38bdf8; padding:2px 8px; border-radius:12px; border:1px solid #0284c7; font-weight:600; margin-left:8px;">Strategy v1.0.0</span>'
+        st.markdown(f"<h3 style='margin:0; font-weight:800; color:#ffffff; display:flex; align-items:center;'>오늘의 나스닥 퀀트 유망주 Top 7 {version_badge} {db_badge}</h3>", unsafe_allow_html=True)
         st.caption("피보나치 지지·빗각 돌파·다이버전스 타점 및 최소 손익비(1.20:1 이상)·최소 퀀트 점수(68점 이상) 커트라인을 통과한 엄선 종목입니다. (뉴욕 증시 거래일 기준)")
     with top_col2:
         top_btn1, top_btn2 = st.columns([1.7, 1])
@@ -642,18 +643,58 @@ with tab_rec:
                     track_res = evaluate_and_learn_from_history()
                     adaptive = track_res.get('adaptive_weights', {})
                     
-                    if track_res.get('completed_count', 0) > 0:
+                    comp_cnt = track_res.get('completed_count', 0)
+                    ong_cnt = track_res.get('ongoing_count', 0)
+                    tot_cnt = track_res.get('total_recs', 0)
+                    ev_val = track_res.get('expected_value', 0.0)
+                    pf_val = track_res.get('profit_factor', 0.0)
+                    win_r = track_res.get('win_rate', 0.0)
+                    net_ret = track_res.get('avg_return_net', 0.0)
+
+                    # 1. 통계적 신뢰도 단계 인디케이터 배너
+                    st.markdown(f"""
+                    <div style="background:#171922; border-left:4px solid #3b82f6; padding:10px 14px; border-radius:8px; margin-bottom:12px; font-size:12.5px; line-height:1.6;">
+                        <div style="font-weight:700; color:#ffffff;">📊 표본 신뢰도: <span style="color:#60a5fa;">{track_res.get('sample_tier', '실험 단계')}</span> (오차범위: {track_res.get('sample_error_margin', '±20%p 이상')})</div>
+                        <div style="color:#9ba0b4; font-size:12px; margin-top:2px;">{track_res.get('sample_tier_desc', '')}</div>
+                        <div style="color:#6b7280; font-size:11px; margin-top:4px;">• <b>동결 전략 규칙 (v1.0.0)</b>: 최소 점수 68점 · 최소 손익비 1.20:1 · 20거래일 만료 · 동적 매물대 손익비 모델 (왕복비용 0.25% 차감)</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                    if comp_cnt > 0:
+                        # 4대 핵심 퀀트 메트릭 그리드
+                        ev_color = "#00e676" if ev_val >= 0 else "#f04452"
+                        net_color = "#00e676" if net_ret >= 0 else "#f04452"
                         st.markdown(f"""
-                        <div style="font-size:13px; line-height:1.7;">
-                            • <b>누적 추천 표본수</b>: {track_res['total_recs']}개 (완료 {track_res['completed_count']}건 · 진행 {track_res['ongoing_count']}건)<br>
-                            • <b>실제 적중 승률</b>: <b style="color:#00e676;">{track_res['win_rate']}%</b> ({track_res['wins']}승 {track_res['completed_count']-track_res['wins']}패)<br>
-                            • <b>평균 실현 손익률</b>: <b style="color:{'#00e676' if track_res['avg_return']>=0 else '#f04452'};">{track_res['avg_return']:+}%</b>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:8px; margin-bottom:12px;">
+                            <div style="background:#1f212c; border:1px solid #2e3242; border-radius:8px; padding:10px; text-align:center;">
+                                <div style="font-size:11px; color:#8b95a1; font-weight:600;">1회 기대값 (EV)</div>
+                                <div style="font-size:16px; font-weight:800; color:{ev_color}; margin-top:2px;">{ev_val:+}%</div>
+                                <div style="font-size:10px; color:#6b7280;">1회 추천당 장기기대</div>
+                            </div>
+                            <div style="background:#1f212c; border:1px solid #2e3242; border-radius:8px; padding:10px; text-align:center;">
+                                <div style="font-size:11px; color:#8b95a1; font-weight:600;">Profit Factor</div>
+                                <div style="font-size:16px; font-weight:800; color:#ffd700; margin-top:2px;">{pf_val}</div>
+                                <div style="font-size:10px; color:#6b7280;">총이익 / 총손실</div>
+                            </div>
+                            <div style="background:#1f212c; border:1px solid #2e3242; border-radius:8px; padding:10px; text-align:center;">
+                                <div style="font-size:11px; color:#8b95a1; font-weight:600;">실제 승률 (N= {comp_cnt})</div>
+                                <div style="font-size:16px; font-weight:800; color:#00e676; margin-top:2px;">{win_r}%</div>
+                                <div style="font-size:10px; color:#6b7280;">{track_res.get('wins', 0)}승 {track_res.get('losses', 0)}패</div>
+                            </div>
+                            <div style="background:#1f212c; border:1px solid #2e3242; border-radius:8px; padding:10px; text-align:center;">
+                                <div style="font-size:11px; color:#8b95a1; font-weight:600;">순수익률 (비용차감)</div>
+                                <div style="font-size:16px; font-weight:800; color:{net_color}; margin-top:2px;">{net_ret:+}%</div>
+                                <div style="font-size:10px; color:#6b7280;">수수료 0.25% 반영</div>
+                            </div>
+                        </div>
+                        <div style="font-size:12px; color:#8b90a4; margin-bottom:8px;">
+                            • 누적 추천: 총 {tot_cnt}개 (완료 {comp_cnt}건 · 진행 중 {ong_cnt}건) | 평균 이익 +{track_res.get('avg_win', 0.0)}% vs 평균 손실 {track_res.get('avg_loss', 0.0)}%
                         </div>
                         """, unsafe_allow_html=True)
                     else:
                         st.markdown(f"""
-                        <div style="font-size:12.5px; line-height:1.7; color:#d1d5db;">
-                            • <b>현재 상태</b>: <b>{track_res.get('ongoing_count', 0)}개 종목 실시간 성과 추적 중</b> (익절/손절 도달 시 자동 집계)
+                        <div style="font-size:12.5px; line-height:1.7; color:#d1d5db; margin-bottom:8px;">
+                            • <b>현재 상태</b>: <b>{ong_cnt}개 종목 실시간 성과 추적 중</b> (익절/손절 도달 시 기대값·Profit Factor 자동 산출)
                         </div>
                         """, unsafe_allow_html=True)
 
