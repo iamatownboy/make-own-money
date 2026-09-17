@@ -1,0 +1,40 @@
+name: Daily AI Quant Market Scan
+
+on:
+  schedule:
+    # 매주 화~토요일 한국 시간 오전 06:30 (미국 장 마감 후, UTC 21:30 월~금)
+    - cron: '30 21 * * 1-5'
+  workflow_dispatch: # GitHub 웹 UI에서 수동 실행 지원
+
+permissions:
+  contents: write
+
+jobs:
+  run-daily-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Daily 82-Stock AI Quant Scan & Learning
+        run: |
+          python scripts/daily_scan.py
+
+      - name: Commit and Push Updated History
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add daily_recommendations.json recommendation_history.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(auto): Update daily recommendations and history [skip ci]" && git push)
