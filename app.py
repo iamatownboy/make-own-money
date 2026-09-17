@@ -71,11 +71,21 @@ if "key" in st.query_params:
     except Exception:
         pass
 
+# 세션 인증 상태 기본값 안전 초기화 (AttributeError 원천 차단)
+if "is_authenticated" not in st.session_state:
+    st.session_state.is_authenticated = False
+
 # 1. Google OAuth 확인 (내 계정 tomsslee043@gmail.com 만 승인)
 google_login_rejected = False
 rejected_email = ""
 if hasattr(st, "user") and getattr(st.user, "is_logged_in", False):
-    current_user_email = (st.user.get("email") or "").strip().lower()
+    user_obj = st.user
+    current_user_email = ""
+    if hasattr(user_obj, "email") and user_obj.email:
+        current_user_email = str(user_obj.email).strip().lower()
+    elif isinstance(user_obj, dict) and user_obj.get("email"):
+        current_user_email = str(user_obj["email"]).strip().lower()
+
     if current_user_email in AUTHORIZED_EMAILS:
         st.session_state.is_authenticated = True
     else:
@@ -83,7 +93,7 @@ if hasattr(st, "user") and getattr(st.user, "is_logged_in", False):
         rejected_email = current_user_email
 
 # 2. 클라우드 환경에서 미인증 시 전용 로그인 폼 렌더링 후 정지
-if is_cloud and not st.session_state.is_authenticated:
+if is_cloud and not st.session_state.get("is_authenticated", False):
     st.markdown("""
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
