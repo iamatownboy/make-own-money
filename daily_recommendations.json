@@ -1,5 +1,567 @@
 {
   "date": "2026-09-17",
-  "updated_at": "2026-09-17 18:13:37",
-  "recommendations": []
+  "updated_at": "2026-09-17 18:23:11",
+  "recommendations": [
+    {
+      "ticker": "TSM",
+      "name": "TSMC",
+      "category": "파운드리 반도체",
+      "current_price": 417.72,
+      "prev_price": 412.64,
+      "change_pct": 1.23,
+      "has_analyst_target": true,
+      "target_price": 551.26,
+      "upside_pct": 32.0,
+      "analyst_count": 20,
+      "total_score": 83,
+      "tech_score": 28,
+      "fund_score": 30,
+      "mom_score": 25,
+      "pattern_status": "타점 임박",
+      "status_color": "#ffd700",
+      "tags": [
+        "피보나치지지",
+        "빗각돌파임박",
+        "반등캔들출현",
+        "월가목표+32%"
+      ],
+      "core_reasons": [
+        {
+          "category": "기술적 패턴 타점",
+          "text": "피보나치 0.618~0.500 되돌림 지지선($412.21) 부근에서 하방 경직성을 확보하고 있습니다."
+        },
+        {
+          "category": "기술적 패턴 타점",
+          "text": "하락 추세 저항선($399.08) 부근에 근접하여 방향성 분기점에 위치해 있습니다."
+        },
+        {
+          "category": "기술적 패턴 타점",
+          "text": "지지 구간 부근에서 아래꼬리 망치형 캔들 (저가 매수세 유입) 형태의 반등 캔들이 형성되었습니다."
+        },
+        {
+          "category": "기본적 펀더멘털",
+          "text": "월가 애널리스트(20명) 평균 목표가 $551.26 기준 +32.0% 괴리율이 집계되었습니다."
+        }
+      ],
+      "fibonacci": {
+        "swing_high": 477.72,
+        "swing_low": 371.72,
+        "fib_236": 452.7,
+        "fib_382": 437.23,
+        "fib_500": 424.72,
+        "fib_618": 412.21,
+        "fib_786": 394.41,
+        "is_in_golden_pocket": true,
+        "is_at_fib_382": false,
+        "status_desc": "피보나치 0.618~0.5 지지 구간 (되돌림 지지 타점)"
+      },
+      "trendline": {
+        "is_breakout": false,
+        "is_approaching": true,
+        "trendline_value": 399.08,
+        "slope": -0.6296,
+        "status": "하락 빗각 상단 턱밑 도달 (돌파 임박)"
+      },
+      "divergence": {
+        "has_divergence": false,
+        "status": "다이버전스 없음"
+      },
+      "backtest_stats": {
+        "sample_count": 58,
+        "win_rate": 69.0,
+        "avg_return": 4.5,
+        "status": "검증 완료"
+      },
+      "bull_target_1": 440.41,
+      "bull_target_2": 454.02,
+      "stop_loss": 402.5,
+      "target_1_pct": 5.4,
+      "target_2_pct": 8.7,
+      "stop_loss_pct": -3.6,
+      "risk_reward_ratio": 1.49,
+      "is_qualified": true,
+      "atr": 10.15,
+      "updated_at": "2026-09-17 18:23"
+    },
+    {
+      "ticker": "GOOGL",
+      "name": "알파벳 (구글)",
+      "category": "검색/AI",
+      "current_price": 342.87,
+      "prev_price": 344.98,
+      "change_pct": -0.61,
+      "has_analyst_target": true,
+      "target_price": 428.07,
+      "upside_pct": 24.8,
+      "analyst_count": 54,
+      "total_score": 77,
+      "tech_score": 33,
+      "fund_score": 26,
+      "mom_score": 18,
+      "pattern_status": "타점 임박",
+      "status_color": "#ffd700",
+      "tags": [
+        "피보나치지지",
+        "빗각돌파임박",
+        "상승다이버전스",
+        "매출고성장"
+      ],
+      "core_reasons": [
+        {
+          "category": "기술적 패턴 타점",
+          "text": "피보나치 0.618~0.500 되돌림 지지선($341.26) 부근에서 하방 경직성을 확보하고 있습니다."
+        },
+        {
+          "category": "기술적 패턴 타점",
+          "text": "하락 추세 저항선($324.24) 부근에 근접하여 방향성 분기점에 위치해 있습니다."
+        },
+        {
+          "category": "기술적 패턴 타점",
+          "text": "주가 신저가 대비 RSI 저점이 상승하는 다이버전스가 포착되어 단기 하락 모멘텀 둔화가 확인되었습니다."
+        },
+        {
+          "category": "기본적 펀더멘털",
+          "text": "월가 평균 목표주가($428.07) 기준 +24.8% 상승 여력이 집계되었습니다."
+        }
+      ],
+      "fibonacci": {
+        "swing_high": 384.23,
+        "swing_low": 314.7,
+        "fib_236": 367.82,
+        "fib_382": 357.67,
+        "fib_500": 349.47,
+        "fib_618": 341.26,
+        "fib_786": 329.58,
+        "is_in_golden_pocket": true,
+        "is_at_fib_382": false,
+        "status_desc": "피보나치 0.618~0.5 지지 구간 (되돌림 지지 타점)"
+      },
+      "trendline": {
+        "is_breakout": false,
+        "is_approaching": true,
+        "trendline_value": 324.24,
+        "slope": -1.1811,
+        "status": "하락 빗각 상단 턱밑 도달 (돌파 임박)"
+      },
+      "divergence": {
+        "has_divergence": true,
+        "status": "RSI 상승 다이버전스 발생 (강력 바닥 턴어라운드)"
+      },
+      "backtest_stats": {
+        "sample_count": 68,
+        "win_rate": 73.5,
+        "avg_return": 5.7,
+        "status": "검증 완료"
+      },
+      "bull_target_1": 360.1,
+      "bull_target_2": 370.44,
+      "stop_loss": 331.31,
+      "target_1_pct": 5.0,
+      "target_2_pct": 8.0,
+      "stop_loss_pct": -3.4,
+      "risk_reward_ratio": 1.49,
+      "is_qualified": true,
+      "atr": 7.71,
+      "updated_at": "2026-09-17 18:23"
+    },
+    {
+      "ticker": "NVDA",
+      "name": "엔비디아",
+      "category": "AI 반도체",
+      "current_price": 213.9,
+      "prev_price": 212.17,
+      "change_pct": 0.82,
+      "has_analyst_target": true,
+      "target_price": 328.66,
+      "upside_pct": 53.7,
+      "analyst_count": 58,
+      "total_score": 75,
+      "tech_score": 30,
+      "fund_score": 30,
+      "mom_score": 15,
+      "pattern_status": "진입 적기",
+      "status_color": "#00e676",
+      "tags": [
+        "피보나치지지",
+        "상승다이버전스",
+        "반등캔들출현",
+        "월가목표+53%"
+      ],
+      "core_reasons": [
+        {
+          "category": "기술적 패턴 타점",
+          "text": "피보나치 0.618~0.500 되돌림 지지선($206.74) 부근에서 하방 경직성을 확보하고 있습니다."
+        },
+        {
+          "category": "기술적 패턴 타점",
+          "text": "주가 신저가 대비 RSI 저점이 상승하는 다이버전스가 포착되어 단기 하락 모멘텀 둔화가 확인되었습니다."
+        },
+        {
+          "category": "기술적 패턴 타점",
+          "text": "지지 구간 부근에서 아래꼬리 망치형 캔들 (저가 매수세 유입) 형태의 반등 캔들이 형성되었습니다."
+        },
+        {
+          "category": "기본적 펀더멘털",
+          "text": "월가 애널리스트(58명) 평균 목표가 $328.66 기준 +53.7% 괴리율이 집계되었습니다."
+        }
+      ],
+      "fibonacci": {
+        "swing_high": 234.5,
+        "swing_low": 189.59,
+        "fib_236": 223.9,
+        "fib_382": 217.34,
+        "fib_500": 212.04,
+        "fib_618": 206.74,
+        "fib_786": 199.2,
+        "is_in_golden_pocket": true,
+        "is_at_fib_382": true,
+        "status_desc": "피보나치 0.618~0.5 지지 구간 (되돌림 지지 타점)"
+      },
+      "trendline": {
+        "is_breakout": false,
+        "status": "하락 빗각 미형성"
+      },
+      "divergence": {
+        "has_divergence": true,
+        "status": "RSI 상승 다이버전스 발생 (강력 바닥 턴어라운드)"
+      },
+      "backtest_stats": {
+        "sample_count": 73,
+        "win_rate": 53.4,
+        "avg_return": 0.5,
+        "status": "검증 완료"
+      },
+      "bull_target_1": 230.72,
+      "bull_target_2": 240.82,
+      "stop_loss": 202.61,
+      "target_1_pct": 7.9,
+      "target_2_pct": 12.6,
+      "stop_loss_pct": -5.3,
+      "risk_reward_ratio": 1.49,
+      "is_qualified": true,
+      "atr": 7.52,
+      "updated_at": "2026-09-17 18:23"
+    },
+    {
+      "ticker": "SE",
+      "name": "Sea Limited",
+      "category": "동남아 디지털 플랫폼",
+      "current_price": 103.5,
+      "prev_price": 102.65,
+      "change_pct": 0.83,
+      "has_analyst_target": true,
+      "target_price": 157.11,
+      "upside_pct": 51.8,
+      "analyst_count": 28,
+      "total_score": 71,
+      "tech_score": 28,
+      "fund_score": 25,
+      "mom_score": 18,
+      "pattern_status": "타점 임박",
+      "status_color": "#ffd700",
+      "tags": [
+        "피보나치지지",
+        "빗각돌파임박",
+        "반등캔들출현",
+        "월가목표+51%"
+      ],
+      "core_reasons": [
+        {
+          "category": "기술적 패턴 타점",
+          "text": "피보나치 0.618~0.500 되돌림 지지선($103.35) 부근에서 하방 경직성을 확보하고 있습니다."
+        },
+        {
+          "category": "기술적 패턴 타점",
+          "text": "하락 추세 저항선($95.29) 부근에 근접하여 방향성 분기점에 위치해 있습니다."
+        },
+        {
+          "category": "기술적 패턴 타점",
+          "text": "지지 구간 부근에서 아래꼬리 망치형 캔들 (저가 매수세 유입) 형태의 반등 캔들이 형성되었습니다."
+        },
+        {
+          "category": "기본적 펀더멘털",
+          "text": "월가 애널리스트(28명) 평균 목표가 $157.11 기준 +51.8% 괴리율이 집계되었습니다."
+        }
+      ],
+      "fibonacci": {
+        "swing_high": 131.94,
+        "swing_low": 85.67,
+        "fib_236": 121.02,
+        "fib_382": 114.26,
+        "fib_500": 108.81,
+        "fib_618": 103.35,
+        "fib_786": 95.57,
+        "is_in_golden_pocket": true,
+        "is_at_fib_382": false,
+        "status_desc": "피보나치 0.618~0.5 지지 구간 (되돌림 지지 타점)"
+      },
+      "trendline": {
+        "is_breakout": false,
+        "is_approaching": true,
+        "trendline_value": 95.29,
+        "slope": -0.4346,
+        "status": "하락 빗각 상단 턱밑 도달 (돌파 임박)"
+      },
+      "divergence": {
+        "has_divergence": false,
+        "status": "다이버전스 없음"
+      },
+      "backtest_stats": {
+        "sample_count": 59,
+        "win_rate": 69.5,
+        "avg_return": 4.2,
+        "status": "검증 완료"
+      },
+      "bull_target_1": 112.23,
+      "bull_target_2": 117.47,
+      "stop_loss": 97.64,
+      "target_1_pct": 8.4,
+      "target_2_pct": 13.5,
+      "stop_loss_pct": -5.7,
+      "risk_reward_ratio": 1.49,
+      "is_qualified": true,
+      "atr": 3.91,
+      "updated_at": "2026-09-17 18:23"
+    },
+    {
+      "ticker": "AMZN",
+      "name": "아마존",
+      "category": "이커머스/클라우드",
+      "current_price": 245.96,
+      "prev_price": 248.42,
+      "change_pct": -0.99,
+      "has_analyst_target": true,
+      "target_price": 328.17,
+      "upside_pct": 33.4,
+      "analyst_count": 60,
+      "total_score": 70,
+      "tech_score": 25,
+      "fund_score": 20,
+      "mom_score": 25,
+      "pattern_status": "진입 적기",
+      "status_color": "#00e676",
+      "tags": [
+        "피보나치지지",
+        "상승다이버전스",
+        "월가목표+33%",
+        "PEG저평가"
+      ],
+      "core_reasons": [
+        {
+          "category": "기술적 패턴 타점",
+          "text": "피보나치 0.618~0.500 되돌림 지지선($249.10) 부근에서 하방 경직성을 확보하고 있습니다."
+        },
+        {
+          "category": "기술적 패턴 타점",
+          "text": "주가 신저가 대비 RSI 저점이 상승하는 다이버전스가 포착되어 단기 하락 모멘텀 둔화가 확인되었습니다."
+        },
+        {
+          "category": "기본적 펀더멘털",
+          "text": "월가 애널리스트(60명) 평균 목표가 $328.17 기준 +33.4% 괴리율이 집계되었습니다."
+        },
+        {
+          "category": "과거 통계 검증",
+          "text": "과거 2년 동일 패턴 출현 시 승률 61.4% (평균 수익률 +3.0%, 83회)의 흐름을 보였습니다."
+        }
+      ],
+      "fibonacci": {
+        "swing_high": 287.2,
+        "swing_low": 225.55,
+        "fib_236": 272.65,
+        "fib_382": 263.65,
+        "fib_500": 256.38,
+        "fib_618": 249.1,
+        "fib_786": 238.74,
+        "is_in_golden_pocket": true,
+        "is_at_fib_382": false,
+        "status_desc": "피보나치 0.618~0.5 지지 구간 (되돌림 지지 타점)"
+      },
+      "trendline": {
+        "is_breakout": false,
+        "status": "하락 빗각 미형성"
+      },
+      "divergence": {
+        "has_divergence": true,
+        "status": "RSI 상승 다이버전스 발생 (강력 바닥 턴어라운드)"
+      },
+      "backtest_stats": {
+        "sample_count": 83,
+        "win_rate": 61.4,
+        "avg_return": 3.0,
+        "status": "검증 완료"
+      },
+      "bull_target_1": 259.31,
+      "bull_target_2": 267.32,
+      "stop_loss": 237.01,
+      "target_1_pct": 5.4,
+      "target_2_pct": 8.7,
+      "stop_loss_pct": -3.6,
+      "risk_reward_ratio": 1.49,
+      "is_qualified": true,
+      "atr": 5.97,
+      "updated_at": "2026-09-17 18:23"
+    },
+    {
+      "ticker": "RDW",
+      "name": "레드와이어",
+      "category": "우주 부품/3D프린팅",
+      "current_price": 10.79,
+      "prev_price": 10.75,
+      "change_pct": 0.37,
+      "has_analyst_target": true,
+      "target_price": 14.69,
+      "upside_pct": 36.1,
+      "analyst_count": 8,
+      "total_score": 68,
+      "tech_score": 28,
+      "fund_score": 22,
+      "mom_score": 18,
+      "pattern_status": "타점 임박",
+      "status_color": "#ffd700",
+      "tags": [
+        "피보나치지지",
+        "빗각돌파임박",
+        "반등캔들출현",
+        "월가목표+36%"
+      ],
+      "core_reasons": [
+        {
+          "category": "기술적 패턴 타점",
+          "text": "피보나치 0.618~0.500 되돌림 지지선($10.22) 부근에서 하방 경직성을 확보하고 있습니다."
+        },
+        {
+          "category": "기술적 패턴 타점",
+          "text": "하락 추세 저항선($1.88) 부근에 근접하여 방향성 분기점에 위치해 있습니다."
+        },
+        {
+          "category": "기술적 패턴 타점",
+          "text": "지지 구간 부근에서 아래꼬리 망치형 캔들 (저가 매수세 유입) 형태의 반등 캔들이 형성되었습니다."
+        },
+        {
+          "category": "기본적 펀더멘털",
+          "text": "월가 애널리스트(8명) 평균 목표가 $14.69 기준 +36.1% 괴리율이 집계되었습니다."
+        }
+      ],
+      "fibonacci": {
+        "swing_high": 14.19,
+        "swing_low": 7.76,
+        "fib_236": 12.67,
+        "fib_382": 11.73,
+        "fib_500": 10.97,
+        "fib_618": 10.22,
+        "fib_786": 9.14,
+        "is_in_golden_pocket": true,
+        "is_at_fib_382": false,
+        "status_desc": "피보나치 0.618~0.5 지지 구간 (되돌림 지지 타점)"
+      },
+      "trendline": {
+        "is_breakout": false,
+        "is_approaching": true,
+        "trendline_value": 1.88,
+        "slope": -0.1913,
+        "status": "하락 빗각 상단 턱밑 도달 (돌파 임박)"
+      },
+      "divergence": {
+        "has_divergence": false,
+        "status": "다이버전스 없음"
+      },
+      "backtest_stats": {
+        "sample_count": 48,
+        "win_rate": 64.6,
+        "avg_return": 17.6,
+        "status": "검증 완료"
+      },
+      "bull_target_1": 12.1,
+      "bull_target_2": 12.89,
+      "stop_loss": 9.91,
+      "target_1_pct": 12.1,
+      "target_2_pct": 19.5,
+      "stop_loss_pct": -8.2,
+      "risk_reward_ratio": 1.49,
+      "is_qualified": true,
+      "atr": 0.59,
+      "updated_at": "2026-09-17 18:23"
+    },
+    {
+      "ticker": "SHOP",
+      "name": "쇼피파이",
+      "category": "이커머스 솔루션",
+      "current_price": 129.96,
+      "prev_price": 129.86,
+      "change_pct": 0.08,
+      "has_analyst_target": true,
+      "target_price": 172.77,
+      "upside_pct": 32.9,
+      "analyst_count": 48,
+      "total_score": 68,
+      "tech_score": 28,
+      "fund_score": 22,
+      "mom_score": 18,
+      "pattern_status": "타점 임박",
+      "status_color": "#ffd700",
+      "tags": [
+        "피보나치지지",
+        "빗각돌파임박",
+        "반등캔들출현",
+        "월가목표+32%"
+      ],
+      "core_reasons": [
+        {
+          "category": "기술적 패턴 타점",
+          "text": "피보나치 0.618~0.500 되돌림 지지선($126.64) 부근에서 하방 경직성을 확보하고 있습니다."
+        },
+        {
+          "category": "기술적 패턴 타점",
+          "text": "하락 추세 저항선($111.24) 부근에 근접하여 방향성 분기점에 위치해 있습니다."
+        },
+        {
+          "category": "기술적 패턴 타점",
+          "text": "지지 구간 부근에서 아래꼬리 망치형 캔들 (저가 매수세 유입) 형태의 반등 캔들이 형성되었습니다."
+        },
+        {
+          "category": "기본적 펀더멘털",
+          "text": "월가 애널리스트(48명) 평균 목표가 $172.77 기준 +32.9% 괴리율이 집계되었습니다."
+        }
+      ],
+      "fibonacci": {
+        "swing_high": 158.87,
+        "swing_low": 106.72,
+        "fib_236": 146.56,
+        "fib_382": 138.95,
+        "fib_500": 132.79,
+        "fib_618": 126.64,
+        "fib_786": 117.88,
+        "is_in_golden_pocket": true,
+        "is_at_fib_382": false,
+        "status_desc": "피보나치 0.618~0.5 지지 구간 (되돌림 지지 타점)"
+      },
+      "trendline": {
+        "is_breakout": false,
+        "is_approaching": true,
+        "trendline_value": 111.24,
+        "slope": -0.415,
+        "status": "하락 빗각 상단 턱밑 도달 (돌파 임박)"
+      },
+      "divergence": {
+        "has_divergence": false,
+        "status": "다이버전스 없음"
+      },
+      "backtest_stats": {
+        "sample_count": 72,
+        "win_rate": 66.7,
+        "avg_return": 4.5,
+        "status": "검증 완료"
+      },
+      "bull_target_1": 144.06,
+      "bull_target_2": 152.53,
+      "stop_loss": 120.5,
+      "target_1_pct": 10.8,
+      "target_2_pct": 17.4,
+      "stop_loss_pct": -7.3,
+      "risk_reward_ratio": 1.49,
+      "is_qualified": true,
+      "atr": 6.31,
+      "updated_at": "2026-09-17 18:23"
+    }
+  ]
 }

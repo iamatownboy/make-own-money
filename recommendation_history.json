@@ -248,5 +248,53 @@
     "current_pnl_pct": 0.0,
     "hit_success": false,
     "is_completed": false
+  },
+  {
+    "date": "2026-09-17",
+    "ticker": "RDW",
+    "name": "레드와이어",
+    "category": "우주 부품/3D프린팅",
+    "rec_price": 10.79,
+    "target_price": 12.1,
+    "target_price_2": 12.89,
+    "stop_loss": 9.91,
+    "expected_upside": 36.1,
+    "ai_score": 68,
+    "tags": [
+      "피보나치지지",
+      "빗각돌파임박",
+      "반등캔들출현",
+      "월가목표+36%"
+    ],
+    "pattern_status": "타점 임박",
+    "status": "HOLD",
+    "max_price": 10.79,
+    "current_price": 10.79,
+    "current_pnl_pct": 0.0,
+    "hit_success": false
+  },
+  {
+    "date": "2026-09-17",
+    "ticker": "SHOP",
+    "name": "쇼피파이",
+    "category": "이커머스 솔루션",
+    "rec_price": 129.96,
+    "target_price": 144.06,
+    "target_price_2": 152.53,
+    "stop_loss": 120.5,
+    "expected_upside": 32.9,
+    "ai_score": 68,
+    "tags": [
+      "피보나치지지",
+      "빗각돌파임박",
+      "반등캔들출현",
+      "월가목표+32%"
+    ],
+    "pattern_status": "타점 임박",
+    "status": "HOLD",
+    "max_price": 129.96,
+    "current_price": 129.96,
+    "current_pnl_pct": 0.0,
+    "hit_success": false
   }
 ]

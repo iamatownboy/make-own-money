@@ -379,10 +379,10 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
         potential_loss = max(0.01, curr_price - stop_loss)
         risk_reward_ratio = round(potential_gain / potential_loss, 2)
 
-        # 실전 진입 적격 여부 판정 (최소 점수 68점 & 손익비 1.2 이상 & 쿨다운 미해당)
+        # 실전 진입 적격 여부 판정 (최소 점수 65점 & 손익비 1.15 이상 & 쿨다운 미해당)
         is_qualified = (
-            total_score >= 68 and
-            risk_reward_ratio >= 1.2 and
+            total_score >= 65 and
+            risk_reward_ratio >= 1.15 and
             pattern_status != "쿨다운(반등확인)"
         )
         

@@ -177,8 +177,8 @@ def predict_price_scenarios(df: pd.DataFrame, days_ahead: int = 5) -> Dict[str, 
     r1 = sr['resistances'][0] if sr['resistances'] else (current_price + expected_move)
     r2 = sr['resistances'][1] if len(sr['resistances']) > 1 else (current_price + (expected_move * 1.5))
     
-    bull_target_1 = max(round(r1, 2), round(current_price + expected_move * 0.8, 2))
-    bull_target_2 = max(round(r2, 2), round(current_price + expected_move * 1.4, 2))
+    bull_target_1 = max(round(r1, 2), round(current_price + expected_move * 1.0, 2))
+    bull_target_2 = max(round(r2, 2), round(current_price + expected_move * 1.6, 2))
     
     # 2. Base Scenario (현재 추세 지속 시 예상치)
     direction = last.get('Supertrend_Direction', 1)
