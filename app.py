@@ -12,6 +12,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import json
 import os
+import hmac
 from datetime import datetime
 import yfinance as yf
 
@@ -61,21 +62,23 @@ try:
 except Exception:
     pass
 
+# 보안 강화: URL 쿼리스트링에 key 파라미터가 존재할 경우 주소창/로그 노출 방지를 위해 즉시 제거
+if "key" in st.query_params:
+    try:
+        st.query_params.clear()
+    except Exception:
+        pass
+
 if "is_authenticated" not in st.session_state:
     st.session_state.is_authenticated = False
 
-# 1. URL 파라미터 자동 인증 (Magic Link: ?key=townboy)
-url_key = str(st.query_params.get("key", "")).strip().lower()
-if url_key and url_key in ADMIN_PASSWORDS:
-    st.session_state.is_authenticated = True
-
-# 2. Google OAuth 확인 (st.user)
+# Google OAuth 확인 (st.user)
 if hasattr(st, "user") and getattr(st.user, "is_logged_in", False):
     current_user_email = (st.user.get("email") or "").strip().lower()
     if current_user_email in AUTHORIZED_EMAILS:
         st.session_state.is_authenticated = True
 
-# 3. 클라우드 환경에서 미인증 시 로그인 화면 렌더링 후 정지
+# 클라우드 환경에서 미인증 시 전용 로그인 폼 렌더링 후 정지 (URL 노출 차단 & 안전한 세션 인증)
 if is_cloud and not st.session_state.is_authenticated:
     st.markdown("""
     <style>
@@ -98,11 +101,13 @@ if is_cloud and not st.session_state.is_authenticated:
     
     col_l, col_center, col_r = st.columns([1, 1.2, 1])
     with col_center:
-        with st.form("admin_login_form"):
+        with st.form("admin_login_form", clear_on_submit=True):
             entered_pw = st.text_input("관리자 암호", type="password", placeholder="암호 입력 (기본: townboy)", label_visibility="collapsed")
             submit_btn = st.form_submit_button("🔑 대시보드 입장", use_container_width=True)
-            if submit_btn:
-                if entered_pw.strip().lower() in ADMIN_PASSWORDS:
+            if submit_btn and entered_pw:
+                pw_input = entered_pw.strip().lower()
+                is_valid = any(hmac.compare_digest(pw_input, valid_pw) for valid_pw in ADMIN_PASSWORDS)
+                if is_valid:
                     st.session_state.is_authenticated = True
                     st.success("인증되었습니다! 대시보드로 이동합니다...")
                     st.rerun()
@@ -338,10 +343,16 @@ with tab_rec:
         st.markdown(f"<h3 style='margin:0; font-weight:800; color:#ffffff; display:flex; align-items:center;'>오늘의 나스닥 퀀트 유망주 Top 7 {db_badge}</h3>", unsafe_allow_html=True)
         st.caption("피보나치 지지·빗각 돌파·다이버전스 타점 및 최소 손익비(1.2:1)·점수 커트라인을 통과한 엄선 종목입니다.")
     with top_col2:
-        if st.button("🔄 오늘자 패턴 재스캔", use_container_width=True):
-            with st.spinner("과거 패턴 통계 검증 및 다각도 퀀트 스캔을 진행 중입니다..."):
-                run_full_market_scan(force_refresh=True)
-            st.rerun()
+        top_btn1, top_btn2 = st.columns([1.7, 1])
+        with top_btn1:
+            if st.button("🔄 오늘자 재스캔", use_container_width=True):
+                with st.spinner("과거 패턴 통계 검증 및 다각도 퀀트 스캔을 진행 중입니다..."):
+                    run_full_market_scan(force_refresh=True)
+                st.rerun()
+        with top_btn2:
+            if st.button("🔒 로그아웃", use_container_width=True):
+                st.session_state.is_authenticated = False
+                st.rerun()
 
     recs = run_full_market_scan(force_refresh=False)
 
