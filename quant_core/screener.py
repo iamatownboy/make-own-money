@@ -238,25 +238,25 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
         # 1) 피보나치 지지
         if fib.get('is_in_golden_pocket'):
             tech_score += 15
-            reasons.append({'category': '기술적 패턴 타점', 'text': f"피보나치 0.618~0.500 황금 지지선(${fib['fib_618']:.2f})에 정확히 안착하며 강력한 기술적 반등 타점을 형성했어요."})
-            tags.append("피보나치황금지지")
+            reasons.append({'category': '기술적 패턴 타점', 'text': f"피보나치 0.618~0.500 되돌림 지지선(${fib['fib_618']:.2f}) 부근에서 하방 경직성을 확보하고 있습니다."})
+            tags.append("피보나치지지")
             pattern_status = "진입 적기"
             status_color = "#00e676"
         elif fib.get('is_at_fib_382'):
             tech_score += 12
-            reasons.append({'category': '기술적 패턴 타점', 'text': f"피보나치 0.382 지지선(${fib['fib_382']:.2f}) 위를 유지하며 강력한 상승 탄력을 보이고 있어요."})
+            reasons.append({'category': '기술적 패턴 타점', 'text': f"피보나치 0.382 지지선(${fib['fib_382']:.2f}) 상단을 유지하며 단기 추세를 보존하고 있습니다."})
             tags.append("피보나치0.382지지")
             
         # 2) 빗각(대각 추세선) 돌파
         if trendline.get('is_breakout'):
             tech_score += 15
-            reasons.append({'category': '기술적 패턴 타점', 'text': f"수개월간 주가를 억누르던 하락 빗각(대각 추세선 ${trendline['trendline_value']:.2f})을 위로 상향 돌파하며 대세 상승장 진입을 알렸어요."})
+            reasons.append({'category': '기술적 패턴 타점', 'text': f"하락 추세선(${trendline['trendline_value']:.2f})을 상향 돌파하여 단기 추세 반전 흐름을 보이고 있습니다."})
             tags.append("하락빗각돌파")
             pattern_status = "진입 적기"
             status_color = "#00e676"
         elif trendline.get('is_approaching'):
             tech_score += 8
-            reasons.append({'category': '기술적 패턴 타점', 'text': f"하락 빗각 저항선(${trendline['trendline_value']:.2f}) 턱밑까지 바짝 접근하여 돌파가 임박한 상태예요."})
+            reasons.append({'category': '기술적 패턴 타점', 'text': f"하락 추세 저항선(${trendline['trendline_value']:.2f}) 부근에 근접하여 방향성 분기점에 위치해 있습니다."})
             tags.append("빗각돌파임박")
             pattern_status = "타점 임박"
             status_color = "#ffd700"
@@ -264,13 +264,13 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
         # 3) RSI 상승 다이버전스
         if divergence.get('has_divergence'):
             tech_score += 10
-            reasons.append({'category': '기술적 패턴 타점', 'text': "주가는 바닥인데 매수세가 먼저 올라오는 'RSI 상승 다이버전스'가 포착되어 저가 매집이 확인됐어요."})
+            reasons.append({'category': '기술적 패턴 타점', 'text': "주가 신저가 대비 RSI 저점이 상승하는 다이버전스가 포착되어 단기 하락 모멘텀 둔화가 확인되었습니다."})
             tags.append("상승다이버전스")
             
         # 4) 아래꼬리 반등 캔들
         if reversal_candle.get('has_reversal_candle'):
             tech_score = min(40, tech_score + 5)
-            reasons.append({'category': '기술적 패턴 타점', 'text': f"지지선에서 {reversal_candle['type']}이 출현하며 저가 매수세의 방어 의지를 확인했어요."})
+            reasons.append({'category': '기술적 패턴 타점', 'text': f"지지 구간 부근에서 {reversal_candle['type']} 형태의 반등 캔들이 형성되었습니다."})
             tags.append("반등캔들출현")
             
         if tech_score == 0:
@@ -281,21 +281,21 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
         if has_analyst_target and upside_pct is not None:
             if upside_pct >= 25:
                 fund_score += 12
-                reasons.append({'category': '기본적 펀더멘털', 'text': f"월가 애널리스트({analyst_count or '다수'}명) 평균 목표가가 ${target_price:.2f}로 현재보다 +{upside_pct:.1f}% 추가 상승 여력이 집계되었어요."})
+                reasons.append({'category': '기본적 펀더멘털', 'text': f"월가 애널리스트({analyst_count or '다수'}명) 평균 목표가 ${target_price:.2f} 기준 +{upside_pct:.1f}% 괴리율이 집계되었습니다."})
                 tags.append(f"월가목표+{int(upside_pct)}%")
             elif upside_pct >= 12:
                 fund_score += 8
-                reasons.append({'category': '기본적 펀더멘털', 'text': f"월가 평균 목표주가(${target_price:.2f}) 기준 +{upside_pct:.1f}% 상승 여력이 남아있어요."})
+                reasons.append({'category': '기본적 펀더멘털', 'text': f"월가 평균 목표주가(${target_price:.2f}) 기준 +{upside_pct:.1f}% 상승 여력이 집계되었습니다."})
             elif upside_pct > 0:
                 fund_score += 5
         else:
-            reasons.append({'category': '기본적 펀더멘털', 'text': "월가 공식 애널리스트 목표가 집계가 없어 자체 재무 지표와 기술적 타점으로만 검증했어요."})
+            reasons.append({'category': '기본적 펀더멘털', 'text': "월가 공식 애널리스트 목표가 집계가 없어 자체 재무 지표와 기술적 지표로만 검증되었습니다."})
             tags.append("컨센서스미집계")
             
         # 2) 실적 성장성 (매출 및 영업이익률)
         if rev_growth >= 0.20:
             fund_score += 10
-            reasons.append({'category': '기본적 펀더멘털', 'text': f"최근 분기 매출 성장률이 +{rev_growth*100:.1f}%에 달해 펀더멘털 성장 엔진이 가동 중이에요."})
+            reasons.append({'category': '기본적 펀더멘털', 'text': f"최근 분기 매출 성장률이 +{rev_growth*100:.1f}%로 양호한 성장세를 나타내고 있습니다."})
             tags.append("매출고성장")
         elif rev_growth > 0:
             fund_score += 5
@@ -303,7 +303,7 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
         # 3) 영업이익률 & 밸류에이션(PEG)
         if op_margin >= 0.20:
             fund_score += 5
-            reasons.append({'category': '기본적 펀더멘털', 'text': f"영업이익률이 {op_margin*100:.1f}%에 달해 압도적인 수익성과 가격 결정력을 갖추고 있어요."})
+            reasons.append({'category': '기본적 펀더멘털', 'text': f"영업이익률이 {op_margin*100:.1f}%로 안정적인 마진율을 유지하고 있습니다."})
             tags.append("고마진우량주")
         if 0 < peg_ratio <= 1.5:
             fund_score += 3
@@ -314,14 +314,14 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
         if bt_stats['sample_count'] >= 3 and bt_stats['win_rate'] is not None:
             if bt_stats['win_rate'] >= 75:
                 mom_score += 15
-                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년간 동일 패턴 출현 시 승률 {bt_stats['win_rate']}% (평균 수익률 +{bt_stats['avg_return']}%, {bt_stats['sample_count']}회 검증)을 기록했어요."})
+                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년간 동일 패턴 출현 시 승률 {bt_stats['win_rate']}% (평균 수익률 +{bt_stats['avg_return']}%, {bt_stats['sample_count']}회 검증)을 기록했습니다."})
                 tags.append(f"백테스트승률{int(bt_stats['win_rate'])}%")
             elif bt_stats['win_rate'] >= 60:
                 mom_score += 10
-                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 동일 패턴 출현 시 승률 {bt_stats['win_rate']}% (평균 수익률 +{bt_stats['avg_return']}%, {bt_stats['sample_count']}회)의 안정적 흐름을 보였어요."})
+                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 동일 패턴 출현 시 승률 {bt_stats['win_rate']}% (평균 수익률 +{bt_stats['avg_return']}%, {bt_stats['sample_count']}회)의 흐름을 보였습니다."})
             elif bt_stats['win_rate'] < 50:
                 mom_score -= 5  # 과거 동일 패턴 승률 저조 시 감점!
-                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 동일 패턴 승률이 {bt_stats['win_rate']}%로 저조하여 보수적 감점(-5점)이 적용되었어요."})
+                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 동일 패턴 승률이 {bt_stats['win_rate']}%로 저조하여 보수적 감점(-5점)이 적용되었습니다."})
         else:
             mom_score += 5  # 중립 점수
             reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년간 유효한 동일 패턴 표본 수({bt_stats['sample_count']}회)가 적어 과거 승률 수치는 산출하지 않았습니다."})
@@ -332,11 +332,11 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
         drop_from_high = ((high_52 - curr_price) / high_52) * 100
         if drop_from_high <= 15:
             mom_score += 15
-            tags.append("신고가돌파권")
+            tags.append("신고가근접")
         else:
             mom_score += 8
 
-        # --- [4] AI 자가 학습 피드백 & 실패 페널티 적용 ---
+        # --- [4] 성과 피드백 & 실패 페널티 적용 ---
         if adaptive_data:
             factor_adjustments = adaptive_data.get('factor_adjustments', {})
             cooldown_tickers = adaptive_data.get('cooldown_tickers', {})
@@ -348,9 +348,9 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
                     adj = factor_adjustments[tag]
                     total_adj += adj
                     if adj < 0:
-                        reasons.append({'category': 'AI 피드백 보정', 'text': f"최근 '{tag}' 패턴의 실패율 상승으로 AI 자가 학습 감점({adj}점)이 적용되었어요."})
+                        reasons.append({'category': '성과 피드백 보정', 'text': f"최근 '{tag}' 패턴의 실패율 상승으로 가중치 페널티 감점({adj}점)이 적용되었습니다."})
                     elif adj > 0:
-                        reasons.append({'category': 'AI 피드백 보정', 'text': f"최근 '{tag}' 패턴의 고승률 유지로 AI 자가 학습 보너스(+{adj}점)가 가산되었어요."})
+                        reasons.append({'category': '성과 피드백 보정', 'text': f"최근 '{tag}' 패턴의 고승률 유지로 가중치 보너스(+{adj}점)가 가산되었습니다."})
             
             tech_score = max(0, tech_score + total_adj)
             
@@ -359,7 +359,7 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
                 cd_info = cooldown_tickers[ticker]
                 penalty = cd_info.get('penalty', -12)
                 mom_score = max(0, mom_score + penalty)
-                reasons.insert(0, {'category': '리스크 관리', 'text': f"최근 {cd_info['days_ago']}일 전 손절선 이탈({cd_info['reason']}) 이력으로 쿨다운 감점({penalty}점)이 적용되었어요."})
+                reasons.insert(0, {'category': '리스크 관리', 'text': f"최근 {cd_info['days_ago']}일 전 손절선 이탈({cd_info['reason']}) 이력으로 쿨다운 감점({penalty}점)이 적용되었습니다."})
                 tags.insert(0, "최근손절쿨다운")
                 pattern_status = "쿨다운(반등확인)"
                 status_color = "#f04452"

@@ -1,7 +1,7 @@
 """
 app.py
-토스증권(Toss Securities) WTS 스타일 1:1 완벽 벤치마킹 대시보드
-- 모드 1: 🔥 오늘의 AI 추천 종목 (피보나치·빗각돌파·다이버전스 & 백테스트 실증 검증)
+토스증권(Toss Securities) WTS 스타일 퀀트 트레이딩 대시보드
+- 모드 1: 🔥 오늘의 퀀트 유망주 (피보나치·추세선돌파·다이버전스 & 통계 실증 검증)
 - 모드 2: 💼 내 보유 포트폴리오 (토스 WTS 뷰 & 실시간 계좌)
 """
 
@@ -22,7 +22,7 @@ from quant_core.screener import run_full_market_scan
 
 # 1. 페이지 설정
 st.set_page_config(
-    page_title="토스증권 AI 퀀트 WTS",
+    page_title="토스증권 스타일 퀀트 WTS",
     page_icon="💸",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -274,14 +274,14 @@ if 'port_selected_ticker' not in st.session_state:
 # ==============================================================================
 has_holdings = bool(holdings)
 if has_holdings:
-    tab_rec, tab_port = st.tabs(["🔥 오늘의 AI 상승 추천주", "💼 내 보유 포트폴리오 (토스 WTS)"])
+    tab_rec, tab_port = st.tabs(["🔥 오늘의 퀀트 유망주", "💼 내 보유 포트폴리오 (토스 WTS)"])
 else:
     tab_rec = st.container()
 
 
 
 # ==============================================================================
-# 탭 1: 🔥 오늘의 AI 상승 추천주 (피보나치·빗각·다이버전스 & 백테스트 실증)
+# 탭 1: 🔥 오늘의 퀀트 유망주 (피보나치·추세선·다이버전스 & 통계 실증)
 # ==============================================================================
 with tab_rec:
     top_col1, top_col2 = st.columns([3, 1])
@@ -408,30 +408,16 @@ with tab_rec:
                     <div style="text-align:right;">
                         <div style="font-size:11.5px; color:#9094a6;">단기 1차 기대수익</div>
                         <div style="font-size:26px; font-weight:800; color:#00e676;">+{t1_pct:.1f}%</div>
-                        <div style="font-size:12px; color:#ffffff; font-weight:700; margin-top:2px;">AI 퀀트 점수 {active_rec['total_score']}점</div>
+                        <div style="font-size:12px; color:#ffffff; font-weight:700; margin-top:2px;">퀀트 기술 점수 {active_rec['total_score']}점</div>
                         <div style="font-size:11.5px; color:#ffd700; font-weight:600; margin-top:2px;">손익비 <b>{rr_ratio}:1</b></div>
                     </div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
 
-            # 실전 매매 손익 계산 가이드 (위험과 수익을 대등하게 강조)
-            calc_t_col, calc_b_col = st.columns([2.3, 1.7])
-            with calc_t_col:
-                st.markdown("<h4 style='font-weight:800; margin-top:16px; margin-bottom:4px;'>실전 매매 손익 및 리스크 계산기</h4>", unsafe_allow_html=True)
-                st.caption(f"목표 수익과 최대 허용 손실을 대등하게 비교합니다. (실시간 환율 $1 = {current_usd_krw:,.1f}원 적용)")
-            with calc_b_col:
-                st.markdown("<div style='margin-top:14px;'></div>", unsafe_allow_html=True)
-                inv_choice = st.segmented_control(
-                    "투자 기준금액",
-                    options=[1000000, 3000000, 5000000, 10000000],
-                    format_func=lambda x: f"{x//10000}만원",
-                    default=1000000,
-                    key="rec_invest_amount",
-                    label_visibility="collapsed"
-                )
-                if not inv_choice:
-                    inv_choice = 1000000
+            # 실전 매매 손익 계산 (100만원 투자 고정)
+            st.markdown("<h4 style='font-weight:800; margin-top:16px; margin-bottom:4px;'>실전 매매 손익 및 리스크 계산 (100만원 투자 기준)</h4>", unsafe_allow_html=True)
+            st.caption(f"100만원 진입 시 예상 목표 수익과 최대 허용 손실을 산출합니다. (실시간 환율 $1 = {current_usd_krw:,.1f}원 적용)")
 
             curr_p = active_rec['current_price']
             t1 = active_rec['bull_target_1']
@@ -439,7 +425,7 @@ with tab_rec:
             sl = active_rec['stop_loss']
             rate = current_usd_krw
 
-            inv = inv_choice
+            inv = 1000000  # 100만원 투자금 고정
             pct_1 = active_rec.get('target_1_pct', round(((t1 / curr_p) - 1) * 100, 1))
             pct_2 = active_rec.get('target_2_pct', round(((t2 / curr_p) - 1) * 100, 1))
             pct_sl = active_rec.get('stop_loss_pct', round(((sl / curr_p) - 1) * 100, 1))
@@ -455,9 +441,9 @@ with tab_rec:
             st.markdown(f"""
             <div class="toss-panel" style="padding:16px; margin-bottom:14px;">
                 <div style="font-size:13.5px; color:#cfcfd4; line-height:1.7; margin-bottom:14px; border-bottom:1px solid #23252e; padding-bottom:10px;">
-                    <b>{inv//10000}만원 투자 시 위험 대비 보상 요약:</b><br>
-                    지금 <b>${curr_p:.2f} (약 {int(curr_p*rate):,}원)</b>에 진입하여 1차 목표 <b>${t1:.2f}</b> 도달 시 <b style="color:#00e676;">+{int(gain_1):,}원 (+{pct_1:.1f}%)</b>의 이익을 기대할 수 있습니다.<br>
-                    반면, 예측 실패로 손절선 <b>${sl:.2f}</b> 이탈 시 <b style="color:#f04452;">{int(loss_sl):,}원 ({pct_sl:.1f}%)</b>에서 손실을 철저히 방어합니다. (<b>손익비 {rr_ratio}:1</b>)
+                    <b>100만원 투자 시 위험 대비 보상 요약:</b><br>
+                    지금 <b>${curr_p:.2f} (약 {int(curr_p*rate):,}원)</b>에 100만원 진입하여 1차 목표 <b>${t1:.2f}</b> 도달 시 <b style="color:#00e676;">+{int(gain_1):,}원 (+{pct_1:.1f}%)</b>의 이익을 기대할 수 있습니다.<br>
+                    반면, 기술적 손절선 <b>${sl:.2f}</b> 이탈 시 <b style="color:#f04452;">{int(loss_sl):,}원 ({pct_sl:.1f}%)</b>에서 손실을 철저히 방어합니다. (<b>손익비 {rr_ratio}:1</b>)
                 </div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:10px;">
                     <div style="background:#1f212c; border: 1px solid #3b82f6; border-radius:10px; padding:12px; text-align:center;">
@@ -779,7 +765,7 @@ def render_portfolio_tab(tab_container, holdings_dict, usd_krw_rate):
             st.markdown(f"""
             <div class="toss-panel">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <b style="font-size:15px; color:#ffffff;">💡 {curr_ticker} AI 진단: <span style="color:{'#00e676' if health['score']>=20 else ('#f04452' if health['score']<=-20 else '#ffa726')};">{health['signal']}</span></b>
+                    <b style="font-size:15px; color:#ffffff;">💡 {curr_ticker} 기술 진단: <span style="color:{'#00e676' if health['score']>=20 else ('#f04452' if health['score']<=-20 else '#ffa726')};">{health['signal']}</span></b>
                     <span style="font-size:13px; color:#9094a6;">내 평단: <b>${my_avg:.2f}</b> ({curr_info['shares']}주)</span>
                 </div>
                 <div style="font-size:13px; color:#cfcfd4; margin-top:8px; line-height:1.7;">

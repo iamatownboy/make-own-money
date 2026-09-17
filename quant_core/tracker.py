@@ -1,6 +1,6 @@
 """
 quant_core/tracker.py
-AI 추천 종목 이력 기록, 실제 주가 성과 추적 및 팩터 가중치 자가 학습(Feedback Loop) 모듈
+퀀트 추천 종목 이력 기록, 실제 주가 성과 추적 및 규칙 기반 가중치 피드백(Feedback Loop) 모듈
 """
 
 import os
@@ -113,7 +113,7 @@ def get_adaptive_factor_weights() -> Dict[str, Any]:
     과거 추천 이력의 성공/실패 데이터를 바탕으로:
     1. 각 팩터별 승률 및 가중치 보너스(+)/페널티(-) 계산
     2. 최근 14일 내 손절 이탈 종목(쿨다운 대상) 식별
-    3. AI 오답 노트(최근 실패 원인 감사 로그) 생성
+    3. 최근 손절/실패 원인 기술 감사 로그 생성
     """
     history = load_history()
     if not history:
@@ -205,7 +205,7 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
     """
     과거에 추천했던 모든 종목들의 실제 주가를 야후 파이낸스로 재조회하여:
     1. 실제 목표가에 도달했는지(적중 여부)
-    2. 손절/실패 시 실패 원인 자동 진단 및 오답노트 작성
+    2. 손절/실패 시 실패 원인 기술 분석 및 감사 로그 작성
     3. 팩터별 실시간 승률 및 피드백 반영
     """
     history = load_history()

@@ -227,9 +227,9 @@ def calculate_fibonacci_levels(df: pd.DataFrame, window: int = 60) -> Dict[str, 
     
     status_desc = "관망 구간"
     if is_in_golden_pocket:
-        status_desc = "피보나치 0.618~0.5 황금 지지존 안착 (최고의 반등 타점)"
+        status_desc = "피보나치 0.618~0.5 지지 구간 (되돌림 지지 타점)"
     elif is_at_fib_382:
-        status_desc = "피보나치 0.382 강력 지지 (초강세 지속형)"
+        status_desc = "피보나치 0.382 지지 (단기 추세 지속형)"
     elif current_price > fib_236:
         status_desc = "신고가 영역 돌파 준비"
         
