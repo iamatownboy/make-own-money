@@ -46,15 +46,20 @@ ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS market_context JSONB
 ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS fee_slippage_pct NUMERIC DEFAULT 0.25;
 ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS realized_pnl_net_pct NUMERIC;
 
--- 2단계: 기존 과거 추천 행을 명시적으로 'legacy' 버전으로 백필 (통계 왜곡 방지)
+-- 2단계: 과거 추천 행을 명시적으로 'legacy' 버전으로 완벽 복구/백필 (통계 왜곡 원천 차단)
+-- (NULL/빈값뿐만 아니라, 직전 스키마 적용으로 인해 v1.0.0 공식 도입일(2026-09-17) 이전에 v1.0.0으로 잘못 채워진 과거 행도 일괄 복구)
 UPDATE recommendation_history
 SET strategy_version = 'legacy'
-WHERE strategy_version IS NULL OR strategy_version = '';
+WHERE strategy_version IS NULL
+   OR strategy_version = ''
+   OR (strategy_version = 'v1.0.0' AND date < '2026-09-17');
 
--- 3단계: 기존 행의 recommendation_id 고유 식별자 백필
+-- 3단계: 기존 행의 recommendation_id 고유 식별자 백필 및 동기화
 UPDATE recommendation_history
 SET recommendation_id = date || '_' || ticker || '_' || strategy_version
-WHERE recommendation_id IS NULL OR recommendation_id = '';
+WHERE recommendation_id IS NULL
+   OR recommendation_id = ''
+   OR recommendation_id != (date || '_' || ticker || '_' || strategy_version);
 
 -- 4단계: 앞으로 들어오는 신규 추천에만 기본값 'v1.0.0' 및 NOT NULL 설정
 ALTER TABLE recommendation_history ALTER COLUMN strategy_version SET DEFAULT 'v1.0.0';

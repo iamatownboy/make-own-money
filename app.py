@@ -487,11 +487,11 @@ with tab_rec:
     with top_col1:
         diag = get_supabase_diagnostics()
         if diag.get("is_healthy"):
-            db_badge = '<span style="font-size:11px; background:#1e293b; color:#10b981; padding:2px 8px; border-radius:12px; border:1px solid #059669; font-weight:600; margin-left:8px;">🟢 Supabase 연동됨 (읽기/쓰기 완료)</span>'
-        elif diag.get("key_role") == "anon":
-            db_badge = '<span style="font-size:11px; background:#2a1b12; color:#fb923c; padding:2px 8px; border-radius:12px; border:1px solid #ea580c; font-weight:600; margin-left:8px;" title="현재 클라이언트용 anon 키로 연결되어 비공개 RLS 쓰기가 차단됩니다. Streamlit Secrets에 service_role 키를 설정하세요.">🟠 Supabase 권한 부족 (service_role 키 필요)</span>'
+            db_badge = '<span style="font-size:11px; background:#1e293b; color:#10b981; padding:2px 8px; border-radius:12px; border:1px solid #059669; font-weight:600; margin-left:8px;">🟢 Supabase 연동됨 (읽기·쓰기 실증 완료)</span>'
+        elif diag.get("can_read") and not diag.get("can_write"):
+            db_badge = '<span style="font-size:11px; background:#2a1b12; color:#fb923c; padding:2px 8px; border-radius:12px; border:1px solid #ea580c; font-weight:600; margin-left:8px;" title="현재 키는 읽기만 가능하며 비공개 RLS 쓰기가 차단됩니다. Streamlit Secrets에 service_role 키를 설정하세요.">🟠 Supabase 쓰기 권한 부족 (service_role 키 필요)</span>'
         elif diag.get("client_created") and not diag.get("can_read"):
-            db_badge = '<span style="font-size:11px; background:#2d1515; color:#f87171; padding:2px 8px; border-radius:12px; border:1px solid #dc2626; font-weight:600; margin-left:8px;" title="테이블 조회 실패. supabase_schema.sql 마이그레이션을 실행하세요.">🔴 Supabase 스키마 미적용</span>'
+            db_badge = '<span style="font-size:11px; background:#2d1515; color:#f87171; padding:2px 8px; border-radius:12px; border:1px solid #dc2626; font-weight:600; margin-left:8px;" title="테이블 조회 실패. supabase_schema.sql 마이그레이션을 실행하세요.">🔴 Supabase 접근 불가 (스키마 미적용 또는 RLS 차단)</span>'
         else:
             if not diag.get("has_url") and not diag.get("has_key"):
                 fail_hint = "Secrets 키 미인식"

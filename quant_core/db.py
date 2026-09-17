@@ -115,29 +115,42 @@ def get_supabase_diagnostics(force_refresh: bool = False) -> Dict[str, Any]:
     except Exception as re:
         _last_error = f"SELECT 권한 오류: {re}"
 
-    # 2. 실제 쓰기 권한 점검 (service_role 키 또는 RLS 권한 확인)
+    # 2. 실제 쓰기 권한 실증 점검 (추측 배제: 실제 쓰기 시도 후 즉시 정리)
     can_write = False
-    if key_role == "service_role":
-        can_write = True
-    elif key_role == "anon":
+    if key_role == "anon":
+        # anon 키는 비공개 RLS 정책상 쓰기가 원천 차단되므로 시도 없이 거부
         can_write = False
         if not _last_error:
             _last_error = "RLS 정책 제한: anon 키는 쓰기 권한이 없습니다. service_role 키가 필요합니다."
     else:
-        can_write = can_read
+        # service_role, authenticated, unknown 등 모든 키에 대해 실제 캐시 테이블에 더미 핑 row 쓰기/삭제 테스트
+        try:
+            test_row = {
+                "date": "1970-01-01",
+                "recommendations": [{"health_check": True}],
+                "updated_at": datetime.now().isoformat()
+            }
+            # 실제 쓰기 시도 (RLS 정책에 의해 service_role만 통과)
+            client.table("daily_recommendation_cache").upsert(test_row, on_conflict="date").execute()
+            # 쓰기 성공 확인 후 테스트 레코드 즉시 삭제 (DB 청결 유지)
+            client.table("daily_recommendation_cache").delete().eq("date", "1970-01-01").execute()
+            can_write = True
+        except Exception as we:
+            can_write = False
+            _last_error = f"실제 쓰기 권한 거부 (service_role 키 필요): {we}"
 
     diag["can_read"] = can_read
     diag["can_write"] = can_write
 
-    # 종합 가동 가능 상태(is_healthy) 판정: 읽기 및 쓰기 권한이 모두 확보된 경우만 True
+    # 종합 가동 가능 상태(is_healthy) 판정: 읽기 및 쓰기 권한이 실제 테스트로 모두 입증된 경우만 True
     if can_read and can_write:
         diag["is_healthy"] = True
         diag["is_connected"] = True
-        diag["status_message"] = "🟢 Supabase 연동됨 (읽기/쓰기 권한 완비)"
-    elif key_role == "anon":
+        diag["status_message"] = "🟢 Supabase 연동됨 (읽기·쓰기 실증 완료)"
+    elif can_read and not can_write:
         diag["is_healthy"] = False
         diag["is_connected"] = False
-        diag["status_message"] = "🟠 Supabase 권한 부족 (anon 키 감지: RLS 쓰기가 차단되므로 service_role 키 설정 필요)"
+        diag["status_message"] = "🟠 Supabase 쓰기 권한 부족 (service_role 키 필요, 읽기만 가능)"
     elif not can_read:
         diag["is_healthy"] = False
         diag["is_connected"] = False
@@ -145,7 +158,7 @@ def get_supabase_diagnostics(force_refresh: bool = False) -> Dict[str, Any]:
     else:
         diag["is_healthy"] = False
         diag["is_connected"] = False
-        diag["status_message"] = "🟠 Supabase 쓰기 권한 부족"
+        diag["status_message"] = "🔴 Supabase 접근 불가 (RLS 차단)"
 
     _health_cache = diag
     _health_cache_time = now

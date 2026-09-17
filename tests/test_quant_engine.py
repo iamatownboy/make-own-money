@@ -870,3 +870,51 @@ def test_supabase_schema_migration_backfill_order():
     assert pos_add < pos_backfill, "컬럼 추가가 백필보다 먼저 나와야 합니다."
     assert pos_backfill < pos_default_v1, "기존 행 legacy 백필이 DEFAULT v1.0.0 설정보다 반드시 먼저 실행되어야 합니다."
     assert pos_default_v1 < pos_unique, "DEFAULT 및 NOT NULL 설정 후 복합 UNIQUE 제약조건이 적용되어야 합니다."
+
+    # 5. 직전 스키마 적용으로 오염된 2026-09-17 이전 과거 행의 복구 조건 포함 여부 검증
+    assert "date < '2026-09-17'" in sql_content, "v1.0.0 도입일 이전 과거 행에 대한 안전 복구 조건이 포함되어야 합니다."
+
+
+# 22. authenticated 역할 등 쓰기 권한이 없는 키에 대한 실제 Write Probe 차단 실증 검증
+def test_write_probe_authenticated_key_rejection(monkeypatch):
+    import base64
+    from quant_core.db import get_supabase_diagnostics, is_supabase_enabled
+
+    def make_fake_jwt(role_name: str) -> str:
+        header = base64.urlsafe_b64encode(b'{"alg":"HS256","typ":"JWT"}').decode().rstrip('=')
+        payload = base64.urlsafe_b64encode(f'{{"role":"{role_name}"}}'.encode()).decode().rstrip('=')
+        return f"{header}.{payload}.sig"
+
+    auth_key = make_fake_jwt("authenticated")
+    monkeypatch.setenv("SUPABASE_URL", "https://mock.supabase.co")
+    monkeypatch.setenv("SUPABASE_KEY", auth_key)
+
+    class MockTable:
+        def select(self, *args, **kwargs):
+            return self
+        def limit(self, *args, **kwargs):
+            return self
+        def eq(self, *args, **kwargs):
+            return self
+        def delete(self, *args, **kwargs):
+            return self
+        def execute(self):
+            # SELECT는 성공 (authenticated 허용)
+            return type('Response', (), {'data': [{'id': 1}]})()
+        def upsert(self, records, on_conflict=None):
+            # WRITE는 RLS 정책에 의해 403 차단 시뮬레이션 (service_role만 통과)
+            raise Exception("403 Forbidden: RLS policy denies insert/upsert for authenticated role")
+
+    class MockClient:
+        def table(self, name):
+            return MockTable()
+
+    monkeypatch.setattr("quant_core.db.get_supabase_client", lambda: MockClient())
+
+    diag = get_supabase_diagnostics(force_refresh=True)
+    # 읽기는 성공했지만 실제 쓰기 프로브에서 차단되었으므로 can_write는 False여야 함
+    assert diag['can_read'] is True
+    assert diag['can_write'] is False
+    assert diag['is_healthy'] is False
+    assert is_supabase_enabled() is False
+    assert "쓰기 권한 부족" in diag['status_message']
