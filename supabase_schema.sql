@@ -37,15 +37,30 @@ CREATE TABLE IF NOT EXISTS recommendation_history (
     CONSTRAINT unique_date_ticker_version UNIQUE (date, ticker, strategy_version)
 );
 
--- 기존 테이블이 있을 경우 신규 컬럼 안전 추가 (마이그레이션)
+-- 기존 테이블이 있을 경우 신규 컬럼 안전 추가 및 기존 행 legacy 백필 (마이그레이션)
+-- 1단계: 기본값 없이 컬럼 추가 (기존 행이 v1.0.0으로 자동 오분류되는 현상 원천 차단)
 ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS recommendation_id VARCHAR(64);
-ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS strategy_version VARCHAR(32) DEFAULT 'v1.0.0';
+ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS strategy_version VARCHAR(32);
 ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS rules JSONB;
 ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS market_context JSONB;
 ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS fee_slippage_pct NUMERIC DEFAULT 0.25;
 ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS realized_pnl_net_pct NUMERIC;
 
--- 기존 (date, ticker) 단일 제약조건을 (date, ticker, strategy_version) 복합 제약조건으로 안전하게 전환
+-- 2단계: 기존 과거 추천 행을 명시적으로 'legacy' 버전으로 백필 (통계 왜곡 방지)
+UPDATE recommendation_history
+SET strategy_version = 'legacy'
+WHERE strategy_version IS NULL OR strategy_version = '';
+
+-- 3단계: 기존 행의 recommendation_id 고유 식별자 백필
+UPDATE recommendation_history
+SET recommendation_id = date || '_' || ticker || '_' || strategy_version
+WHERE recommendation_id IS NULL OR recommendation_id = '';
+
+-- 4단계: 앞으로 들어오는 신규 추천에만 기본값 'v1.0.0' 및 NOT NULL 설정
+ALTER TABLE recommendation_history ALTER COLUMN strategy_version SET DEFAULT 'v1.0.0';
+ALTER TABLE recommendation_history ALTER COLUMN strategy_version SET NOT NULL;
+
+-- 5단계: 기존 (date, ticker) 제약조건 제거 후 (date, ticker, strategy_version) 복합 UNIQUE 적용
 ALTER TABLE recommendation_history DROP CONSTRAINT IF EXISTS unique_date_ticker;
 DO $$
 BEGIN
@@ -94,16 +109,16 @@ USING (true);
 
 -- [보안 정책 2] 수정/삽입/삭제(ALL/WRITE)는 오직 백엔드 서버(service_role)만 허용
 -- 외부에서 데이터를 임의 조작하거나 변조/삭제하는 것을 원천 차단
-CREATE POLICY "Service Role Write History" 
-ON recommendation_history 
-FOR ALL 
+CREATE POLICY "Service Role Write History"
+ON recommendation_history
+FOR ALL
 TO service_role
 USING (true)
 WITH CHECK (true);
 
-CREATE POLICY "Service Role Write Cache" 
-ON daily_recommendation_cache 
-FOR ALL 
+CREATE POLICY "Service Role Write Cache"
+ON daily_recommendation_cache
+FOR ALL
 TO service_role
 USING (true)
 WITH CHECK (true);

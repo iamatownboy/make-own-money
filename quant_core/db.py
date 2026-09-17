@@ -5,19 +5,54 @@ Supabase(PostgreSQL) 클라우드 데이터베이스 연동 및 로컬 JSON 자�
 - 시크릿 미설정 시: 기존 로컬 JSON 파일로 안전하게 자동 폴백(Fallback)
 """
 
+import base64
 import os
 import json
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 
-# Supabase 클라이언트 싱글톤 캐시
+# Supabase 클라이언트 싱글톤 캐시 및 Health Check 캐시
 _supabase_client = None
 _last_error = None
+_health_cache = None
+_health_cache_time = None
 
 
-def get_supabase_diagnostics() -> Dict[str, Any]:
-    """Supabase 연결 상태 상세 진단 정보 반환"""
-    global _supabase_client, _last_error
+def inspect_jwt_role(key: str) -> str:
+    """
+    Supabase API 키의 JWT 페이로드를 안전하게 파싱하여 role('service_role', 'anon' 등)을 감지합니다.
+    - 보안 원칙: 키 본문 평문은 절대로 출력하거나 노출하지 않으며, 오직 역할 이름 문자열만 반환합니다.
+    """
+    if not key or not isinstance(key, str):
+        return "unknown"
+    parts = key.strip().split(".")
+    if len(parts) != 3:
+        return "unknown"
+    try:
+        payload_b64 = parts[1]
+        padding = len(payload_b64) % 4
+        if padding:
+            payload_b64 += "=" * (4 - padding)
+        payload_bytes = base64.urlsafe_b64decode(payload_b64)
+        payload = json.loads(payload_bytes.decode("utf-8"))
+        return str(payload.get("role", "unknown"))
+    except Exception:
+        return "unknown"
+
+
+def get_supabase_diagnostics(force_refresh: bool = False) -> Dict[str, Any]:
+    """
+    Supabase 연결 상태 및 실제 RLS 권한(Health Check) 상세 진단 정보 반환.
+    - 단순히 클라이언트 객체 생성 여부가 아니라, 실제 SELECT 및 service_role 권한 여부를 검증
+    - 30초 캐시 적용으로 불필요한 네트워크 오버헤드 방지
+    """
+    global _supabase_client, _last_error, _health_cache, _health_cache_time
+    now = datetime.now()
+
+    if not force_refresh and _health_cache and _health_cache_time:
+        if (now - _health_cache_time).total_seconds() < 30:
+            return _health_cache
+
     url = os.environ.get("SUPABASE_URL", "") or os.environ.get("supabase_url", "")
     key = os.environ.get("SUPABASE_KEY", "") or os.environ.get("SUPABASE_ANON_KEY", "") or os.environ.get("supabase_key", "")
 
@@ -28,11 +63,13 @@ def get_supabase_diagnostics() -> Dict[str, Any]:
             if k_lower in ("supabase_url", "supabase_project_url"):
                 if not url:
                     url = str(st.secrets[k]).strip()
-            elif k_lower in ("supabase_key", "supabase_anon_key", "supabase_publishable_key", "supabase_anon"):
+            elif k_lower in ("supabase_key", "supabase_service_role_key", "supabase_service_key", "supabase_secret_key", "supabase_anon_key", "supabase_publishable_key", "supabase_anon"):
                 if not key:
                     key = str(st.secrets[k]).strip()
     except Exception as e:
         pass
+
+    key_role = inspect_jwt_role(key)
 
     package_installed = False
     try:
@@ -41,14 +78,78 @@ def get_supabase_diagnostics() -> Dict[str, Any]:
     except Exception:
         package_installed = False
 
-    return {
+    diag = {
         "has_url": bool(url),
         "has_key": bool(key),
-        "url_preview": f"{url[:15]}..." if url else "없음",
+        "key_role": key_role,
+        "is_service_role": (key_role == "service_role"),
         "package_installed": package_installed,
-        "is_connected": _supabase_client is not None,
+        "client_created": False,
+        "can_read": False,
+        "can_write": False,
+        "is_healthy": False,
+        "is_connected": False,
+        "status_message": "⚪ 로컬 스토리지 모드 (Supabase 미설정)",
         "last_error": str(_last_error) if _last_error else None
     }
+
+    if not url or not key or not package_installed:
+        _health_cache = diag
+        _health_cache_time = now
+        return diag
+
+    client = get_supabase_client()
+    if not client:
+        diag["status_message"] = "🔴 Supabase 클라이언트 초기화 실패"
+        _health_cache = diag
+        _health_cache_time = now
+        return diag
+
+    diag["client_created"] = True
+
+    # 1. 실제 읽기 권한 점검 (경량 SELECT 1건)
+    can_read = False
+    try:
+        resp = client.table("recommendation_history").select("id").limit(1).execute()
+        can_read = True
+    except Exception as re:
+        _last_error = f"SELECT 권한 오류: {re}"
+
+    # 2. 실제 쓰기 권한 점검 (service_role 키 또는 RLS 권한 확인)
+    can_write = False
+    if key_role == "service_role":
+        can_write = True
+    elif key_role == "anon":
+        can_write = False
+        if not _last_error:
+            _last_error = "RLS 정책 제한: anon 키는 쓰기 권한이 없습니다. service_role 키가 필요합니다."
+    else:
+        can_write = can_read
+
+    diag["can_read"] = can_read
+    diag["can_write"] = can_write
+
+    # 종합 가동 가능 상태(is_healthy) 판정: 읽기 및 쓰기 권한이 모두 확보된 경우만 True
+    if can_read and can_write:
+        diag["is_healthy"] = True
+        diag["is_connected"] = True
+        diag["status_message"] = "🟢 Supabase 연동됨 (읽기/쓰기 권한 완비)"
+    elif key_role == "anon":
+        diag["is_healthy"] = False
+        diag["is_connected"] = False
+        diag["status_message"] = "🟠 Supabase 권한 부족 (anon 키 감지: RLS 쓰기가 차단되므로 service_role 키 설정 필요)"
+    elif not can_read:
+        diag["is_healthy"] = False
+        diag["is_connected"] = False
+        diag["status_message"] = "🔴 Supabase 테이블 조회 실패 (supabase_schema.sql 마이그레이션 필요)"
+    else:
+        diag["is_healthy"] = False
+        diag["is_connected"] = False
+        diag["status_message"] = "🟠 Supabase 쓰기 권한 부족"
+
+    _health_cache = diag
+    _health_cache_time = now
+    return diag
 
 
 def get_supabase_client():
@@ -64,7 +165,6 @@ def get_supabase_client():
     url = os.environ.get("SUPABASE_URL", "") or os.environ.get("supabase_url", "")
     key = os.environ.get("SUPABASE_KEY", "") or os.environ.get("SUPABASE_ANON_KEY", "") or os.environ.get("supabase_key", "")
 
-    # Streamlit secrets 확인 (대소문자 및 변수명 유연 매핑)
     try:
         import streamlit as st
         for k in st.secrets.keys():
@@ -72,7 +172,7 @@ def get_supabase_client():
             if k_lower in ("supabase_url", "supabase_project_url"):
                 if not url:
                     url = str(st.secrets[k]).strip()
-            elif k_lower in ("supabase_key", "supabase_anon_key", "supabase_publishable_key", "supabase_anon"):
+            elif k_lower in ("supabase_key", "supabase_service_role_key", "supabase_service_key", "supabase_secret_key", "supabase_anon_key", "supabase_publishable_key", "supabase_anon"):
                 if not key:
                     key = str(st.secrets[k]).strip()
     except Exception as e:
@@ -93,8 +193,16 @@ def get_supabase_client():
 
 
 def is_supabase_enabled() -> bool:
-    """Supabase DB 연결 가능 여부 확인"""
-    return get_supabase_client() is not None
+    """
+    Supabase DB 실질 가동 가능 여부 확인.
+    - 단순히 클라이언트 객체 생성 여부가 아니라, 실제 읽기/쓰기 권한(is_healthy)을 만족해야 True.
+    - 권한이 불완전할 경우 가짜 연결로 간주하지 않고 로컬 JSON 폴백으로 안전하게 동작.
+    """
+    client = get_supabase_client()
+    if not client:
+        return False
+    diag = get_supabase_diagnostics()
+    return diag.get("is_healthy", False)
 
 
 # -----------------------------------------------------------------------------
@@ -130,11 +238,19 @@ def db_load_history() -> Optional[List[Dict[str, Any]]]:
 
 
 def db_upsert_history_items(items: List[Dict[str, Any]]) -> bool:
-    """Supabase에 추천 이력 리스트를 업서트(Insert or Update)합니다."""
+    """
+    Supabase에 추천 이력 리스트를 업서트(Insert or Update)합니다.
+    - 고유 키: (date, ticker, strategy_version) 복합 키
+    - [엄격한 무손실 원칙]:
+      구형 DB 제약조건(date, ticker)으로 조용히 재시도하여 서로 다른 전략 버전의 데이터를 덮어쓰는
+      침묵적 폴백을 엄격히 배제합니다.
+      복합 제약조건 미적용으로 실패할 경우 명확한 에러를 반환하여 마이그레이션을 요구합니다.
+    """
     client = get_supabase_client()
     if not client or not items:
         return False
 
+    global _last_error
     try:
         records = []
         for it in items:
@@ -175,7 +291,7 @@ def db_upsert_history_items(items: List[Dict[str, Any]]) -> bool:
             }
             records.append(rec)
 
-        # 1차 시도: 신규 복합 키 (date, ticker, strategy_version) 기준 upsert
+        # 전략 버전 분리 복합 키 (date, ticker, strategy_version) 기준 단일 엄격 upsert
         try:
             client.table("recommendation_history").upsert(
                 records,
@@ -183,32 +299,18 @@ def db_upsert_history_items(items: List[Dict[str, Any]]) -> bool:
             ).execute()
             return True
         except Exception as v_err:
-            # 2차 시도: 기존 테이블 제약조건이 (date, ticker)인 경우
-            try:
-                client.table("recommendation_history").upsert(
-                    records,
-                    on_conflict="date,ticker"
-                ).execute()
-                return True
-            except Exception as dt_err:
-                # 3차 시도: 신규 컬럼이 없는 구버전 스키마인 경우 구버전 필드만으로 시도
-                fallback_records = []
-                for r in records:
-                    fb = dict(r)
-                    fb.pop("recommendation_id", None)
-                    fb.pop("strategy_version", None)
-                    fb.pop("rules", None)
-                    fb.pop("market_context", None)
-                    fb.pop("fee_slippage_pct", None)
-                    fb.pop("realized_pnl_net_pct", None)
-                    fallback_records.append(fb)
-                client.table("recommendation_history").upsert(
-                    fallback_records,
-                    on_conflict="date,ticker"
-                ).execute()
-                return True
+            err_msg = (
+                f"[DB 오류] DB 스키마가 전략 버전 복합키(date, ticker, strategy_version) 저장을 지원하지 않습니다. "
+                f"기존 (date, ticker) 단일키로 덮어쓰지 않고 저장을 중단합니다. "
+                f"supabase_schema.sql 마이그레이션을 먼저 실행해 주세요. (상세: {v_err})"
+            )
+            print(err_msg)
+            _last_error = err_msg
+            return False
+
     except Exception as e:
-        print(f"[DB] Supabase 추천 이력 업서트 최종 실패: {e}")
+        _last_error = f"Supabase 추천 이력 업서트 실패: {e}"
+        print(f"[DB] Supabase 추천 이력 업서트 실패: {e}")
         return False
 
 

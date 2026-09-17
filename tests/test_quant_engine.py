@@ -753,3 +753,120 @@ def test_dynamic_fee_slippage_calculation(monkeypatch, tmp_path):
     assert res['avg_return'] == 10.0
     assert res['avg_return_net'] == 9.70
     assert res['expected_value'] == 9.70
+
+
+# 18. Supabase API 키 JWT 역할(Role) 안전 감지 검증
+def test_jwt_role_inspection():
+    import base64
+    from quant_core.db import inspect_jwt_role
+
+    def make_fake_jwt(role_name: str) -> str:
+        header = base64.urlsafe_b64encode(b'{"alg":"HS256","typ":"JWT"}').decode().rstrip('=')
+        payload = base64.urlsafe_b64encode(f'{{"role":"{role_name}"}}'.encode()).decode().rstrip('=')
+        signature = "dummy_signature"
+        return f"{header}.{payload}.{signature}"
+
+    service_key = make_fake_jwt("service_role")
+    anon_key = make_fake_jwt("anon")
+
+    assert inspect_jwt_role(service_key) == "service_role"
+    assert inspect_jwt_role(anon_key) == "anon"
+    assert inspect_jwt_role("invalid_key_format") == "unknown"
+    assert inspect_jwt_role("") == "unknown"
+
+
+# 19. anon 키 설정 시 가짜 연결 차단 및 권한 부족 상태 검증 (RLS Default Deny 보호)
+def test_supabase_diagnostics_anon_key_blocks_enabled(monkeypatch):
+    import base64
+    from quant_core.db import get_supabase_diagnostics, is_supabase_enabled
+
+    def make_fake_jwt(role_name: str) -> str:
+        header = base64.urlsafe_b64encode(b'{"alg":"HS256","typ":"JWT"}').decode().rstrip('=')
+        payload = base64.urlsafe_b64encode(f'{{"role":"{role_name}"}}'.encode()).decode().rstrip('=')
+        return f"{header}.{payload}.sig"
+
+    anon_key = make_fake_jwt("anon")
+
+    monkeypatch.setenv("SUPABASE_URL", "https://mock.supabase.co")
+    monkeypatch.setenv("SUPABASE_KEY", anon_key)
+
+    class MockTable:
+        def select(self, *args, **kwargs):
+            return self
+        def limit(self, *args, **kwargs):
+            return self
+        def execute(self):
+            # anon 키는 비공개 RLS 정책에 의해 SELECT 403 차단 시뮬레이션
+            raise Exception("403 Forbidden: RLS policy denies access")
+
+    class MockClient:
+        def table(self, name):
+            return MockTable()
+
+    monkeypatch.setattr("quant_core.db.get_supabase_client", lambda: MockClient())
+
+    diag = get_supabase_diagnostics(force_refresh=True)
+    assert diag['key_role'] == "anon"
+    assert diag['is_service_role'] is False
+    assert diag['can_write'] is False
+    assert diag['is_healthy'] is False
+    # RLS 권한이 부족하므로 가짜 연결을 차단하고 is_supabase_enabled()는 False를 반환해야 함
+    assert is_supabase_enabled() is False
+
+
+# 20. 구형 DB 제약조건으로의 조용한 덮어쓰기 폴백 배제 및 명확한 오류 반환 검증
+def test_db_upsert_strict_compound_key_no_silent_overwrite(monkeypatch):
+    from quant_core.db import db_upsert_history_items
+
+    class MockTable:
+        def upsert(self, records, on_conflict=None):
+            # 복합키 on_conflict="date,ticker,strategy_version" 실패 시뮬레이션 (구버전 스키마)
+            if on_conflict == "date,ticker,strategy_version":
+                raise Exception("column 'strategy_version' not in unique constraint")
+            # 만약 구버전 키로 조용히 시도하려 하면 호출되면 안 됨
+            raise AssertionError("구형 키(date,ticker)로 조용히 폴백 시도됨! 엄격한 무손실 원칙 위반.")
+
+    class MockClient:
+        def table(self, name):
+            return MockTable()
+
+    monkeypatch.setattr("quant_core.db.get_supabase_client", lambda: MockClient())
+
+    items = [{
+        'date': '2026-09-17',
+        'ticker': 'NVDA',
+        'strategy_version': 'v1.0.0',
+        'rec_price': 120.0
+    }]
+
+    # 복합키 제약조건이 없으면 date,ticker로 덮어쓰지 않고 명확히 False 반환
+    success = db_upsert_history_items(items)
+    assert success is False
+
+
+# 21. supabase_schema.sql 마이그레이션 순서 (기본값 없이 추가 -> legacy 백필 -> v1.0.0 설정) 검증
+def test_supabase_schema_migration_backfill_order():
+    sql_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "supabase_schema.sql")
+    assert os.path.exists(sql_path)
+
+    with open(sql_path, "r", encoding="utf-8") as f:
+        sql_content = f.read()
+
+    # 1. ADD COLUMN 시 DEFAULT 'v1.0.0'이 바로 붙지 않고 기본값 없이 추가되는지 검증
+    assert "ADD COLUMN IF NOT EXISTS strategy_version VARCHAR(32);" in sql_content
+
+    # 2. 기존 행을 'legacy'로 백필하는 UPDATE 문 존재 검증
+    assert "SET strategy_version = 'legacy'" in sql_content
+
+    # 3. recommendation_id 백필 문 존재 검증
+    assert "SET recommendation_id = date || '_' || ticker || '_' || strategy_version" in sql_content
+
+    # 4. 순서 검증: 백필(legacy) 후에 신규 행 DEFAULT 'v1.0.0' 설정이 나와야 함
+    pos_add = sql_content.find("ADD COLUMN IF NOT EXISTS strategy_version VARCHAR(32);")
+    pos_backfill = sql_content.find("SET strategy_version = 'legacy'")
+    pos_default_v1 = sql_content.find("ALTER COLUMN strategy_version SET DEFAULT 'v1.0.0'")
+    pos_unique = sql_content.find("ADD CONSTRAINT unique_date_ticker_version")
+
+    assert pos_add < pos_backfill, "컬럼 추가가 백필보다 먼저 나와야 합니다."
+    assert pos_backfill < pos_default_v1, "기존 행 legacy 백필이 DEFAULT v1.0.0 설정보다 반드시 먼저 실행되어야 합니다."
+    assert pos_default_v1 < pos_unique, "DEFAULT 및 NOT NULL 설정 후 복합 UNIQUE 제약조건이 적용되어야 합니다."

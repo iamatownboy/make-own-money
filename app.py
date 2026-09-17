@@ -486,19 +486,23 @@ with tab_rec:
     top_col1, top_col2 = st.columns([3, 1])
     with top_col1:
         diag = get_supabase_diagnostics()
-        if is_supabase_enabled():
-            db_badge = '<span style="font-size:11px; background:#1e293b; color:#10b981; padding:2px 8px; border-radius:12px; border:1px solid #059669; font-weight:600; margin-left:8px;">🟢 Supabase DB 연동됨</span>'
+        if diag.get("is_healthy"):
+            db_badge = '<span style="font-size:11px; background:#1e293b; color:#10b981; padding:2px 8px; border-radius:12px; border:1px solid #059669; font-weight:600; margin-left:8px;">🟢 Supabase 연동됨 (읽기/쓰기 완료)</span>'
+        elif diag.get("key_role") == "anon":
+            db_badge = '<span style="font-size:11px; background:#2a1b12; color:#fb923c; padding:2px 8px; border-radius:12px; border:1px solid #ea580c; font-weight:600; margin-left:8px;" title="현재 클라이언트용 anon 키로 연결되어 비공개 RLS 쓰기가 차단됩니다. Streamlit Secrets에 service_role 키를 설정하세요.">🟠 Supabase 권한 부족 (service_role 키 필요)</span>'
+        elif diag.get("client_created") and not diag.get("can_read"):
+            db_badge = '<span style="font-size:11px; background:#2d1515; color:#f87171; padding:2px 8px; border-radius:12px; border:1px solid #dc2626; font-weight:600; margin-left:8px;" title="테이블 조회 실패. supabase_schema.sql 마이그레이션을 실행하세요.">🔴 Supabase 스키마 미적용</span>'
         else:
             if not diag.get("has_url") and not diag.get("has_key"):
-                fail_hint = "Secrets 키 미인식 (재부팅 대기중)"
+                fail_hint = "Secrets 키 미인식"
             elif not diag.get("has_url"):
                 fail_hint = "SUPABASE_URL 미인식"
             elif not diag.get("has_key"):
                 fail_hint = "SUPABASE_KEY 미인식"
             elif diag.get("last_error"):
-                fail_hint = "연결 오류 (로그 확인)"
+                fail_hint = "연결 오류"
             else:
-                fail_hint = "폴백 모드"
+                fail_hint = "로컬 모드"
             db_badge = f'<span style="font-size:11px; background:#1e293b; color:#94a3b8; padding:2px 8px; border-radius:12px; border:1px solid #475569; font-weight:500; margin-left:8px;" title="{diag.get("last_error", "")}">⚪ 로컬 스토리지 모드 ({fail_hint})</span>'
         version_badge = '<span style="font-size:11px; background:#1e293b; color:#38bdf8; padding:2px 8px; border-radius:12px; border:1px solid #0284c7; font-weight:600; margin-left:8px;">Strategy v1.0.0</span>'
         st.markdown(f"<h3 style='margin:0; font-weight:800; color:#ffffff; display:flex; align-items:center;'>오늘의 나스닥 퀀트 유망주 Top 7 {version_badge} {db_badge}</h3>", unsafe_allow_html=True)
