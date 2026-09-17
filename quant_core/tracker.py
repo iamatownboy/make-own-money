@@ -10,33 +10,64 @@ import numpy as np
 import yfinance as yf
 from datetime import datetime, timedelta
 from typing import Dict, List, Any
+from .db import db_load_history, db_upsert_history_items, is_supabase_enabled
 
 HISTORY_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'recommendation_history.json')
 
 
 def load_history() -> List[Dict[str, Any]]:
-    """과거 추천 이력을 불러옵니다."""
+    """
+    과거 추천 이력을 불러옵니다.
+    1. Supabase 클라우드 DB 연결 가능 시 우선 조회
+    2. 미연결 또는 빈 데이터 시 로컬 JSON 파일 폴백
+    3. 로컬 데이터가 존재하고 DB가 비어있을 시 자동 클라우드 마이그레이션
+    """
+    if is_supabase_enabled():
+        db_items = db_load_history()
+        if db_items:
+            return db_items
+
+    # 로컬 JSON 폴백
+    local_items = []
     if os.path.exists(HISTORY_FILE):
         try:
             with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
+                local_items = json.load(f)
         except Exception:
-            return []
-    return []
+            local_items = []
+
+    # Supabase가 활성화되어 있는데 DB가 비어있고 로컬 데이터가 있으면 즉시 클라우드로 동기화
+    if is_supabase_enabled() and local_items:
+        try:
+            db_upsert_history_items(local_items)
+        except Exception:
+            pass
+
+    return local_items
 
 
 def save_history(history: List[Dict[str, Any]]):
-    """추천 이력을 저장합니다."""
+    """
+    추천 이력을 저장합니다.
+    1. 항상 로컬 JSON 파일에 1차 안전 보존 (로컬 백업)
+    2. Supabase 클라우드 DB 활성화 시 PostgreSQL 테이블에 동기화 업서트
+    """
     try:
         with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
             json.dump(history, f, ensure_ascii=False, indent=2)
     except Exception as e:
-        print(f"추천 이력 저장 실패: {e}")
+        print(f"로컬 추천 이력 저장 실패: {e}")
+
+    if is_supabase_enabled():
+        try:
+            db_upsert_history_items(history)
+        except Exception as e:
+            print(f"Supabase 클라우드 DB 동기화 실패: {e}")
 
 
 def record_daily_recommendations(recs: List[Dict[str, Any]]):
     """
-    오늘 AI가 선별한 추천 종목들을 학습 데이터베이스에 기록합니다.
+    오늘 퀀트 엔진이 선별한 추천 종목들을 성과 추적 데이터베이스에 기록합니다.
     (이미 오늘 기록된 종목은 중복 방지)
     """
     history = load_history()

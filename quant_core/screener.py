@@ -432,22 +432,47 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
 def run_full_market_scan(force_refresh: bool = False) -> List[Dict[str, Any]]:
     """
     유니버스 전체를 스캔하고 상위 유망 종목을 선별하여 캐시에 저장합니다.
+    1. Supabase 클라우드 캐시 우선 확인
+    2. 로컬 JSON 캐시 확인
+    3. 필요 시 82개 유니버스 전수 스캔 후 양쪽 캐시 동시 저장
     """
-    if not force_refresh and os.path.exists(RECOMMENDATION_CACHE_FILE):
-        try:
-            with open(RECOMMENDATION_CACHE_FILE, 'r', encoding='utf-8') as f:
-                cached = json.load(f)
-                cache_date = cached.get('date', '')
-                today_str = datetime.now().strftime('%Y-%m-%d')
-                if cache_date == today_str and 'recommendations' in cached:
-                    try:
-                        from .tracker import record_daily_recommendations
-                        record_daily_recommendations(cached['recommendations'])
-                    except Exception:
-                        pass
-                    return cached['recommendations']
-        except Exception:
-            pass
+    from .db import db_load_daily_cache, db_save_daily_cache, is_supabase_enabled
+
+    today_str = datetime.now().strftime('%Y-%m-%d')
+
+    if not force_refresh:
+        # 1. Supabase 클라우드 캐시 우선 확인
+        if is_supabase_enabled():
+            cloud_cached = db_load_daily_cache(today_str)
+            if cloud_cached:
+                try:
+                    from .tracker import record_daily_recommendations
+                    record_daily_recommendations(cloud_cached)
+                except Exception:
+                    pass
+                return cloud_cached
+
+        # 2. 로컬 JSON 캐시 폴백 확인
+        if os.path.exists(RECOMMENDATION_CACHE_FILE):
+            try:
+                with open(RECOMMENDATION_CACHE_FILE, 'r', encoding='utf-8') as f:
+                    cached = json.load(f)
+                    cache_date = cached.get('date', '')
+                    if cache_date == today_str and 'recommendations' in cached:
+                        cached_recs = cached['recommendations']
+                        if is_supabase_enabled() and cached_recs:
+                            try:
+                                db_save_daily_cache(today_str, cached_recs)
+                            except Exception:
+                                pass
+                        try:
+                            from .tracker import record_daily_recommendations
+                            record_daily_recommendations(cached_recs)
+                        except Exception:
+                            pass
+                        return cached_recs
+            except Exception:
+                pass
 
     try:
         from .tracker import get_adaptive_factor_weights
@@ -486,12 +511,19 @@ def run_full_market_scan(force_refresh: bool = False) -> List[Dict[str, Any]]:
 
         with open(RECOMMENDATION_CACHE_FILE, 'w', encoding='utf-8') as f:
             json.dump({
-                'date': datetime.now().strftime('%Y-%m-%d'),
+                'date': today_str,
                 'updated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                 'recommendations': top_picks
             }, f, ensure_ascii=False, indent=2, default=np_encoder)
     except Exception as e:
-        print(f"캐시 저장 실패: {e}")
+        print(f"로컬 캐시 저장 실패: {e}")
+
+    # Supabase 클라우드 캐시 동시 저장
+    if is_supabase_enabled():
+        try:
+            db_save_daily_cache(today_str, top_picks)
+        except Exception as e:
+            print(f"Supabase 클라우드 캐시 저장 실패: {e}")
         
     # 추천 결과를 성과 추적 데이터베이스에 자동 기록 (학습용)
     try:
