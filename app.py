@@ -29,9 +29,16 @@ st.set_page_config(
 )
 
 # -----------------------------------------------------------------------------
-# 🔒 보안 인증: 등록된 구글 계정(tomsslee043@gmail.com) 전용 열람 2중 잠금 (Default Deny)
+# 🔒 보안 인증: 등록된 관리자 전용 열람 2중 잠금 (Default Deny + 암호/매직키 지원)
 # -----------------------------------------------------------------------------
 AUTHORIZED_EMAILS = {"tomsslee043@gmail.com"}
+
+ADMIN_PASSWORDS = {
+    "townboy",
+    "tomsslee043",
+    "0403",
+    "makeownmoney"
+}
 
 def check_has_auth_secret() -> bool:
     try:
@@ -47,26 +54,66 @@ is_cloud = (
     check_has_auth_secret()
 )
 
-if is_cloud:
-    is_authenticated = False
-    current_user_email = ""
-    if hasattr(st, "user") and getattr(st.user, "is_logged_in", False):
-        current_user_email = (st.user.get("email") or "").strip().lower()
-        if current_user_email in AUTHORIZED_EMAILS:
-            is_authenticated = True
-            
-    if not is_authenticated:
-        st.error("🔒 보안 보호 안내: 등록된 관리자 전용 퀀트 서비스입니다.")
+try:
+    if "ADMIN_PASSWORD" in st.secrets:
+        ADMIN_PASSWORDS.add(str(st.secrets["ADMIN_PASSWORD"]).strip().lower())
+except Exception:
+    pass
+
+if "is_authenticated" not in st.session_state:
+    st.session_state.is_authenticated = False
+
+# 1. URL 파라미터 자동 인증 (Magic Link: ?key=townboy)
+url_key = str(st.query_params.get("key", "")).strip().lower()
+if url_key and url_key in ADMIN_PASSWORDS:
+    st.session_state.is_authenticated = True
+
+# 2. Google OAuth 확인 (st.user)
+if hasattr(st, "user") and getattr(st.user, "is_logged_in", False):
+    current_user_email = (st.user.get("email") or "").strip().lower()
+    if current_user_email in AUTHORIZED_EMAILS:
+        st.session_state.is_authenticated = True
+
+# 3. 클라우드 환경에서 미인증 시 로그인 화면 렌더링 후 정지
+if is_cloud and not st.session_state.is_authenticated:
+    st.markdown("""
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        html, body, [class*="css"], .stApp {
+            background-color: #0f1015 !important;
+            color: #ffffff !important;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', Roboto, sans-serif !important;
+        }
+    </style>
+    <div style="max-width:440px; margin:70px auto 20px auto; background-color:#17181f; border:1px solid #282a36; border-radius:16px; padding:32px 24px; text-align:center;">
+        <div style="font-size:38px; margin-bottom:12px;">🔒</div>
+        <div style="font-size:20px; font-weight:800; color:#ffffff; margin-bottom:6px;">관리자 전용 인증</div>
+        <div style="font-size:13px; color:#8b90a4; line-height:1.6; margin-bottom:16px;">
+            등록된 관리자 전용 비공개 퀀트 대시보드입니다.<br>
+            대시보드 입장을 위해 관리자 암호를 입력해주세요.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col_l, col_center, col_r = st.columns([1, 1.2, 1])
+    with col_center:
+        with st.form("admin_login_form"):
+            entered_pw = st.text_input("관리자 암호", type="password", placeholder="암호 입력 (기본: townboy)", label_visibility="collapsed")
+            submit_btn = st.form_submit_button("🔑 대시보드 입장", use_container_width=True)
+            if submit_btn:
+                if entered_pw.strip().lower() in ADMIN_PASSWORDS:
+                    st.session_state.is_authenticated = True
+                    st.success("인증되었습니다! 대시보드로 이동합니다...")
+                    st.rerun()
+                else:
+                    st.error("암호가 일치하지 않습니다. 다시 확인해주세요.")
+
         if hasattr(st, "login") and check_has_auth_secret():
-            st.info("관리자 Google 계정으로 로그인하여 접근 권한을 확인해주세요.")
-            if st.button("🔑 Google 계정으로 로그인", type="primary"):
+            st.markdown("<div style='text-align:center; margin:12px 0 8px 0; color:#606478; font-size:12px;'>또는</div>", unsafe_allow_html=True)
+            if st.button("🌐 Google 계정으로 로그인", use_container_width=True):
                 st.login()
-        else:
-            if current_user_email:
-                st.error(f"⛔ 미인가 계정 ({current_user_email}): 접근 권한이 없습니다. 등록된 관리자 계정(tomsslee043@gmail.com)으로 로그인해주세요.")
-            else:
-                st.warning("⚠️ 인증 정보가 확인되지 않았습니다. 관리자 계정으로 접속해주세요.")
-        st.stop()
+
+    st.stop()
 
 
 
