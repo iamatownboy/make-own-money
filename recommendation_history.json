@@ -19,10 +19,13 @@
     "pattern_status": "타점 임박",
     "status": "⏳ 실시간 추적 중 (오늘 등록)",
     "max_price": 443.1012943868179,
-    "current_price": 417.72,
-    "current_pnl_pct": 0.0,
+    "current_price": 430.26,
+    "current_pnl_pct": 3.0,
     "hit_success": false,
-    "is_completed": false
+    "is_completed": false,
+    "strategy_version": "legacy",
+    "recommendation_id": "2026-09-17_TSM_legacy",
+    "fee_slippage_pct": 0.25
   },
   {
     "date": "2026-09-17",
@@ -44,10 +47,13 @@
     "pattern_status": "타점 임박",
     "status": "⏳ 실시간 추적 중 (오늘 등록)",
     "max_price": 351.3741604480826,
-    "current_price": 342.87,
-    "current_pnl_pct": -0.0,
+    "current_price": 347.33,
+    "current_pnl_pct": 1.3,
     "hit_success": false,
-    "is_completed": false
+    "is_completed": false,
+    "strategy_version": "legacy",
+    "recommendation_id": "2026-09-17_GOOGL_legacy",
+    "fee_slippage_pct": 0.25
   },
   {
     "date": "2026-09-17",
@@ -69,10 +75,13 @@
     "pattern_status": "진입 적기",
     "status": "⏳ 실시간 추적 중 (오늘 등록)",
     "max_price": 234.49759976142684,
-    "current_price": 213.9,
-    "current_pnl_pct": -0.0,
+    "current_price": 219.34,
+    "current_pnl_pct": 2.54,
     "hit_success": false,
-    "is_completed": false
+    "is_completed": false,
+    "strategy_version": "legacy",
+    "recommendation_id": "2026-09-17_NVDA_legacy",
+    "fee_slippage_pct": 0.25
   },
   {
     "date": "2026-09-17",
@@ -94,10 +103,13 @@
     "pattern_status": "타점 임박",
     "status": "⏳ 실시간 추적 중 (오늘 등록)",
     "max_price": 527.25,
-    "current_price": 512.5,
-    "current_pnl_pct": 0.0,
+    "current_price": 545.09,
+    "current_pnl_pct": 6.36,
     "hit_success": false,
-    "is_completed": false
+    "is_completed": false,
+    "strategy_version": "legacy",
+    "recommendation_id": "2026-09-17_AMD_legacy",
+    "fee_slippage_pct": 0.25
   },
   {
     "date": "2026-09-17",
@@ -119,10 +131,13 @@
     "pattern_status": "타점 임박",
     "status": "⏳ 실시간 추적 중 (오늘 등록)",
     "max_price": 85.55000305175781,
-    "current_price": 63.7,
-    "current_pnl_pct": 0.0,
+    "current_price": 67.82,
+    "current_pnl_pct": 6.47,
     "hit_success": false,
-    "is_completed": false
+    "is_completed": false,
+    "strategy_version": "legacy",
+    "recommendation_id": "2026-09-17_RKLB_legacy",
+    "fee_slippage_pct": 0.25
   },
   {
     "date": "2026-09-17",
@@ -144,10 +159,13 @@
     "pattern_status": "진입 적기",
     "status": "⏳ 실시간 추적 중 (오늘 등록)",
     "max_price": 267.55999755859375,
-    "current_price": 245.96,
-    "current_pnl_pct": 0.0,
+    "current_price": 251.19,
+    "current_pnl_pct": 2.13,
     "hit_success": false,
-    "is_completed": false
+    "is_completed": false,
+    "strategy_version": "legacy",
+    "recommendation_id": "2026-09-17_AMZN_legacy",
+    "fee_slippage_pct": 0.25
   },
   {
     "date": "2026-09-17",
@@ -169,10 +187,13 @@
     "pattern_status": "타점 형성 중",
     "status": "⏳ 실시간 추적 중 (오늘 등록)",
     "max_price": 399.3599853515625,
-    "current_price": 339.51,
-    "current_pnl_pct": 0.0,
+    "current_price": 347.3,
+    "current_pnl_pct": 2.29,
     "hit_success": false,
-    "is_completed": false
+    "is_completed": false,
+    "strategy_version": "legacy",
+    "recommendation_id": "2026-09-17_AVGO_legacy",
+    "fee_slippage_pct": 0.25
   },
   {
     "date": "2026-09-17",
@@ -194,10 +215,13 @@
     "pattern_status": "타점 임박",
     "status": "⏳ 실시간 추적 중 (오늘 등록)",
     "max_price": 382.29,
-    "current_price": 382.29,
-    "current_pnl_pct": 0.0,
+    "current_price": 383.54,
+    "current_pnl_pct": 0.33,
     "hit_success": false,
-    "is_completed": false
+    "is_completed": false,
+    "strategy_version": "legacy",
+    "recommendation_id": "2026-09-17_ISRG_legacy",
+    "fee_slippage_pct": 0.25
   },
   {
     "date": "2026-09-17",
@@ -219,10 +243,13 @@
     "pattern_status": "타점 임박",
     "status": "⏳ 실시간 추적 중 (오늘 등록)",
     "max_price": 926.55,
-    "current_price": 926.55,
-    "current_pnl_pct": -0.0,
+    "current_price": 977.5,
+    "current_pnl_pct": 5.5,
     "hit_success": false,
-    "is_completed": false
+    "is_completed": false,
+    "strategy_version": "legacy",
+    "recommendation_id": "2026-09-17_MU_legacy",
+    "fee_slippage_pct": 0.25
   },
   {
     "date": "2026-09-17",
@@ -244,10 +271,13 @@
     "pattern_status": "타점 임박",
     "status": "⏳ 실시간 추적 중 (오늘 등록)",
     "max_price": 103.5,
-    "current_price": 103.5,
-    "current_pnl_pct": 0.0,
+    "current_price": 101.27,
+    "current_pnl_pct": -2.15,
     "hit_success": false,
-    "is_completed": false
+    "is_completed": false,
+    "strategy_version": "legacy",
+    "recommendation_id": "2026-09-17_SE_legacy",
+    "fee_slippage_pct": 0.25
   },
   {
     "date": "2026-09-17",
@@ -267,11 +297,15 @@
       "월가목표+36%"
     ],
     "pattern_status": "타점 임박",
-    "status": "HOLD",
+    "status": "⏳ 실시간 추적 중 (오늘 등록)",
     "max_price": 10.79,
-    "current_price": 10.79,
-    "current_pnl_pct": 0.0,
-    "hit_success": false
+    "current_price": 11.55,
+    "current_pnl_pct": 7.04,
+    "hit_success": false,
+    "strategy_version": "legacy",
+    "recommendation_id": "2026-09-17_RDW_legacy",
+    "fee_slippage_pct": 0.25,
+    "is_completed": false
   },
   {
     "date": "2026-09-17",
@@ -291,10 +325,186 @@
       "월가목표+32%"
     ],
     "pattern_status": "타점 임박",
-    "status": "HOLD",
+    "status": "⏳ 실시간 추적 중 (오늘 등록)",
     "max_price": 129.96,
-    "current_price": 129.96,
+    "current_price": 128.6,
+    "current_pnl_pct": -1.05,
+    "hit_success": false,
+    "strategy_version": "legacy",
+    "recommendation_id": "2026-09-17_SHOP_legacy",
+    "fee_slippage_pct": 0.25,
+    "is_completed": false
+  },
+  {
+    "recommendation_id": "2026-09-17_TSM_v1.0.0",
+    "strategy_version": "v1.0.0",
+    "recommended_at": "2026-09-18T08:35:30.083658+09:00",
+    "market_date": "2026-09-17",
+    "date": "2026-09-17",
+    "ticker": "TSM",
+    "name": "TSMC",
+    "category": "파운드리 반도체",
+    "rec_price": 430.26,
+    "target_price": 444.55,
+    "target_price_2": 456.8,
+    "stop_loss": 418.82,
+    "expected_upside": 28.4,
+    "ai_score": 78,
+    "tags": [
+      "피보나치지지",
+      "빗각돌파임박",
+      "월가목표+28%",
+      "월가괴리_25이상"
+    ],
+    "pattern_status": "타점 임박",
+    "rules": {
+      "min_score": 68,
+      "min_rr": 1.2,
+      "holding_days": 20
+    },
+    "market_context": {
+      "regime": "강세 상승장",
+      "nasdaq_trend": "상승 우위",
+      "qqq_20d_return": 0.8,
+      "above_20ma": true
+    },
+    "fee_slippage_pct": 0.25,
+    "status": "HOLD",
+    "max_price": 430.26,
+    "current_price": 430.26,
     "current_pnl_pct": 0.0,
-    "hit_success": false
+    "realized_pnl_pct": null,
+    "realized_pnl_net_pct": null,
+    "hit_success": false,
+    "is_completed": false
+  },
+  {
+    "recommendation_id": "2026-09-17_GOOGL_v1.0.0",
+    "strategy_version": "v1.0.0",
+    "recommended_at": "2026-09-18T08:35:30.083685+09:00",
+    "market_date": "2026-09-17",
+    "date": "2026-09-17",
+    "ticker": "GOOGL",
+    "name": "알파벳 (구글)",
+    "category": "검색/AI",
+    "rec_price": 347.33,
+    "target_price": 358.43,
+    "target_price_2": 367.95,
+    "stop_loss": 339.58,
+    "expected_upside": 23.3,
+    "ai_score": 74,
+    "tags": [
+      "피보나치지지",
+      "빗각돌파임박",
+      "상승다이버전스",
+      "반등캔들출현"
+    ],
+    "pattern_status": "타점 임박",
+    "rules": {
+      "min_score": 68,
+      "min_rr": 1.2,
+      "holding_days": 20
+    },
+    "market_context": {
+      "regime": "강세 상승장",
+      "nasdaq_trend": "상승 우위",
+      "qqq_20d_return": 0.8,
+      "above_20ma": true
+    },
+    "fee_slippage_pct": 0.25,
+    "status": "HOLD",
+    "max_price": 347.33,
+    "current_price": 347.33,
+    "current_pnl_pct": 0.0,
+    "realized_pnl_pct": null,
+    "realized_pnl_net_pct": null,
+    "hit_success": false,
+    "is_completed": false
+  },
+  {
+    "recommendation_id": "2026-09-17_MU_v1.0.0",
+    "strategy_version": "v1.0.0",
+    "recommended_at": "2026-09-18T08:35:30.083700+09:00",
+    "market_date": "2026-09-17",
+    "date": "2026-09-17",
+    "ticker": "MU",
+    "name": "마이크론",
+    "category": "메모리/HBM 반도체",
+    "rec_price": 977.5,
+    "target_price": 1042.4,
+    "target_price_2": 1093.86,
+    "stop_loss": 957.07,
+    "expected_upside": 54.8,
+    "ai_score": 71,
+    "tags": [
+      "피보나치지지",
+      "빗각돌파임박",
+      "상승다이버전스",
+      "월가목표+54%"
+    ],
+    "pattern_status": "타점 임박",
+    "rules": {
+      "min_score": 68,
+      "min_rr": 1.2,
+      "holding_days": 20
+    },
+    "market_context": {
+      "regime": "강세 상승장",
+      "nasdaq_trend": "상승 우위",
+      "qqq_20d_return": 0.8,
+      "above_20ma": true
+    },
+    "fee_slippage_pct": 0.25,
+    "status": "HOLD",
+    "max_price": 977.5,
+    "current_price": 977.5,
+    "current_pnl_pct": 0.0,
+    "realized_pnl_pct": null,
+    "realized_pnl_net_pct": null,
+    "hit_success": false,
+    "is_completed": false
+  },
+  {
+    "recommendation_id": "2026-09-17_ASML_v1.0.0",
+    "strategy_version": "v1.0.0",
+    "recommended_at": "2026-09-18T08:35:30.083711+09:00",
+    "market_date": "2026-09-17",
+    "date": "2026-09-17",
+    "ticker": "ASML",
+    "name": "ASML",
+    "category": "반도체 노광장비",
+    "rec_price": 1629.67,
+    "target_price": 1701.78,
+    "target_price_2": 1764.01,
+    "stop_loss": 1594.94,
+    "expected_upside": 31.0,
+    "ai_score": 71,
+    "tags": [
+      "빗각돌파임박",
+      "상승다이버전스",
+      "반등캔들출현",
+      "월가목표+31%"
+    ],
+    "pattern_status": "타점 임박",
+    "rules": {
+      "min_score": 68,
+      "min_rr": 1.2,
+      "holding_days": 20
+    },
+    "market_context": {
+      "regime": "강세 상승장",
+      "nasdaq_trend": "상승 우위",
+      "qqq_20d_return": 0.8,
+      "above_20ma": true
+    },
+    "fee_slippage_pct": 0.25,
+    "status": "HOLD",
+    "max_price": 1629.67,
+    "current_price": 1629.67,
+    "current_pnl_pct": 0.0,
+    "realized_pnl_pct": null,
+    "realized_pnl_net_pct": null,
+    "hit_success": false,
+    "is_completed": false
   }
 ]
