@@ -35,12 +35,20 @@ st.set_page_config(
 # -----------------------------------------------------------------------------
 AUTHORIZED_EMAILS = {"tomsslee043@gmail.com"}
 
-ADMIN_PASSWORDS = {
-    "townboy",
-    "tomsslee043",
-    "0403",
-    "makeownmoney"
-}
+ADMIN_PASSWORDS = set()
+
+# 환경 변수 및 Streamlit Secrets에서만 안전하게 비밀번호 주입 (소스코드 평문 하드코딩 원천 금지)
+env_pw = os.environ.get("ADMIN_PASSWORD", "").strip()
+if env_pw:
+    ADMIN_PASSWORDS.add(env_pw)
+
+try:
+    if "ADMIN_PASSWORD" in st.secrets:
+        secret_pw = str(st.secrets["ADMIN_PASSWORD"]).strip()
+        if secret_pw:
+            ADMIN_PASSWORDS.add(secret_pw)
+except Exception:
+    pass
 
 def check_has_auth_secret() -> bool:
     try:
@@ -55,12 +63,6 @@ is_cloud = (
     os.environ.get("USER") == "appuser" or
     check_has_auth_secret()
 )
-
-try:
-    if "ADMIN_PASSWORD" in st.secrets:
-        ADMIN_PASSWORDS.add(str(st.secrets["ADMIN_PASSWORD"]).strip().lower())
-except Exception:
-    pass
 
 # 보안 강화: URL 쿼리스트링에 key 파라미터가 존재할 경우 주소창/로그 노출 방지를 위해 즉시 제거
 if "key" in st.query_params:
@@ -101,11 +103,14 @@ if is_cloud and not st.session_state.is_authenticated:
     
     col_l, col_center, col_r = st.columns([1, 1.2, 1])
     with col_center:
+        if not ADMIN_PASSWORDS and not check_has_auth_secret():
+            st.warning("⚠️ Streamlit Secrets에 ADMIN_PASSWORD가 등록되지 않았습니다. Secrets 설정을 먼저 완료해주세요.")
+
         with st.form("admin_login_form", clear_on_submit=True):
-            entered_pw = st.text_input("관리자 암호", type="password", placeholder="암호 입력 (기본: townboy)", label_visibility="collapsed")
+            entered_pw = st.text_input("관리자 암호", type="password", placeholder="비밀번호를 입력하세요", label_visibility="collapsed")
             submit_btn = st.form_submit_button("🔑 대시보드 입장", use_container_width=True)
             if submit_btn and entered_pw:
-                pw_input = entered_pw.strip().lower()
+                pw_input = entered_pw.strip()
                 is_valid = any(hmac.compare_digest(pw_input, valid_pw) for valid_pw in ADMIN_PASSWORDS)
                 if is_valid:
                     st.session_state.is_authenticated = True
