@@ -979,8 +979,8 @@ def test_write_probe_dedicated_health_check_table_success(monkeypatch):
     assert "daily_recommendation_cache" not in table_names
 
 
-# 24. 구버전 스키마(system_health_check 없음) 시 기존 행 백업 및 원상 복원 무손실 검증
-def test_write_probe_fallback_cache_table_backup_and_restore(monkeypatch):
+# 24. system_health_check 테이블 부재 시 비즈니스 테이블 접근 차단 및 스키마 미적용 안전 반환 검증
+def test_write_probe_missing_health_check_table_blocks_and_never_touches_business_tables(monkeypatch):
     import base64
     from quant_core.db import get_supabase_diagnostics, is_supabase_enabled
 
@@ -993,55 +993,42 @@ def test_write_probe_fallback_cache_table_backup_and_restore(monkeypatch):
     monkeypatch.setenv("SUPABASE_URL", "https://mock.supabase.co")
     monkeypatch.setenv("SUPABASE_KEY", svc_key)
 
-    existing_original_row = {
-        "date": "1970-01-01",
-        "recommendations": [{"original_data": "important_value"}],
-        "updated_at": "1970-01-01T00:00:00"
-    }
+    business_table_mutations = []
 
-    operations = []
-
-    class MockFallbackClient:
+    class MockStrictClient:
         def table(self, name):
-            table_instance = self
-
             if name == "system_health_check":
                 class MissingTable:
                     def upsert(self, *args, **kwargs):
-                        # 테이블 부재 에러 발생 (42P01 시뮬레이션)
+                        # 테이블 부재 에러 발생 (PostgreSQL error 42P01)
                         raise Exception('relation "system_health_check" does not exist (PostgreSQL error 42P01)')
                 return MissingTable()
 
-            class CacheTable:
+            class BusinessTable:
                 def select(self, *args, **kwargs):
-                    operations.append("select")
                     return self
                 def limit(self, *args, **kwargs):
                     return self
-                def eq(self, col, val):
-                    operations.append(f"eq_{col}_{val}")
-                    return self
                 def upsert(self, records, on_conflict=None):
-                    operations.append(("upsert", records))
+                    business_table_mutations.append(("upsert", name, records))
                     return self
                 def delete(self):
-                    operations.append("delete")
+                    business_table_mutations.append(("delete", name))
                     return self
                 def execute(self):
-                    if "select" in operations:
-                        return type('Response', (), {'data': [existing_original_row]})()
-                    return type('Response', (), {'data': []})()
+                    return type('Response', (), {'data': [{'id': 1}]})()
 
-            return CacheTable()
+            return BusinessTable()
 
-    monkeypatch.setattr("quant_core.db.get_supabase_client", lambda: MockFallbackClient())
+    monkeypatch.setattr("quant_core.db.get_supabase_client", lambda: MockStrictClient())
 
     diag = get_supabase_diagnostics(force_refresh=True)
+    # 1. 읽기는 통과했으나 전용 테이블이 없으므로 can_write는 False, is_healthy는 False여야 함
     assert diag['can_read'] is True
-    assert diag['can_write'] is True
-    assert diag['is_healthy'] is True
+    assert diag['can_write'] is False
+    assert diag['is_healthy'] is False
+    assert is_supabase_enabled() is False
+    assert "스키마 미적용" in diag['status_message']
 
-    # 1970-01-01에 기존 데이터가 있었으므로, 테스트 후 최종적으로 원래 row로 복원 upsert되었는지 확인
-    upsert_records = [op[1] for op in operations if isinstance(op, tuple) and op[0] == "upsert"]
-    assert len(upsert_records) >= 2  # 프로브 upsert + 복원 upsert
-    assert upsert_records[-1] == existing_original_row, "테스트 완료 후 기존 행이 100% 원본 데이터로 복원되어야 합니다."
+    # 2. 핵심 안전성 검증: 비즈니스 테이블(daily_recommendation_cache 등)에 대한 쓰기/삭제 시도가 0건이어야 함
+    assert len(business_table_mutations) == 0, "전용 헬스체크 테이블 부재 시 비즈니스 테이블에 폴백하여 데이터를 건드려서는 안 됩니다."

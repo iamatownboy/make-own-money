@@ -1,7 +1,7 @@
 # 🚀 퀀트 시스템 엄밀화 & Supabase 무손실 운영 데이터 완벽 보호 최종 보고서
 
 > **작업 브랜치**: `feat/strategy-versioning-quant-rigor`
-> **상태**: 사용자 추가 리뷰 지적 사항(무손실 쓰기 점검 방식) 100% 완벽 해결, 단위 테스트 24종 100% 통과, `main` 직접 커밋 금지 원칙 엄격 준수
+> **상태**: 사용자 추가 리뷰 지적 사항(구형 스키마 폴백 비즈니스 테이블 침범 원천 차단) 완벽 해결, 단위 테스트 24종 100% 통과, `main` 직접 커밋 금지 원칙 엄격 준수
 
 ---
 
@@ -10,30 +10,12 @@
 ### 1. DB 새로 생성 불필요 (무손실 보존)
 기존 DB의 추천 기록과 성과 판정 데이터는 귀중한 운영 자산입니다. DB를 새로 파거나 테이블을 삭제할 필요가 전혀 없으며, 아래의 안전 마이그레이션 SQL을 Supabase SQL Editor에서 1회 실행하시면 기존 데이터가 100% 보존됩니다.
 
-### 2. SQL 구분자 및 당일(2026-09-17) 과거 추천 처리
-- **구분자 일치**: 파이썬 코드(`quant_core/db.py`)와 동일하게 `date || '_' || ticker || '_' || strategy_version` (언더스코어 `_`)로 완벽 일치하도록 구성되었습니다.
-- **당일 레거시 처리**: 오늘(`2026-09-17`) 기존 구버전 로직으로 생성되었던 기록(구버전 엔진은 `rules` 메타데이터가 없음)까지 안전하게 감지하여 `legacy`로 일괄 정리하도록 조건을 고도화했습니다:
-  ```sql
-  WHERE strategy_version IS NULL
-     OR strategy_version = ''
-     OR (strategy_version = 'v1.0.0' AND (date < '2026-09-17' OR rules IS NULL OR rules = '{}'::jsonb));
-  ```
+### 2. 구형 스키마 폴백 완전 제거 (비즈니스 테이블 0% 침범)
+- `system_health_check` 테이블이 없는 환경에서 캐시 테이블(`daily_recommendation_cache`)을 덮어쓰고 복원하던 폴백을 **완전히 제거**했습니다.
+- 전용 헬스체크 테이블이 없을 경우, 비즈니스 테이블에 일절 접근하지 않고 즉시 **`🔴 Supabase 스키마 미적용 (supabase_schema.sql 마이그레이션 필요)`** 상태를 반환하여 데이터 오염 위험을 0.000%로 완벽 차단했습니다.
 
----
-
-## 📌 추가 보완 사항 해결 내역
-
-### 1. 🛡️ [P1] 무손실 쓰기 점검(Write Probe) 고도화 (전용 테이블 + 원상 복구)
-- **문제점**:
-  - 기존 방식은 캐시 테이블의 `1970-01-01` 날짜 행을 upsert 후 delete하였기 때문에, 해당 날짜에 데이터가 있었을 경우 덮어써지거나 삭제가 실패했을 때 캐시 테이블에 점검용 더미 행이 남는 문제 존재.
-- **해결 조치 (`quant_core/db.py`, `supabase_schema.sql`)**:
-  1. **1순위 (전용 헬스체크 테이블)**:
-     - `system_health_check` 전용 테이블을 도입(`id VARCHAR(64) PRIMARY KEY, pinged_at TIMESTAMPTZ`).
-     - 점검 시 비즈니스 테이블(추천 기록/캐시)에 전혀 접근하지 않고, 전용 테이블에 무작위 UUID 행(`probe_{uuid}`)을 upsert/delete하여 비즈니스 데이터 오염/손실 가능성을 0.000%로 완전 차단.
-  2. **2순위 (구버전 스키마 호환 무손실 백업 & 원상 복구)**:
-     - `system_health_check` 테이블이 아직 생성되지 않은 환경(`42P01` 에러)에서는 캐시 테이블을 점검하되,
-     - 먼저 기존 데이터를 `SELECT`하여 백업한 뒤 테스트를 수행하고,
-     - `finally` 블록에서 기존 데이터가 있었으면 원래 데이터로 즉시 복원(`upsert`), 없었으면 삭제(`delete`)를 보장하여 데이터 유실을 완벽 방지.
+### 3. Streamlit Cloud 배포 의존성 최적화
+- `requirements.txt`에서 빌드 충돌을 유발하는 상한선(`streamlit<=1.51.0`, `numpy<2.0.0`) 및 불필요한 `pytest`를 정리하여 Streamlit Cloud 인스톨러 에러를 해결했습니다.
 
 ---
 
@@ -129,9 +111,9 @@ tests/test_quant_engine.py::test_db_upsert_strict_compound_key_no_silent_overwri
 tests/test_quant_engine.py::test_supabase_schema_migration_backfill_order PASSED  [ 87%]
 tests/test_quant_engine.py::test_write_probe_authenticated_key_rejection PASSED   [ 91%]
 tests/test_quant_engine.py::test_write_probe_dedicated_health_check_table_success PASSED [ 95%]
-tests/test_quant_engine.py::test_write_probe_fallback_cache_table_backup_and_restore PASSED [100%]
+tests/test_quant_engine.py::test_write_probe_missing_health_check_table_blocks_and_never_touches_business_tables PASSED [100%]
 
-============================== 24 passed in 1.30s ==============================
+============================== 24 passed in 0.93s ==============================
 ```
 
 - **구문 컴파일 검증**: `python3 -m py_compile app.py quant_core/*.py tests/*.py` ➡️ **오류 0건**

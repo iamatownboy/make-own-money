@@ -116,8 +116,9 @@ def get_supabase_diagnostics(force_refresh: bool = False) -> Dict[str, Any]:
     except Exception as re:
         _last_error = f"SELECT 권한 오류: {re}"
 
-    # 2. 실제 쓰기 권한 실증 점검 (추측 배제: 무손실 전용 헬스체크 테이블 및 원상 복구 보장)
+    # 2. 실제 쓰기 권한 실증 점검 (전용 system_health_check 테이블 전용, 비즈니스 테이블 침범 완전 배제)
     can_write = False
+    is_schema_missing = False
     if key_role == "anon":
         # anon 키는 비공개 RLS 정책상 쓰기가 원천 차단되므로 시도 없이 거부
         can_write = False
@@ -126,46 +127,23 @@ def get_supabase_diagnostics(force_refresh: bool = False) -> Dict[str, Any]:
     else:
         probe_id = f"probe_{uuid.uuid4().hex}"
         try:
-            # [1순위: 전용 헬스체크 테이블] 비즈니스 데이터(추천/캐시)에 영향이 전무한 전용 테이블 사용
+            # [전용 헬스체크 테이블 단독 사용] 비즈니스 데이터(추천/캐시) 테이블은 절대로 건드리지 않음
             test_row = {"id": probe_id, "pinged_at": datetime.now().isoformat()}
             client.table("system_health_check").upsert(test_row).execute()
             can_write = True
             try:
                 client.table("system_health_check").delete().eq("id", probe_id).execute()
             except Exception:
-                pass  # 삭제 실패 시에도 전용 테이블의 핑 행일 뿐 비즈니스 데이터에 영향 0%
+                pass  # 삭제 실패 시에도 전용 테이블의 핑 행일 뿐 비즈니스 데이터 영향 0%
         except Exception as te:
+            can_write = False
             err_msg = str(te)
-            # system_health_check 테이블이 아직 생성되지 않은 구버전 환경의 경우:
-            # daily_recommendation_cache 테이블에서 '기존 행 백업 & 원상 복구' 방식으로 무손실 실증
+            # system_health_check 테이블이 아직 생성되지 않은 경우:
+            # 비즈니스 캐시 행을 덮어쓰지 않고 명확하게 '스키마 마이그레이션 필요' 상태로 방어
             if "relation" in err_msg.lower() or "does not exist" in err_msg.lower() or "42p01" in err_msg.lower():
-                target_date = "1970-01-01"
-                orig_row = None
-                try:
-                    existing = client.table("daily_recommendation_cache").select("*").eq("date", target_date).execute()
-                    if existing and existing.data:
-                        orig_row = existing.data[0]
-                    test_cache = {
-                        "date": target_date,
-                        "recommendations": [{"health_check": True}],
-                        "updated_at": datetime.now().isoformat()
-                    }
-                    client.table("daily_recommendation_cache").upsert(test_cache, on_conflict="date").execute()
-                    can_write = True
-                except Exception as we:
-                    can_write = False
-                    _last_error = f"실제 쓰기 권한 거부 (service_role 키 필요): {we}"
-                finally:
-                    # 무손실 원상 복원 보장: 기존 데이터가 있었으면 원래대로 복원, 없었으면 삭제
-                    try:
-                        if orig_row:
-                            client.table("daily_recommendation_cache").upsert(orig_row, on_conflict="date").execute()
-                        elif can_write:
-                            client.table("daily_recommendation_cache").delete().eq("date", target_date).execute()
-                    except Exception:
-                        pass
+                is_schema_missing = True
+                _last_error = "스키마 마이그레이션 필요: system_health_check 테이블이 없습니다. supabase_schema.sql을 먼저 실행해 주세요."
             else:
-                can_write = False
                 _last_error = f"실제 쓰기 권한 거부 (service_role 키 필요): {te}"
 
     diag["can_read"] = can_read
@@ -176,14 +154,14 @@ def get_supabase_diagnostics(force_refresh: bool = False) -> Dict[str, Any]:
         diag["is_healthy"] = True
         diag["is_connected"] = True
         diag["status_message"] = "🟢 Supabase 연동됨 (읽기·쓰기 실증 완료)"
+    elif is_schema_missing or not can_read:
+        diag["is_healthy"] = False
+        diag["is_connected"] = False
+        diag["status_message"] = "🔴 Supabase 스키마 미적용 (supabase_schema.sql 마이그레이션 필요)"
     elif can_read and not can_write:
         diag["is_healthy"] = False
         diag["is_connected"] = False
         diag["status_message"] = "🟠 Supabase 쓰기 권한 부족 (service_role 키 필요, 읽기만 가능)"
-    elif not can_read:
-        diag["is_healthy"] = False
-        diag["is_connected"] = False
-        diag["status_message"] = "🔴 Supabase 테이블 조회 실패 (supabase_schema.sql 마이그레이션 필요)"
     else:
         diag["is_healthy"] = False
         diag["is_connected"] = False
