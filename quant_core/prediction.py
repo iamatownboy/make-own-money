@@ -8,7 +8,7 @@ quant_core/prediction.py
 
 import pandas as pd
 import numpy as np
-from typing import Dict, Any
+from typing import Dict, Any, List
 from .indicators import get_support_resistance_levels
 
 
@@ -156,9 +156,44 @@ def evaluate_technical_health(df: pd.DataFrame) -> Dict[str, Any]:
     }
 
 
+def find_volume_profile_nodes(df: pd.DataFrame, bins: int = 15) -> Dict[str, List[float]]:
+    """최근 60거래일 거래량 집중 매물대(Volume Profile Nodes)를 추출합니다."""
+    if len(df) < 10:
+        return {'resistance_nodes': [], 'support_nodes': []}
+    
+    recent = df.tail(min(60, len(df))).copy()
+    current_price = float(df['Close'].iloc[-1])
+    
+    price_min = float(recent['Low'].min())
+    price_max = float(recent['High'].max())
+    if price_max <= price_min:
+        return {'resistance_nodes': [], 'support_nodes': []}
+        
+    price_bins = np.linspace(price_min, price_max, bins + 1)
+    typical_prices = (recent['High'] + recent['Low'] + recent['Close']) / 3.0
+    vol_hist, _ = np.histogram(typical_prices, bins=price_bins, weights=recent['Volume'])
+    
+    mean_vol = np.mean(vol_hist)
+    high_vol_indices = np.where(vol_hist > mean_vol * 1.2)[0]
+    
+    r_nodes = []
+    s_nodes = []
+    for idx in high_vol_indices:
+        node_price = (price_bins[idx] + price_bins[idx + 1]) / 2.0
+        if node_price > current_price * 1.015:
+            r_nodes.append(round(node_price, 2))
+        elif node_price < current_price * 0.985:
+            s_nodes.append(round(node_price, 2))
+            
+    r_nodes.sort()
+    s_nodes.sort(reverse=True)
+    return {'resistance_nodes': r_nodes, 'support_nodes': s_nodes}
+
+
 def predict_price_scenarios(df: pd.DataFrame, days_ahead: int = 5) -> Dict[str, Any]:
     """
-    고변동성 2X 종목의 ATR 및 일일 변동성을 기반으로 단기 시나리오별 가격 밴드를 예측합니다.
+    실제 구조적 저항선, 거래량 매물대, 스윙 고점/저점, ATR 변동성을 결합하여
+    종목 고유의 현실적인 목표가, 손절가 및 동적 손익비(Risk-Reward Ratio)를 산출합니다.
     """
     if df.empty or len(df) < 5:
         return {}
@@ -166,42 +201,83 @@ def predict_price_scenarios(df: pd.DataFrame, days_ahead: int = 5) -> Dict[str, 
     last = df.iloc[-1]
     current_price = float(last['Close'])
     atr = float(last['ATR_14']) if 'ATR_14' in last and not np.isnan(last['ATR_14']) else current_price * 0.04
+    direction = last.get('Supertrend_Direction', 1)
     
+    # 1. 구조적 상방 저항 후보군 집계 (피봇 저항선, 매물대, 20일 스윙 고점)
     sr = get_support_resistance_levels(df)
+    vp = find_volume_profile_nodes(df)
+    swing_high_20 = float(df['High'].tail(min(20, len(df))).max())
     
-    # 단기 변동폭 계산 (기간에 따른 제곱근 변동성 반영)
+    resistance_pool = set()
+    for r in sr.get('resistances', []):
+        if r > current_price * 1.01:
+            resistance_pool.add(round(float(r), 2))
+    for r in vp.get('resistance_nodes', []):
+        if r > current_price * 1.015:
+            resistance_pool.add(round(float(r), 2))
+    if swing_high_20 > current_price * 1.01:
+        resistance_pool.add(round(swing_high_20, 2))
+        
+    sorted_resistances = sorted(list(resistance_pool))
+    
+    # 1차 목표가 (bull_target_1): 상방에서 실제로 먼저 부딪힐 구조적 저항선
+    atr_cap = round(current_price + (atr * 2.5), 2)
+    atr_floor = round(current_price + max(atr * 0.8, current_price * 0.035), 2)
+    
+    valid_near_r = [r for r in sorted_resistances if r >= atr_floor and r <= atr_cap]
+    if valid_near_r:
+        bull_target_1 = valid_near_r[0]
+    else:
+        bull_target_1 = round(current_price + (atr * 1.4), 2)
+        
+    # 2차 목표가 (bull_target_2): 1차 목표가 상방의 다음 유효 저항선
+    valid_far_r = [r for r in sorted_resistances if r > bull_target_1 * 1.025]
+    if valid_far_r:
+        bull_target_2 = min(valid_far_r[0], round(bull_target_1 + (atr * 1.8), 2))
+    else:
+        bull_target_2 = round(bull_target_1 + (atr * 1.2), 2)
+        
+    # 2. 구조적 하방 지지 후보군 집계 (피봇 지지선, 매물대, 20일 스윙 저점, Supertrend)
+    support_pool = set()
+    for s in sr.get('supports', []):
+        if s < current_price * 0.99:
+            support_pool.add(round(float(s), 2))
+    for s in vp.get('support_nodes', []):
+        if s < current_price * 0.985:
+            support_pool.add(round(float(s), 2))
+    swing_low_20 = float(df['Low'].tail(min(20, len(df))).min())
+    if swing_low_20 < current_price * 0.99:
+        support_pool.add(round(swing_low_20, 2))
+    if 'Supertrend' in last and not np.isnan(last['Supertrend']) and direction == 1:
+        st_val = float(last['Supertrend'])
+        if st_val < current_price * 0.99:
+            support_pool.add(round(st_val, 2))
+            
+    sorted_supports = sorted(list(support_pool), reverse=True)
+    
+    # 손절가 (stop_loss): 바로 아래 구조적 지지 붕괴선과 ATR 기반 안전선 조화
+    atr_sl = round(current_price - (atr * 1.5), 2)
+    min_safe_sl = round(current_price * 0.92, 2)  # 최대 손절 마지노선 (-8%)
+    
+    valid_near_s = [s for s in sorted_supports if s <= current_price * 0.985 and s >= min_safe_sl]
+    if valid_near_s:
+        structural_sl = round(valid_near_s[0] * 0.995, 2)
+        stop_loss = max(structural_sl, atr_sl)
+    else:
+        stop_loss = atr_sl
+        
+    stop_loss = max(stop_loss, min_safe_sl)
+    
+    # 3. 실제 동적 손익비 (Risk-Reward Ratio) 산출
+    potential_reward = max(0.01, bull_target_1 - current_price)
+    potential_risk = max(0.01, current_price - stop_loss)
+    rr_ratio = round(potential_reward / potential_risk, 2) if potential_risk > 0 else 0.0
+    
     time_factor = np.sqrt(days_ahead)
     expected_move = atr * time_factor
-    
-    # 1. Bull Target (상승 추세 시 1차/2차 목표가)
-    r1 = sr['resistances'][0] if sr['resistances'] else (current_price + expected_move)
-    r2 = sr['resistances'][1] if len(sr['resistances']) > 1 else (current_price + (expected_move * 1.5))
-    
-    bull_target_1 = max(round(r1, 2), round(current_price + expected_move * 1.0, 2))
-    bull_target_2 = max(round(r2, 2), round(current_price + expected_move * 1.6, 2))
-    
-    # 2. Base Scenario (현재 추세 지속 시 예상치)
-    direction = last.get('Supertrend_Direction', 1)
     base_target = round(current_price + (expected_move * 0.3 * direction), 2)
-    
-    # 3. Bear Support (하락 시 1차/2차 지지선)
-    s1 = sr['supports'][0] if sr['supports'] else (current_price - expected_move)
-    s2 = sr['supports'][1] if len(sr['supports']) > 1 else (current_price - (expected_move * 1.5))
-    
-    bear_support_1 = min(round(s1, 2), round(current_price - expected_move * 0.8, 2))
-    bear_support_2 = min(round(s2, 2), round(current_price - expected_move * 1.4, 2))
-    
-    # 4. 권장 손절가 (Stop Loss)
-    # Supertrend 기준선 또는 ATR 1.5배 이탈 지점
-    if 'Supertrend' in last and not np.isnan(last['Supertrend']) and direction == 1:
-        stop_loss = round(min(last['Supertrend'], current_price - (atr * 1.5)), 2)
-    else:
-        stop_loss = round(current_price - (atr * 1.5), 2)
-        
-    # 손익비 (Risk-Reward Ratio)
-    potential_reward = bull_target_1 - current_price
-    potential_risk = current_price - stop_loss
-    rr_ratio = round(potential_reward / potential_risk, 2) if potential_risk > 0 else 0.0
+    bear_support_1 = min(round(s, 2) for s in sorted_supports) if sorted_supports else round(current_price - expected_move * 0.8, 2)
+    bear_support_2 = round(current_price - expected_move * 1.4, 2)
     
     return {
         'days_ahead': days_ahead,
@@ -216,6 +292,6 @@ def predict_price_scenarios(df: pd.DataFrame, days_ahead: int = 5) -> Dict[str, 
         'stop_loss': stop_loss,
         'stop_loss_pct': round(((stop_loss - current_price) / current_price) * 100, 2),
         'risk_reward_ratio': rr_ratio,
-        'resistances': sr['resistances'],
-        'supports': sr['supports']
+        'resistances': sorted_resistances,
+        'supports': sorted_supports
     }

@@ -71,16 +71,18 @@ if "key" in st.query_params:
     except Exception:
         pass
 
-if "is_authenticated" not in st.session_state:
-    st.session_state.is_authenticated = False
-
-# Google OAuth 확인 (st.user)
+# 1. Google OAuth 확인 (내 계정 tomsslee043@gmail.com 만 승인)
+google_login_rejected = False
+rejected_email = ""
 if hasattr(st, "user") and getattr(st.user, "is_logged_in", False):
     current_user_email = (st.user.get("email") or "").strip().lower()
     if current_user_email in AUTHORIZED_EMAILS:
         st.session_state.is_authenticated = True
+    else:
+        google_login_rejected = True
+        rejected_email = current_user_email
 
-# 클라우드 환경에서 미인증 시 전용 로그인 폼 렌더링 후 정지 (URL 노출 차단 & 안전한 세션 인증)
+# 2. 클라우드 환경에서 미인증 시 전용 로그인 폼 렌더링 후 정지
 if is_cloud and not st.session_state.is_authenticated:
     st.markdown("""
     <style>
@@ -96,33 +98,40 @@ if is_cloud and not st.session_state.is_authenticated:
         <div style="font-size:20px; font-weight:800; color:#ffffff; margin-bottom:6px;">관리자 전용 인증</div>
         <div style="font-size:13px; color:#8b90a4; line-height:1.6; margin-bottom:16px;">
             등록된 관리자 전용 비공개 퀀트 대시보드입니다.<br>
-            대시보드 입장을 위해 관리자 암호를 입력해주세요.
+            Google 관리자 계정 로그인 또는 관리자 암호로 입장하세요.
         </div>
     </div>
     """, unsafe_allow_html=True)
     
     col_l, col_center, col_r = st.columns([1, 1.2, 1])
     with col_center:
-        if not ADMIN_PASSWORDS and not check_has_auth_secret():
-            st.warning("⚠️ Streamlit Secrets에 ADMIN_PASSWORD가 등록되지 않았습니다. Secrets 설정을 먼저 완료해주세요.")
-
-        with st.form("admin_login_form", clear_on_submit=True):
-            entered_pw = st.text_input("관리자 암호", type="password", placeholder="비밀번호를 입력하세요", label_visibility="collapsed")
-            submit_btn = st.form_submit_button("🔑 대시보드 입장", use_container_width=True)
-            if submit_btn and entered_pw:
-                pw_input = entered_pw.strip()
-                is_valid = any(hmac.compare_digest(pw_input, valid_pw) for valid_pw in ADMIN_PASSWORDS)
-                if is_valid:
-                    st.session_state.is_authenticated = True
-                    st.success("인증되었습니다! 대시보드로 이동합니다...")
-                    st.rerun()
-                else:
-                    st.error("암호가 일치하지 않습니다. 다시 확인해주세요.")
+        if google_login_rejected:
+            st.error(f"⛔ 접근 불가: 승인되지 않은 계정({rejected_email})입니다. 등록된 관리자 계정으로 로그인해주세요.")
+            if hasattr(st, "logout"):
+                st.button("🔄 다른 계정으로 다시 로그인", on_click=st.logout, use_container_width=True)
 
         if hasattr(st, "login") and check_has_auth_secret():
-            st.markdown("<div style='text-align:center; margin:12px 0 8px 0; color:#606478; font-size:12px;'>또는</div>", unsafe_allow_html=True)
             if st.button("🌐 Google 계정으로 로그인", use_container_width=True):
                 st.login()
+            st.markdown("<div style='text-align:center; margin:10px 0; color:#606478; font-size:12px;'>또는 관리자 암호 입력</div>", unsafe_allow_html=True)
+
+        with st.form("admin_login_form", clear_on_submit=True):
+            entered_pw = st.text_input("관리자 암호", type="password", placeholder="관리자 비밀번호 입력", label_visibility="collapsed")
+            submit_btn = st.form_submit_button("🔑 대시보드 입장", use_container_width=True)
+            if submit_btn:
+                if not ADMIN_PASSWORDS:
+                    st.error("⚠️ Streamlit Secrets에 ADMIN_PASSWORD가 설정되지 않았습니다.")
+                elif entered_pw:
+                    pw_input = entered_pw.strip()
+                    is_valid = any(hmac.compare_digest(pw_input, valid_pw) for valid_pw in ADMIN_PASSWORDS)
+                    if is_valid:
+                        st.session_state.is_authenticated = True
+                        st.success("인증되었습니다! 대시보드로 이동합니다...")
+                        st.rerun()
+                    else:
+                        st.error("암호가 일치하지 않습니다. 다시 확인해주세요.")
+                else:
+                    st.warning("비밀번호를 입력해주세요.")
 
     st.stop()
 
@@ -360,7 +369,7 @@ with tab_rec:
                 fail_hint = "폴백 모드"
             db_badge = f'<span style="font-size:11px; background:#1e293b; color:#94a3b8; padding:2px 8px; border-radius:12px; border:1px solid #475569; font-weight:500; margin-left:8px;" title="{diag.get("last_error", "")}">⚪ 로컬 스토리지 모드 ({fail_hint})</span>'
         st.markdown(f"<h3 style='margin:0; font-weight:800; color:#ffffff; display:flex; align-items:center;'>오늘의 나스닥 퀀트 유망주 Top 7 {db_badge}</h3>", unsafe_allow_html=True)
-        st.caption("피보나치 지지·빗각 돌파·다이버전스 타점 및 최소 손익비(1.2:1)·점수 커트라인을 통과한 엄선 종목입니다.")
+        st.caption("피보나치 지지·빗각 돌파·다이버전스 타점 및 최소 손익비(1.20:1 이상)·최소 퀀트 점수(68점 이상) 커트라인을 통과한 엄선 종목입니다. (뉴욕 증시 거래일 기준)")
     with top_col2:
         top_btn1, top_btn2 = st.columns([1.7, 1])
         with top_btn1:

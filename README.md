@@ -57,64 +57,37 @@ make_own_money/
 │   ├── tracker.py              # 추천 성과 추적 엔진
 │   ├── data_loader.py          # 실시간 시세 및 환율 수집기
 │   └── backtester.py           # 백테스팅 시뮬레이터
+├── supabase_schema.sql         # Supabase 테이블 및 RLS 행 보안 정책 SQL
 └── .gitignore                  # Git 관리 제외 파일 목록
 ```
 
 ---
 
-## 🗄️ 데이터베이스 (Supabase 연동 가이드)
+## 🗄️ 데이터베이스 & 보안 (Supabase RLS 연동 가이드)
 
 Streamlit Community Cloud는 재시작 시 로컬 파일이 초기화되는 휘발성 컨테이너 환경입니다.
-추천 이력과 일일 캐시를 영구 보존하기 위해 **Supabase (무료 PostgreSQL)** 연동을 지원합니다.
+추천 이력과 일일 캐시를 영구 보존하기 위해 **Supabase (PostgreSQL)** 연동을 지원하며, **RLS (Row Level Security)** 정책을 통해 데이터 무단 변조를 원천 차단합니다.
 
 > **하이브리드 무중단 폴백 구조**:
 > Supabase 시크릿이 설정되지 않은 상태에서도 로컬 JSON 파일로 100% 정상 작동하며 오류가 발생하지 않습니다.
 
-### Supabase 테이블 생성 SQL
-Supabase 대시보드의 **SQL Editor**에서 아래 쿼리를 1회 실행합니다:
+### 1. Supabase 스키마 생성 및 RLS 보안 활성화
+Supabase 대시보드의 **SQL Editor**에서 [`supabase_schema.sql`](supabase_schema.sql) 파일의 내용을 실행합니다.
 
-```sql
--- 1. 과거 추천 종목 이력 및 실현 성과 추적 테이블
-CREATE TABLE IF NOT EXISTS recommendation_history (
-    id BIGSERIAL PRIMARY KEY,
-    date DATE NOT NULL,
-    ticker VARCHAR(16) NOT NULL,
-    name VARCHAR(128),
-    category VARCHAR(64),
-    rec_price NUMERIC,
-    target_price NUMERIC,
-    target_price_2 NUMERIC,
-    stop_loss NUMERIC,
-    expected_upside NUMERIC,
-    quant_score INTEGER,
-    tags JSONB,
-    pattern_status VARCHAR(64),
-    status VARCHAR(64),
-    max_price NUMERIC,
-    current_price NUMERIC,
-    current_pnl_pct NUMERIC,
-    realized_pnl_pct NUMERIC,
-    hit_success BOOLEAN DEFAULT FALSE,
-    is_completed BOOLEAN DEFAULT FALSE,
-    failure_reason TEXT,
-    exit_price NUMERIC,
-    exit_date DATE,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    CONSTRAINT unique_date_ticker UNIQUE (date, ticker)
-);
+주요 보안 정책:
+- **`recommendation_history` 및 `daily_recommendation_cache` RLS 활성화**
+- **읽기(SELECT)**: `anon`, `authenticated` 모두 허용 (대시보드 차트/데이터 렌더링용)
+- **쓰기/수정/삭제(ALL/WRITE)**: 오직 백엔드 서버의 `service_role` (Secret key)만 허용하여, 외부에서 공개 키(`anon`)로 데이터를 조작/삭제하는 것을 원천 차단
 
--- 2. 당일 추천 종목 스캔 캐시 테이블
-CREATE TABLE IF NOT EXISTS daily_recommendation_cache (
-    date DATE PRIMARY KEY,
-    recommendations JSONB NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-### Streamlit Cloud 시크릿 설정
+### 2. Streamlit Cloud 시크릿 설정
 Streamlit Cloud 대시보드 (`Settings` > `Secrets`)에 다음을 추가합니다:
 
 ```toml
+# 관리자 인증 (Google OAuth 또는 시크릿 비밀번호)
+ADMIN_PASSWORD = "여기에_나만의_안전한_비밀번호_입력"
+
+# Supabase 연결 설정
 SUPABASE_URL = "https://your-project-id.supabase.co"
-SUPABASE_KEY = "your-anon-public-key"
+# 쓰기 권한이 필요한 경우 Supabase Settings > API의 'Secret keys' (service_role) 사용 권장
+SUPABASE_KEY = "your-supabase-key"
 ```

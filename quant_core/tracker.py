@@ -8,11 +8,50 @@ import json
 import pandas as pd
 import numpy as np
 import yfinance as yf
+import re
+import pytz
 from datetime import datetime, timedelta
 from typing import Dict, List, Any
 from .db import db_load_history, db_upsert_history_items, is_supabase_enabled
 
 HISTORY_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'recommendation_history.json')
+
+
+def get_ny_market_date_str() -> str:
+    """미국 동부 뉴욕 증시(US/Eastern) 거래일 날짜 문자열 반환"""
+    try:
+        eastern = pytz.timezone('US/Eastern')
+        return datetime.now(eastern).strftime('%Y-%m-%d')
+    except Exception:
+        return datetime.now().strftime('%Y-%m-%d')
+
+
+def normalize_factor_tag(tag: str) -> str:
+    """
+    동적 수치가 포함된 태그를 정규화 버킷으로 분류하여
+    통계적 표본이 안전하게 누적될 수 있도록 그룹화합니다.
+    """
+    m = re.search(r'월가목표\+?(-?\d+)', tag)
+    if m:
+        pct = int(m.group(1))
+        if pct >= 25:
+            return "월가괴리_25이상"
+        elif pct >= 12:
+            return "월가괴리_12_25"
+        else:
+            return "월가괴리_12미만"
+            
+    m_bt = re.search(r'백테스트승률(\d+)', tag)
+    if m_bt:
+        win = int(m_bt.group(1))
+        if win >= 70:
+            return "백테스트_승률70이상"
+        elif win >= 55:
+            return "백테스트_승률55_70"
+        else:
+            return "백테스트_승률55미만"
+            
+    return tag
 
 
 def load_history() -> List[Dict[str, Any]]:
@@ -71,15 +110,16 @@ def record_daily_recommendations(recs: List[Dict[str, Any]]):
     (이미 오늘 기록된 종목은 중복 방지)
     """
     history = load_history()
-    today_str = datetime.now().strftime('%Y-%m-%d')
+    today_str = get_ny_market_date_str()
     existing_keys = {f"{item['date']}_{item['ticker']}" for item in history}
     
     added_count = 0
     for r in recs:
-        key = f"{today_str}_{r['ticker']}"
+        rec_date_val = r.get('date') or today_str
+        key = f"{rec_date_val}_{r['ticker']}"
         if key not in existing_keys:
             history.append({
-                'date': today_str,
+                'date': rec_date_val,
                 'ticker': r['ticker'],
                 'name': r['name'],
                 'category': r.get('category', ''),
@@ -192,25 +232,27 @@ def get_adaptive_factor_weights() -> Dict[str, Any]:
                     'tag': item.get('tags', [''])[0]
                 })
 
-        # 팩터별 성패 집계
+        # 팩터별 성패 집계 (정규화 버킷 적용)
         if is_completed:
             for tag in item.get('tags', []):
-                if tag not in factor_stats:
-                    factor_stats[tag] = {'total': 0, 'wins': 0, 'losses': 0}
-                factor_stats[tag]['total'] += 1
+                norm_tag = normalize_factor_tag(tag)
+                if norm_tag not in factor_stats:
+                    factor_stats[norm_tag] = {'total': 0, 'wins': 0, 'losses': 0}
+                factor_stats[norm_tag]['total'] += 1
                 if hit_success:
-                    factor_stats[tag]['wins'] += 1
+                    factor_stats[norm_tag]['wins'] += 1
                 else:
-                    factor_stats[tag]['losses'] += 1
+                    factor_stats[norm_tag]['losses'] += 1
 
-    # 팩터 가중치 조정값 산출 (최소 2회 이상 표본)
+    # 팩터 가중치 조정값 산출 (통계적 왜곡 방지: 최소 10회 이상 표본 누적 시에만 유의미한 가중치 보정)
+    MIN_SAMPLE_THRESHOLD = 10
     factor_adjustments = {}
     boosted_factors = []
     penalized_factors = []
 
     for tag, stats in factor_stats.items():
         total = stats['total']
-        if total >= 2:
+        if total >= MIN_SAMPLE_THRESHOLD:
             win_rate = (stats['wins'] / total) * 100
             if win_rate >= 70:
                 adj = 5 if win_rate >= 80 else 3
