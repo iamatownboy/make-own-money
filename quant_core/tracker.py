@@ -73,13 +73,140 @@ def record_daily_recommendations(recs: List[Dict[str, Any]]):
     return history
 
 
+def diagnose_failure_reason(item: Dict[str, Any], df_after: pd.DataFrame, df_full: pd.DataFrame) -> Dict[str, Any]:
+
+    """
+    예측 실패(손절선 이탈 또는 손실 마감) 종목의 기술적 실패 원인을 분석합니다.
+    """
+    reasons = []
+    try:
+        if len(df_after) >= 1 and len(df_full) >= 20:
+            avg_vol_20 = float(df_full['Volume'].iloc[-20:].mean())
+            break_vol = float(df_after['Volume'].iloc[0])
+            if break_vol < avg_vol_20 * 0.8:
+                reasons.append("돌파 시 거래량 결핍으로 인한 가짜 돌파(Bull Trap)")
+    except Exception:
+        pass
+        
+    try:
+        if 'Close' in df_after and len(df_after) >= 1:
+            last_close = float(df_after['Close'].iloc[-1])
+            if last_close < item['stop_loss']:
+                reasons.append(f"기술적 손절선(${item['stop_loss']:.2f}) 하방 이탈")
+    except Exception:
+        pass
+
+    primary_tag = item.get('tags', ['기술적반등'])[0] if item.get('tags') else '기술적반등'
+    if not reasons:
+        reasons.append(f"'{primary_tag}' 패턴 지지선 붕괴 및 단기 차익 실현 매물 출회")
+        
+    diagnosis_text = " · ".join(reasons)
+    return {
+        'primary_cause': reasons[0],
+        'full_diagnosis': diagnosis_text,
+        'failed_tag': primary_tag
+    }
+
+
+def get_adaptive_factor_weights() -> Dict[str, Any]:
+    """
+    과거 추천 이력의 성공/실패 데이터를 바탕으로:
+    1. 각 팩터별 승률 및 가중치 보너스(+)/페널티(-) 계산
+    2. 최근 14일 내 손절 이탈 종목(쿨다운 대상) 식별
+    3. AI 오답 노트(최근 실패 원인 감사 로그) 생성
+    """
+    history = load_history()
+    if not history:
+        return {
+            'factor_adjustments': {},
+            'cooldown_tickers': {},
+            'failure_notes': [],
+            'boosted_factors': [],
+            'penalized_factors': []
+        }
+
+    factor_stats = {}
+    cooldown_tickers = {}
+    failure_notes = []
+    today_date = datetime.now().date()
+
+    for item in history:
+        t = item['ticker']
+        is_completed = item.get('is_completed', False)
+        hit_success = item.get('hit_success', False)
+        rec_date_str = item.get('date', '')
+        
+        try:
+            rec_date = datetime.strptime(rec_date_str, '%Y-%m-%d').date()
+            days_ago = (today_date - rec_date).days
+        except Exception:
+            days_ago = 999
+
+        # 최근 14일(약 10거래일) 이내 손절 이탈 종목 쿨다운 등록
+        if is_completed and not hit_success and days_ago <= 14:
+            cooldown_tickers[t] = {
+                'ticker': t,
+                'name': item.get('name', t),
+                'date': rec_date_str,
+                'days_ago': days_ago,
+                'reason': item.get('failure_reason', '손절선 이탈'),
+                'penalty': -12
+            }
+            if item.get('failure_reason'):
+                failure_notes.append({
+                    'ticker': t,
+                    'name': item.get('name', t),
+                    'date': rec_date_str,
+                    'reason': item.get('failure_reason'),
+                    'tag': item.get('tags', [''])[0]
+                })
+
+        # 팩터별 성패 집계
+        if is_completed:
+            for tag in item.get('tags', []):
+                if tag not in factor_stats:
+                    factor_stats[tag] = {'total': 0, 'wins': 0, 'losses': 0}
+                factor_stats[tag]['total'] += 1
+                if hit_success:
+                    factor_stats[tag]['wins'] += 1
+                else:
+                    factor_stats[tag]['losses'] += 1
+
+    # 팩터 가중치 조정값 산출 (최소 2회 이상 표본)
+    factor_adjustments = {}
+    boosted_factors = []
+    penalized_factors = []
+
+    for tag, stats in factor_stats.items():
+        total = stats['total']
+        if total >= 2:
+            win_rate = (stats['wins'] / total) * 100
+            if win_rate >= 70:
+                adj = 5 if win_rate >= 80 else 3
+                factor_adjustments[tag] = adj
+                boosted_factors.append({'tag': tag, 'win_rate': round(win_rate, 1), 'adj': f"+{adj}점 (우수 팩터 가산)"})
+            elif win_rate <= 40:
+                adj = -10 if win_rate <= 25 else -6
+                factor_adjustments[tag] = adj
+                penalized_factors.append({'tag': tag, 'win_rate': round(win_rate, 1), 'adj': f"{adj}점 (실패율 과다 감점)"})
+            else:
+                factor_adjustments[tag] = 0
+
+    return {
+        'factor_adjustments': factor_adjustments,
+        'cooldown_tickers': cooldown_tickers,
+        'failure_notes': failure_notes[-5:],
+        'boosted_factors': boosted_factors,
+        'penalized_factors': penalized_factors
+    }
+
+
 def evaluate_and_learn_from_history() -> Dict[str, Any]:
     """
     과거에 추천했던 모든 종목들의 실제 주가를 야후 파이낸스로 재조회하여:
     1. 실제 목표가에 도달했는지(적중 여부)
-    2. 현재까지의 누적 승률 및 평균 수익률
-    3. 어떤 기술적 패턴(피보나치, 빗각 등)이 가장 잘 맞았는지 팩터별 적중률을 학습 분석합니다.
-    (주의: 추천 당일(오늘) 신규 추천 종목은 아직 장 마감 및 거래가 진행되지 않았으므로 '실시간 추적 중'으로 분류하고 승률 통계에서 분리합니다.)
+    2. 손절/실패 시 실패 원인 자동 진단 및 오답노트 작성
+    3. 팩터별 실시간 승률 및 피드백 반영
     """
     history = load_history()
     if not history:
@@ -90,7 +217,8 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
             'win_rate': 0.0,
             'avg_return': 0.0,
             'history_items': [],
-            'best_factors': []
+            'best_factors': [],
+            'adaptive_weights': get_adaptive_factor_weights()
         }
         
     unique_tickers = list(set([item['ticker'] for item in history]))
@@ -112,7 +240,7 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
     completed_samples = 0
     wins = 0
     total_pnls = []
-    factor_hits = {}  # 팩터별 성공 횟수 기록 (자가 학습용)
+    factor_hits = {}
     ongoing_count = 0
     
     for item in history:
@@ -138,7 +266,6 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
             df_after = df[df.index.date > rec_date]
             
             if df_after.empty:
-                # 추천 당일이거나 아직 다음 거래일 봉이 완성되지 않음 (본장 미개장)
                 item['status'] = '⏳ 실시간 추적 중 (오늘 등록)'
                 item['hit_success'] = False
                 item['is_completed'] = False
@@ -152,6 +279,7 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
                     item['hit_success'] = True
                     item['status'] = '🎯 목표가 도달 (성공)'
                     item['is_completed'] = True
+                    item['failure_reason'] = None
                     completed_samples += 1
                     wins += 1
                     total_pnls.append(pnl_pct)
@@ -159,12 +287,19 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
                     item['hit_success'] = False
                     item['status'] = '⚠️ 손절선 이탈'
                     item['is_completed'] = True
+                    diagnosis = diagnose_failure_reason(item, df_after, df)
+                    item['failure_reason'] = diagnosis['full_diagnosis']
                     completed_samples += 1
                     total_pnls.append(pnl_pct)
                 elif len(df_after) >= 20:
                     item['hit_success'] = (curr_p >= rec_p)
                     item['status'] = '기간 만료 마감'
                     item['is_completed'] = True
+                    if not item['hit_success']:
+                        diagnosis = diagnose_failure_reason(item, df_after, df)
+                        item['failure_reason'] = diagnosis['full_diagnosis']
+                    else:
+                        item['failure_reason'] = None
                     completed_samples += 1
                     if item['hit_success']:
                         wins += 1
@@ -188,7 +323,6 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
     win_rate = (wins / completed_samples * 100) if completed_samples > 0 else 0.0
     avg_return = np.mean(total_pnls) if total_pnls else 0.0
     
-    # 최고 승률 팩터 랭킹 (학습 피드백)
     best_factors = []
     for tag, counts in factor_hits.items():
         if counts['total'] >= 1:
@@ -200,6 +334,8 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
             })
     best_factors.sort(key=lambda x: x['win_rate'], reverse=True)
     
+    adaptive_weights = get_adaptive_factor_weights()
+    
     return {
         'total_recs': len(history),
         'completed_count': completed_samples,
@@ -208,5 +344,7 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
         'win_rate': round(win_rate, 1),
         'avg_return': round(avg_return, 1),
         'history_items': history[::-1],
-        'best_factors': best_factors[:4]
+        'best_factors': best_factors[:4],
+        'adaptive_weights': adaptive_weights
     }
+

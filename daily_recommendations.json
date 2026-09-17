@@ -1,6 +1,6 @@
 {
   "date": "2026-09-17",
-  "updated_at": "2026-09-17 08:54:51",
+  "updated_at": "2026-09-17 18:00:35",
   "recommendations": [
     {
       "ticker": "TSM",
@@ -61,7 +61,7 @@
       "bull_target_2": 449.48,
       "stop_loss": 402.5,
       "atr": 10.15,
-      "updated_at": "2026-09-17 08:54"
+      "updated_at": "2026-09-17 18:00"
     },
     {
       "ticker": "GOOGL",
@@ -122,7 +122,7 @@
       "bull_target_2": 366.99,
       "stop_loss": 331.31,
       "atr": 7.71,
-      "updated_at": "2026-09-17 08:54"
+      "updated_at": "2026-09-17 18:00"
     },
     {
       "ticker": "NVDA",
@@ -180,7 +180,7 @@
       "bull_target_2": 237.45,
       "stop_loss": 202.61,
       "atr": 7.52,
-      "updated_at": "2026-09-17 08:54"
+      "updated_at": "2026-09-17 18:00"
     },
     {
       "ticker": "ISRG",
@@ -241,7 +241,7 @@
       "bull_target_2": 417.47,
       "stop_loss": 365.43,
       "atr": 11.24,
-      "updated_at": "2026-09-17 08:54"
+      "updated_at": "2026-09-17 18:00"
     },
     {
       "ticker": "MU",
@@ -302,7 +302,7 @@
       "bull_target_2": 1061.29,
       "stop_loss": 861.99,
       "atr": 43.04,
-      "updated_at": "2026-09-17 08:54"
+      "updated_at": "2026-09-17 18:00"
     },
     {
       "ticker": "SE",
@@ -363,7 +363,7 @@
       "bull_target_2": 115.73,
       "stop_loss": 97.64,
       "atr": 3.91,
-      "updated_at": "2026-09-17 08:54"
+      "updated_at": "2026-09-17 18:00"
     },
     {
       "ticker": "AMD",
@@ -424,7 +424,7 @@
       "bull_target_2": 575.58,
       "stop_loss": 462.11,
       "atr": 20.15,
-      "updated_at": "2026-09-17 08:54"
+      "updated_at": "2026-09-17 18:00"
     }
   ]
 }

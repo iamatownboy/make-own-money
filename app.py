@@ -435,38 +435,65 @@ with tab_rec:
                     st.rerun()
 
 
-        # 🧠 [신규] AI 추천 성과 추적 & 자가 학습 섹션
+        # 🧠 [신규] AI 추천 성과 추적 & 자가 학습 피드백 (오답 노트)
         st.markdown("<hr style='border:0; border-top:1px solid #23252e; margin: 12px 0 10px 0;'>", unsafe_allow_html=True)
-        with st.expander("🧠 AI 추천 적중률 & 자가 학습 피드백"):
+        with st.expander("🧠 AI 추천 성과 추적 & 자가 학습 오답 노트"):
             try:
                 from quant_core.tracker import evaluate_and_learn_from_history
                 track_res = evaluate_and_learn_from_history()
+                adaptive = track_res.get('adaptive_weights', {})
                 
                 if track_res.get('completed_count', 0) > 0:
                     st.markdown(f"""
                     <div style="font-size:13px; line-height:1.7;">
-                        • <b>누적 추천 종목</b>: {track_res['total_recs']}개 (완료 {track_res['completed_count']}건 · 진행 {track_res['ongoing_count']}건)<br>
-                        • <b>목표가 적중 승률</b>: <b style="color:#00e676;">{track_res['win_rate']}%</b><br>
-                        • <b>평균 실현 수익률</b>: <b style="color:#f04452;">+{track_res['avg_return']}%</b>
+                        • <b>누적 표본수</b>: {track_res['total_recs']}개 (완료 {track_res['completed_count']}건 · 진행 {track_res['ongoing_count']}건)<br>
+                        • <b>실제 적중 승률</b>: <b style="color:#00e676;">{track_res['win_rate']}%</b> ({track_res['wins']}승 {track_res['completed_count']-track_res['wins']}패)<br>
+                        • <b>평균 실현 수익률</b>: <b style="color:{'#f04452' if track_res['avg_return']>=0 else '#3182f6'};">{track_res['avg_return']:+}%</b>
                     </div>
                     """, unsafe_allow_html=True)
-                    if track_res.get('best_factors'):
-                        st.markdown("<div style='font-size:12px; font-weight:700; color:#9094a6; margin-top:8px;'>가장 잘 맞았던 팩터 (자가 학습 순위)</div>", unsafe_allow_html=True)
-                        for bf in track_res['best_factors']:
-                            st.write(f"• #{bf['factor']}: 승률 {bf['win_rate']}% ({bf['count']}회)")
                 else:
                     st.markdown(f"""
                     <div style="font-size:12.5px; line-height:1.7; color:#d1d5db;">
-                        • <b>오늘 신규 등록</b>: <b>{track_res.get('ongoing_count', 7)}개 종목 실시간 추적 중</b><br>
-                        • <b>진행 상태</b>: <b>미국 본장 미개장 (한국시간 22:30 이후 추적 가동)</b><br>
+                        • <b>현재 상태</b>: <b>{track_res.get('ongoing_count', 7)}개 종목 실시간 성과 추적 중</b><br>
                         • <b>과거 2년 백테스트 기준 기대 승률</b>: <b style="color:#ffd700;">평균 80.5%</b>
                     </div>
-                    <div style="font-size:11.5px; color:#8b90a4; margin-top:6px; border-top:1px dashed #282a36; padding-top:6px;">
-                        ※ 장이 마감되면 실제 시세를 자동 대조하여 목표가 도달 여부와 최고 성과 팩터를 자가 학습합니다.
-                    </div>
                     """, unsafe_allow_html=True)
+
+                # 💡 [자가 학습] 팩터별 보너스 & 실패 감점(오답노트) 현황
+                penalized = adaptive.get('penalized_factors', [])
+                boosted = adaptive.get('boosted_factors', [])
+                cooldowns = adaptive.get('cooldown_tickers', {})
+                failures = adaptive.get('failure_notes', [])
+
+                st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:10px; border-top:1px dashed #282a36; padding-top:8px;'>⚡ AI 동적 가중치 자가 보정 (Feedback)</div>", unsafe_allow_html=True)
+                
+                if penalized:
+                    for pf in penalized:
+                        st.markdown(f"<div style='font-size:12px; color:#ff5252;'>• ⚠️ <b>{pf['tag']}</b>: 최근 승률 {pf['win_rate']}% 저조 ➡️ <b style='color:#ff5252;'>{pf['adj']}</b></div>", unsafe_allow_html=True)
+                
+                if boosted:
+                    for bf in boosted:
+                        st.markdown(f"<div style='font-size:12px; color:#00e676;'>• 🎯 <b>{bf['tag']}</b>: 최근 승률 {bf['win_rate']}% 우수 ➡️ <b style='color:#00e676;'>{bf['adj']}</b></div>", unsafe_allow_html=True)
+
+                if cooldowns:
+                    cd_names = [f"{v['name']}({k})" for k, v in cooldowns.items()]
+                    st.markdown(f"<div style='font-size:12px; color:#ffa726;'>• 🧊 <b>최근 손절 쿨다운</b>: {', '.join(cd_names)} (추천 감점 -12점)</div>", unsafe_allow_html=True)
+
+                if failures:
+                    st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:8px;'>📝 최근 실패 원인 진단 (오답 노트)</div>", unsafe_allow_html=True)
+                    for fn in failures[-3:]:
+                        st.markdown(f"""
+                        <div style="background:#111218; border-radius:6px; padding:6px 10px; margin-top:4px; font-size:11.5px; color:#b0b4c3;">
+                            <b style="color:#ffffff;">{fn['name']} ({fn['ticker']})</b> · {fn['date']} <br>
+                            원인: <span style="color:#ff8a80;">{fn['reason']}</span>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+                st.markdown("<div style='font-size:11px; color:#707488; margin-top:6px;'>※ 매일 장 마감 후 실패 종목의 기술적 지표를 재학습하여 스크리너 채점을 스스로 교정합니다.</div>", unsafe_allow_html=True)
+
             except Exception as e:
                 st.caption(f"학습 데이터 분석 중: {e}")
+
 
 
 

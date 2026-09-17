@@ -160,13 +160,14 @@ def backtest_pattern_reliability(df: pd.DataFrame, holding_days: int = 20) -> Di
     }
 
 
-def analyze_single_stock_advanced(item: Dict[str, str]) -> Dict[str, Any]:
+def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dict[str, Any] = None) -> Dict[str, Any]:
     """
-    피보나치, 빗각 돌파, 상승 다이버전스, 심층 재무 및 백테스트 검증을 결합한 분석.
+    단일 종목에 대해 기술적/기본적/모멘텀 분석을 수행하고, AI 자가 학습 피드백(실패 페널티 및 쿨다운)을 적용합니다.
     """
-    ticker = item['ticker']
-    name = item['name']
-    category = item['category']
+    ticker = stock_item['ticker']
+    name = stock_item['name']
+    category = stock_item['category']
+
     
     try:
         t = yf.Ticker(ticker)
@@ -310,8 +311,38 @@ def analyze_single_stock_advanced(item: Dict[str, str]) -> Dict[str, Any]:
             tags.append("신고가돌파권")
         else:
             mom_score += 8
+
+        # --- [4] AI 자가 학습 피드백 & 실패 페널티 적용 ---
+
+        if adaptive_data:
+            factor_adjustments = adaptive_data.get('factor_adjustments', {})
+            cooldown_tickers = adaptive_data.get('cooldown_tickers', {})
             
-        total_score = min(100, tech_score + fund_score + mom_score)
+            # 1) 팩터별 성공/실패율에 따른 가중치 보너스 또는 페널티 적용
+            total_adj = 0
+            for tag in tags:
+                if tag in factor_adjustments:
+                    adj = factor_adjustments[tag]
+                    total_adj += adj
+                    if adj < 0:
+                        reasons.append(f"최근 '{tag}' 패턴의 실패율 상승으로 AI 자가 학습 감점({adj}점)이 적용되었어요.")
+                    elif adj > 0:
+                        reasons.append(f"최근 '{tag}' 패턴의 고승률 유지로 AI 자가 학습 보너스(+{adj}점)가 가산되었어요.")
+            
+            tech_score = max(0, tech_score + total_adj)
+            
+            # 2) 최근 14일 이내 손절선 이탈 종목 쿨다운 페널티 적용
+            if ticker in cooldown_tickers:
+                cd_info = cooldown_tickers[ticker]
+                penalty = cd_info.get('penalty', -12)
+                mom_score = max(0, mom_score + penalty)
+                reasons.insert(0, f"최근 {cd_info['days_ago']}일 전 손절선 이탈({cd_info['reason']}) 이력으로 쿨다운 감점({penalty}점)이 적용되었어요.")
+                tags.insert(0, "최근손절쿨다운")
+                pattern_status = "쿨다운(반등확인)"
+                status_color = "#f04452"
+
+        total_score = min(100, max(0, tech_score + fund_score + mom_score))
+
         
         # 다각도 추천 근거 4개 엄선
         core_reasons = reasons[:4] if len(reasons) >= 4 else (reasons + ["기술적 지표와 기본적 재무 안정성이 고루 뒷받침되는 종목입니다."])[:4]
@@ -368,11 +399,18 @@ def run_full_market_scan(force_refresh: bool = False) -> List[Dict[str, Any]]:
         except Exception:
             pass
 
+    try:
+        from .tracker import get_adaptive_factor_weights
+        adaptive_data = get_adaptive_factor_weights()
+    except Exception:
+        adaptive_data = {}
+
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
     results = []
     with ThreadPoolExecutor(max_workers=10) as executor:
-        futures = {executor.submit(analyze_single_stock_advanced, item): item for item in CORE_UNIVERSE}
+        futures = {executor.submit(analyze_single_stock_advanced, item, adaptive_data): item for item in CORE_UNIVERSE}
+
         for future in as_completed(futures):
             try:
                 res = future.result()

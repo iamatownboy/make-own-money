@@ -25,6 +25,19 @@ def main():
     print(f"  • 누적 표본수: {eval_result['total_recs']}개 (완료: {eval_result['completed_count']}개, 추적중: {eval_result['ongoing_count']}개)")
     print(f"  • 현재 공식 승률: {eval_result['win_rate']}% · 평균 수익률: {eval_result['avg_return']:+}%")
 
+    adaptive = eval_result.get('adaptive_weights', {})
+    if adaptive.get('penalized_factors'):
+        print("\n  ⚠️ [실패 피드백 감점 팩터]:")
+        for pf in adaptive['penalized_factors']:
+            print(f"    - '{pf['tag']}': 승률 {pf['win_rate']}% ➡️ {pf['adj']}")
+    if adaptive.get('boosted_factors'):
+        print("  🎯 [고승률 가산 팩터]:")
+        for bf in adaptive['boosted_factors']:
+            print(f"    - '{bf['tag']}': 승률 {bf['win_rate']}% ➡️ {bf['adj']}")
+    if adaptive.get('cooldown_tickers'):
+        print(f"  🧊 [최근 손절 쿨다운 종목]: {', '.join(adaptive['cooldown_tickers'].keys())}")
+
+
     # 2. 82개 종목 전체 병렬 스캔 실행
     print("\n🔍 2단계: 82개 유니버스 병렬 스캔 및 오늘의 Top 7 선별 중...")
     recs = run_full_market_scan(force_refresh=True)
