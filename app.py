@@ -28,6 +28,18 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# -----------------------------------------------------------------------------
+# 🔒 보안 인증: 등록된 구글 계정(tomsslee043@gmail.com) 전용 열람 2중 잠금
+# -----------------------------------------------------------------------------
+AUTHORIZED_EMAILS = {"tomsslee043@gmail.com"}
+
+if hasattr(st, "user") and st.user:
+    current_user_email = st.user.get("email")
+    if current_user_email and current_user_email.strip().lower() not in AUTHORIZED_EMAILS:
+        st.error(f"⛔ 접근 권한이 없습니다. 등록된 관리자 계정(tomsslee043@gmail.com)으로 로그인해주세요.")
+        st.stop()
+
+
 # 2. 토스증권 프리미엄 미니멀 다크 CSS (눈 피로도 0% 차분한 톤)
 st.markdown("""
 <style>
