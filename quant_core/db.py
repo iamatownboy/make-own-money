@@ -11,46 +11,80 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 
 # Supabase 클라이언트 싱글톤 캐시
-_supabase_client = None
-_checked_env = False
+_last_error = None
+
+
+def get_supabase_diagnostics() -> Dict[str, Any]:
+    """Supabase 연결 상태 상세 진단 정보 반환"""
+    global _last_error
+    url = os.environ.get("SUPABASE_URL", "") or os.environ.get("supabase_url", "")
+    key = os.environ.get("SUPABASE_KEY", "") or os.environ.get("SUPABASE_ANON_KEY", "") or os.environ.get("supabase_key", "")
+
+    try:
+        import streamlit as st
+        for k in st.secrets.keys():
+            k_lower = k.lower().replace("-", "_")
+            if k_lower in ("supabase_url", "supabase_project_url"):
+                if not url:
+                    url = str(st.secrets[k]).strip()
+            elif k_lower in ("supabase_key", "supabase_anon_key", "supabase_publishable_key", "supabase_anon"):
+                if not key:
+                    key = str(st.secrets[k]).strip()
+    except Exception as e:
+        pass
+
+    package_installed = False
+    try:
+        import supabase
+        package_installed = True
+    except Exception:
+        package_installed = False
+
+    return {
+        "has_url": bool(url),
+        "has_key": bool(key),
+        "url_preview": f"{url[:15]}..." if url else "없음",
+        "package_installed": package_installed,
+        "is_connected": _supabase_client is not None,
+        "last_error": str(_last_error) if _last_error else None
+    }
 
 
 def get_supabase_client():
     """
     Supabase 클라이언트를 초기화하여 반환합니다.
-    Streamlit secrets 또는 환경 변수에서 URL과 KEY를 읽습니다.
+    Streamlit secrets 또는 환경 변수에서 URL과 KEY를 유연하게 읽습니다.
     """
-    global _supabase_client, _checked_env
+    global _supabase_client, _last_error
 
     if _supabase_client is not None:
         return _supabase_client
 
-    if _checked_env and _supabase_client is None:
-        return None
+    url = os.environ.get("SUPABASE_URL", "") or os.environ.get("supabase_url", "")
+    key = os.environ.get("SUPABASE_KEY", "") or os.environ.get("SUPABASE_ANON_KEY", "") or os.environ.get("supabase_key", "")
 
-    url = os.environ.get("SUPABASE_URL", "")
-    key = os.environ.get("SUPABASE_KEY", "") or os.environ.get("SUPABASE_ANON_KEY", "")
-
-    # Streamlit secrets 확인
+    # Streamlit secrets 확인 (대소문자 및 변수명 유연 매핑)
     try:
         import streamlit as st
-        if not url and "SUPABASE_URL" in st.secrets:
-            url = str(st.secrets["SUPABASE_URL"]).strip()
-        if not key and "SUPABASE_KEY" in st.secrets:
-            key = str(st.secrets["SUPABASE_KEY"]).strip()
-        if not key and "SUPABASE_ANON_KEY" in st.secrets:
-            key = str(st.secrets["SUPABASE_ANON_KEY"]).strip()
-    except Exception:
-        pass
-
-    _checked_env = True
+        for k in st.secrets.keys():
+            k_lower = k.lower().replace("-", "_")
+            if k_lower in ("supabase_url", "supabase_project_url"):
+                if not url:
+                    url = str(st.secrets[k]).strip()
+            elif k_lower in ("supabase_key", "supabase_anon_key", "supabase_publishable_key", "supabase_anon"):
+                if not key:
+                    key = str(st.secrets[k]).strip()
+    except Exception as e:
+        _last_error = f"Secrets 읽기 예외: {e}"
 
     if url and key:
         try:
             from supabase import create_client
             _supabase_client = create_client(url, key)
+            _last_error = None
             return _supabase_client
         except Exception as e:
+            _last_error = f"Client 생성 실패: {e}"
             print(f"[DB] Supabase 클라이언트 초기화 실패: {e}")
             return None
 

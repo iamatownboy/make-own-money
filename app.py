@@ -20,7 +20,7 @@ from quant_core.data_loader import fetch_stock_data, PORTFOLIO_CONFIG
 from quant_core.indicators import calculate_all_indicators
 from quant_core.prediction import evaluate_technical_health, predict_price_scenarios
 from quant_core.screener import run_full_market_scan
-from quant_core.db import is_supabase_enabled
+from quant_core.db import is_supabase_enabled, get_supabase_diagnostics
 
 # 1. 페이지 설정
 st.set_page_config(
@@ -339,7 +339,21 @@ else:
 with tab_rec:
     top_col1, top_col2 = st.columns([3, 1])
     with top_col1:
-        db_badge = '<span style="font-size:11px; background:#1e293b; color:#10b981; padding:2px 8px; border-radius:12px; border:1px solid #059669; font-weight:600; margin-left:8px;">🟢 Supabase DB 연동됨</span>' if is_supabase_enabled() else '<span style="font-size:11px; background:#1e293b; color:#94a3b8; padding:2px 8px; border-radius:12px; border:1px solid #475569; font-weight:500; margin-left:8px;">⚪ 로컬 스토리지 모드</span>'
+        diag = get_supabase_diagnostics()
+        if is_supabase_enabled():
+            db_badge = '<span style="font-size:11px; background:#1e293b; color:#10b981; padding:2px 8px; border-radius:12px; border:1px solid #059669; font-weight:600; margin-left:8px;">🟢 Supabase DB 연동됨</span>'
+        else:
+            if not diag.get("has_url") and not diag.get("has_key"):
+                fail_hint = "Secrets 키 미인식 (재부팅 대기중)"
+            elif not diag.get("has_url"):
+                fail_hint = "SUPABASE_URL 미인식"
+            elif not diag.get("has_key"):
+                fail_hint = "SUPABASE_KEY 미인식"
+            elif diag.get("last_error"):
+                fail_hint = "연결 오류 (로그 확인)"
+            else:
+                fail_hint = "폴백 모드"
+            db_badge = f'<span style="font-size:11px; background:#1e293b; color:#94a3b8; padding:2px 8px; border-radius:12px; border:1px solid #475569; font-weight:500; margin-left:8px;" title="{diag.get("last_error", "")}">⚪ 로컬 스토리지 모드 ({fail_hint})</span>'
         st.markdown(f"<h3 style='margin:0; font-weight:800; color:#ffffff; display:flex; align-items:center;'>오늘의 나스닥 퀀트 유망주 Top 7 {db_badge}</h3>", unsafe_allow_html=True)
         st.caption("피보나치 지지·빗각 돌파·다이버전스 타점 및 최소 손익비(1.2:1)·점수 커트라인을 통과한 엄선 종목입니다.")
     with top_col2:
