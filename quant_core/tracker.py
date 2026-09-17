@@ -254,6 +254,21 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
         except Exception:
             rec_date = today_date
             
+        if item.get('is_completed'):
+            completed_samples += 1
+            if item.get('hit_success'):
+                wins += 1
+            realized = item.get('realized_pnl_pct')
+            if realized is not None:
+                total_pnls.append(realized)
+            for tag in item.get('tags', []):
+                if tag not in factor_hits:
+                    factor_hits[tag] = {'total': 0, 'wins': 0}
+                factor_hits[tag]['total'] += 1
+                if item.get('hit_success'):
+                    factor_hits[tag]['wins'] += 1
+            continue
+
         if t in stock_dfs:
             df = stock_dfs[t]
             curr_p = float(df['Close'].iloc[-1])
@@ -263,7 +278,7 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
             item['current_pnl_pct'] = round(pnl_pct, 2)
             
             # 추천일 이후(date > rec_date)의 실제 거래일 봉만 필터링!
-            df_after = df[df.index.date > rec_date]
+            df_after = df[df.index.date > rec_date].sort_index()
             
             if df_after.empty:
                 item['status'] = '⏳ 실시간 추적 중 (오늘 등록)'
@@ -275,40 +290,84 @@ def evaluate_and_learn_from_history() -> Dict[str, Any]:
                 after_low = float(df_after['Low'].min())
                 item['max_price'] = round(after_high, 2)
                 
-                if after_high >= t1:
-                    item['hit_success'] = True
-                    item['status'] = '🎯 목표가 도달 (성공)'
-                    item['is_completed'] = True
-                    item['failure_reason'] = None
-                    completed_samples += 1
-                    wins += 1
-                    total_pnls.append(pnl_pct)
-                elif after_low <= sl:
-                    item['hit_success'] = False
-                    item['status'] = '⚠️ 손절선 이탈'
-                    item['is_completed'] = True
-                    diagnosis = diagnose_failure_reason(item, df_after, df)
-                    item['failure_reason'] = diagnosis['full_diagnosis']
-                    completed_samples += 1
-                    total_pnls.append(pnl_pct)
-                elif len(df_after) >= 20:
-                    item['hit_success'] = (curr_p >= rec_p)
-                    item['status'] = '기간 만료 마감'
-                    item['is_completed'] = True
-                    if not item['hit_success']:
-                        diagnosis = diagnose_failure_reason(item, df_after, df)
+                # 일자별(시간순) 순차 판정: 목표가 vs 손절가 선후 관계 판별
+                resolved = False
+                for bar_date, row in df_after.iterrows():
+                    bar_high = float(row['High'])
+                    bar_low = float(row['Low'])
+                    
+                    hit_t = bar_high >= t1
+                    hit_s = bar_low <= sl
+                    
+                    if hit_t and hit_s:
+                        # 동일 일봉 내 동시 도달: 보수적 리스크 원칙에 따라 손절 우선 처리
+                        item['hit_success'] = False
+                        item['status'] = '⚠️ 변동성 손절 이탈 (동일봉 도달)'
+                        item['is_completed'] = True
+                        item['exit_price'] = sl
+                        item['exit_date'] = str(bar_date.date())
+                        realized_pnl = round(((sl / rec_p) - 1) * 100, 2)
+                        item['realized_pnl_pct'] = realized_pnl
+                        diagnosis = diagnose_failure_reason(item, df_after.loc[:bar_date], df)
                         item['failure_reason'] = diagnosis['full_diagnosis']
-                    else:
+                        completed_samples += 1
+                        total_pnls.append(realized_pnl)
+                        resolved = True
+                        break
+                    elif hit_s:
+                        item['hit_success'] = False
+                        item['status'] = '⚠️ 손절선 이탈'
+                        item['is_completed'] = True
+                        item['exit_price'] = sl
+                        item['exit_date'] = str(bar_date.date())
+                        realized_pnl = round(((sl / rec_p) - 1) * 100, 2)
+                        item['realized_pnl_pct'] = realized_pnl
+                        diagnosis = diagnose_failure_reason(item, df_after.loc[:bar_date], df)
+                        item['failure_reason'] = diagnosis['full_diagnosis']
+                        completed_samples += 1
+                        total_pnls.append(realized_pnl)
+                        resolved = True
+                        break
+                    elif hit_t:
+                        item['hit_success'] = True
+                        item['status'] = '🎯 목표가 도달 (성공)'
+                        item['is_completed'] = True
+                        item['exit_price'] = t1
+                        item['exit_date'] = str(bar_date.date())
+                        realized_pnl = round(((t1 / rec_p) - 1) * 100, 2)
+                        item['realized_pnl_pct'] = realized_pnl
                         item['failure_reason'] = None
-                    completed_samples += 1
-                    if item['hit_success']:
+                        completed_samples += 1
                         wins += 1
-                    total_pnls.append(pnl_pct)
-                else:
-                    item['status'] = f'📈 보유 {len(df_after)}일차 추적 중'
-                    item['hit_success'] = False
-                    item['is_completed'] = False
-                    ongoing_count += 1
+                        total_pnls.append(realized_pnl)
+                        resolved = True
+                        break
+                        
+                if not resolved:
+                    # 20거래일(약 1개월) 경과 시 기간 만료 청산
+                    if len(df_after) >= 20:
+                        exit_p = curr_p
+                        realized_pnl = round(((exit_p / rec_p) - 1) * 100, 2)
+                        item['is_completed'] = True
+                        item['exit_price'] = round(exit_p, 2)
+                        item['exit_date'] = str(df_after.index[-1].date())
+                        item['realized_pnl_pct'] = realized_pnl
+                        item['hit_success'] = (exit_p >= rec_p)
+                        item['status'] = '기간 만료 마감'
+                        if not item['hit_success']:
+                            diagnosis = diagnose_failure_reason(item, df_after, df)
+                            item['failure_reason'] = diagnosis['full_diagnosis']
+                        else:
+                            item['failure_reason'] = None
+                        completed_samples += 1
+                        if item['hit_success']:
+                            wins += 1
+                        total_pnls.append(realized_pnl)
+                    else:
+                        item['status'] = f'📈 보유 {len(df_after)}일차 추적 중'
+                        item['hit_success'] = False
+                        item['is_completed'] = False
+                        ongoing_count += 1
                     
                 if item.get('is_completed'):
                     for tag in item.get('tags', []):

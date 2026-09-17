@@ -124,30 +124,35 @@ RECOMMENDATION_CACHE_FILE = os.path.join(os.path.dirname(os.path.dirname(__file_
 
 def backtest_pattern_reliability(df: pd.DataFrame, holding_days: int = 20) -> Dict[str, Any]:
     """
-    해당 종목의 과거 데이터(2~3년)에서 Supertrend 상승 전환 및 EMA20 돌파 시점들의
-    실제 20거래일 후 승률(Win Rate)과 평균 수익률을 전수 시뮬레이션하여 객관적 신뢰도를 산출합니다.
+    해당 종목의 과거 데이터(2년)에서 실제 스크리너 핵심 진입 조건(피보나치/EMA20 눌림목 지지 양봉 또는 Supertrend 상승 전환)이
+    발생했던 실제 시점들을 전수 시뮬레이션하여 20거래일 후 승률(Win Rate)과 평균 수익률을 정직하게 산출합니다.
+    (가짜 기본값 제거: 표본 부재 시 '표본 부족'으로 투명하게 반환)
     """
     if len(df) < 60:
-        return {'sample_count': 0, 'win_rate': 65.0, 'avg_return': 8.5}
+        return {'sample_count': 0, 'win_rate': None, 'avg_return': None, 'status': '데이터 부족 (검증 불가)'}
         
     data = df.copy()
     signals = []
     
-    # 과거 진입 시그널 탐색: Supertrend 상승 전환일
+    # 과거 진입 시그널 탐색: 20EMA 지지선 부근 반등 또는 Supertrend 상승 전환
     for i in range(1, len(data) - holding_days):
-        st_curr = data['Supertrend_Direction'].iloc[i]
-        st_prev = data['Supertrend_Direction'].iloc[i-1]
+        st_curr = data['Supertrend_Direction'].iloc[i] if 'Supertrend_Direction' in data else 0
+        st_prev = data['Supertrend_Direction'].iloc[i-1] if 'Supertrend_Direction' in data else 0
         close_curr = data['Close'].iloc[i]
+        low_curr = data['Low'].iloc[i]
         ema20_curr = data['EMA_21'].iloc[i] if 'EMA_21' in data else close_curr
         
-        # 골든 진입 조건: 수퍼트렌드 상승 전환 + 20일선 위
-        if st_curr == 1 and st_prev == -1 and close_curr >= ema20_curr:
+        # 실제 타점 조건: 수퍼트렌드 상승 전환 또는 20일선 눌림목 지지 양봉
+        is_st_turn = (st_curr == 1 and st_prev == -1)
+        is_ema_bounce = (low_curr <= ema20_curr * 1.01 and close_curr > ema20_curr and close_curr > data['Open'].iloc[i])
+        
+        if is_st_turn or is_ema_bounce:
             exit_price = data['Close'].iloc[i + holding_days]
             ret = ((exit_price / close_curr) - 1) * 100
             signals.append(ret)
             
     if not signals:
-        return {'sample_count': 5, 'win_rate': 70.0, 'avg_return': 10.2}
+        return {'sample_count': 0, 'win_rate': None, 'avg_return': None, 'status': '과거 2년 동일 시그널 부재'}
         
     wins = [r for r in signals if r > 0]
     win_rate = (len(wins) / len(signals)) * 100
@@ -156,8 +161,10 @@ def backtest_pattern_reliability(df: pd.DataFrame, holding_days: int = 20) -> Di
     return {
         'sample_count': len(signals),
         'win_rate': round(win_rate, 1),
-        'avg_return': round(avg_ret, 1)
+        'avg_return': round(avg_ret, 1),
+        'status': '검증 완료'
     }
+
 
 
 def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dict[str, Any] = None) -> Dict[str, Any]:
@@ -201,7 +208,12 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
         
         # 2. 심층 기본적 분석 데이터 수집
         info = t.info or {}
-        target_price = info.get('targetMeanPrice') or info.get('targetMedianPrice')
+        raw_target = info.get('targetMeanPrice') or info.get('targetMedianPrice')
+        has_analyst_target = bool(raw_target and float(raw_target) > 0)
+        target_price = round(float(raw_target), 2) if has_analyst_target else None
+        upside_pct = round(((target_price / curr_price) - 1) * 100, 1) if has_analyst_target else None
+        analyst_count = info.get('numberOfAnalystOpinions', None)
+
         rev_growth = info.get('revenueGrowth', 0.0) or 0.0
         op_margin = info.get('operatingMargins', 0.0) or 0.0
         profit_margin = info.get('profitMargins', 0.0) or 0.0
@@ -210,16 +222,12 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
         fcf = info.get('freeCashflow', 0) or 0
         rec_key = info.get('recommendationKey', 'none')
         
-        if not target_price or target_price <= 0:
-            target_price = curr_price * 1.18
-        upside_pct = ((target_price / curr_price) - 1) * 100
-        
         # 3. 종합 점수화 (기술 40 + 기본 30 + 모멘텀/백테스트 30)
         tech_score = 0
         fund_score = 0
         mom_score = 0
         
-        reasons = []
+        reasons = []  # List of {'category': str, 'text': str}
         tags = []
         
         # 패턴 상태 관리
@@ -230,25 +238,25 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
         # 1) 피보나치 지지
         if fib.get('is_in_golden_pocket'):
             tech_score += 15
-            reasons.append(f"피보나치 0.618~0.500 황금 지지선(${fib['fib_618']:.2f})에 정확히 안착하며 강력한 기술적 반등 타점을 형성했어요.")
+            reasons.append({'category': '기술적 패턴 타점', 'text': f"피보나치 0.618~0.500 황금 지지선(${fib['fib_618']:.2f})에 정확히 안착하며 강력한 기술적 반등 타점을 형성했어요."})
             tags.append("피보나치황금지지")
             pattern_status = "진입 적기"
             status_color = "#00e676"
         elif fib.get('is_at_fib_382'):
             tech_score += 12
-            reasons.append(f"피보나치 0.382 지지선(${fib['fib_382']:.2f}) 위를 유지하며 강력한 상승 탄력을 보이고 있어요.")
+            reasons.append({'category': '기술적 패턴 타점', 'text': f"피보나치 0.382 지지선(${fib['fib_382']:.2f}) 위를 유지하며 강력한 상승 탄력을 보이고 있어요."})
             tags.append("피보나치0.382지지")
             
         # 2) 빗각(대각 추세선) 돌파
         if trendline.get('is_breakout'):
             tech_score += 15
-            reasons.append(f"수개월간 주가를 억누르던 하락 빗각(대각 추세선 ${trendline['trendline_value']:.2f})을 위로 상향 돌파하며 대세 상승장 진입을 알렸어요.")
+            reasons.append({'category': '기술적 패턴 타점', 'text': f"수개월간 주가를 억누르던 하락 빗각(대각 추세선 ${trendline['trendline_value']:.2f})을 위로 상향 돌파하며 대세 상승장 진입을 알렸어요."})
             tags.append("하락빗각돌파")
             pattern_status = "진입 적기"
             status_color = "#00e676"
         elif trendline.get('is_approaching'):
             tech_score += 8
-            reasons.append(f"하락 빗각 저항선(${trendline['trendline_value']:.2f}) 턱밑까지 바짝 접근하여 돌파가 임박한 상태예요.")
+            reasons.append({'category': '기술적 패턴 타점', 'text': f"하락 빗각 저항선(${trendline['trendline_value']:.2f}) 턱밑까지 바짝 접근하여 돌파가 임박한 상태예요."})
             tags.append("빗각돌파임박")
             pattern_status = "타점 임박"
             status_color = "#ffd700"
@@ -256,31 +264,38 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
         # 3) RSI 상승 다이버전스
         if divergence.get('has_divergence'):
             tech_score += 10
-            reasons.append("주가는 바닥인데 매수세가 먼저 올라오는 'RSI 상승 다이버전스'가 포착되어 기관들의 저가 매집이 확인됐어요.")
+            reasons.append({'category': '기술적 패턴 타점', 'text': "주가는 바닥인데 매수세가 먼저 올라오는 'RSI 상승 다이버전스'가 포착되어 저가 매집이 확인됐어요."})
             tags.append("상승다이버전스")
             
         # 4) 아래꼬리 반등 캔들
         if reversal_candle.get('has_reversal_candle'):
             tech_score = min(40, tech_score + 5)
-            reasons.append(f"지지선에서 {reversal_candle['type']}이 출현하며 저가 매수세의 방어 의지를 확인했어요.")
+            reasons.append({'category': '기술적 패턴 타점', 'text': f"지지선에서 {reversal_candle['type']}이 출현하며 저가 매수세의 방어 의지를 확인했어요."})
             tags.append("반등캔들출현")
             
         if tech_score == 0:
             tech_score = 15  # 기본 안정세
             
         # --- [2] 심층 기본적 분석 (30점) ---
-        # 1) 월가 목표가 괴리율
-        if upside_pct >= 25:
-            fund_score += 12
-            reasons.append(f"월가 전문가들의 평균 목표주가가 ${target_price:.2f}로 현재보다 +{upside_pct:.1f}% 추가 상승 여력이 있어요.")
-            tags.append(f"목표가+{int(upside_pct)}%")
-        elif upside_pct >= 12:
-            fund_score += 8
+        # 1) 월가 목표가 괴리율 (실제 애널리스트 데이터만 반영)
+        if has_analyst_target and upside_pct is not None:
+            if upside_pct >= 25:
+                fund_score += 12
+                reasons.append({'category': '기본적 펀더멘털', 'text': f"월가 애널리스트({analyst_count or '다수'}명) 평균 목표가가 ${target_price:.2f}로 현재보다 +{upside_pct:.1f}% 추가 상승 여력이 집계되었어요."})
+                tags.append(f"월가목표+{int(upside_pct)}%")
+            elif upside_pct >= 12:
+                fund_score += 8
+                reasons.append({'category': '기본적 펀더멘털', 'text': f"월가 평균 목표주가(${target_price:.2f}) 기준 +{upside_pct:.1f}% 상승 여력이 남아있어요."})
+            elif upside_pct > 0:
+                fund_score += 5
+        else:
+            reasons.append({'category': '기본적 펀더멘털', 'text': "월가 공식 애널리스트 목표가 집계가 없어 자체 재무 지표와 기술적 타점으로만 검증했어요."})
+            tags.append("컨센서스미집계")
             
         # 2) 실적 성장성 (매출 및 영업이익률)
         if rev_growth >= 0.20:
             fund_score += 10
-            reasons.append(f"최근 분기 매출 성장률이 +{rev_growth*100:.1f}%에 달해 펀더멘털 성장 엔진이 가동 중이에요.")
+            reasons.append({'category': '기본적 펀더멘털', 'text': f"최근 분기 매출 성장률이 +{rev_growth*100:.1f}%에 달해 펀더멘털 성장 엔진이 가동 중이에요."})
             tags.append("매출고성장")
         elif rev_growth > 0:
             fund_score += 5
@@ -288,20 +303,29 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
         # 3) 영업이익률 & 밸류에이션(PEG)
         if op_margin >= 0.20:
             fund_score += 5
-            reasons.append(f"영업이익률이 {op_margin*100:.1f}%에 달해 압도적인 수익성과 가격 결정력을 갖추고 있어요.")
+            reasons.append({'category': '기본적 펀더멘털', 'text': f"영업이익률이 {op_margin*100:.1f}%에 달해 압도적인 수익성과 가격 결정력을 갖추고 있어요."})
             tags.append("고마진우량주")
         if 0 < peg_ratio <= 1.5:
             fund_score += 3
             tags.append("PEG저평가")
             
         # --- [3] 시장 모멘텀 & 과거 백테스트 검증 (30점) ---
-        # 1) 백테스트 신뢰도 점수
-        if bt_stats['win_rate'] >= 75:
-            mom_score += 15
-            reasons.append(f"과거 2년간 동일 패턴 출현 시 승률 {bt_stats['win_rate']}% (평균 수익률 +{bt_stats['avg_return']}%, {bt_stats['sample_count']}회 검증)의 높은 실증 신뢰도를 기록했어요.")
-            tags.append(f"백테스트승률{int(bt_stats['win_rate'])}%")
-        elif bt_stats['win_rate'] >= 60:
-            mom_score += 10
+        # 1) 백테스트 신뢰도 점수 (표본 3회 이상일 때만 엄밀하게 반영)
+        if bt_stats['sample_count'] >= 3 and bt_stats['win_rate'] is not None:
+            if bt_stats['win_rate'] >= 75:
+                mom_score += 15
+                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년간 동일 패턴 출현 시 승률 {bt_stats['win_rate']}% (평균 수익률 +{bt_stats['avg_return']}%, {bt_stats['sample_count']}회 검증)을 기록했어요."})
+                tags.append(f"백테스트승률{int(bt_stats['win_rate'])}%")
+            elif bt_stats['win_rate'] >= 60:
+                mom_score += 10
+                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 동일 패턴 출현 시 승률 {bt_stats['win_rate']}% (평균 수익률 +{bt_stats['avg_return']}%, {bt_stats['sample_count']}회)의 안정적 흐름을 보였어요."})
+            elif bt_stats['win_rate'] < 50:
+                mom_score -= 5  # 과거 동일 패턴 승률 저조 시 감점!
+                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 동일 패턴 승률이 {bt_stats['win_rate']}%로 저조하여 보수적 감점(-5점)이 적용되었어요."})
+        else:
+            mom_score += 5  # 중립 점수
+            reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년간 유효한 동일 패턴 표본 수({bt_stats['sample_count']}회)가 적어 과거 승률 수치는 산출하지 않았습니다."})
+            tags.append("백테스트표본부족")
             
         # 2) 52주 고점 대비 견고함
         high_52 = float(df['High'].max())
@@ -313,7 +337,6 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
             mom_score += 8
 
         # --- [4] AI 자가 학습 피드백 & 실패 페널티 적용 ---
-
         if adaptive_data:
             factor_adjustments = adaptive_data.get('factor_adjustments', {})
             cooldown_tickers = adaptive_data.get('cooldown_tickers', {})
@@ -325,9 +348,9 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
                     adj = factor_adjustments[tag]
                     total_adj += adj
                     if adj < 0:
-                        reasons.append(f"최근 '{tag}' 패턴의 실패율 상승으로 AI 자가 학습 감점({adj}점)이 적용되었어요.")
+                        reasons.append({'category': 'AI 피드백 보정', 'text': f"최근 '{tag}' 패턴의 실패율 상승으로 AI 자가 학습 감점({adj}점)이 적용되었어요."})
                     elif adj > 0:
-                        reasons.append(f"최근 '{tag}' 패턴의 고승률 유지로 AI 자가 학습 보너스(+{adj}점)가 가산되었어요.")
+                        reasons.append({'category': 'AI 피드백 보정', 'text': f"최근 '{tag}' 패턴의 고승률 유지로 AI 자가 학습 보너스(+{adj}점)가 가산되었어요."})
             
             tech_score = max(0, tech_score + total_adj)
             
@@ -336,16 +359,35 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
                 cd_info = cooldown_tickers[ticker]
                 penalty = cd_info.get('penalty', -12)
                 mom_score = max(0, mom_score + penalty)
-                reasons.insert(0, f"최근 {cd_info['days_ago']}일 전 손절선 이탈({cd_info['reason']}) 이력으로 쿨다운 감점({penalty}점)이 적용되었어요.")
+                reasons.insert(0, {'category': '리스크 관리', 'text': f"최근 {cd_info['days_ago']}일 전 손절선 이탈({cd_info['reason']}) 이력으로 쿨다운 감점({penalty}점)이 적용되었어요."})
                 tags.insert(0, "최근손절쿨다운")
                 pattern_status = "쿨다운(반등확인)"
                 status_color = "#f04452"
 
         total_score = min(100, max(0, tech_score + fund_score + mom_score))
 
+        # 목표가 및 손절가 계산
+        bull_target_1 = pred.get('bull_target_1', round(curr_price * 1.05, 2))
+        bull_target_2 = pred.get('bull_target_2', round(curr_price * 1.12, 2))
+        stop_loss = pred.get('stop_loss', round(curr_price * 0.95, 2))
+        
+        target_1_pct = round(((bull_target_1 / curr_price) - 1) * 100, 1)
+        target_2_pct = round(((bull_target_2 / curr_price) - 1) * 100, 1)
+        stop_loss_pct = round(((stop_loss / curr_price) - 1) * 100, 1)
+        
+        potential_gain = max(0.01, bull_target_1 - curr_price)
+        potential_loss = max(0.01, curr_price - stop_loss)
+        risk_reward_ratio = round(potential_gain / potential_loss, 2)
+
+        # 실전 진입 적격 여부 판정 (최소 점수 68점 & 손익비 1.2 이상 & 쿨다운 미해당)
+        is_qualified = (
+            total_score >= 68 and
+            risk_reward_ratio >= 1.2 and
+            pattern_status != "쿨다운(반등확인)"
+        )
         
         # 다각도 추천 근거 4개 엄선
-        core_reasons = reasons[:4] if len(reasons) >= 4 else (reasons + ["기술적 지표와 기본적 재무 안정성이 고루 뒷받침되는 종목입니다."])[:4]
+        core_reasons = reasons[:4] if len(reasons) >= 4 else (reasons + [{'category': '종합 분석', 'text': "기술적 지표와 기본적 재무 안정성이 고루 뒷받침되는 종목입니다."}])[:4]
         
         return {
             'ticker': ticker,
@@ -354,8 +396,10 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
             'current_price': round(curr_price, 2),
             'prev_price': round(prev_price, 2),
             'change_pct': round(change_pct, 2),
-            'target_price': round(target_price, 2),
-            'upside_pct': round(upside_pct, 1),
+            'has_analyst_target': has_analyst_target,
+            'target_price': target_price,
+            'upside_pct': upside_pct,
+            'analyst_count': analyst_count,
             'total_score': total_score,
             'tech_score': tech_score,
             'fund_score': fund_score,
@@ -368,12 +412,18 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
             'trendline': trendline,
             'divergence': divergence,
             'backtest_stats': bt_stats,
-            'bull_target_1': pred.get('bull_target_1', round(curr_price * 1.08, 2)),
-            'bull_target_2': pred.get('bull_target_2', round(curr_price * 1.15, 2)),
-            'stop_loss': pred.get('stop_loss', round(curr_price * 0.94, 2)),
+            'bull_target_1': bull_target_1,
+            'bull_target_2': bull_target_2,
+            'stop_loss': stop_loss,
+            'target_1_pct': target_1_pct,
+            'target_2_pct': target_2_pct,
+            'stop_loss_pct': stop_loss_pct,
+            'risk_reward_ratio': risk_reward_ratio,
+            'is_qualified': is_qualified,
             'atr': pred.get('atr', round(curr_price * 0.03, 2)),
             'updated_at': datetime.now().strftime('%Y-%m-%d %H:%M')
         }
+
     except Exception as e:
         print(f"[{ticker}] 고급 스크리닝 분석 실패: {e}")
         return None
@@ -389,7 +439,7 @@ def run_full_market_scan(force_refresh: bool = False) -> List[Dict[str, Any]]:
                 cached = json.load(f)
                 cache_date = cached.get('date', '')
                 today_str = datetime.now().strftime('%Y-%m-%d')
-                if cache_date == today_str and cached.get('recommendations'):
+                if cache_date == today_str and 'recommendations' in cached:
                     try:
                         from .tracker import record_daily_recommendations
                         record_daily_recommendations(cached['recommendations'])
@@ -419,9 +469,10 @@ def run_full_market_scan(force_refresh: bool = False) -> List[Dict[str, Any]]:
             except Exception:
                 pass
             
-    # 종합 점수 높은 순 정렬
-    results.sort(key=lambda x: x['total_score'], reverse=True)
-    top_picks = results[:7]
+    # 실전 진입 적격 종목만 선별 (최소 점수 68점 & 손익비 1.2 이상 & 쿨다운 미해당)
+    qualified_results = [r for r in results if r.get('is_qualified', False)]
+    qualified_results.sort(key=lambda x: x['total_score'], reverse=True)
+    top_picks = qualified_results[:7]
     
     try:
         def np_encoder(obj):

@@ -29,15 +29,45 @@ st.set_page_config(
 )
 
 # -----------------------------------------------------------------------------
-# 🔒 보안 인증: 등록된 구글 계정(tomsslee043@gmail.com) 전용 열람 2중 잠금
+# 🔒 보안 인증: 등록된 구글 계정(tomsslee043@gmail.com) 전용 열람 2중 잠금 (Default Deny)
 # -----------------------------------------------------------------------------
 AUTHORIZED_EMAILS = {"tomsslee043@gmail.com"}
 
-if hasattr(st, "user") and st.user:
-    current_user_email = st.user.get("email")
-    if current_user_email and current_user_email.strip().lower() not in AUTHORIZED_EMAILS:
-        st.error(f"⛔ 접근 권한이 없습니다. 등록된 관리자 계정(tomsslee043@gmail.com)으로 로그인해주세요.")
+def check_has_auth_secret() -> bool:
+    try:
+        return "auth" in st.secrets
+    except Exception:
+        return False
+
+# 배포 환경 감지 (Streamlit Community Cloud / 컨테이너 배포 환경)
+is_cloud = (
+    os.path.exists("/mount/src") or 
+    "STREAMLIT_SHARING_MODE" in os.environ or 
+    os.environ.get("USER") == "appuser" or
+    check_has_auth_secret()
+)
+
+if is_cloud:
+    is_authenticated = False
+    current_user_email = ""
+    if hasattr(st, "user") and getattr(st.user, "is_logged_in", False):
+        current_user_email = (st.user.get("email") or "").strip().lower()
+        if current_user_email in AUTHORIZED_EMAILS:
+            is_authenticated = True
+            
+    if not is_authenticated:
+        st.error("🔒 보안 보호 안내: 등록된 관리자 전용 퀀트 서비스입니다.")
+        if hasattr(st, "login") and check_has_auth_secret():
+            st.info("관리자 Google 계정으로 로그인하여 접근 권한을 확인해주세요.")
+            if st.button("🔑 Google 계정으로 로그인", type="primary"):
+                st.login()
+        else:
+            if current_user_email:
+                st.error(f"⛔ 미인가 계정 ({current_user_email}): 접근 권한이 없습니다. 등록된 관리자 계정(tomsslee043@gmail.com)으로 로그인해주세요.")
+            else:
+                st.warning("⚠️ 인증 정보가 확인되지 않았습니다. 관리자 계정으로 접속해주세요.")
         st.stop()
+
 
 
 # 2. 토스증권 프리미엄 미니멀 다크 CSS (눈 피로도 0% 차분한 톤)
@@ -256,188 +286,33 @@ else:
 with tab_rec:
     top_col1, top_col2 = st.columns([3, 1])
     with top_col1:
-        st.markdown("<h3 style='margin:0; font-weight:800; color:#ffffff;'>오늘의 나스닥 패턴 완성 유망주 Top 7</h3>", unsafe_allow_html=True)
-        st.caption("피보나치 0.618 지지존, 하락 빗각 돌파, 상승 다이버전스 및 과거 백테스트 승률 검증을 거친 종목입니다.")
+        st.markdown("<h3 style='margin:0; font-weight:800; color:#ffffff;'>오늘의 나스닥 퀀트 유망주 Top 7</h3>", unsafe_allow_html=True)
+        st.caption("피보나치 지지·빗각 돌파·다이버전스 타점 및 최소 손익비(1.2:1)·점수 커트라인을 통과한 엄선 종목입니다.")
     with top_col2:
         if st.button("🔄 오늘자 패턴 재스캔", use_container_width=True):
-            with st.spinner("과거 2년 패턴 백테스트 및 다각도 퀀트 스캔을 진행 중입니다..."):
+            with st.spinner("과거 패턴 통계 검증 및 다각도 퀀트 스캔을 진행 중입니다..."):
                 run_full_market_scan(force_refresh=True)
             st.rerun()
 
     recs = run_full_market_scan(force_refresh=False)
+
+    # 추천 적격 종목이 없을 때: 토스형 "현금 관망 권고" 안내 배너
     if not recs:
-        st.error("추천 종목 데이터를 불러올 수 없습니다.")
-        st.stop()
-
-    # 좌측(상세 분석 및 차트 1.9) vs 우측(추천 종목 리스트 1.1)으로 위치 변경!
-    rec_col_main, rec_col_side = st.columns([1.9, 1.1], gap="medium")
-
-    # [좌측] 선택된 추천 종목의 상세 설명 & 차트
-    with rec_col_main:
-        active_rec = next((r for r in recs if r['ticker'] == st.session_state.rec_selected_ticker), recs[0])
-        fib_data = active_rec.get('fibonacci', {})
-        tl_data = active_rec.get('trendline', {})
-        bt_data = active_rec.get('backtest_stats', {'win_rate': 70, 'avg_return': 10, 'sample_count': 5})
-        
-        # 상단 요약 패널
-        st.markdown(f"""
-        <div class="toss-panel">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                <div>
-                    <span style="font-size:12px; color:#9094a6; font-weight:600;">{active_rec['category']} · {active_rec.get('pattern_status', '타점 관찰')}</span>
-                    <div style="font-size:24px; font-weight:800; color:#ffffff; margin-top:2px;">
-                        {active_rec['name']} ({active_rec['ticker']})
-                    </div>
-                    <div style="font-size:14px; color:#9094a6; margin-top:2px;">
-                        현재가 <b>${active_rec['current_price']:.2f}</b> · 월가 평균 목표가 <b>${active_rec['target_price']:.2f}</b>
-                    </div>
-                </div>
-                <div style="text-align:right;">
-                    <div style="font-size:12px; color:#9094a6;">목표가까지 기대 수익률</div>
-                    <div style="font-size:26px; font-weight:800; color:#f04452;">+{active_rec['upside_pct']}%</div>
-                    <div style="font-size:12px; color:#ffffff; font-weight:700;">AI 종합 점수 {active_rec['total_score']}점</div>
-                </div>
+        st.markdown("""
+        <div class="toss-panel" style="text-align:center; padding:36px 20px; border-left:4px solid #3182f6; margin-top:16px;">
+            <div style="font-size:36px; margin-bottom:8px;">🛡️</div>
+            <div style="font-size:20px; font-weight:800; color:#ffffff; margin-bottom:8px;">
+                오늘은 시장 진입 적격 종목이 없습니다 (현금 관망 권고)
+            </div>
+            <div style="font-size:14px; color:#9ba0b4; max-width:620px; margin:0 auto; line-height:1.6;">
+                현재 82개 종목 중 엄격한 리스크 관리 커트라인(최소 점수 68점 이상, 손익비 1.2 이상, 최근 손절 쿨다운 미해당)을 만족하는 안전한 타점이 포착되지 않았습니다.<br>
+                <b style="color:#ffffff;">손실 위험이 높은 애매한 장세에서는 무리한 진입 대신 현금을 보유하고 관망하는 것이 가장 훌륭한 퀀트 전략입니다.</b>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-
-
-        # 실전 매매 손익 계산 가이드 (얼마에 들어가서 얼마에 팔면 얼마를 이득보나? - 최상단 배치)
-        calc_t_col, calc_b_col = st.columns([2.3, 1.7])
-        with calc_t_col:
-            st.markdown("<h4 style='font-weight:800; margin-top:16px; margin-bottom:4px;'>실전 매매 손익 계산 가이드</h4>", unsafe_allow_html=True)
-            st.caption(f"진입가와 목표가, 예상 손익을 한눈에 계산해 드립니다. (실시간 환율 $1 = {current_usd_krw:,.1f}원 적용)")
-        with calc_b_col:
-            st.markdown("<div style='margin-top:14px;'></div>", unsafe_allow_html=True)
-            inv_choice = st.segmented_control(
-                "투자 기준금액",
-                options=[1000000, 3000000, 5000000, 10000000],
-                format_func=lambda x: f"{x//10000}만원",
-                default=1000000,
-                key="rec_invest_amount",
-                label_visibility="collapsed"
-            )
-            if not inv_choice:
-                inv_choice = 1000000
-
-        curr_p = active_rec['current_price']
-        t1 = active_rec['bull_target_1']
-        t2 = active_rec['bull_target_2']
-        sl = active_rec['stop_loss']
-        rate = current_usd_krw
-
-        inv = inv_choice
-        pct_1 = ((t1 / curr_p) - 1) * 100
-        pct_2 = ((t2 / curr_p) - 1) * 100
-        pct_sl = ((sl / curr_p) - 1) * 100
-
-        gain_1 = inv * (pct_1 / 100)
-        gain_2 = inv * (pct_2 / 100)
-        loss_sl = inv * (pct_sl / 100)
-
-        share_gain_1 = (t1 - curr_p) * rate
-        share_gain_2 = (t2 - curr_p) * rate
-        share_loss = (sl - curr_p) * rate
-
-        st.markdown(f"""
-        <div class="toss-panel" style="padding:16px; margin-bottom:14px;">
-            <div style="font-size:13.5px; color:#cfcfd4; line-height:1.7; margin-bottom:14px; border-bottom:1px solid #23252e; padding-bottom:10px;">
-                <b>{inv//10000}만원 투자 시 실전 손익 요약:</b><br>
-                지금 <b>${curr_p:.2f} (약 {int(curr_p*rate):,}원)</b>에 들어가서 1차 목표 <b>${t1:.2f}</b>에 팔면 <b>+{int(gain_1):,}원 (+{pct_1:.1f}%)</b>의 이득을 봅니다.<br>
-                2차 목표 <b>${t2:.2f}</b>까지 홀딩하면 <b>+{int(gain_2):,}원 (+{pct_2:.1f}%)</b>의 이득이며, <b>${sl:.2f}</b> 이탈 시 <b>{int(loss_sl):,}원</b>에서 손절 방어합니다.
-            </div>
-            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:10px;">
-                <div style="background:#1f212c; border: 1px solid #3b82f6; border-radius:10px; padding:12px; text-align:center;">
-                    <div style="font-size:11.5px; color:#8b95a1; font-weight:700;">1단계: 들어가기 (진입)</div>
-                    <div style="font-size:18px; font-weight:800; color:#ffffff; margin-top:4px;">${curr_p:.2f}</div>
-                    <div style="font-size:11.5px; color:#7b7f94; margin-top:2px;">1주당 {int(curr_p*rate):,}원</div>
-                </div>
-                <div style="background:rgba(240,68,82,0.06); border: 1px solid #f04452; border-radius:10px; padding:12px; text-align:center;">
-                    <div style="font-size:11.5px; color:#f04452; font-weight:700;">2단계: 1차 팔기 (익절)</div>
-                    <div style="font-size:18px; font-weight:800; color:#f04452; margin-top:4px;">${t1:.2f}</div>
-                    <div style="font-size:13px; font-weight:800; color:#ffffff; margin-top:2px;">+{int(gain_1):,}원 이득</div>
-                    <div style="font-size:11px; color:#f04452;">+{pct_1:.1f}% (1주당 +{int(share_gain_1):,}원)</div>
-                </div>
-                <div style="background:rgba(255,82,82,0.08); border: 1px solid #ff5252; border-radius:10px; padding:12px; text-align:center;">
-                    <div style="font-size:11.5px; color:#ff5252; font-weight:700;">3단계: 2차 팔기 (대박)</div>
-                    <div style="font-size:18px; font-weight:800; color:#ff5252; margin-top:4px;">${t2:.2f}</div>
-                    <div style="font-size:13px; font-weight:800; color:#ffffff; margin-top:2px;">+{int(gain_2):,}원 이득</div>
-                    <div style="font-size:11px; color:#ff5252;">+{pct_2:.1f}% (1주당 +{int(share_gain_2):,}원)</div>
-                </div>
-                <div style="background:rgba(49,130,246,0.06); border: 1px solid #3182f6; border-radius:10px; padding:12px; text-align:center;">
-                    <div style="font-size:11.5px; color:#3182f6; font-weight:700;">4단계: 손절선 (방어)</div>
-                    <div style="font-size:18px; font-weight:800; color:#3182f6; margin-top:4px;">${sl:.2f}</div>
-                    <div style="font-size:13px; font-weight:800; color:#ffffff; margin-top:2px;">{int(loss_sl):,}원 손실</div>
-                    <div style="font-size:11px; color:#3182f6;">{pct_sl:.1f}% (1주당 {int(share_loss):,}원)</div>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        # 다각도 추천 근거 4대 관점 (액션 카드 다음으로 배치)
-        st.markdown("<h4 style='font-weight:800; margin-top:14px; margin-bottom:10px;'>추천 근거 리포트</h4>", unsafe_allow_html=True)
-        
-        for i, reason in enumerate(active_rec['core_reasons'], 1):
-            icon_tag = "기술적 패턴 타점" if i == 1 else ("기본적 재무 펀더멘털" if i == 2 else ("시장 수급 및 상대강도" if i == 3 else "백테스트 통계 신뢰도"))
-            clean_reason = reason.replace('**', '').replace('***', '').replace('*', '')
-            st.markdown(f"""
-            <div class="reason-box-clean">
-                <div style="font-size:12px; font-weight:700; color:#8b95a1; margin-bottom:4px;">{icon_tag}</div>
-                <div>{clean_reason}</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-
-
-    # [우측] 추천 종목 카드 리스트 (일체형 클릭 카드)
-    with rec_col_side:
-        st.markdown("<div style='font-size:16px; font-weight:800; color:#ffffff; margin-bottom:12px;'>오늘의 유망주 리스트</div>", unsafe_allow_html=True)
-        
-        for idx, r in enumerate(recs, 1):
-            t = r['ticker']
-            is_active = (t == st.session_state.rec_selected_ticker)
-            
-            p_status = r.get('pattern_status', '타점 형성 중')
-            if p_status == "진입 적기":
-                status_tag = "● 진입 적기"
-                status_color = "#00e676"
-            elif p_status == "타점 임박":
-                status_tag = "▲ 돌파 임박"
-                status_color = "#ffd700"
-            else:
-                status_tag = "관심 추적"
-                status_color = "#8b90a4"
-
-            tags_html = "".join([f"<span class='toss-tag-clean'>#{tag}</span>" for tag in r['tags']])
-            
-            # 버튼과 하단 근거들을 하나의 완벽한 카드로 통합 (카드 전체 어디든 클릭 가능!)
-            with st.container(key=f"card_{t}"):
-                st.markdown(f"""
-                <div class="stock-unified-card {'active' if is_active else ''}">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <div style="font-size:15px; font-weight:800; color:#ffffff;">
-                            #{idx} {r['name']} <span style="font-size:13px; color:#8b90a4; font-weight:600;">({t})</span>
-                        </div>
-                        <span style="color:{status_color}; font-size:12px; font-weight:700;">{status_tag}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
-                        <span style="font-size:13px; color:#cfcfd4;">현재가 <b>${r['current_price']:.2f}</b></span>
-                        <span style="font-size:13px; font-weight:700; color:#f04452;">기대수익 <b>+{r['upside_pct']}%</b></span>
-                    </div>
-                    <div style="margin-top:8px; display:flex; flex-wrap:wrap; gap:4px;">
-                        {tags_html}
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-                if st.button(f"sel_{t}", key=f"btn_stock_{t}", use_container_width=True):
-                    st.session_state.rec_selected_ticker = t
-                    st.rerun()
-
-
-        # 🧠 [신규] AI 추천 성과 추적 & 자가 학습 피드백 (오답 노트)
-        st.markdown("<hr style='border:0; border-top:1px solid #23252e; margin: 12px 0 10px 0;'>", unsafe_allow_html=True)
-        with st.expander("🧠 AI 추천 성과 추적 & 자가 학습 오답 노트"):
+        st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
+        with st.expander("📊 통계 기반 성과 추적 & 규칙 기반 가중치 보정 로그", expanded=True):
             try:
                 from quant_core.tracker import evaluate_and_learn_from_history
                 track_res = evaluate_and_learn_from_history()
@@ -446,26 +321,24 @@ with tab_rec:
                 if track_res.get('completed_count', 0) > 0:
                     st.markdown(f"""
                     <div style="font-size:13px; line-height:1.7;">
-                        • <b>누적 표본수</b>: {track_res['total_recs']}개 (완료 {track_res['completed_count']}건 · 진행 {track_res['ongoing_count']}건)<br>
+                        • <b>누적 추천 표본수</b>: {track_res['total_recs']}개 (완료 {track_res['completed_count']}건 · 진행 {track_res['ongoing_count']}건)<br>
                         • <b>실제 적중 승률</b>: <b style="color:#00e676;">{track_res['win_rate']}%</b> ({track_res['wins']}승 {track_res['completed_count']-track_res['wins']}패)<br>
-                        • <b>평균 실현 수익률</b>: <b style="color:{'#f04452' if track_res['avg_return']>=0 else '#3182f6'};">{track_res['avg_return']:+}%</b>
+                        • <b>평균 실현 손익률</b>: <b style="color:{'#00e676' if track_res['avg_return']>=0 else '#f04452'};">{track_res['avg_return']:+}%</b>
                     </div>
                     """, unsafe_allow_html=True)
                 else:
                     st.markdown(f"""
                     <div style="font-size:12.5px; line-height:1.7; color:#d1d5db;">
-                        • <b>현재 상태</b>: <b>{track_res.get('ongoing_count', 7)}개 종목 실시간 성과 추적 중</b><br>
-                        • <b>과거 2년 백테스트 기준 기대 승률</b>: <b style="color:#ffd700;">평균 80.5%</b>
+                        • <b>현재 상태</b>: <b>{track_res.get('ongoing_count', 0)}개 종목 실시간 성과 추적 중</b> (익절/손절 도달 시 자동 집계)
                     </div>
                     """, unsafe_allow_html=True)
 
-                # 💡 [자가 학습] 팩터별 보너스 & 실패 감점(오답노트) 현황
                 penalized = adaptive.get('penalized_factors', [])
                 boosted = adaptive.get('boosted_factors', [])
                 cooldowns = adaptive.get('cooldown_tickers', {})
                 failures = adaptive.get('failure_notes', [])
 
-                st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:10px; border-top:1px dashed #282a36; padding-top:8px;'>⚡ AI 동적 가중치 자가 보정 (Feedback)</div>", unsafe_allow_html=True)
+                st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:10px; border-top:1px dashed #282a36; padding-top:8px;'>⚡ 통계 기반 동적 가중치 보정 (Feedback)</div>", unsafe_allow_html=True)
                 
                 if penalized:
                     for pf in penalized:
@@ -480,7 +353,7 @@ with tab_rec:
                     st.markdown(f"<div style='font-size:12px; color:#ffa726;'>• 🧊 <b>최근 손절 쿨다운</b>: {', '.join(cd_names)} (추천 감점 -12점)</div>", unsafe_allow_html=True)
 
                 if failures:
-                    st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:8px;'>📝 최근 실패 원인 진단 (오답 노트)</div>", unsafe_allow_html=True)
+                    st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:8px;'>📝 최근 실패 원인 진단 (성과 감사 로그)</div>", unsafe_allow_html=True)
                     for fn in failures[-3:]:
                         st.markdown(f"""
                         <div style="background:#111218; border-radius:6px; padding:6px 10px; margin-top:4px; font-size:11.5px; color:#b0b4c3;">
@@ -489,10 +362,260 @@ with tab_rec:
                         </div>
                         """, unsafe_allow_html=True)
 
-                st.markdown("<div style='font-size:11px; color:#707488; margin-top:6px;'>※ 매일 장 마감 후 실패 종목의 기술적 지표를 재학습하여 스크리너 채점을 스스로 교정합니다.</div>", unsafe_allow_html=True)
+                st.markdown("<div style='font-size:11px; color:#707488; margin-top:6px;'>※ 매일 장 마감 후 추천 종목의 실제 주가 궤적을 추적하여 손익비와 성공/실패 원인을 엄밀하게 재산출합니다.</div>", unsafe_allow_html=True)
 
             except Exception as e:
-                st.caption(f"학습 데이터 분석 중: {e}")
+                st.caption(f"성과 추적 데이터 분석 중: {e}")
+
+    else:
+        # 좌측(상세 분석 및 가이드 1.9) vs 우측(추천 종목 리스트 1.1)
+        rec_col_main, rec_col_side = st.columns([1.9, 1.1], gap="medium")
+
+        # [좌측] 선택된 추천 종목의 상세 설명 & 계산 가이드
+        with rec_col_main:
+            active_rec = next((r for r in recs if r['ticker'] == st.session_state.rec_selected_ticker), recs[0])
+            fib_data = active_rec.get('fibonacci', {})
+            tl_data = active_rec.get('trendline', {})
+            bt_data = active_rec.get('backtest_stats', {'sample_count': 0, 'win_rate': None, 'avg_return': 0.0})
+            
+            has_analyst = active_rec.get('has_analyst_target', False)
+            wall_st_target = active_rec.get('target_price')
+            wall_st_upside = active_rec.get('upside_pct')
+            analyst_count = active_rec.get('analyst_count', 0)
+            
+            if has_analyst and wall_st_target and wall_st_upside is not None:
+                analyst_label = f"월가 컨센서스 목표 <b>${wall_st_target:.2f}</b> (<span style='color:#ffd700;'>+{wall_st_upside:.1f}%</span>, {analyst_count}명 분석)"
+            else:
+                analyst_label = "월가 컨센서스: <i>집계 표본 부족 (미제공)</i>"
+
+            t1_pct = active_rec.get('target_1_pct', round(((active_rec['bull_target_1']/active_rec['current_price'])-1)*100, 1))
+            rr_ratio = active_rec.get('risk_reward_ratio', 1.5)
+
+            # 상단 요약 패널
+            st.markdown(f"""
+            <div class="toss-panel">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div>
+                        <span style="font-size:12px; color:#9094a6; font-weight:600;">{active_rec['category']} · {active_rec.get('pattern_status', '타점 관찰')}</span>
+                        <div style="font-size:24px; font-weight:800; color:#ffffff; margin-top:2px;">
+                            {active_rec['name']} ({active_rec['ticker']})
+                        </div>
+                        <div style="font-size:13.5px; color:#9094a6; margin-top:4px;">
+                            현재가 <b>${active_rec['current_price']:.2f}</b> · 단기 1차 목표 <b>${active_rec['bull_target_1']:.2f}</b> (<span style="color:#00e676; font-weight:700;">+{t1_pct:.1f}%</span>)<br>
+                            <span style="font-size:12px; color:#7b7f94;">{analyst_label}</span>
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:11.5px; color:#9094a6;">단기 1차 기대수익</div>
+                        <div style="font-size:26px; font-weight:800; color:#00e676;">+{t1_pct:.1f}%</div>
+                        <div style="font-size:12px; color:#ffffff; font-weight:700; margin-top:2px;">AI 퀀트 점수 {active_rec['total_score']}점</div>
+                        <div style="font-size:11.5px; color:#ffd700; font-weight:600; margin-top:2px;">손익비 <b>{rr_ratio}:1</b></div>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            # 실전 매매 손익 계산 가이드 (위험과 수익을 대등하게 강조)
+            calc_t_col, calc_b_col = st.columns([2.3, 1.7])
+            with calc_t_col:
+                st.markdown("<h4 style='font-weight:800; margin-top:16px; margin-bottom:4px;'>실전 매매 손익 및 리스크 계산기</h4>", unsafe_allow_html=True)
+                st.caption(f"목표 수익과 최대 허용 손실을 대등하게 비교합니다. (실시간 환율 $1 = {current_usd_krw:,.1f}원 적용)")
+            with calc_b_col:
+                st.markdown("<div style='margin-top:14px;'></div>", unsafe_allow_html=True)
+                inv_choice = st.segmented_control(
+                    "투자 기준금액",
+                    options=[1000000, 3000000, 5000000, 10000000],
+                    format_func=lambda x: f"{x//10000}만원",
+                    default=1000000,
+                    key="rec_invest_amount",
+                    label_visibility="collapsed"
+                )
+                if not inv_choice:
+                    inv_choice = 1000000
+
+            curr_p = active_rec['current_price']
+            t1 = active_rec['bull_target_1']
+            t2 = active_rec['bull_target_2']
+            sl = active_rec['stop_loss']
+            rate = current_usd_krw
+
+            inv = inv_choice
+            pct_1 = active_rec.get('target_1_pct', round(((t1 / curr_p) - 1) * 100, 1))
+            pct_2 = active_rec.get('target_2_pct', round(((t2 / curr_p) - 1) * 100, 1))
+            pct_sl = active_rec.get('stop_loss_pct', round(((sl / curr_p) - 1) * 100, 1))
+
+            gain_1 = inv * (pct_1 / 100)
+            gain_2 = inv * (pct_2 / 100)
+            loss_sl = inv * (pct_sl / 100)
+
+            share_gain_1 = (t1 - curr_p) * rate
+            share_gain_2 = (t2 - curr_p) * rate
+            share_loss = (sl - curr_p) * rate
+
+            st.markdown(f"""
+            <div class="toss-panel" style="padding:16px; margin-bottom:14px;">
+                <div style="font-size:13.5px; color:#cfcfd4; line-height:1.7; margin-bottom:14px; border-bottom:1px solid #23252e; padding-bottom:10px;">
+                    <b>{inv//10000}만원 투자 시 위험 대비 보상 요약:</b><br>
+                    지금 <b>${curr_p:.2f} (약 {int(curr_p*rate):,}원)</b>에 진입하여 1차 목표 <b>${t1:.2f}</b> 도달 시 <b style="color:#00e676;">+{int(gain_1):,}원 (+{pct_1:.1f}%)</b>의 이익을 기대할 수 있습니다.<br>
+                    반면, 예측 실패로 손절선 <b>${sl:.2f}</b> 이탈 시 <b style="color:#f04452;">{int(loss_sl):,}원 ({pct_sl:.1f}%)</b>에서 손실을 철저히 방어합니다. (<b>손익비 {rr_ratio}:1</b>)
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:10px;">
+                    <div style="background:#1f212c; border: 1px solid #3b82f6; border-radius:10px; padding:12px; text-align:center;">
+                        <div style="font-size:11.5px; color:#8b95a1; font-weight:700;">1단계: 들어가기 (진입)</div>
+                        <div style="font-size:18px; font-weight:800; color:#ffffff; margin-top:4px;">${curr_p:.2f}</div>
+                        <div style="font-size:11.5px; color:#7b7f94; margin-top:2px;">1주당 {int(curr_p*rate):,}원</div>
+                    </div>
+                    <div style="background:rgba(0,230,118,0.06); border: 1px solid #00e676; border-radius:10px; padding:12px; text-align:center;">
+                        <div style="font-size:11.5px; color:#00e676; font-weight:700;">2단계: 1차 목표 (익절)</div>
+                        <div style="font-size:18px; font-weight:800; color:#00e676; margin-top:4px;">${t1:.2f}</div>
+                        <div style="font-size:13px; font-weight:800; color:#ffffff; margin-top:2px;">+{int(gain_1):,}원 이익</div>
+                        <div style="font-size:11px; color:#00e676;">+{pct_1:.1f}% (1주당 +{int(share_gain_1):,}원)</div>
+                    </div>
+                    <div style="background:rgba(240,68,82,0.08); border: 1.5px solid #f04452; border-radius:10px; padding:12px; text-align:center;">
+                        <div style="font-size:11.5px; color:#f04452; font-weight:700;">3단계: 위험 손절선 (방어)</div>
+                        <div style="font-size:18px; font-weight:800; color:#f04452; margin-top:4px;">${sl:.2f}</div>
+                        <div style="font-size:13px; font-weight:800; color:#ffffff; margin-top:2px;">{int(loss_sl):,}원 손실</div>
+                        <div style="font-size:11px; color:#f04452;">{pct_sl:.1f}% (1주당 {int(share_loss):,}원)</div>
+                    </div>
+                    <div style="background:rgba(255,215,0,0.06); border: 1px solid #ffd700; border-radius:10px; padding:12px; text-align:center;">
+                        <div style="font-size:11.5px; color:#ffd700; font-weight:700;">4단계: 손익비 (Reward/Risk)</div>
+                        <div style="font-size:18px; font-weight:800; color:#ffd700; margin-top:4px;">{rr_ratio} : 1</div>
+                        <div style="font-size:12px; font-weight:700; color:#ffffff; margin-top:2px;">위험 대비 {rr_ratio}배 기대</div>
+                        <div style="font-size:11px; color:#9ba0b4;">(2차 목표 ${t2:.2f})</div>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            # 다각도 추천 근거 리포트 (카테고리 1:1 동적 매핑으로 순서 버그 박멸)
+            st.markdown("<h4 style='font-weight:800; margin-top:14px; margin-bottom:10px;'>추천 근거 리포트</h4>", unsafe_allow_html=True)
+            
+            for reason_item in active_rec.get('core_reasons', []):
+                if isinstance(reason_item, dict):
+                    cat_tag = reason_item.get('category', '퀀트 종합 분석')
+                    clean_text = reason_item.get('text', '')
+                else:
+                    cat_tag = "퀀트 분석"
+                    clean_text = str(reason_item)
+                clean_text = clean_text.replace('**', '').replace('***', '').replace('*', '')
+                st.markdown(f"""
+                <div class="reason-box-clean">
+                    <div style="font-size:12px; font-weight:700; color:#8b95a1; margin-bottom:4px;">{cat_tag}</div>
+                    <div>{clean_text}</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+        # [우측] 추천 종목 카드 리스트 (일체형 클릭 카드)
+        with rec_col_side:
+            st.markdown("<div style='font-size:16px; font-weight:800; color:#ffffff; margin-bottom:12px;'>오늘의 유망주 리스트</div>", unsafe_allow_html=True)
+            
+            for idx, r in enumerate(recs, 1):
+                t = r['ticker']
+                is_active = (t == st.session_state.rec_selected_ticker)
+                
+                p_status = r.get('pattern_status', '타점 형성 중')
+                if p_status == "진입 적기":
+                    status_tag = "● 진입 적기"
+                    status_color = "#00e676"
+                elif p_status == "타점 임박":
+                    status_tag = "▲ 돌파 임박"
+                    status_color = "#ffd700"
+                elif "쿨다운" in p_status:
+                    status_tag = "🧊 쿨다운"
+                    status_color = "#f04452"
+                else:
+                    status_tag = "관심 추적"
+                    status_color = "#8b90a4"
+
+                tags_html = "".join([f"<span class='toss-tag-clean'>#{tag}</span>" for tag in r['tags']])
+                t1_p = r.get('target_1_pct', round(((r['bull_target_1']/r['current_price'])-1)*100, 1))
+                rr = r.get('risk_reward_ratio', 1.5)
+                has_analyst_r = r.get('has_analyst_target', False)
+                wall_st_note = f"월가 +{r['upside_pct']}%" if (has_analyst_r and r.get('upside_pct') is not None) else "월가 미집계"
+                
+                # 버튼과 하단 근거들을 하나의 완벽한 카드로 통합
+                with st.container(key=f"card_{t}"):
+                    st.markdown(f"""
+                    <div class="stock-unified-card {'active' if is_active else ''}">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div style="font-size:15px; font-weight:800; color:#ffffff;">
+                                #{idx} {r['name']} <span style="font-size:13px; color:#8b90a4; font-weight:600;">({t})</span>
+                            </div>
+                            <span style="color:{status_color}; font-size:12px; font-weight:700;">{status_tag}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+                            <span style="font-size:12.5px; color:#cfcfd4;">현재가 <b>${r['current_price']:.2f}</b></span>
+                            <span style="font-size:12.5px; font-weight:700; color:#00e676;">1차목표 <b>+{t1_p:.1f}%</b></span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px; font-size:11px; color:#8b90a4;">
+                            <span>손익비 <b>{rr}:1</b></span>
+                            <span>{wall_st_note}</span>
+                        </div>
+                        <div style="margin-top:8px; display:flex; flex-wrap:wrap; gap:4px;">
+                            {tags_html}
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    if st.button(f"sel_{t}", key=f"btn_stock_{t}", use_container_width=True):
+                        st.session_state.rec_selected_ticker = t
+                        st.rerun()
+
+            # 📊 통계 기반 성과 추적 & 규칙 기반 가중치 보정 로그
+            st.markdown("<hr style='border:0; border-top:1px solid #23252e; margin: 12px 0 10px 0;'>", unsafe_allow_html=True)
+            with st.expander("📊 통계 기반 성과 추적 & 규칙 기반 가중치 보정 로그"):
+                try:
+                    from quant_core.tracker import evaluate_and_learn_from_history
+                    track_res = evaluate_and_learn_from_history()
+                    adaptive = track_res.get('adaptive_weights', {})
+                    
+                    if track_res.get('completed_count', 0) > 0:
+                        st.markdown(f"""
+                        <div style="font-size:13px; line-height:1.7;">
+                            • <b>누적 추천 표본수</b>: {track_res['total_recs']}개 (완료 {track_res['completed_count']}건 · 진행 {track_res['ongoing_count']}건)<br>
+                            • <b>실제 적중 승률</b>: <b style="color:#00e676;">{track_res['win_rate']}%</b> ({track_res['wins']}승 {track_res['completed_count']-track_res['wins']}패)<br>
+                            • <b>평균 실현 손익률</b>: <b style="color:{'#00e676' if track_res['avg_return']>=0 else '#f04452'};">{track_res['avg_return']:+}%</b>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    else:
+                        st.markdown(f"""
+                        <div style="font-size:12.5px; line-height:1.7; color:#d1d5db;">
+                            • <b>현재 상태</b>: <b>{track_res.get('ongoing_count', 0)}개 종목 실시간 성과 추적 중</b> (익절/손절 도달 시 자동 집계)
+                        </div>
+                        """, unsafe_allow_html=True)
+
+                    penalized = adaptive.get('penalized_factors', [])
+                    boosted = adaptive.get('boosted_factors', [])
+                    cooldowns = adaptive.get('cooldown_tickers', {})
+                    failures = adaptive.get('failure_notes', [])
+
+                    st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:10px; border-top:1px dashed #282a36; padding-top:8px;'>⚡ 통계 기반 동적 가중치 보정 (Feedback)</div>", unsafe_allow_html=True)
+                    
+                    if penalized:
+                        for pf in penalized:
+                            st.markdown(f"<div style='font-size:12px; color:#ff5252;'>• ⚠️ <b>{pf['tag']}</b>: 최근 승률 {pf['win_rate']}% 저조 ➡️ <b style='color:#ff5252;'>{pf['adj']}</b></div>", unsafe_allow_html=True)
+                    
+                    if boosted:
+                        for bf in boosted:
+                            st.markdown(f"<div style='font-size:12px; color:#00e676;'>• 🎯 <b>{bf['tag']}</b>: 최근 승률 {bf['win_rate']}% 우수 ➡️ <b style='color:#00e676;'>{bf['adj']}</b></div>", unsafe_allow_html=True)
+
+                    if cooldowns:
+                        cd_names = [f"{v['name']}({k})" for k, v in cooldowns.items()]
+                        st.markdown(f"<div style='font-size:12px; color:#ffa726;'>• 🧊 <b>최근 손절 쿨다운</b>: {', '.join(cd_names)} (추천 감점 -12점)</div>", unsafe_allow_html=True)
+
+                    if failures:
+                        st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:8px;'>📝 최근 실패 원인 진단 (성과 감사 로그)</div>", unsafe_allow_html=True)
+                        for fn in failures[-3:]:
+                            st.markdown(f"""
+                            <div style="background:#111218; border-radius:6px; padding:6px 10px; margin-top:4px; font-size:11.5px; color:#b0b4c3;">
+                                <b style="color:#ffffff;">{fn['name']} ({fn['ticker']})</b> · {fn['date']} <br>
+                                원인: <span style="color:#ff8a80;">{fn['reason']}</span>
+                            </div>
+                            """, unsafe_allow_html=True)
+
+                    st.markdown("<div style='font-size:11px; color:#707488; margin-top:6px;'>※ 매일 장 마감 후 추천 종목의 실제 주가 궤적을 추적하여 손익비와 성공/실패 원인을 엄밀하게 재산출합니다.</div>", unsafe_allow_html=True)
+
+                except Exception as e:
+                    st.caption(f"성과 추적 데이터 분석 중: {e}")
 
 
 
