@@ -338,6 +338,128 @@ if 'port_selected_ticker' not in st.session_state:
     st.session_state.port_selected_ticker = 'RKLX'
 
 
+def render_quant_performance_tracker(key_suffix: str = ""):
+    """통계 기반 성과 추적 및 버전별 가중치 보정 로그 UI 렌더러"""
+    try:
+        from quant_core.tracker import evaluate_and_learn_from_history, CURRENT_STRATEGY_VERSION
+
+        col_title, col_ver = st.columns([2, 1])
+        with col_title:
+            st.markdown("<div style='font-size:13px; font-weight:700; color:#e2e8f0; margin-top:4px;'>📊 전략 버전별 실현 성과 & 통계 신뢰도</div>", unsafe_allow_html=True)
+        with col_ver:
+            version_map = {
+                "v1.0.0 (동결 전략)": "v1.0.0",
+                "전체 통합 (All)": "all",
+                "legacy (구버전)": "legacy"
+            }
+            selected_label = st.selectbox(
+                "전략 버전 선택",
+                options=list(version_map.keys()),
+                index=0,
+                key=f"sb_strat_ver_{key_suffix}",
+                label_visibility="collapsed"
+            )
+            target_version = version_map[selected_label]
+
+        track_res = evaluate_and_learn_from_history(strategy_version=target_version)
+        adaptive = track_res.get('adaptive_weights', {})
+
+        comp_cnt = track_res.get('completed_count', 0)
+        ong_cnt = track_res.get('ongoing_count', 0)
+        tot_cnt = track_res.get('total_recs', 0)
+        ev_val = track_res.get('expected_value', 0.0)
+        pf_display = track_res.get('profit_factor_display', str(track_res.get('profit_factor', 0.0)))
+        win_r = track_res.get('win_rate', 0.0)
+        net_ret = track_res.get('avg_return_net', 0.0)
+
+        # 1. 통계적 신뢰도 단계 인디케이터 배너
+        rule_desc = {
+            "v1.0.0": "• <b>동결 전략 규칙 (v1.0.0)</b>: 최소 점수 68점 · 최소 손익비 1.20:1 · 20거래일 만료 · 동적 매물대 손익비 (왕복비용 0.25% 차감)",
+            "legacy": "• <b>구버전 이력 (legacy)</b>: 전략 버전 분리 이전의 초기 추천 데이터 (동결 규칙 미적용)",
+            "all": "• <b>전체 통합 통계</b>: 과거 구버전(legacy) 및 신규 동결 버전(v1.0.0) 누적 전체 표본"
+        }.get(target_version, "")
+
+        st.markdown(f"""
+        <div style="background:#171922; border-left:4px solid #3b82f6; padding:10px 14px; border-radius:8px; margin-bottom:12px; font-size:12.5px; line-height:1.6;">
+            <div style="font-weight:700; color:#ffffff;">📊 표본 신뢰도: <span style="color:#60a5fa;">{track_res.get('sample_tier', '실험 단계')}</span> (오차범위: {track_res.get('sample_error_margin', '±20%p 이상')})</div>
+            <div style="color:#9ba0b4; font-size:12px; margin-top:2px;">{track_res.get('sample_tier_desc', '')}</div>
+            <div style="color:#6b7280; font-size:11px; margin-top:4px;">{rule_desc}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        if comp_cnt > 0:
+            # 4대 핵심 퀀트 메트릭 그리드
+            ev_color = "#00e676" if ev_val >= 0 else "#f04452"
+            net_color = "#00e676" if net_ret >= 0 else "#f04452"
+            st.markdown(f"""
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:8px; margin-bottom:12px;">
+                <div style="background:#1f212c; border:1px solid #2e3242; border-radius:8px; padding:10px; text-align:center;">
+                    <div style="font-size:11px; color:#8b95a1; font-weight:600;">1회 기대값 (EV)</div>
+                    <div style="font-size:16px; font-weight:800; color:{ev_color}; margin-top:2px;">{ev_val:+}%</div>
+                    <div style="font-size:10px; color:#6b7280;">1회 추천당 장기기대</div>
+                </div>
+                <div style="background:#1f212c; border:1px solid #2e3242; border-radius:8px; padding:10px; text-align:center;">
+                    <div style="font-size:11px; color:#8b95a1; font-weight:600;">Profit Factor</div>
+                    <div style="font-size:15px; font-weight:800; color:#ffd700; margin-top:2px;">{pf_display}</div>
+                    <div style="font-size:10px; color:#6b7280;">총이익 / 총손실</div>
+                </div>
+                <div style="background:#1f212c; border:1px solid #2e3242; border-radius:8px; padding:10px; text-align:center;">
+                    <div style="font-size:11px; color:#8b95a1; font-weight:600;">실제 승률 (N={comp_cnt})</div>
+                    <div style="font-size:16px; font-weight:800; color:#00e676; margin-top:2px;">{win_r}%</div>
+                    <div style="font-size:10px; color:#6b7280;">{track_res.get('wins', 0)}승 {track_res.get('losses', 0)}패</div>
+                </div>
+                <div style="background:#1f212c; border:1px solid #2e3242; border-radius:8px; padding:10px; text-align:center;">
+                    <div style="font-size:11px; color:#8b95a1; font-weight:600;">순수익률 (비용차감)</div>
+                    <div style="font-size:16px; font-weight:800; color:{net_color}; margin-top:2px;">{net_ret:+}%</div>
+                    <div style="font-size:10px; color:#6b7280;">슬리피지 0.25% 반영</div>
+                </div>
+            </div>
+            <div style="font-size:12px; color:#8b90a4; margin-bottom:8px;">
+                • [{target_version}] 누적 추천: 총 {tot_cnt}개 (완료 {comp_cnt}건 · 진행 중 {ong_cnt}건) | 평균 이익 +{track_res.get('avg_win', 0.0)}% vs 평균 손실 {track_res.get('avg_loss', 0.0)}%
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <div style="font-size:12.5px; line-height:1.7; color:#d1d5db; margin-bottom:8px;">
+                • <b>[{target_version}] 현재 상태</b>: <b>{ong_cnt}개 종목 실시간 성과 추적 중</b> (익절/손절 도달 시 기대값·Profit Factor 자동 산출)
+            </div>
+            """, unsafe_allow_html=True)
+
+        penalized = adaptive.get('penalized_factors', [])
+        boosted = adaptive.get('boosted_factors', [])
+        cooldowns = adaptive.get('cooldown_tickers', {})
+        failures = adaptive.get('failure_notes', [])
+
+        st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:10px; border-top:1px dashed #282a36; padding-top:8px;'>⚡ 통계 기반 동적 가중치 보정 (Feedback)</div>", unsafe_allow_html=True)
+
+        if penalized:
+            for pf in penalized:
+                st.markdown(f"<div style='font-size:12px; color:#ff5252;'>• ⚠️ <b>{pf['tag']}</b>: 최근 승률 {pf['win_rate']}% 저조 ➡️ <b style='color:#ff5252;'>{pf['adj']}</b></div>", unsafe_allow_html=True)
+
+        if boosted:
+            for bf in boosted:
+                st.markdown(f"<div style='font-size:12px; color:#00e676;'>• 🎯 <b>{bf['tag']}</b>: 최근 승률 {bf['win_rate']}% 우수 ➡️ <b style='color:#00e676;'>{bf['adj']}</b></div>", unsafe_allow_html=True)
+
+        if cooldowns:
+            cd_names = [f"{v['name']}({k})" for k, v in cooldowns.items()]
+            st.markdown(f"<div style='font-size:12px; color:#ffa726;'>• 🧊 <b>최근 손절 쿨다운</b>: {', '.join(cd_names)} (추천 감점 -12점)</div>", unsafe_allow_html=True)
+
+        if failures:
+            st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:8px;'>📝 최근 실패 원인 진단 (성과 감사 로그)</div>", unsafe_allow_html=True)
+            for fn in failures[-3:]:
+                st.markdown(f"""
+                <div style="background:#111218; border-radius:6px; padding:6px 10px; margin-top:4px; font-size:11.5px; color:#b0b4c3;">
+                    <b style="color:#ffffff;">{fn['name']} ({fn['ticker']})</b> · {fn['date']} <br>
+                    원인: <span style="color:#ff8a80;">{fn['reason']}</span>
+                </div>
+                """, unsafe_allow_html=True)
+
+        st.markdown("<div style='font-size:11px; color:#707488; margin-top:6px;'>※ 매일 장 마감 후 추천 종목의 실제 주가 궤적을 추적하여 손익비와 성공/실패 원인을 엄밀하게 재산출합니다.</div>", unsafe_allow_html=True)
+
+    except Exception as e:
+        st.caption(f"성과 추적 데이터 분석 중: {e}")
+
+
 # ==============================================================================
 has_holdings = bool(holdings)
 if has_holdings:
@@ -402,59 +524,7 @@ with tab_rec:
 
         st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
         with st.expander("📊 통계 기반 성과 추적 & 규칙 기반 가중치 보정 로그", expanded=True):
-            try:
-                from quant_core.tracker import evaluate_and_learn_from_history
-                track_res = evaluate_and_learn_from_history()
-                adaptive = track_res.get('adaptive_weights', {})
-                
-                if track_res.get('completed_count', 0) > 0:
-                    st.markdown(f"""
-                    <div style="font-size:13px; line-height:1.7;">
-                        • <b>누적 추천 표본수</b>: {track_res['total_recs']}개 (완료 {track_res['completed_count']}건 · 진행 {track_res['ongoing_count']}건)<br>
-                        • <b>실제 적중 승률</b>: <b style="color:#00e676;">{track_res['win_rate']}%</b> ({track_res['wins']}승 {track_res['completed_count']-track_res['wins']}패)<br>
-                        • <b>평균 실현 손익률</b>: <b style="color:{'#00e676' if track_res['avg_return']>=0 else '#f04452'};">{track_res['avg_return']:+}%</b>
-                    </div>
-                    """, unsafe_allow_html=True)
-                else:
-                    st.markdown(f"""
-                    <div style="font-size:12.5px; line-height:1.7; color:#d1d5db;">
-                        • <b>현재 상태</b>: <b>{track_res.get('ongoing_count', 0)}개 종목 실시간 성과 추적 중</b> (익절/손절 도달 시 자동 집계)
-                    </div>
-                    """, unsafe_allow_html=True)
-
-                penalized = adaptive.get('penalized_factors', [])
-                boosted = adaptive.get('boosted_factors', [])
-                cooldowns = adaptive.get('cooldown_tickers', {})
-                failures = adaptive.get('failure_notes', [])
-
-                st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:10px; border-top:1px dashed #282a36; padding-top:8px;'>⚡ 통계 기반 동적 가중치 보정 (Feedback)</div>", unsafe_allow_html=True)
-                
-                if penalized:
-                    for pf in penalized:
-                        st.markdown(f"<div style='font-size:12px; color:#ff5252;'>• ⚠️ <b>{pf['tag']}</b>: 최근 승률 {pf['win_rate']}% 저조 ➡️ <b style='color:#ff5252;'>{pf['adj']}</b></div>", unsafe_allow_html=True)
-                
-                if boosted:
-                    for bf in boosted:
-                        st.markdown(f"<div style='font-size:12px; color:#00e676;'>• 🎯 <b>{bf['tag']}</b>: 최근 승률 {bf['win_rate']}% 우수 ➡️ <b style='color:#00e676;'>{bf['adj']}</b></div>", unsafe_allow_html=True)
-
-                if cooldowns:
-                    cd_names = [f"{v['name']}({k})" for k, v in cooldowns.items()]
-                    st.markdown(f"<div style='font-size:12px; color:#ffa726;'>• 🧊 <b>최근 손절 쿨다운</b>: {', '.join(cd_names)} (추천 감점 -12점)</div>", unsafe_allow_html=True)
-
-                if failures:
-                    st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:8px;'>📝 최근 실패 원인 진단 (성과 감사 로그)</div>", unsafe_allow_html=True)
-                    for fn in failures[-3:]:
-                        st.markdown(f"""
-                        <div style="background:#111218; border-radius:6px; padding:6px 10px; margin-top:4px; font-size:11.5px; color:#b0b4c3;">
-                            <b style="color:#ffffff;">{fn['name']} ({fn['ticker']})</b> · {fn['date']} <br>
-                            원인: <span style="color:#ff8a80;">{fn['reason']}</span>
-                        </div>
-                        """, unsafe_allow_html=True)
-
-                st.markdown("<div style='font-size:11px; color:#707488; margin-top:6px;'>※ 매일 장 마감 후 추천 종목의 실제 주가 궤적을 추적하여 손익비와 성공/실패 원인을 엄밀하게 재산출합니다.</div>", unsafe_allow_html=True)
-
-            except Exception as e:
-                st.caption(f"성과 추적 데이터 분석 중: {e}")
+            render_quant_performance_tracker(key_suffix="empty")
 
     else:
         # 좌측(상세 분석 및 가이드 1.9) vs 우측(추천 종목 리스트 1.1)
@@ -638,99 +708,7 @@ with tab_rec:
             # 📊 통계 기반 성과 추적 & 규칙 기반 가중치 보정 로그
             st.markdown("<hr style='border:0; border-top:1px solid #23252e; margin: 12px 0 10px 0;'>", unsafe_allow_html=True)
             with st.expander("📊 통계 기반 성과 추적 & 규칙 기반 가중치 보정 로그"):
-                try:
-                    from quant_core.tracker import evaluate_and_learn_from_history
-                    track_res = evaluate_and_learn_from_history()
-                    adaptive = track_res.get('adaptive_weights', {})
-                    
-                    comp_cnt = track_res.get('completed_count', 0)
-                    ong_cnt = track_res.get('ongoing_count', 0)
-                    tot_cnt = track_res.get('total_recs', 0)
-                    ev_val = track_res.get('expected_value', 0.0)
-                    pf_val = track_res.get('profit_factor', 0.0)
-                    win_r = track_res.get('win_rate', 0.0)
-                    net_ret = track_res.get('avg_return_net', 0.0)
-
-                    # 1. 통계적 신뢰도 단계 인디케이터 배너
-                    st.markdown(f"""
-                    <div style="background:#171922; border-left:4px solid #3b82f6; padding:10px 14px; border-radius:8px; margin-bottom:12px; font-size:12.5px; line-height:1.6;">
-                        <div style="font-weight:700; color:#ffffff;">📊 표본 신뢰도: <span style="color:#60a5fa;">{track_res.get('sample_tier', '실험 단계')}</span> (오차범위: {track_res.get('sample_error_margin', '±20%p 이상')})</div>
-                        <div style="color:#9ba0b4; font-size:12px; margin-top:2px;">{track_res.get('sample_tier_desc', '')}</div>
-                        <div style="color:#6b7280; font-size:11px; margin-top:4px;">• <b>동결 전략 규칙 (v1.0.0)</b>: 최소 점수 68점 · 최소 손익비 1.20:1 · 20거래일 만료 · 동적 매물대 손익비 모델 (왕복비용 0.25% 차감)</div>
-                    </div>
-                    """, unsafe_allow_html=True)
-
-                    if comp_cnt > 0:
-                        # 4대 핵심 퀀트 메트릭 그리드
-                        ev_color = "#00e676" if ev_val >= 0 else "#f04452"
-                        net_color = "#00e676" if net_ret >= 0 else "#f04452"
-                        st.markdown(f"""
-                        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:8px; margin-bottom:12px;">
-                            <div style="background:#1f212c; border:1px solid #2e3242; border-radius:8px; padding:10px; text-align:center;">
-                                <div style="font-size:11px; color:#8b95a1; font-weight:600;">1회 기대값 (EV)</div>
-                                <div style="font-size:16px; font-weight:800; color:{ev_color}; margin-top:2px;">{ev_val:+}%</div>
-                                <div style="font-size:10px; color:#6b7280;">1회 추천당 장기기대</div>
-                            </div>
-                            <div style="background:#1f212c; border:1px solid #2e3242; border-radius:8px; padding:10px; text-align:center;">
-                                <div style="font-size:11px; color:#8b95a1; font-weight:600;">Profit Factor</div>
-                                <div style="font-size:16px; font-weight:800; color:#ffd700; margin-top:2px;">{pf_val}</div>
-                                <div style="font-size:10px; color:#6b7280;">총이익 / 총손실</div>
-                            </div>
-                            <div style="background:#1f212c; border:1px solid #2e3242; border-radius:8px; padding:10px; text-align:center;">
-                                <div style="font-size:11px; color:#8b95a1; font-weight:600;">실제 승률 (N= {comp_cnt})</div>
-                                <div style="font-size:16px; font-weight:800; color:#00e676; margin-top:2px;">{win_r}%</div>
-                                <div style="font-size:10px; color:#6b7280;">{track_res.get('wins', 0)}승 {track_res.get('losses', 0)}패</div>
-                            </div>
-                            <div style="background:#1f212c; border:1px solid #2e3242; border-radius:8px; padding:10px; text-align:center;">
-                                <div style="font-size:11px; color:#8b95a1; font-weight:600;">순수익률 (비용차감)</div>
-                                <div style="font-size:16px; font-weight:800; color:{net_color}; margin-top:2px;">{net_ret:+}%</div>
-                                <div style="font-size:10px; color:#6b7280;">수수료 0.25% 반영</div>
-                            </div>
-                        </div>
-                        <div style="font-size:12px; color:#8b90a4; margin-bottom:8px;">
-                            • 누적 추천: 총 {tot_cnt}개 (완료 {comp_cnt}건 · 진행 중 {ong_cnt}건) | 평균 이익 +{track_res.get('avg_win', 0.0)}% vs 평균 손실 {track_res.get('avg_loss', 0.0)}%
-                        </div>
-                        """, unsafe_allow_html=True)
-                    else:
-                        st.markdown(f"""
-                        <div style="font-size:12.5px; line-height:1.7; color:#d1d5db; margin-bottom:8px;">
-                            • <b>현재 상태</b>: <b>{ong_cnt}개 종목 실시간 성과 추적 중</b> (익절/손절 도달 시 기대값·Profit Factor 자동 산출)
-                        </div>
-                        """, unsafe_allow_html=True)
-
-                    penalized = adaptive.get('penalized_factors', [])
-                    boosted = adaptive.get('boosted_factors', [])
-                    cooldowns = adaptive.get('cooldown_tickers', {})
-                    failures = adaptive.get('failure_notes', [])
-
-                    st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:10px; border-top:1px dashed #282a36; padding-top:8px;'>⚡ 통계 기반 동적 가중치 보정 (Feedback)</div>", unsafe_allow_html=True)
-                    
-                    if penalized:
-                        for pf in penalized:
-                            st.markdown(f"<div style='font-size:12px; color:#ff5252;'>• ⚠️ <b>{pf['tag']}</b>: 최근 승률 {pf['win_rate']}% 저조 ➡️ <b style='color:#ff5252;'>{pf['adj']}</b></div>", unsafe_allow_html=True)
-                    
-                    if boosted:
-                        for bf in boosted:
-                            st.markdown(f"<div style='font-size:12px; color:#00e676;'>• 🎯 <b>{bf['tag']}</b>: 최근 승률 {bf['win_rate']}% 우수 ➡️ <b style='color:#00e676;'>{bf['adj']}</b></div>", unsafe_allow_html=True)
-
-                    if cooldowns:
-                        cd_names = [f"{v['name']}({k})" for k, v in cooldowns.items()]
-                        st.markdown(f"<div style='font-size:12px; color:#ffa726;'>• 🧊 <b>최근 손절 쿨다운</b>: {', '.join(cd_names)} (추천 감점 -12점)</div>", unsafe_allow_html=True)
-
-                    if failures:
-                        st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:8px;'>📝 최근 실패 원인 진단 (성과 감사 로그)</div>", unsafe_allow_html=True)
-                        for fn in failures[-3:]:
-                            st.markdown(f"""
-                            <div style="background:#111218; border-radius:6px; padding:6px 10px; margin-top:4px; font-size:11.5px; color:#b0b4c3;">
-                                <b style="color:#ffffff;">{fn['name']} ({fn['ticker']})</b> · {fn['date']} <br>
-                                원인: <span style="color:#ff8a80;">{fn['reason']}</span>
-                            </div>
-                            """, unsafe_allow_html=True)
-
-                    st.markdown("<div style='font-size:11px; color:#707488; margin-top:6px;'>※ 매일 장 마감 후 추천 종목의 실제 주가 궤적을 추적하여 손익비와 성공/실패 원인을 엄밀하게 재산출합니다.</div>", unsafe_allow_html=True)
-
-                except Exception as e:
-                    st.caption(f"성과 추적 데이터 분석 중: {e}")
+                render_quant_performance_tracker(key_suffix="list")
 
 
 

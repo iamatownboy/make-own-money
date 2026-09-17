@@ -75,8 +75,9 @@ Streamlit Community Cloud는 재시작 시 로컬 파일이 초기화되는 휘�
 Supabase 대시보드의 **SQL Editor**에서 [`supabase_schema.sql`](supabase_schema.sql) 파일의 내용을 실행합니다.
 
 주요 보안 정책:
-- **`recommendation_history` 및 `daily_recommendation_cache` RLS 활성화**
-- **읽기(SELECT)**: `anon`, `authenticated` 모두 허용 (대시보드 차트/데이터 렌더링용)
+- **`recommendation_history` 및 `daily_recommendation_cache` 비공개 RLS 활성화**
+- **복합 고유 키 (`date, ticker, strategy_version`)**: 전략 버전이 달라도 동일 날짜/종목의 추천 이력을 충돌 없이 영구 보존
+- **읽기(SELECT)**: 오직 인증된 사용자(`authenticated`) 및 백엔드(`service_role`)만 허용하여 외부 미인증 `anon` 접근 원천 차단 (Default Deny)
 - **쓰기/수정/삭제(ALL/WRITE)**: 오직 백엔드 서버의 `service_role` (Secret key)만 허용하여, 외부에서 공개 키(`anon`)로 데이터를 조작/삭제하는 것을 원천 차단
 
 ### 2. Streamlit Cloud 시크릿 설정

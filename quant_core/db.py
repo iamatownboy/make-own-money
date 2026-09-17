@@ -138,9 +138,15 @@ def db_upsert_history_items(items: List[Dict[str, Any]]) -> bool:
     try:
         records = []
         for it in items:
+            strat_ver = it.get("strategy_version", "v1.0.0")
+            dt_str = str(it.get("date", ""))
+            tk_str = it.get("ticker", "")
+            rec_id = it.get("recommendation_id") or f"{dt_str}_{tk_str}_{strat_ver}"
+
             rec = {
-                "date": str(it.get("date", "")),
-                "ticker": it.get("ticker", ""),
+                "recommendation_id": rec_id,
+                "date": dt_str,
+                "ticker": tk_str,
                 "name": it.get("name", ""),
                 "category": it.get("category", ""),
                 "rec_price": float(it.get("rec_price", 0.0)),
@@ -162,37 +168,47 @@ def db_upsert_history_items(items: List[Dict[str, Any]]) -> bool:
                 "failure_reason": it.get("failure_reason"),
                 "exit_price": float(it.get("exit_price", 0.0)) if it.get("exit_price") else None,
                 "exit_date": str(it.get("exit_date", "")) if it.get("exit_date") else None,
-                "strategy_version": it.get("strategy_version", "v1.0.0"),
+                "strategy_version": strat_ver,
                 "rules": it.get("rules"),
                 "market_context": it.get("market_context"),
                 "fee_slippage_pct": float(it.get("fee_slippage_pct", 0.25))
             }
             records.append(rec)
 
+        # 1차 시도: 신규 복합 키 (date, ticker, strategy_version) 기준 upsert
         try:
             client.table("recommendation_history").upsert(
                 records,
-                on_conflict="date,ticker"
+                on_conflict="date,ticker,strategy_version"
             ).execute()
             return True
-        except Exception as full_err:
-            # 신규 컬럼이 아직 마이그레이션되지 않은 기존 테이블의 경우 구버전 필드만으로 2차 시도
-            fallback_records = []
-            for r in records:
-                fb = dict(r)
-                fb.pop("strategy_version", None)
-                fb.pop("rules", None)
-                fb.pop("market_context", None)
-                fb.pop("fee_slippage_pct", None)
-                fb.pop("realized_pnl_net_pct", None)
-                fallback_records.append(fb)
-            client.table("recommendation_history").upsert(
-                fallback_records,
-                on_conflict="date,ticker"
-            ).execute()
-            return True
+        except Exception as v_err:
+            # 2차 시도: 기존 테이블 제약조건이 (date, ticker)인 경우
+            try:
+                client.table("recommendation_history").upsert(
+                    records,
+                    on_conflict="date,ticker"
+                ).execute()
+                return True
+            except Exception as dt_err:
+                # 3차 시도: 신규 컬럼이 없는 구버전 스키마인 경우 구버전 필드만으로 시도
+                fallback_records = []
+                for r in records:
+                    fb = dict(r)
+                    fb.pop("recommendation_id", None)
+                    fb.pop("strategy_version", None)
+                    fb.pop("rules", None)
+                    fb.pop("market_context", None)
+                    fb.pop("fee_slippage_pct", None)
+                    fb.pop("realized_pnl_net_pct", None)
+                    fallback_records.append(fb)
+                client.table("recommendation_history").upsert(
+                    fallback_records,
+                    on_conflict="date,ticker"
+                ).execute()
+                return True
     except Exception as e:
-        print(f"[DB] Supabase 추천 이력 업서트 실패: {e}")
+        print(f"[DB] Supabase 추천 이력 업서트 최종 실패: {e}")
         return False
 
 

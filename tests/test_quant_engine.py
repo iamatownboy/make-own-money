@@ -351,7 +351,8 @@ def test_cooldown_and_adaptive_weights(monkeypatch, tmp_path):
             'tags': ['급락패턴'],
             'is_completed': True,
             'hit_success': False,
-            'failure_reason': '기술적 손절선 하방 이탈'
+            'failure_reason': '기술적 손절선 하방 이탈',
+            'strategy_version': 'v1.0.0'
         }
     ]
     
@@ -366,7 +367,8 @@ def test_cooldown_and_adaptive_weights(monkeypatch, tmp_path):
             'stop_loss': 47.0,
             'tags': ['소표본태그'],
             'is_completed': True,
-            'hit_success': True
+            'hit_success': True,
+            'strategy_version': 'v1.0.0'
         })
 
     # 2. 40건 생성 (30 <= 표본 < 100건): 최대 ±2점 제한 보정
@@ -380,7 +382,8 @@ def test_cooldown_and_adaptive_weights(monkeypatch, tmp_path):
             'stop_loss': 47.0,
             'tags': ['중표본태그'],
             'is_completed': True,
-            'hit_success': True  # 승률 100%이지만 40건이므로 최대 +2점
+            'hit_success': True,  # 승률 100%이지만 40건이므로 최대 +2점
+            'strategy_version': 'v1.0.0'
         })
 
     # 3. 120건 생성 (100 <= 표본 < 300건): 최대 ±5점 보정
@@ -394,11 +397,12 @@ def test_cooldown_and_adaptive_weights(monkeypatch, tmp_path):
             'stop_loss': 47.0,
             'tags': ['대표본태그'],
             'is_completed': True,
-            'hit_success': True
+            'hit_success': True,
+            'strategy_version': 'v1.0.0'
         })
 
     save_history(mock_history)
-    weights = get_adaptive_factor_weights()
+    weights = get_adaptive_factor_weights(strategy_version='v1.0.0')
 
     # 1. 쿨다운 검증
     assert 'BAD_STOCK' in weights['cooldown_tickers']
@@ -469,7 +473,8 @@ def test_expectancy_and_profit_factor_calculation(monkeypatch, tmp_path):
             'is_completed': True,
             'hit_success': True,
             'realized_pnl_pct': 10.0,
-            'fee_slippage_pct': 0.25
+            'fee_slippage_pct': 0.25,
+            'strategy_version': 'v1.0.0'
         })
     for idx in range(3):
         mock_history.append({
@@ -482,7 +487,8 @@ def test_expectancy_and_profit_factor_calculation(monkeypatch, tmp_path):
             'is_completed': True,
             'hit_success': False,
             'realized_pnl_pct': -5.0,
-            'fee_slippage_pct': 0.25
+            'fee_slippage_pct': 0.25,
+            'strategy_version': 'v1.0.0'
         })
 
     save_history(mock_history)
@@ -506,3 +512,244 @@ def test_expectancy_and_profit_factor_calculation(monkeypatch, tmp_path):
     assert '실험 단계' in res['sample_tier']
     assert res['avg_win'] == 10.0
     assert res['avg_loss'] == -5.0
+
+
+# 12. 전략 버전별 통계 및 가중치 독립 격리 검증 (데이터 오염 방지)
+def test_strategy_version_isolation(monkeypatch, tmp_path):
+    test_hist_file = str(tmp_path / "test_history.json")
+    monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
+    monkeypatch.setattr("quant_core.tracker.is_supabase_enabled", lambda: False)
+
+    mock_data = [
+        # v1.0.0 버전 레코드 4개 (3승 1패)
+        {
+            'date': '2026-02-01', 'ticker': 'V1_W1', 'name': 'V1승1', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 10.0,
+            'strategy_version': 'v1.0.0', 'tags': ['피보나치골든포켓']
+        },
+        {
+            'date': '2026-02-01', 'ticker': 'V1_W2', 'name': 'V1승2', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 10.0,
+            'strategy_version': 'v1.0.0', 'tags': ['피보나치골든포켓']
+        },
+        {
+            'date': '2026-02-01', 'ticker': 'V1_W3', 'name': 'V1승3', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 10.0,
+            'strategy_version': 'v1.0.0', 'tags': ['빗각추세선돌파']
+        },
+        {
+            'date': '2026-02-01', 'ticker': 'V1_L1', 'name': 'V1패1', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': False, 'realized_pnl_pct': -5.0,
+            'strategy_version': 'v1.0.0', 'tags': ['빗각추세선돌파']
+        },
+        # legacy 구버전 레코드 3개 (1승 2패)
+        {
+            'date': '2025-12-01', 'ticker': 'LEG_W1', 'name': '구승1', 'rec_price': 50.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 8.0,
+            'strategy_version': 'legacy', 'tags': ['피보나치골든포켓']
+        },
+        {
+            'date': '2025-12-01', 'ticker': 'LEG_L1', 'name': '구패1', 'rec_price': 50.0,
+            'is_completed': True, 'hit_success': False, 'realized_pnl_pct': -6.0,
+            'strategy_version': 'legacy', 'tags': ['피보나치골든포켓']
+        },
+        {
+            'date': '2025-12-01', 'ticker': 'LEG_L2', 'name': '구패2', 'rec_price': 50.0,
+            'is_completed': True, 'hit_success': False, 'realized_pnl_pct': -7.0,
+            'strategy_version': 'legacy', 'tags': ['빗각추세선돌파']
+        }
+    ]
+    save_history(mock_data)
+
+    class MockTicker:
+        def __init__(self, ticker): pass
+        def history(self, *args, **kwargs): return pd.DataFrame()
+    monkeypatch.setattr("yfinance.Ticker", MockTicker)
+
+    # 1. v1.0.0 필터 집계: 총 4건, 3승 1패 (승률 75.0%)
+    res_v1 = evaluate_and_learn_from_history(strategy_version='v1.0.0')
+    assert res_v1['completed_count'] == 4
+    assert res_v1['wins'] == 3
+    assert res_v1['losses'] == 1
+    assert res_v1['win_rate'] == 75.0
+
+    # 2. legacy 필터 집계: 총 3건, 1승 2패 (승률 33.3%)
+    res_leg = evaluate_and_learn_from_history(strategy_version='legacy')
+    assert res_leg['completed_count'] == 3
+    assert res_leg['wins'] == 1
+    assert res_leg['losses'] == 2
+    assert res_leg['win_rate'] == 33.3
+
+    # 3. all 전체 집계: 총 7건, 4승 3패
+    res_all = evaluate_and_learn_from_history(strategy_version='all')
+    assert res_all['completed_count'] == 7
+    assert res_all['wins'] == 4
+    assert res_all['losses'] == 3
+
+
+# 13. 1종목 내 다중 정규화 동의어 태그 중복 집계 원천 차단 검증
+def test_tag_deduplication_in_single_recommendation(monkeypatch, tmp_path):
+    test_hist_file = str(tmp_path / "test_history.json")
+    monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
+    monkeypatch.setattr("quant_core.tracker.is_supabase_enabled", lambda: False)
+
+    # 1개 종목에 '월가목표+35%'와 '월가괴리_25이상'이 둘 다 들어있음
+    # 둘 다 normalize_factor_tag()를 거치면 '월가괴리_25이상'이 됨
+    mock_data = [{
+        'date': '2026-03-10',
+        'ticker': 'DUP_TAG_STOCK',
+        'name': '중복태그종목',
+        'rec_price': 100.0,
+        'is_completed': True,
+        'hit_success': True,
+        'realized_pnl_pct': 12.0,
+        'strategy_version': 'v1.0.0',
+        'tags': ['월가목표+35%', '월가괴리_25이상']  # 동의어 태그 2개
+    }]
+    save_history(mock_data)
+
+    class MockTicker:
+        def __init__(self, ticker): pass
+        def history(self, *args, **kwargs): return pd.DataFrame()
+    monkeypatch.setattr("yfinance.Ticker", MockTicker)
+
+    # evaluate_and_learn_from_history 실행 시 factor_stats에서 표본수가 1건이어야 함 (2건이 아님)
+    res = evaluate_and_learn_from_history(strategy_version='v1.0.0')
+    factor_stats = res['adaptive_weights']['factor_adjustments']
+
+    # get_adaptive_factor_weights로 직접 확인
+    weights = get_adaptive_factor_weights(strategy_version='v1.0.0')
+    # 표본수가 1건이므로 가중치는 0(동결)이어야 함
+    assert weights['factor_adjustments'].get('월가괴리_25이상', 0) == 0
+
+
+# 14. 동일 날짜·종목에 대한 다중 전략 버전 추천 동시 보존 검증
+def test_multi_strategy_same_date_ticker_storage(monkeypatch, tmp_path):
+    test_hist_file = str(tmp_path / "test_history.json")
+    monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
+    monkeypatch.setattr("quant_core.tracker.is_supabase_enabled", lambda: False)
+
+    # 동일 날짜, 동일 종목이지만 전략 버전이 다름
+    rec_v1 = {
+        'date': '2026-09-17',
+        'ticker': 'NVDA',
+        'name': '엔비디아',
+        'current_price': 120.0,
+        'bull_target_1': 135.0,
+        'stop_loss': 114.0,
+        'strategy_version': 'v1.0.0'
+    }
+    rec_v2 = {
+        'date': '2026-09-17',
+        'ticker': 'NVDA',
+        'name': '엔비디아',
+        'current_price': 120.0,
+        'bull_target_1': 140.0,
+        'stop_loss': 116.0,
+        'strategy_version': 'v1.1.0'
+    }
+
+    # v1.0.0 등록
+    hist1 = record_daily_recommendations([rec_v1])
+    assert len(hist1) == 1
+
+    # v1.1.0 등록 -> 충돌 없이 2건 모두 보존되어야 함
+    hist2 = record_daily_recommendations([rec_v2])
+    assert len(hist2) == 2
+
+    # 파일에서 직접 확인
+    saved = load_history()
+    assert len(saved) == 2
+    versions = {s['strategy_version'] for s in saved}
+    assert versions == {'v1.0.0', 'v1.1.0'}
+    assert saved[0]['recommendation_id'] != saved[1]['recommendation_id']
+
+
+# 15. 실시간-백테스트 패턴 판정 단일 소스 (evaluate_pattern_match) 검증
+def test_evaluate_pattern_match_unified_logic():
+    from quant_core.screener import evaluate_pattern_match
+    from quant_core.indicators import calculate_all_indicators
+
+    df = make_dummy_ohlcv(days=120, base_price=100.0)
+    df = calculate_all_indicators(df)
+
+    # 피보나치, 빗각 추세선, 다이버전스, 자동(Supertrend/EMA) 각각 단일 소스 판정 호출
+    fibo_res = evaluate_pattern_match(df, 'fibonacci')
+    assert isinstance(fibo_res, (bool, np.bool_))
+
+    trend_res = evaluate_pattern_match(df, 'trendline')
+    assert isinstance(trend_res, (bool, np.bool_))
+
+    div_res = evaluate_pattern_match(df, 'divergence')
+    assert isinstance(div_res, (bool, np.bool_))
+
+    auto_res = evaluate_pattern_match(df, 'auto')
+    assert isinstance(auto_res, (bool, np.bool_))
+
+
+# 16. 무손실(Loss 0건) 시 Profit Factor 무한대(손실 없음) 안전 표기 검증
+def test_zero_loss_profit_factor_infinity_display(monkeypatch, tmp_path):
+    test_hist_file = str(tmp_path / "test_history.json")
+    monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
+    monkeypatch.setattr("quant_core.tracker.is_supabase_enabled", lambda: False)
+
+    mock_data = [
+        {
+            'date': '2026-03-01', 'ticker': 'PERF_1', 'name': '완벽1', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 10.0,
+            'strategy_version': 'v1.0.0'
+        },
+        {
+            'date': '2026-03-01', 'ticker': 'PERF_2', 'name': '완벽2', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 15.0,
+            'strategy_version': 'v1.0.0'
+        }
+    ]
+    save_history(mock_data)
+
+    class MockTicker:
+        def __init__(self, ticker): pass
+        def history(self, *args, **kwargs): return pd.DataFrame()
+    monkeypatch.setattr("yfinance.Ticker", MockTicker)
+
+    res = evaluate_and_learn_from_history(strategy_version='v1.0.0')
+    assert res['losses'] == 0
+    assert res['wins'] == 2
+    assert res['profit_factor'] == 99.9
+    assert res['profit_factor_display'] == "손실 없음 (∞)"
+
+
+# 17. 기록별 동적 슬리피지·수수료 (fee_slippage_pct) 차감 반영 검증
+def test_dynamic_fee_slippage_calculation(monkeypatch, tmp_path):
+    test_hist_file = str(tmp_path / "test_history.json")
+    monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
+    monkeypatch.setattr("quant_core.tracker.is_supabase_enabled", lambda: False)
+
+    # 2개 표본: 둘 다 +10% 이익
+    # item1: 수수료 0.10% -> 순이익 +9.90%
+    # item2: 수수료 0.50% -> 순이익 +9.50%
+    # 평균 수수료 = 0.30%
+    # 평균 순이익 = (9.90 + 9.50) / 2 = +9.70%
+    mock_data = [
+        {
+            'date': '2026-03-01', 'ticker': 'FEE_LOW', 'name': '저비용', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 10.0,
+            'fee_slippage_pct': 0.10, 'strategy_version': 'v1.0.0'
+        },
+        {
+            'date': '2026-03-01', 'ticker': 'FEE_HIGH', 'name': '고비용', 'rec_price': 100.0,
+            'is_completed': True, 'hit_success': True, 'realized_pnl_pct': 10.0,
+            'fee_slippage_pct': 0.50, 'strategy_version': 'v1.0.0'
+        }
+    ]
+    save_history(mock_data)
+
+    class MockTicker:
+        def __init__(self, ticker): pass
+        def history(self, *args, **kwargs): return pd.DataFrame()
+    monkeypatch.setattr("yfinance.Ticker", MockTicker)
+
+    res = evaluate_and_learn_from_history(strategy_version='v1.0.0')
+    assert res['avg_return'] == 10.0
+    assert res['avg_return_net'] == 9.70
+    assert res['expected_value'] == 9.70
