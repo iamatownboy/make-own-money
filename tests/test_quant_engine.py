@@ -873,6 +873,11 @@ def test_supabase_schema_migration_backfill_order():
 
     # 5. 직전 스키마 적용으로 오염된 2026-09-17 이전 과거 행의 복구 조건 포함 여부 검증
     assert "date < '2026-09-17'" in sql_content, "v1.0.0 도입일 이전 과거 행에 대한 안전 복구 조건이 포함되어야 합니다."
+    assert "rules IS NULL" in sql_content, "구버전 메타데이터(rules 부재) 과거 행에 대한 안전 복구 조건이 포함되어야 합니다."
+
+    # 6. 무손실 전용 헬스체크 테이블(system_health_check) 정의 검증
+    assert "CREATE TABLE IF NOT EXISTS system_health_check" in sql_content
+    assert "Service Role Manage Health Check" in sql_content
 
 
 # 22. authenticated 역할 등 쓰기 권한이 없는 키에 대한 실제 Write Probe 차단 실증 검증
@@ -918,3 +923,125 @@ def test_write_probe_authenticated_key_rejection(monkeypatch):
     assert diag['is_healthy'] is False
     assert is_supabase_enabled() is False
     assert "쓰기 권한 부족" in diag['status_message']
+
+
+# 23. 전용 system_health_check 테이블을 통한 무손실 쓰기 점검 실증 검증
+def test_write_probe_dedicated_health_check_table_success(monkeypatch):
+    import base64
+    from quant_core.db import get_supabase_diagnostics, is_supabase_enabled
+
+    def make_fake_jwt(role_name: str) -> str:
+        header = base64.urlsafe_b64encode(b'{"alg":"HS256","typ":"JWT"}').decode().rstrip('=')
+        payload = base64.urlsafe_b64encode(f'{{"role":"{role_name}"}}'.encode()).decode().rstrip('=')
+        return f"{header}.{payload}.sig"
+
+    svc_key = make_fake_jwt("service_role")
+    monkeypatch.setenv("SUPABASE_URL", "https://mock.supabase.co")
+    monkeypatch.setenv("SUPABASE_KEY", svc_key)
+
+    recorded_calls = []
+
+    class MockHealthCheckTable:
+        def __init__(self, name):
+            self.name = name
+
+        def select(self, *args, **kwargs):
+            return self
+        def limit(self, *args, **kwargs):
+            return self
+        def eq(self, col, val):
+            recorded_calls.append(("eq", self.name, col, val))
+            return self
+        def delete(self):
+            recorded_calls.append(("delete", self.name))
+            return self
+        def upsert(self, records, on_conflict=None):
+            recorded_calls.append(("upsert", self.name, records))
+            return self
+        def execute(self):
+            return type('Response', (), {'data': [{'id': 1}]})()
+
+    class MockClient:
+        def table(self, name):
+            return MockHealthCheckTable(name)
+
+    monkeypatch.setattr("quant_core.db.get_supabase_client", lambda: MockClient())
+
+    diag = get_supabase_diagnostics(force_refresh=True)
+    assert diag['can_read'] is True
+    assert diag['can_write'] is True
+    assert diag['is_healthy'] is True
+    assert is_supabase_enabled() is True
+
+    # system_health_check 테이블에 upsert 및 delete가 순차 호출되었는지 확인 (비즈니스 테이블 침범 없음)
+    table_names = [call[1] for call in recorded_calls]
+    assert "system_health_check" in table_names
+    assert "daily_recommendation_cache" not in table_names
+
+
+# 24. 구버전 스키마(system_health_check 없음) 시 기존 행 백업 및 원상 복원 무손실 검증
+def test_write_probe_fallback_cache_table_backup_and_restore(monkeypatch):
+    import base64
+    from quant_core.db import get_supabase_diagnostics, is_supabase_enabled
+
+    def make_fake_jwt(role_name: str) -> str:
+        header = base64.urlsafe_b64encode(b'{"alg":"HS256","typ":"JWT"}').decode().rstrip('=')
+        payload = base64.urlsafe_b64encode(f'{{"role":"{role_name}"}}'.encode()).decode().rstrip('=')
+        return f"{header}.{payload}.sig"
+
+    svc_key = make_fake_jwt("service_role")
+    monkeypatch.setenv("SUPABASE_URL", "https://mock.supabase.co")
+    monkeypatch.setenv("SUPABASE_KEY", svc_key)
+
+    existing_original_row = {
+        "date": "1970-01-01",
+        "recommendations": [{"original_data": "important_value"}],
+        "updated_at": "1970-01-01T00:00:00"
+    }
+
+    operations = []
+
+    class MockFallbackClient:
+        def table(self, name):
+            table_instance = self
+
+            if name == "system_health_check":
+                class MissingTable:
+                    def upsert(self, *args, **kwargs):
+                        # 테이블 부재 에러 발생 (42P01 시뮬레이션)
+                        raise Exception('relation "system_health_check" does not exist (PostgreSQL error 42P01)')
+                return MissingTable()
+
+            class CacheTable:
+                def select(self, *args, **kwargs):
+                    operations.append("select")
+                    return self
+                def limit(self, *args, **kwargs):
+                    return self
+                def eq(self, col, val):
+                    operations.append(f"eq_{col}_{val}")
+                    return self
+                def upsert(self, records, on_conflict=None):
+                    operations.append(("upsert", records))
+                    return self
+                def delete(self):
+                    operations.append("delete")
+                    return self
+                def execute(self):
+                    if "select" in operations:
+                        return type('Response', (), {'data': [existing_original_row]})()
+                    return type('Response', (), {'data': []})()
+
+            return CacheTable()
+
+    monkeypatch.setattr("quant_core.db.get_supabase_client", lambda: MockFallbackClient())
+
+    diag = get_supabase_diagnostics(force_refresh=True)
+    assert diag['can_read'] is True
+    assert diag['can_write'] is True
+    assert diag['is_healthy'] is True
+
+    # 1970-01-01에 기존 데이터가 있었으므로, 테스트 후 최종적으로 원래 row로 복원 upsert되었는지 확인
+    upsert_records = [op[1] for op in operations if isinstance(op, tuple) and op[0] == "upsert"]
+    assert len(upsert_records) >= 2  # 프로브 upsert + 복원 upsert
+    assert upsert_records[-1] == existing_original_row, "테스트 완료 후 기존 행이 100% 원본 데이터로 복원되어야 합니다."

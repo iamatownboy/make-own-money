@@ -8,6 +8,7 @@ Supabase(PostgreSQL) 클라우드 데이터베이스 연동 및 로컬 JSON 자�
 import base64
 import os
 import json
+import uuid
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 
@@ -115,7 +116,7 @@ def get_supabase_diagnostics(force_refresh: bool = False) -> Dict[str, Any]:
     except Exception as re:
         _last_error = f"SELECT 권한 오류: {re}"
 
-    # 2. 실제 쓰기 권한 실증 점검 (추측 배제: 실제 쓰기 시도 후 즉시 정리)
+    # 2. 실제 쓰기 권한 실증 점검 (추측 배제: 무손실 전용 헬스체크 테이블 및 원상 복구 보장)
     can_write = False
     if key_role == "anon":
         # anon 키는 비공개 RLS 정책상 쓰기가 원천 차단되므로 시도 없이 거부
@@ -123,21 +124,49 @@ def get_supabase_diagnostics(force_refresh: bool = False) -> Dict[str, Any]:
         if not _last_error:
             _last_error = "RLS 정책 제한: anon 키는 쓰기 권한이 없습니다. service_role 키가 필요합니다."
     else:
-        # service_role, authenticated, unknown 등 모든 키에 대해 실제 캐시 테이블에 더미 핑 row 쓰기/삭제 테스트
+        probe_id = f"probe_{uuid.uuid4().hex}"
         try:
-            test_row = {
-                "date": "1970-01-01",
-                "recommendations": [{"health_check": True}],
-                "updated_at": datetime.now().isoformat()
-            }
-            # 실제 쓰기 시도 (RLS 정책에 의해 service_role만 통과)
-            client.table("daily_recommendation_cache").upsert(test_row, on_conflict="date").execute()
-            # 쓰기 성공 확인 후 테스트 레코드 즉시 삭제 (DB 청결 유지)
-            client.table("daily_recommendation_cache").delete().eq("date", "1970-01-01").execute()
+            # [1순위: 전용 헬스체크 테이블] 비즈니스 데이터(추천/캐시)에 영향이 전무한 전용 테이블 사용
+            test_row = {"id": probe_id, "pinged_at": datetime.now().isoformat()}
+            client.table("system_health_check").upsert(test_row).execute()
             can_write = True
-        except Exception as we:
-            can_write = False
-            _last_error = f"실제 쓰기 권한 거부 (service_role 키 필요): {we}"
+            try:
+                client.table("system_health_check").delete().eq("id", probe_id).execute()
+            except Exception:
+                pass  # 삭제 실패 시에도 전용 테이블의 핑 행일 뿐 비즈니스 데이터에 영향 0%
+        except Exception as te:
+            err_msg = str(te)
+            # system_health_check 테이블이 아직 생성되지 않은 구버전 환경의 경우:
+            # daily_recommendation_cache 테이블에서 '기존 행 백업 & 원상 복구' 방식으로 무손실 실증
+            if "relation" in err_msg.lower() or "does not exist" in err_msg.lower() or "42p01" in err_msg.lower():
+                target_date = "1970-01-01"
+                orig_row = None
+                try:
+                    existing = client.table("daily_recommendation_cache").select("*").eq("date", target_date).execute()
+                    if existing and existing.data:
+                        orig_row = existing.data[0]
+                    test_cache = {
+                        "date": target_date,
+                        "recommendations": [{"health_check": True}],
+                        "updated_at": datetime.now().isoformat()
+                    }
+                    client.table("daily_recommendation_cache").upsert(test_cache, on_conflict="date").execute()
+                    can_write = True
+                except Exception as we:
+                    can_write = False
+                    _last_error = f"실제 쓰기 권한 거부 (service_role 키 필요): {we}"
+                finally:
+                    # 무손실 원상 복원 보장: 기존 데이터가 있었으면 원래대로 복원, 없었으면 삭제
+                    try:
+                        if orig_row:
+                            client.table("daily_recommendation_cache").upsert(orig_row, on_conflict="date").execute()
+                        elif can_write:
+                            client.table("daily_recommendation_cache").delete().eq("date", target_date).execute()
+                    except Exception:
+                        pass
+            else:
+                can_write = False
+                _last_error = f"실제 쓰기 권한 거부 (service_role 키 필요): {te}"
 
     diag["can_read"] = can_read
     diag["can_write"] = can_write

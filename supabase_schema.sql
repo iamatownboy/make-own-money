@@ -47,12 +47,13 @@ ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS fee_slippage_pct NUM
 ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS realized_pnl_net_pct NUMERIC;
 
 -- 2단계: 과거 추천 행을 명시적으로 'legacy' 버전으로 완벽 복구/백필 (통계 왜곡 원천 차단)
--- (NULL/빈값뿐만 아니라, 직전 스키마 적용으로 인해 v1.0.0 공식 도입일(2026-09-17) 이전에 v1.0.0으로 잘못 채워진 과거 행도 일괄 복구)
+-- (NULL/빈값뿐만 아니라, 직전 스키마 적용으로 인해 v1.0.0 공식 도입일(2026-09-17) 이전에 v1.0.0으로 잘못 채워진 과거 행,
+--  또는 당일(2026-09-17)에 구버전 로직으로 생성되어 rules 메타데이터가 없는 행도 일괄 복구)
 UPDATE recommendation_history
 SET strategy_version = 'legacy'
 WHERE strategy_version IS NULL
    OR strategy_version = ''
-   OR (strategy_version = 'v1.0.0' AND date < '2026-09-17');
+   OR (strategy_version = 'v1.0.0' AND (date < '2026-09-17' OR rules IS NULL OR rules = '{}'::jsonb));
 
 -- 3단계: 기존 행의 recommendation_id 고유 식별자 백필 및 동기화
 UPDATE recommendation_history
@@ -83,12 +84,19 @@ CREATE TABLE IF NOT EXISTS daily_recommendation_cache (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- 3. 시스템 헬스체크 및 무손실 쓰기 권한 실증 전용 테이블 (비즈니스 데이터 영향 0%)
+CREATE TABLE IF NOT EXISTS system_health_check (
+    id VARCHAR(64) PRIMARY KEY,
+    pinged_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- ==============================================================================
 -- 🔒 Row Level Security (RLS) 비공개 행 단위 보안 활성화
 -- ==============================================================================
 
 ALTER TABLE recommendation_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE daily_recommendation_cache ENABLE ROW LEVEL SECURITY;
+ALTER TABLE system_health_check ENABLE ROW LEVEL SECURITY;
 
 -- 기존 정책 정리
 DROP POLICY IF EXISTS "Public Read History" ON recommendation_history;
@@ -97,6 +105,7 @@ DROP POLICY IF EXISTS "Service Role Write History" ON recommendation_history;
 DROP POLICY IF EXISTS "Public Read Cache" ON daily_recommendation_cache;
 DROP POLICY IF EXISTS "Private Read Cache" ON daily_recommendation_cache;
 DROP POLICY IF EXISTS "Service Role Write Cache" ON daily_recommendation_cache;
+DROP POLICY IF EXISTS "Service Role Manage Health Check" ON system_health_check;
 
 -- [보안 정책 1] 조회(SELECT)는 인증된 사용자(authenticated) 및 백엔드(service_role)만 허용
 -- 익명(anon) 사용자의 외부 접근을 원천 차단하여 비공개 개인 대시보드의 데이터를 안전하게 보호
@@ -123,6 +132,13 @@ WITH CHECK (true);
 
 CREATE POLICY "Service Role Write Cache"
 ON daily_recommendation_cache
+FOR ALL
+TO service_role
+USING (true)
+WITH CHECK (true);
+
+CREATE POLICY "Service Role Manage Health Check"
+ON system_health_check
 FOR ALL
 TO service_role
 USING (true)
