@@ -517,6 +517,42 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
         return None
 
 
+def apply_regime_cutoffs(qualified_results: List[Dict[str, Any]], regime: str) -> tuple:
+    """
+    시장 레짐(약세, 박스권, 강세 등)에 따라 동적 커트라인(점수, 손익비, 최대 추천 수)을 적용합니다.
+    
+    Returns:
+        tuple: (filtered_results, max_picks, cutoff_rules)
+    """
+    if '약세' in regime or '조정' in regime:
+        min_score = 75
+        min_rr = 1.50
+        max_picks = 5
+        regime_type = '약세/조정'
+    elif '횡보' in regime or '박스' in regime:
+        min_score = 70
+        min_rr = 1.30
+        max_picks = 6
+        regime_type = '박스/횡보'
+    else:
+        min_score = 68
+        min_rr = 1.20
+        max_picks = 7
+        regime_type = '강세/정상'
+
+    filtered = [
+        r for r in qualified_results 
+        if r.get('total_score', 0) >= min_score and r.get('risk_reward_ratio', 0) >= min_rr
+    ]
+    cutoff_rules = {
+        'regime_type': regime_type,
+        'min_score': min_score,
+        'min_rr': min_rr,
+        'max_picks': max_picks
+    }
+    return filtered, max_picks, cutoff_rules
+
+
 def run_full_market_scan(force_refresh: bool = False) -> List[Dict[str, Any]]:
     """
     유니버스 전체를 스캔하고 상위 유망 종목을 선별하여 캐시에 저장합니다.
@@ -591,18 +627,7 @@ def run_full_market_scan(force_refresh: bool = False) -> List[Dict[str, Any]]:
     regime = market_context.get('regime', '정상장세')
 
     # === 시장 레짐 기반 동적 커트라인 조절 ===
-    # 약세/조정장에서는 더 보수적으로, 강세장에서는 현행 유지
-    if '약세' in regime or '조정' in regime:
-        # 약세장: 점수 75점 이상, 손익비 1.5 이상으로 강화, 추천 최대 5개
-        qualified_results = [r for r in qualified_results if r.get('total_score', 0) >= 75 and r.get('risk_reward_ratio', 0) >= 1.50]
-        max_picks = 5
-    elif '횡보' in regime or '박스' in regime:
-        # 박스권: 점수 70점 이상, 손익비 1.30 이상으로 소폭 강화
-        qualified_results = [r for r in qualified_results if r.get('total_score', 0) >= 70 and r.get('risk_reward_ratio', 0) >= 1.30]
-        max_picks = 6
-    else:
-        # 강세장/정상장세: 현행 기준 유지
-        max_picks = 7
+    qualified_results, max_picks, cutoff_rules = apply_regime_cutoffs(qualified_results, regime)
 
     top_picks = qualified_results[:max_picks]
     for p in top_picks:

@@ -464,10 +464,153 @@ def render_quant_performance_tracker(key_suffix: str = ""):
                 </div>
                 """, unsafe_allow_html=True)
 
+        # MFE/MAE 및 최적 청산 시나리오 분석 카드
+        mfe_mae = track_res.get('mfe_mae_stats', {})
+        scenarios = track_res.get('scenario_comparison', {})
+        regimes = track_res.get('regime_performance', {})
+
+        if mfe_mae.get('sample_count', 0) > 0:
+            st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:10px; border-top:1px dashed #282a36; padding-top:8px;'>🎯 MFE / MAE 및 청산 전략 비교</div>", unsafe_allow_html=True)
+            mfe_col1, mfe_col2, mfe_col3, mfe_col4 = st.columns(4)
+            with mfe_col1:
+                st.metric("평균 MFE (최대수익)", f"+{mfe_mae.get('avg_mfe', 0.0)}%")
+            with mfe_col2:
+                st.metric("평균 MAE (최대낙폭)", f"{mfe_mae.get('avg_mae', 0.0)}%")
+            with mfe_col3:
+                st.metric("2차목표 도달률", f"{mfe_mae.get('target_2_hit_rate', 0.0)}%")
+            with mfe_col4:
+                st.metric("보유 효율성", f"{mfe_mae.get('avg_holding_efficiency', 0.0)}")
+
+            if scenarios.get('best_scenario'):
+                best_sc = scenarios['best_scenario']
+                cur_pnl = scenarios.get('current_avg_pnl', 0.0)
+                part_pnl = scenarios.get('partial_avg_pnl', 0.0)
+                trail_pnl = scenarios.get('trailing_avg_pnl', 0.0)
+                st.markdown(f"""
+                <div style="background:#131b2e; border:1px solid #1e3a8a; border-radius:6px; padding:8px 10px; margin-top:6px; font-size:11.5px; color:#93c5fd;">
+                    💡 <b>청산 전략 시뮬레이션 결과 (N={scenarios.get('sample_count', 0)})</b>: 최적 전략은 <b style="color:#60a5fa;">[{best_sc}]</b>입니다.<br>
+                    • 현행(1차 전량): <b>{cur_pnl:+}%</b> | 분할익절(50%+트레일링): <b>{part_pnl:+}%</b> | 트레일링 전량: <b>{trail_pnl:+}%</b>
+                </div>
+                """, unsafe_allow_html=True)
+
+        if regimes:
+            st.markdown("<div style='font-size:12px; font-weight:700; color:#ffffff; margin-top:10px; border-top:1px dashed #282a36; padding-top:8px;'>🌐 시장 레짐별 성과 분리</div>", unsafe_allow_html=True)
+            r_cols = st.columns(max(1, len(regimes)))
+            for idx, (r_name, r_stat) in enumerate(regimes.items()):
+                with r_cols[idx % len(r_cols)]:
+                    st.markdown(f"""
+                    <div style="background:#161922; border:1px solid #232736; border-radius:6px; padding:8px; text-align:center;">
+                        <div style="font-size:11px; color:#94a3b8; font-weight:600;">{r_name} (N={r_stat.get('sample_count', 0)})</div>
+                        <div style="font-size:14px; font-weight:800; color:#38bdf8; margin-top:2px;">승률 {r_stat.get('win_rate', 0.0)}%</div>
+                        <div style="font-size:10px; color:#64748b;">수익률 {r_stat.get('avg_return', 0.0):+}% | PF {r_stat.get('profit_factor', 0.0)}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
         st.markdown("<div style='font-size:11px; color:#707488; margin-top:6px;'>※ 매일 장 마감 후 추천 종목의 실제 주가 궤적을 추적하여 손익비와 성공/실패 원인을 엄밀하게 재산출합니다.</div>", unsafe_allow_html=True)
 
     except Exception as e:
         st.caption(f"성과 추적 데이터 분석 중: {e}")
+
+
+def render_prediction_feedback_analytics(key_suffix: str = ""):
+    """예측 피드백 시스템 종합 감사 & 포트폴리오 성과 분석 UI"""
+    try:
+        from quant_core.snapshot import compare_with_previous, get_prediction_accuracy_report
+        from quant_core.portfolio_tracker import build_daily_equity_curve
+
+        tab_snap, tab_acc, tab_port = st.tabs([
+            "📸 예측 변동 (어제 vs 오늘)",
+            "🎯 기간별 정확도 리포트",
+            "📈 포트폴리오 에퀴티 커브"
+        ])
+
+        with tab_snap:
+            comp = compare_with_previous()
+            if "message" in comp and not comp.get("new_entries") and not comp.get("dropped_entries"):
+                st.caption(comp.get("message", "스냅샷 비교 데이터가 충분하지 않습니다."))
+            else:
+                c1, c2 = st.columns(2)
+                with c1:
+                    new_entries = comp.get("new_entries", [])
+                    st.markdown(f"<div style='font-size:12px; font-weight:700; color:#10b981;'>✨ 신규 진입 ({len(new_entries)}개)</div>", unsafe_allow_html=True)
+                    if new_entries:
+                        for item in new_entries:
+                            st.markdown(f"<div style='font-size:11.5px; color:#cbd5e1;'>• <b>{item['ticker']}</b>: {item.get('total_score', 0)}점 (${item.get('current_price', 0):.2f})</div>", unsafe_allow_html=True)
+                    else:
+                        st.caption("신규 진입 종목이 없습니다.")
+
+                with c2:
+                    dropped = comp.get("dropped_entries", [])
+                    st.markdown(f"<div style='font-size:12px; font-weight:700; color:#f43f5e;'>🚪 추천 이탈 ({len(dropped)}개)</div>", unsafe_allow_html=True)
+                    if dropped:
+                        for item in dropped:
+                            st.markdown(f"<div style='font-size:11.5px; color:#cbd5e1;'>• <b>{item['ticker']}</b>: 어제 {item.get('prev_score', 0)}점</div>", unsafe_allow_html=True)
+                    else:
+                        st.caption("추천 이탈 종목이 없습니다.")
+
+                score_changes = comp.get("score_changes", [])
+                if score_changes:
+                    st.markdown("<div style='font-size:12px; font-weight:700; color:#e2e8f0; margin-top:8px;'>📊 점수 변동 종목</div>", unsafe_allow_html=True)
+                    for sc in score_changes[:5]:
+                        arrow = "🔺" if sc['score_delta'] > 0 else "🔻"
+                        st.markdown(f"<div style='font-size:11px; color:#94a3b8;'>• {arrow} <b>{sc['ticker']}</b>: {sc['prev_score']}점 ➡️ {sc['today_score']}점 ({sc['score_delta']:+})</div>", unsafe_allow_html=True)
+
+        with tab_acc:
+            acc_rep = get_prediction_accuracy_report(days_back=60)
+            col_5d, col_10d, col_20d = st.columns(3)
+            with col_5d:
+                d5 = acc_rep.get('period_5d', {})
+                st.metric("5영업일 적중률", f"{d5.get('target_hit_rate', 0.0)}%", f"표본 {d5.get('sample_count', 0)}건")
+                st.caption(f"방향성 {d5.get('directional_accuracy', 0.0)}% | 진행중 {d5.get('pending_count', 0)}")
+            with col_10d:
+                d10 = acc_rep.get('period_10d', {})
+                st.metric("10영업일 적중률", f"{d10.get('target_hit_rate', 0.0)}%", f"표본 {d10.get('sample_count', 0)}건")
+                st.caption(f"방향성 {d10.get('directional_accuracy', 0.0)}% | 진행중 {d10.get('pending_count', 0)}")
+            with col_20d:
+                d20 = acc_rep.get('period_20d', {})
+                st.metric("20영업일 적중률", f"{d20.get('target_hit_rate', 0.0)}%", f"표본 {d20.get('sample_count', 0)}건")
+                st.caption(f"방향성 {d20.get('directional_accuracy', 0.0)}% | 진행중 {d20.get('pending_count', 0)}")
+
+            stocks = acc_rep.get('per_stock_accuracy', [])
+            if stocks:
+                st.markdown("<div style='font-size:12px; font-weight:700; color:#e2e8f0; margin-top:8px;'>🏆 종목별 예측 적중 랭킹 (20일 기준)</div>", unsafe_allow_html=True)
+                acc_df = pd.DataFrame(stocks[:5])
+                st.dataframe(acc_df[['ticker', 'accuracy', 'predictions', 'hits']], use_container_width=True, hide_index=True)
+
+        with tab_port:
+            eq_res = build_daily_equity_curve()
+            eq_curve = eq_res.get('equity_curve', [])
+            if eq_curve:
+                p1, p2, p3, p4 = st.columns(4)
+                with p1:
+                    st.metric("총 수익률", f"{eq_res.get('total_return_pct', 0.0):+}%")
+                with p2:
+                    st.metric("포트폴리오 MDD", f"{eq_res.get('mdd_pct', 0.0)}%")
+                with p3:
+                    st.metric("샤프 지수", f"{eq_res.get('sharpe_ratio', 0.0)}")
+                with p4:
+                    st.metric("캘머 비율", f"{eq_res.get('calmar_ratio', 0.0)}")
+
+                # 에퀴티 커브 Plotly 시각화
+                eq_dates = [c['date'] for c in eq_curve]
+                eq_values = [c['equity_value'] for c in eq_curve]
+                fig = go.Figure()
+                fig.add_trace(go.Scatter(x=eq_dates, y=eq_values, mode='lines', name='포트폴리오 평가액', line=dict(color='#3b82f6', width=2)))
+                fig.update_layout(
+                    margin=dict(l=10, r=10, t=20, b=20),
+                    height=240,
+                    template='plotly_dark',
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    xaxis=dict(showgrid=False),
+                    yaxis=dict(showgrid=True, gridcolor='#232736')
+                )
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.caption("포트폴리오 에퀴티 커브를 생성하기 위한 추천 이력 표본이 부족합니다.")
+
+    except Exception as e:
+        st.caption(f"예측 피드백 분석 대시보드 로드 중: {e}")
 
 
 # ==============================================================================
@@ -539,6 +682,8 @@ with tab_rec:
         st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
         with st.expander("📊 통계 기반 성과 추적 & 규칙 기반 가중치 보정 로그", expanded=True):
             render_quant_performance_tracker(key_suffix="empty")
+        with st.expander("🔮 예측 피드백 & 포트폴리오 성과 분석 (일별 스냅샷·정확도·에퀴티)"):
+            render_prediction_feedback_analytics(key_suffix="empty")
 
     else:
         # 좌측(상세 분석 및 가이드 1.9) vs 우측(추천 종목 리스트 1.1)
@@ -723,6 +868,8 @@ with tab_rec:
             st.markdown("<hr style='border:0; border-top:1px solid #23252e; margin: 12px 0 10px 0;'>", unsafe_allow_html=True)
             with st.expander("📊 통계 기반 성과 추적 & 규칙 기반 가중치 보정 로그"):
                 render_quant_performance_tracker(key_suffix="list")
+            with st.expander("🔮 예측 피드백 & 포트폴리오 성과 분석 (일별 스냅샷·정확도·에퀴티)"):
+                render_prediction_feedback_analytics(key_suffix="list")
 
 
 

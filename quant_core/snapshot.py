@@ -5,6 +5,7 @@ quant_core/snapshot.py
 
 import os
 import json
+import pandas as pd
 import numpy as np
 import yfinance as yf
 from datetime import datetime, timedelta
@@ -39,25 +40,33 @@ def db_save_snapshots(date_str: str, snapshot_items: List[Dict]) -> bool:
     try:
         records = []
         for item in snapshot_items:
+            div_val = item.get("divergence_status")
+            if isinstance(div_val, bool):
+                div_str = "bullish" if div_val else "none"
+            elif isinstance(div_val, str):
+                div_str = div_val
+            else:
+                div_str = "none"
+
             rec = {
                 "date": date_str,
-                "ticker": item.get("ticker"),
-                "total_score": item.get("total_score"),
-                "tech_score": item.get("tech_score"),
-                "fund_score": item.get("fund_score"),
-                "mom_score": item.get("mom_score"),
-                "pattern_status": item.get("pattern_status"),
-                "current_price": item.get("current_price"),
-                "target_1": item.get("target_1"),
-                "target_2": item.get("target_2"),
-                "stop_loss": item.get("stop_loss"),
-                "risk_reward": item.get("risk_reward_ratio"),
-                "fib_status": item.get("fib_status"),
-                "trendline_status": item.get("trendline_status"),
-                "divergence_status": item.get("divergence_status"),
-                "market_regime": item.get("market_regime"),
-                "is_qualified": item.get("is_qualified"),
-                "updated_at": datetime.now().isoformat()
+                "ticker": str(item.get("ticker", "")),
+                "total_score": int(item.get("total_score", 0)) if item.get("total_score") is not None else None,
+                "tech_score": int(item.get("tech_score", 0)) if item.get("tech_score") is not None else None,
+                "fund_score": int(item.get("fund_score", 0)) if item.get("fund_score") is not None else None,
+                "mom_score": int(item.get("mom_score", 0)) if item.get("mom_score") is not None else None,
+                "pattern_status": str(item.get("pattern_status", "")) if item.get("pattern_status") is not None else None,
+                "current_price": float(item.get("current_price", 0.0)) if item.get("current_price") is not None else None,
+                "target_1": float(item.get("target_1", 0.0)) if item.get("target_1") is not None else None,
+                "target_2": float(item.get("target_2", 0.0)) if item.get("target_2") is not None else None,
+                "stop_loss": float(item.get("stop_loss", 0.0)) if item.get("stop_loss") is not None else None,
+                "risk_reward": float(item.get("risk_reward_ratio", 0.0)) if item.get("risk_reward_ratio") is not None else None,
+                "fib_status": str(item.get("fib_status", "none")),
+                "trendline_status": str(item.get("trendline_status", "none")),
+                "divergence_status": div_str,
+                "market_regime": str(item.get("market_regime", "unknown")),
+                "is_qualified": bool(item.get("is_qualified", False)),
+                "updated_at": datetime.now(pytz.utc).isoformat()
             }
             records.append(rec)
             
@@ -308,9 +317,9 @@ def get_prediction_accuracy_report(days_back: int = 30) -> Dict:
     today_dt = datetime.now(eastern)
     
     results_by_period = {
-        '5d': {'hits': 0, 'total': 0, 'dir_hits': 0, 'error_sum': 0},
-        '10d': {'hits': 0, 'total': 0, 'dir_hits': 0, 'error_sum': 0},
-        '20d': {'hits': 0, 'total': 0, 'dir_hits': 0, 'error_sum': 0}
+        '5d': {'hits': 0, 'total': 0, 'dir_hits': 0, 'error_sum': 0, 'pending': 0},
+        '10d': {'hits': 0, 'total': 0, 'dir_hits': 0, 'error_sum': 0, 'pending': 0},
+        '20d': {'hits': 0, 'total': 0, 'dir_hits': 0, 'error_sum': 0, 'pending': 0}
     }
     
     per_stock_acc = {}
@@ -377,12 +386,16 @@ def get_prediction_accuracy_report(days_back: int = 30) -> Dict:
                     
                 # 각 기간별(5일, 10일, 20일) 예측 적중 여부 분석
                 for period, target_days in [('5d', 5), ('10d', 10), ('20d', 20)]:
-                    # 해당 영업일 기간이 실질적으로 경과했는지 판단 (약 70% 이상 진행된 경우 평가)
-                    if len(future_data) >= int(target_days * 0.7):
+                    # 엄격한 성숙도 기준: 해당 영업일이 완전히 경과한 표본만 집계
+                    if len(future_data) >= target_days:
                         period_data = future_data.head(target_days)
-                        max_price = period_data.max()
-                        min_price = period_data.min()
-                        end_price = period_data.iloc[-1]
+                        if isinstance(period_data, pd.DataFrame):
+                            period_series = period_data.iloc[:, 0]
+                        else:
+                            period_series = period_data
+                        max_price = float(np.max(period_series))
+                        min_price = float(np.min(period_series))
+                        end_price = float(period_series.iloc[-1])
                         
                         actual_max_pct = (max_price / base_price) - 1
                         actual_end_pct = (end_price / base_price) - 1
@@ -398,11 +411,14 @@ def get_prediction_accuracy_report(days_back: int = 30) -> Dict:
                             results_by_period[period]['dir_hits'] += 1
                         results_by_period[period]['error_sum'] += error
                         
-                        # 종목 단위 신뢰도는 최장기(20일) 데이터를 기준으로 가산
+                        # 종목 단위 신뢰도는 최장기(20일) 성숙 표본을 기준으로 가산
                         if period == '20d':
                             per_stock_acc[ticker]['predictions'] += 1
                             if hit:
                                 per_stock_acc[ticker]['hits'] += 1
+                    else:
+                        # 아직 해당 기간이 채워지지 않은 미성숙 표본은 통계 왜곡 방지를 위해 pending으로 집계
+                        results_by_period[period]['pending'] += 1
                                 
         except Exception as e:
             continue
@@ -412,11 +428,13 @@ def get_prediction_accuracy_report(days_back: int = 30) -> Dict:
     for p in ['5d', '10d', '20d']:
         st = results_by_period[p]
         total = st['total']
+        pending = st.get('pending', 0)
         report[f'period_{p}'] = {
-            'target_hit_rate': round((st['hits'] / total) * 100, 1) if total > 0 else 0,
-            'directional_accuracy': round((st['dir_hits'] / total) * 100, 1) if total > 0 else 0,
-            'avg_error': round(st['error_sum'] / total, 2) if total > 0 else 0,
-            'sample_count': total
+            'target_hit_rate': round((st['hits'] / total) * 100, 1) if total > 0 else 0.0,
+            'directional_accuracy': round((st['dir_hits'] / total) * 100, 1) if total > 0 else 0.0,
+            'avg_error': round(st['error_sum'] / total, 2) if total > 0 else 0.0,
+            'sample_count': total,
+            'pending_count': pending
         }
         
     stock_list = []

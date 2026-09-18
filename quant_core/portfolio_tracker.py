@@ -12,13 +12,18 @@ from .tracker import normalize_factor_tag, load_history
 from .data_loader import fetch_stock_data
 
 
-def build_daily_equity_curve(history: Optional[List[Dict]] = None, initial_capital: float = 10_000_000.0) -> Dict[str, Any]:
+def build_daily_equity_curve(history: Optional[List[Dict]] = None, initial_capital: float = 10_000_000.0,
+                             price_data: Optional[pd.DataFrame] = None) -> Dict[str, Any]:
     """
     일별 에퀴티 커브를 생성하고, 전체 성과 지표(MDD, 샤프 지수 등)를 계산합니다.
+    - 실제 일별 종가(Mark-to-Market) 기반 자산 평가
+    - 동시 보유 종목 수 최대 7개 제한 (MAX_POSITIONS = 7)
+    - 현금 잔고 및 슬롯 배분 제약 엄격 준수
     
     Args:
         history (Optional[List[Dict]]): 추천 히스토리 리스트. None일 경우 load_history()로 불러옵니다.
         initial_capital (float): 초기 자본금. 기본값은 10,000,000원입니다.
+        price_data (Optional[pd.DataFrame]): 모의 테스트 또는 외부 주입용 일별 종가 데이터프레임.
         
     Returns:
         Dict[str, Any]: 에퀴티 커브와 포트폴리오 성과 지표들을 포함하는 딕셔너리.
@@ -61,108 +66,163 @@ def build_daily_equity_curve(history: Optional[List[Dict]] = None, initial_capit
         }
 
     date_range = pd.date_range(start=start_date, end=end_date, freq='B')
+    if len(date_range) == 0:
+        return {
+            'equity_curve': [],
+            'total_return_pct': 0.0,
+            'mdd_pct': 0.0,
+            'max_underwater_days': 0,
+            'sharpe_ratio': 0.0,
+            'calmar_ratio': 0.0
+        }
     
-    # 시뮬레이션을 위한 데이터 준비
-    # 실제 mark-to-market을 하려면 모든 종목의 일별 데이터가 필요하지만, 
-    # API 호출 오버헤드를 줄이기 위해 진입~청산 기간 동안의 선형 수익으로 근사할 수도 있습니다.
-    # 여기서는 정확한 요구사항(Track daily mark-to-market)을 위해 yfinance에서 배치로 가져오는 것을 시도합니다.
-    tickers = df['ticker'].unique().tolist()
-    
-    try:
-        # yfinance를 사용하여 전체 기간의 종가 데이터를 한 번에 다운로드
-        import yfinance as yf
-        price_data = yf.download(tickers, start=start_date, end=end_date + pd.Timedelta(days=1))['Close']
-        if isinstance(price_data, pd.Series):
-            price_data = price_data.to_frame(name=tickers[0])
-    except Exception as e:
-        # 다운로드 실패 시 빈 데이터프레임
-        price_data = pd.DataFrame(index=date_range, columns=tickers)
-        
-    equity_curve = []
-    current_capital = initial_capital
-    portfolio = {} # {ticker: (shares, entry_price, entry_date)}
-    
-    # 간소화된 포트폴리오 백테스트 루프
-    # 매일 자본금을 7등분하여 최대 7종목에 동일 비중으로 투자 (요구사항)
-    
-    # 각 날짜별 추천 종목 매핑
-    recs_by_date = df.groupby(df['date'].dt.date)
-    
-    daily_equity_series = pd.Series(index=date_range, dtype=float)
-    daily_equity_series[:] = initial_capital
-    
-    # 단순화를 위해 각 포지션별 수익률을 추적
-    # 실제로는 매일의 포트폴리오 가치를 계산해야 함
-    for current_date in date_range:
-        current_date_str = current_date.date()
-        
-        # 현재 포트폴리오 가치 평가 (mark-to-market)
-        # 현금 + 보유 포지션 가치
-        # 이 구현에서는 전체 시뮬레이션 복잡도를 줄이기 위해
-        # 개별 트레이드의 realized_pnl_net_pct를 사용해 최종 자본금에 반영하는 방식을 기본으로 하되,
-        # 에퀴티 커브를 위해 보유 기간동안 가치가 선형적으로 변한다고 가정할 수 있습니다.
-        # 실제 구현에서는 price_data를 사용해 매일 가치를 평가합니다.
-        pass
-        
-    # 보다 간단하고 안정적인 시뮬레이션:
-    # 1. 각 트레이드에 동일한 자본(전체 자본금의 1/7 등)을 할당한다고 가정
-    # 2. 진입/청산일 및 최종 수익률(realized_pnl_net_pct)을 기반으로 자본금 변동 계산
-    
-    # 트레이드 종료일 기준으로 자산 변동 기록
-    capital = initial_capital
-    equity_records = []
-    
-    # 날짜별로 정렬하여 자본 변동 추적
-    df_sorted = df.sort_values(by='exit_date').copy()
-    
-    # 일별 자본금 추적 (청산 시점에 자본금 업데이트)
-    # 실제 매일 mark-to-market은 복잡하므로 실현 수익 기준으로 추적
-    capital_series = pd.Series(index=date_range, dtype=float)
-    
-    # 초기화
-    capital_series.iloc[0] = initial_capital
-    
-    for i, date in enumerate(date_range):
-        if i == 0:
+    # 거래 정보 전처리
+    trades = []
+    for idx, row in df.iterrows():
+        t_ticker = str(row.get('ticker', ''))
+        if not t_ticker:
             continue
+        e_date = row['date']
+        x_date = row['exit_date']
+        e_price = float(row.get('current_price', 100.0) or 100.0)
+        if e_price <= 0:
+            e_price = 100.0
             
-        # 이전 자본금 상속
-        capital_series.iloc[i] = capital_series.iloc[i-1]
+        x_price = row.get('exit_price')
+        if x_price is None or pd.isna(x_price) or float(x_price) <= 0:
+            pnl_net = row.get('realized_pnl_net_pct')
+            pnl_gross = row.get('realized_pnl_pct', 0.0)
+            target_pnl = pnl_net if (pnl_net is not None and not pd.isna(pnl_net)) else pnl_gross
+            x_price = e_price * (1.0 + float(target_pnl or 0.0) / 100.0)
+        else:
+            x_price = float(x_price)
+            
+        fee_pct = float(row.get('fee_slippage_pct', 0.25) or 0.25) / 100.0
+        score = int(row.get('total_score', 0) or 0)
         
-        # 오늘 청산된 포지션들 찾기
-        today_exits = df_sorted[df_sorted['exit_date'].dt.date == date.date()]
-        
-        if not today_exits.empty:
-            for _, trade in today_exits.iterrows():
-                # 진입 시 자본금의 일정 비율(예: 1/7)을 투자했다고 가정
-                # 수익률이 퍼센트로 제공됨 (realized_pnl_net_pct)
-                pnl_pct = trade.get('realized_pnl_net_pct', 0.0) / 100.0
-                if pd.isna(pnl_pct):
-                    pnl_pct = trade.get('realized_pnl_pct', 0.0) / 100.0 - 0.005 # 슬리피지/수수료 0.5% (왕복) 가정
-                
-                # 할당된 자본 (기본적으로 동등 분할 가정)
-                allocated_capital = capital_series.iloc[i-1] / 7.0 
-                profit_loss = allocated_capital * pnl_pct
-                
-                # 자본금 업데이트
-                capital_series.iloc[i] += profit_loss
-    
-    # 일별 수익률 계산
-    daily_returns = capital_series.pct_change().fillna(0)
-    
-    for date, capital, ret in zip(capital_series.index, capital_series.values, daily_returns.values):
-        equity_records.append({
-            'date': date.strftime('%Y-%m-%d'),
-            'equity_value': float(capital),
-            'daily_return_pct': float(ret * 100.0)
+        trades.append({
+            'id': idx,
+            'ticker': t_ticker,
+            'entry_date': e_date,
+            'exit_date': x_date,
+            'entry_price': e_price,
+            'exit_price': x_price,
+            'fee_pct': fee_pct,
+            'score': score
         })
         
-    # 누적 최대값 계산 (Drawdown 계산용)
+    tickers = list({t['ticker'] for t in trades})
+    
+    # 일별 가격 데이터(price_data) 준비
+    if price_data is None:
+        try:
+            import yfinance as yf
+            dl_end = end_date + pd.Timedelta(days=2)
+            dl_data = yf.download(tickers, start=start_date, end=dl_end, progress=False)
+            if 'Close' in dl_data:
+                close_df = dl_data['Close']
+            else:
+                close_df = dl_data
+            if isinstance(close_df, pd.Series):
+                close_df = close_df.to_frame(name=tickers[0])
+            price_data = close_df
+        except Exception:
+            price_data = None
+            
+    # 특정 날짜의 종목 가격 조회 헬퍼
+    def _lookup_price(ticker: str, dt_ts: pd.Timestamp, trade_info: Dict) -> float:
+        d_str = dt_ts.strftime('%Y-%m-%d')
+        if price_data is not None and ticker in price_data.columns:
+            matches = price_data.loc[price_data.index.strftime('%Y-%m-%d') == d_str, ticker]
+            if not matches.empty and pd.notna(matches.values[0]) and float(matches.values[0]) > 0:
+                return float(matches.values[0])
+        # 폴백: 진입가~청산가 구간 일자별 보간
+        ep = trade_info['entry_price']
+        xp = trade_info['exit_price']
+        tot_days = max(1, (trade_info['exit_date'] - trade_info['entry_date']).days)
+        elapsed = max(0, min(tot_days, (dt_ts - trade_info['entry_date']).days))
+        return float(ep + (xp - ep) * (elapsed / tot_days))
+
+    # 포트폴리오 일별 Mark-to-Market 시뮬레이션
+    MAX_POSITIONS = 7
+    cash = float(initial_capital)
+    active_positions = {}  # trade_id -> position dict
+    equity_records = []
+    
+    for cur_dt in date_range:
+        cur_str = cur_dt.strftime('%Y-%m-%d')
+        
+        # 1. 청산 처리: 오늘(또는 이전) exit_date에 도달한 보유 종목 청산
+        to_close = [tid for tid, pos in active_positions.items() if pos['exit_date'].strftime('%Y-%m-%d') <= cur_str]
+        for tid in to_close:
+            pos = active_positions.pop(tid)
+            proceeds = pos['shares'] * pos['exit_price']
+            net_proceeds = proceeds * (1.0 - pos['fee_pct'])
+            cash += net_proceeds
+            
+        # 2. 신규 진입 처리: 오늘 entry_date인 추천 종목들
+        today_candidates = [t for t in trades if t['entry_date'].strftime('%Y-%m-%d') == cur_str]
+        today_candidates.sort(key=lambda x: x['score'], reverse=True)
+        
+        for cand in today_candidates:
+            if len(active_positions) >= MAX_POSITIONS:
+                break  # 동시 보유 최대 7종목 제약
+            if cash < 100.0:
+                break  # 가용 현금 부족
+                
+            # 슬롯당 가용 자본 (당일 추정 총자산 / 7)
+            current_est_pos_val = sum(
+                p['shares'] * _lookup_price(p['ticker'], cur_dt, p['trade'])
+                for p in active_positions.values()
+            )
+            est_total_equity = cash + current_est_pos_val
+            target_slot_capital = est_total_equity / MAX_POSITIONS
+            allocated = min(cash, target_slot_capital)
+            
+            if allocated <= 0 or cand['entry_price'] <= 0:
+                continue
+                
+            fee = allocated * cand['fee_pct']
+            net_invest = allocated - fee
+            shares = net_invest / cand['entry_price']
+            cash -= allocated
+            
+            active_positions[cand['id']] = {
+                'ticker': cand['ticker'],
+                'shares': shares,
+                'entry_price': cand['entry_price'],
+                'exit_date': cand['exit_date'],
+                'exit_price': cand['exit_price'],
+                'fee_pct': cand['fee_pct'],
+                'trade': cand
+            }
+            
+        # 3. 당일 Mark-to-Market 포트폴리오 총가치 산출
+        positions_market_val = 0.0
+        for pos in active_positions.values():
+            curr_p = _lookup_price(pos['ticker'], cur_dt, pos['trade'])
+            positions_market_val += pos['shares'] * curr_p
+            
+        day_equity = cash + positions_market_val
+        equity_records.append({
+            'date': cur_str,
+            'equity_value': round(float(day_equity), 2),
+            'cash': round(float(cash), 2),
+            'positions_value': round(float(positions_market_val), 2),
+            'num_positions': len(active_positions)
+        })
+        
+    capital_series = pd.Series([r['equity_value'] for r in equity_records], index=[r['date'] for r in equity_records])
+    daily_returns = capital_series.pct_change().fillna(0)
+    for i, ret in enumerate(daily_returns):
+        equity_records[i]['daily_return_pct'] = round(float(ret * 100.0), 2)
+        
+    # Drawdown 및 지표 계산
     cumulative_max = capital_series.cummax()
     drawdown = (capital_series - cumulative_max) / cumulative_max
     
-    mdd_pct = float(drawdown.min() * 100.0) if not drawdown.empty else 0.0
-    total_return_pct = float((capital_series.iloc[-1] / initial_capital - 1) * 100.0) if not capital_series.empty else 0.0
+    mdd_pct = round(float(drawdown.min() * 100.0), 2) if not drawdown.empty else 0.0
+    total_return_pct = round(float((capital_series.iloc[-1] / initial_capital - 1) * 100.0), 2) if not capital_series.empty else 0.0
     
     # 최대 침체 기간 (max underwater days)
     underwater = drawdown < 0
@@ -170,18 +230,18 @@ def build_daily_equity_curve(history: Optional[List[Dict]] = None, initial_capit
     underwater_days = underwater.groupby(underwater_groups).sum()
     max_underwater_days = int(underwater_days.max()) if not underwater_days.empty else 0
     
-    # 샤프 지수 계산 (연간, 무위험 수익률 4% 가정)
+    # 샤프 지수 계산 (연간 252영업일, 무위험 수익률 4% 가정)
     risk_free_rate = 0.04
     daily_rf = risk_free_rate / 252.0
     excess_returns = daily_returns - daily_rf
     if excess_returns.std() > 0:
-        sharpe_ratio = float(np.sqrt(252) * (excess_returns.mean() / excess_returns.std()))
+        sharpe_ratio = round(float(np.sqrt(252) * (excess_returns.mean() / excess_returns.std())), 2)
     else:
         sharpe_ratio = 0.0
         
     # 칼마 지수 계산
-    annual_return = (1 + total_return_pct / 100.0) ** (252 / len(capital_series)) - 1 if len(capital_series) > 0 else 0
-    calmar_ratio = float(annual_return / abs(mdd_pct / 100.0)) if mdd_pct < 0 else 0.0
+    annual_return = ((1 + total_return_pct / 100.0) ** (252 / max(1, len(capital_series)))) - 1 if len(capital_series) > 0 else 0
+    calmar_ratio = round(float(annual_return / abs(mdd_pct / 100.0)), 2) if mdd_pct < 0 else 0.0
 
     return {
         'equity_curve': equity_records,

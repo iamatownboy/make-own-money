@@ -102,12 +102,25 @@ CREATE TABLE IF NOT EXISTS daily_snapshots (
     risk_reward NUMERIC,
     fib_status TEXT,
     trendline_status TEXT,
-    divergence_status BOOLEAN DEFAULT FALSE,
+    divergence_status TEXT DEFAULT 'none',
     market_regime TEXT,
     is_qualified BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
     CONSTRAINT unique_snapshot UNIQUE (date, ticker)
 );
+
+-- daily_snapshots 마이그레이션 (기존 생성된 테이블 컬럼 및 타입 멱등성 보장)
+ALTER TABLE daily_snapshots ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT NOW();
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'daily_snapshots' AND column_name = 'divergence_status' AND data_type = 'boolean'
+    ) THEN
+        ALTER TABLE daily_snapshots ALTER COLUMN divergence_status TYPE TEXT USING (CASE WHEN divergence_status THEN 'bullish' ELSE 'none' END);
+    END IF;
+END $$;
 
 -- MFE/MAE 분석 컬럼 추가 (recommendation_history 테이블 확장)
 -- MFE: 보유 기간 중 최대 수익률 시점, MAE: 보유 기간 중 최대 손실 시점

@@ -204,9 +204,11 @@ def _simulate_partial_exit(df_after: pd.DataFrame, rec_p: float, t1: float, t2: 
                            sl: float, atr: float, fee_pct: float) -> float:
     """
     시나리오 B 시뮬레이션: 1차 목표가에서 50% 익절, 나머지 50%는 ATR×1.5 트레일링 스탑
+    (추천 후 최대 20거래일 반사실적 시나리오)
     최종 실현 수익률(%) 반환 (수수료 차감 후)
     """
     try:
+        df_target = df_after.iloc[:20] if len(df_after) > 20 else df_after
         half1_realized = False
         half2_realized = False
         half1_pnl = 0.0
@@ -214,7 +216,7 @@ def _simulate_partial_exit(df_after: pd.DataFrame, rec_p: float, t1: float, t2: 
         trailing_stop = sl
         peak_price = rec_p
 
-        for _, row in df_after.iterrows():
+        for _, row in df_target.iterrows():
             bar_high = float(row['High'])
             bar_low = float(row['Low'])
             bar_close = float(row['Close'])
@@ -246,11 +248,11 @@ def _simulate_partial_exit(df_after: pd.DataFrame, rec_p: float, t1: float, t2: 
 
         # 20거래일 종료 시 미청산분은 최종 종가로 청산
         if not half1_realized:
-            last_close = float(df_after['Close'].iloc[-1])
+            last_close = float(df_target['Close'].iloc[-1])
             total_pnl = ((last_close / rec_p) - 1) * 100
             return round(total_pnl - fee_pct, 2)
         if not half2_realized:
-            last_close = float(df_after['Close'].iloc[-1])
+            last_close = float(df_target['Close'].iloc[-1])
             half2_pnl = ((last_close / rec_p) - 1) * 100
 
         total_pnl = (half1_pnl * 0.5) + (half2_pnl * 0.5)
@@ -263,13 +265,15 @@ def _simulate_trailing_exit(df_after: pd.DataFrame, rec_p: float, sl: float,
                             atr: float, fee_pct: float) -> float:
     """
     시나리오 C 시뮬레이션: ATR×2.0 트레일링 스탑으로 전량 청산
+    (추천 후 최대 20거래일 반사실적 시나리오)
     최종 실현 수익률(%) 반환 (수수료 차감 후)
     """
     try:
+        df_target = df_after.iloc[:20] if len(df_after) > 20 else df_after
         trailing_stop = sl
         peak_price = rec_p
 
-        for _, row in df_after.iterrows():
+        for _, row in df_target.iterrows():
             bar_high = float(row['High'])
             bar_low = float(row['Low'])
 
@@ -281,7 +285,7 @@ def _simulate_trailing_exit(df_after: pd.DataFrame, rec_p: float, sl: float,
                 return round(pnl - fee_pct, 2)
 
         # 20거래일 만료 시 최종 종가로 청산
-        last_close = float(df_after['Close'].iloc[-1])
+        last_close = float(df_target['Close'].iloc[-1])
         pnl = ((last_close / rec_p) - 1) * 100
         return round(pnl - fee_pct, 2)
     except Exception:
@@ -623,17 +627,26 @@ def evaluate_and_learn_from_history(strategy_version: str = CURRENT_STRATEGY_VER
                         item['hit_success'] = False
                         item['is_completed'] = False
 
-                # === MFE/MAE 산출 (보유 기간 중 최대 유리/불리 시점 분석) ===
+                # === MFE/MAE 산출 (보유 기간 중 최대 유리/불리 시점 분석 - Lookahead Bias 차단) ===
                 if not df_after.empty and rec_p > 0:
                     try:
-                        after_highs = df_after['High'].astype(float)
-                        after_lows = df_after['Low'].astype(float)
+                        # 청산 완료된 경우 실제 청산일(exit_date)까지만의 보유 데이터로 엄격히 한정 (미래 가격 참조 차단)
+                        if item.get('is_completed') and item.get('exit_date'):
+                            exit_dt_str = str(item['exit_date'])[:10]
+                            df_holding = df_after[df_after.index.strftime('%Y-%m-%d') <= exit_dt_str]
+                            if df_holding.empty:
+                                df_holding = df_after.iloc[:1]
+                        else:
+                            df_holding = df_after
+
+                        after_highs = df_holding['High'].astype(float)
+                        after_lows = df_holding['Low'].astype(float)
                         mfe = round(((float(after_highs.max()) / rec_p) - 1) * 100, 2)
                         mae = round(((float(after_lows.min()) / rec_p) - 1) * 100, 2)
                         item['mfe_pct'] = mfe
                         item['mae_pct'] = mae
 
-                        # 2차 목표가 도달 여부 확인
+                        # 2차 목표가 도달 여부 확인 (실제 보유 기간 중 장중 도달 여부)
                         t2 = float(item.get('target_price_2', 0.0)) if item.get('target_price_2') else 0.0
                         if t2 > 0 and float(after_highs.max()) >= t2:
                             item['target_2_hit'] = True
@@ -645,19 +658,22 @@ def evaluate_and_learn_from_history(strategy_version: str = CURRENT_STRATEGY_VER
                     except Exception:
                         pass
 
-                # === 청산 시나리오 시뮬레이션 (3가지 전략 비교) ===
+                # === 청산 시나리오 시뮬레이션 (3가지 전략 비교 - 추천 후 최대 20거래일 시나리오) ===
                 if item.get('is_completed') and not df_after.empty and rec_p > 0:
                     try:
                         atr_val = float(item.get('atr', rec_p * 0.03)) if item.get('atr') else rec_p * 0.03
                         t2_price = float(item.get('target_price_2', 0)) if item.get('target_price_2') else 0
                         fee_pct = float(item.get('fee_slippage_pct', 0.25))
 
+                        # 추천 이후 최대 20거래일 데이터로만 반사실적 시나리오 시뮬레이션
+                        df_scenario = df_after.iloc[:20]
+
                         # 시나리오 B: 1차 목표가 50% 익절 + 나머지 50% ATR×1.5 트레일링
-                        sim_b_pnl = _simulate_partial_exit(df_after, rec_p, t1, t2_price, sl, atr_val, fee_pct)
+                        sim_b_pnl = _simulate_partial_exit(df_scenario, rec_p, t1, t2_price, sl, atr_val, fee_pct)
                         item['sim_partial_pnl'] = sim_b_pnl
 
                         # 시나리오 C: ATR×2.0 트레일링 스탑 전량 청산
-                        sim_c_pnl = _simulate_trailing_exit(df_after, rec_p, sl, atr_val, fee_pct)
+                        sim_c_pnl = _simulate_trailing_exit(df_scenario, rec_p, sl, atr_val, fee_pct)
                         item['sim_trailing_pnl'] = sim_c_pnl
 
                         # 가장 유리했던 시나리오 기록
