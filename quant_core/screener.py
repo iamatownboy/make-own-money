@@ -585,13 +585,36 @@ def run_full_market_scan(force_refresh: bool = False) -> List[Dict[str, Any]]:
     # 실전 진입 적격 종목만 선별 (최소 점수 68점 & 손익비 1.2 이상 & 쿨다운 미해당)
     qualified_results = [r for r in results if r.get('is_qualified', False)]
     qualified_results.sort(key=lambda x: x['total_score'], reverse=True)
-    top_picks = qualified_results[:7]
 
     # 실시간 나스닥 거시 시장 레짐 산출 및 추천 메타데이터에 부착
     market_context = get_market_context_regime()
+    regime = market_context.get('regime', '정상장세')
+
+    # === 시장 레짐 기반 동적 커트라인 조절 ===
+    # 약세/조정장에서는 더 보수적으로, 강세장에서는 현행 유지
+    if '약세' in regime or '조정' in regime:
+        # 약세장: 점수 75점 이상, 손익비 1.5 이상으로 강화, 추천 최대 5개
+        qualified_results = [r for r in qualified_results if r.get('total_score', 0) >= 75 and r.get('risk_reward_ratio', 0) >= 1.50]
+        max_picks = 5
+    elif '횡보' in regime or '박스' in regime:
+        # 박스권: 점수 70점 이상, 손익비 1.30 이상으로 소폭 강화
+        qualified_results = [r for r in qualified_results if r.get('total_score', 0) >= 70 and r.get('risk_reward_ratio', 0) >= 1.30]
+        max_picks = 6
+    else:
+        # 강세장/정상장세: 현행 기준 유지
+        max_picks = 7
+
+    top_picks = qualified_results[:max_picks]
     for p in top_picks:
         p['market_context'] = market_context
     
+    # === 82개 전체 유니버스 일별 스냅샷 저장 (예측 변화 추적용) ===
+    try:
+        from .snapshot import save_daily_snapshot
+        save_daily_snapshot(results)
+    except Exception as e:
+        print(f"일별 스냅샷 저장 실패 (비치명적): {e}")
+
     try:
         def np_encoder(obj):
             if isinstance(obj, (np.bool_, bool)):

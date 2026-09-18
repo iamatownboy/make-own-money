@@ -307,7 +307,15 @@ def db_upsert_history_items(items: List[Dict[str, Any]]) -> bool:
                 "strategy_version": strat_ver,
                 "rules": it.get("rules"),
                 "market_context": it.get("market_context"),
-                "fee_slippage_pct": float(it.get("fee_slippage_pct", 0.25))
+                "fee_slippage_pct": float(it.get("fee_slippage_pct", 0.25)),
+                # MFE/MAE 분석 및 시나리오 시뮬레이션 필드
+                "mfe_pct": float(it.get("mfe_pct")) if it.get("mfe_pct") is not None else None,
+                "mae_pct": float(it.get("mae_pct")) if it.get("mae_pct") is not None else None,
+                "target_2_hit": bool(it.get("target_2_hit", False)),
+                "holding_efficiency": float(it.get("holding_efficiency")) if it.get("holding_efficiency") is not None else None,
+                "exit_scenario": it.get("exit_scenario"),
+                "sim_partial_pnl": float(it.get("sim_partial_pnl")) if it.get("sim_partial_pnl") is not None else None,
+                "sim_trailing_pnl": float(it.get("sim_trailing_pnl")) if it.get("sim_trailing_pnl") is not None else None,
             }
             records.append(rec)
 

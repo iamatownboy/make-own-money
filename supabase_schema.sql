@@ -84,6 +84,41 @@ CREATE TABLE IF NOT EXISTS daily_recommendation_cache (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- 3. 일별 예측 스냅샷 테이블 (82개 전체 유니버스의 매일 스코어링 기록)
+-- 어제 vs 오늘 예측 변화 추적 및 예측 정확도 분석의 핵심 데이터 소스
+CREATE TABLE IF NOT EXISTS daily_snapshots (
+    id BIGSERIAL PRIMARY KEY,
+    date TEXT NOT NULL,
+    ticker TEXT NOT NULL,
+    total_score INTEGER,
+    tech_score INTEGER,
+    fund_score INTEGER,
+    mom_score INTEGER,
+    pattern_status TEXT,
+    current_price NUMERIC,
+    target_1 NUMERIC,
+    target_2 NUMERIC,
+    stop_loss NUMERIC,
+    risk_reward NUMERIC,
+    fib_status TEXT,
+    trendline_status TEXT,
+    divergence_status BOOLEAN DEFAULT FALSE,
+    market_regime TEXT,
+    is_qualified BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    CONSTRAINT unique_snapshot UNIQUE (date, ticker)
+);
+
+-- MFE/MAE 분석 컬럼 추가 (recommendation_history 테이블 확장)
+-- MFE: 보유 기간 중 최대 수익률 시점, MAE: 보유 기간 중 최대 손실 시점
+ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS mfe_pct NUMERIC;
+ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS mae_pct NUMERIC;
+ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS target_2_hit BOOLEAN DEFAULT FALSE;
+ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS holding_efficiency NUMERIC;
+ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS exit_scenario TEXT;
+ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS sim_partial_pnl NUMERIC;
+ALTER TABLE recommendation_history ADD COLUMN IF NOT EXISTS sim_trailing_pnl NUMERIC;
+
 -- 3. 시스템 헬스체크 및 무손실 쓰기 권한 실증 전용 테이블 (비즈니스 데이터 영향 0%)
 CREATE TABLE IF NOT EXISTS system_health_check (
     id VARCHAR(64) PRIMARY KEY,
@@ -96,6 +131,7 @@ CREATE TABLE IF NOT EXISTS system_health_check (
 
 ALTER TABLE recommendation_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE daily_recommendation_cache ENABLE ROW LEVEL SECURITY;
+ALTER TABLE daily_snapshots ENABLE ROW LEVEL SECURITY;
 ALTER TABLE system_health_check ENABLE ROW LEVEL SECURITY;
 
 -- 기존 정책 정리
@@ -139,6 +175,23 @@ WITH CHECK (true);
 
 CREATE POLICY "Service Role Manage Health Check"
 ON system_health_check
+FOR ALL
+TO service_role
+USING (true)
+WITH CHECK (true);
+
+-- [보안 정책 4] daily_snapshots 비공개 조회 및 서비스 역할 전용 쓰기 정책
+DROP POLICY IF EXISTS "Private Read Snapshots" ON daily_snapshots;
+DROP POLICY IF EXISTS "Service Role Write Snapshots" ON daily_snapshots;
+
+CREATE POLICY "Private Read Snapshots"
+ON daily_snapshots
+FOR SELECT
+TO authenticated, service_role
+USING (true);
+
+CREATE POLICY "Service Role Write Snapshots"
+ON daily_snapshots
 FOR ALL
 TO service_role
 USING (true)

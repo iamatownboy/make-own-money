@@ -180,7 +180,16 @@ def record_daily_recommendations(recs: List[Dict[str, Any]]):
                 'realized_pnl_pct': None,
                 'realized_pnl_net_pct': None,
                 'hit_success': False,
-                'is_completed': False
+                'is_completed': False,
+                # MFE/MAE 분석 필드 (보유 기간 중 최대 수익/손실 시점)
+                'mfe_pct': None,
+                'mae_pct': None,
+                'target_2_hit': False,
+                'holding_efficiency': None,
+                # 청산 시나리오 시뮬레이션 필드
+                'exit_scenario': None,
+                'sim_partial_pnl': None,   # 시나리오 B: 분할 익절 수익률
+                'sim_trailing_pnl': None,  # 시나리오 C: 트레일링 전량 수익률
             })
             existing_keys.add(rec_id)
             added_count += 1
@@ -188,6 +197,95 @@ def record_daily_recommendations(recs: List[Dict[str, Any]]):
     if added_count > 0:
         save_history(history)
     return history
+
+
+
+def _simulate_partial_exit(df_after: pd.DataFrame, rec_p: float, t1: float, t2: float,
+                           sl: float, atr: float, fee_pct: float) -> float:
+    """
+    시나리오 B 시뮬레이션: 1차 목표가에서 50% 익절, 나머지 50%는 ATR×1.5 트레일링 스탑
+    최종 실현 수익률(%) 반환 (수수료 차감 후)
+    """
+    try:
+        half1_realized = False
+        half2_realized = False
+        half1_pnl = 0.0
+        half2_pnl = 0.0
+        trailing_stop = sl
+        peak_price = rec_p
+
+        for _, row in df_after.iterrows():
+            bar_high = float(row['High'])
+            bar_low = float(row['Low'])
+            bar_close = float(row['Close'])
+
+            if not half1_realized:
+                # 1차 목표가 50% 익절
+                if bar_high >= t1:
+                    half1_pnl = ((t1 / rec_p) - 1) * 100
+                    half1_realized = True
+                    peak_price = max(peak_price, bar_high)
+                    trailing_stop = max(trailing_stop, peak_price - atr * 1.5)
+                # 손절선 이탈 시 전량 손절
+                elif bar_low <= sl:
+                    total_pnl = ((sl / rec_p) - 1) * 100
+                    return round(total_pnl - fee_pct, 2)
+            else:
+                # 후반 50%는 트레일링 스탑
+                peak_price = max(peak_price, bar_high)
+                trailing_stop = max(trailing_stop, peak_price - atr * 1.5)
+                if bar_low <= trailing_stop:
+                    half2_pnl = ((trailing_stop / rec_p) - 1) * 100
+                    half2_realized = True
+                    break
+                # 2차 목표가 도달 시 전량 익절
+                if t2 > 0 and bar_high >= t2:
+                    half2_pnl = ((t2 / rec_p) - 1) * 100
+                    half2_realized = True
+                    break
+
+        # 20거래일 종료 시 미청산분은 최종 종가로 청산
+        if not half1_realized:
+            last_close = float(df_after['Close'].iloc[-1])
+            total_pnl = ((last_close / rec_p) - 1) * 100
+            return round(total_pnl - fee_pct, 2)
+        if not half2_realized:
+            last_close = float(df_after['Close'].iloc[-1])
+            half2_pnl = ((last_close / rec_p) - 1) * 100
+
+        total_pnl = (half1_pnl * 0.5) + (half2_pnl * 0.5)
+        return round(total_pnl - fee_pct, 2)
+    except Exception:
+        return None
+
+
+def _simulate_trailing_exit(df_after: pd.DataFrame, rec_p: float, sl: float,
+                            atr: float, fee_pct: float) -> float:
+    """
+    시나리오 C 시뮬레이션: ATR×2.0 트레일링 스탑으로 전량 청산
+    최종 실현 수익률(%) 반환 (수수료 차감 후)
+    """
+    try:
+        trailing_stop = sl
+        peak_price = rec_p
+
+        for _, row in df_after.iterrows():
+            bar_high = float(row['High'])
+            bar_low = float(row['Low'])
+
+            peak_price = max(peak_price, bar_high)
+            trailing_stop = max(trailing_stop, peak_price - atr * 2.0)
+
+            if bar_low <= trailing_stop:
+                pnl = ((trailing_stop / rec_p) - 1) * 100
+                return round(pnl - fee_pct, 2)
+
+        # 20거래일 만료 시 최종 종가로 청산
+        last_close = float(df_after['Close'].iloc[-1])
+        pnl = ((last_close / rec_p) - 1) * 100
+        return round(pnl - fee_pct, 2)
+    except Exception:
+        return None
 
 
 def diagnose_failure_reason(item: Dict[str, Any], df_after: pd.DataFrame, df_full: pd.DataFrame) -> Dict[str, Any]:
@@ -392,7 +490,18 @@ def evaluate_and_learn_from_history(strategy_version: str = CURRENT_STRATEGY_VER
             'sample_error_margin': "±20%p 이상",
             'history_items': [],
             'best_factors': [],
-            'adaptive_weights': get_adaptive_factor_weights(strategy_version=strategy_version)
+            'adaptive_weights': get_adaptive_factor_weights(strategy_version=strategy_version),
+            # 고도화 지표 (빈 히스토리 기본값)
+            'mfe_mae_stats': {
+                'avg_mfe': 0.0, 'avg_mae': 0.0, 'median_mfe': 0.0, 'median_mae': 0.0,
+                'target_2_hit_count': 0, 'target_2_hit_rate': 0.0,
+                'avg_holding_efficiency': 0.0, 'optimal_stop_pct': None, 'sample_count': 0
+            },
+            'scenario_comparison': {
+                'current_avg_pnl': 0.0, 'partial_avg_pnl': 0.0, 'trailing_avg_pnl': 0.0,
+                'best_scenario': None, 'sample_count': 0
+            },
+            'regime_performance': {}
         }
 
     # 보유 중인 종목들의 최신 시세 일괄 수집
@@ -514,6 +623,50 @@ def evaluate_and_learn_from_history(strategy_version: str = CURRENT_STRATEGY_VER
                         item['hit_success'] = False
                         item['is_completed'] = False
 
+                # === MFE/MAE 산출 (보유 기간 중 최대 유리/불리 시점 분석) ===
+                if not df_after.empty and rec_p > 0:
+                    try:
+                        after_highs = df_after['High'].astype(float)
+                        after_lows = df_after['Low'].astype(float)
+                        mfe = round(((float(after_highs.max()) / rec_p) - 1) * 100, 2)
+                        mae = round(((float(after_lows.min()) / rec_p) - 1) * 100, 2)
+                        item['mfe_pct'] = mfe
+                        item['mae_pct'] = mae
+
+                        # 2차 목표가 도달 여부 확인
+                        t2 = float(item.get('target_price_2', 0.0)) if item.get('target_price_2') else 0.0
+                        if t2 > 0 and float(after_highs.max()) >= t2:
+                            item['target_2_hit'] = True
+
+                        # 보유 효율성: 실현수익률 / MFE (얼마나 잘 잡았는가)
+                        realized = item.get('realized_pnl_pct')
+                        if realized is not None and mfe > 0:
+                            item['holding_efficiency'] = round(realized / mfe, 2)
+                    except Exception:
+                        pass
+
+                # === 청산 시나리오 시뮬레이션 (3가지 전략 비교) ===
+                if item.get('is_completed') and not df_after.empty and rec_p > 0:
+                    try:
+                        atr_val = float(item.get('atr', rec_p * 0.03)) if item.get('atr') else rec_p * 0.03
+                        t2_price = float(item.get('target_price_2', 0)) if item.get('target_price_2') else 0
+                        fee_pct = float(item.get('fee_slippage_pct', 0.25))
+
+                        # 시나리오 B: 1차 목표가 50% 익절 + 나머지 50% ATR×1.5 트레일링
+                        sim_b_pnl = _simulate_partial_exit(df_after, rec_p, t1, t2_price, sl, atr_val, fee_pct)
+                        item['sim_partial_pnl'] = sim_b_pnl
+
+                        # 시나리오 C: ATR×2.0 트레일링 스탑 전량 청산
+                        sim_c_pnl = _simulate_trailing_exit(df_after, rec_p, sl, atr_val, fee_pct)
+                        item['sim_trailing_pnl'] = sim_c_pnl
+
+                        # 가장 유리했던 시나리오 기록
+                        actual_pnl = float(item.get('realized_pnl_net_pct', 0) or 0)
+                        scenarios = {'현행(1차전량)': actual_pnl, '분할익절': sim_b_pnl or 0, '트레일링': sim_c_pnl or 0}
+                        item['exit_scenario'] = max(scenarios, key=scenarios.get)
+                    except Exception:
+                        pass
+
     save_history(history)
 
     # 2. 존재하는 모든 전략 버전 식별
@@ -620,6 +773,81 @@ def evaluate_and_learn_from_history(strategy_version: str = CURRENT_STRATEGY_VER
 
     adaptive_weights = get_adaptive_factor_weights(strategy_version=strategy_version)
 
+    # === MFE/MAE 집계 통계 (보유 기간 중 최대 수익/손실 분석) ===
+    mfe_values = [float(it['mfe_pct']) for it in completed_items if it.get('mfe_pct') is not None]
+    mae_values = [float(it['mae_pct']) for it in completed_items if it.get('mae_pct') is not None]
+    t2_hits = sum(1 for it in completed_items if it.get('target_2_hit'))
+    efficiencies = [float(it['holding_efficiency']) for it in completed_items if it.get('holding_efficiency') is not None]
+
+    mfe_mae_stats = {
+        'avg_mfe': round(float(np.mean(mfe_values)), 2) if mfe_values else 0.0,
+        'avg_mae': round(float(np.mean(mae_values)), 2) if mae_values else 0.0,
+        'median_mfe': round(float(np.median(mfe_values)), 2) if mfe_values else 0.0,
+        'median_mae': round(float(np.median(mae_values)), 2) if mae_values else 0.0,
+        'target_2_hit_count': t2_hits,
+        'target_2_hit_rate': round((t2_hits / completed_samples) * 100, 1) if completed_samples > 0 else 0.0,
+        'avg_holding_efficiency': round(float(np.mean(efficiencies)), 2) if efficiencies else 0.0,
+        'optimal_stop_pct': round(float(np.percentile(mae_values, 25)), 2) if len(mae_values) >= 5 else None,
+        'sample_count': len(mfe_values)
+    }
+
+    # === 청산 시나리오 비교 (현행 vs 분할익절 vs 트레일링) ===
+    sim_partial = [float(it['sim_partial_pnl']) for it in completed_items if it.get('sim_partial_pnl') is not None]
+    sim_trailing = [float(it['sim_trailing_pnl']) for it in completed_items if it.get('sim_trailing_pnl') is not None]
+    actual_pnls = [float(it.get('realized_pnl_net_pct', 0) or 0) for it in completed_items if it.get('realized_pnl_net_pct') is not None]
+
+    scenario_comparison = {
+        'current_avg_pnl': round(float(np.mean(actual_pnls)), 2) if actual_pnls else 0.0,
+        'partial_avg_pnl': round(float(np.mean(sim_partial)), 2) if sim_partial else 0.0,
+        'trailing_avg_pnl': round(float(np.mean(sim_trailing)), 2) if sim_trailing else 0.0,
+        'best_scenario': None,
+        'sample_count': len(sim_partial)
+    }
+    if sim_partial and sim_trailing and actual_pnls:
+        scenarios = {
+            '현행(1차전량)': scenario_comparison['current_avg_pnl'],
+            '분할익절': scenario_comparison['partial_avg_pnl'],
+            '트레일링': scenario_comparison['trailing_avg_pnl']
+        }
+        scenario_comparison['best_scenario'] = max(scenarios, key=scenarios.get)
+
+    # === 시장 레짐별 성과 분리 ===
+    regime_performance = {}
+    for it in completed_items:
+        ctx = it.get('market_context', {})
+        if isinstance(ctx, dict):
+            regime = ctx.get('regime', '미분류')
+        else:
+            regime = '미분류'
+
+        if regime not in regime_performance:
+            regime_performance[regime] = {'wins': 0, 'losses': 0, 'pnls': [], 'count': 0}
+        regime_performance[regime]['count'] += 1
+        if it.get('hit_success'):
+            regime_performance[regime]['wins'] += 1
+        else:
+            regime_performance[regime]['losses'] += 1
+        pnl = it.get('realized_pnl_net_pct')
+        if pnl is not None:
+            regime_performance[regime]['pnls'].append(float(pnl))
+
+    regime_stats = {}
+    for regime, data in regime_performance.items():
+        cnt = data['count']
+        r_win_rate = round((data['wins'] / cnt) * 100, 1) if cnt > 0 else 0.0
+        r_avg_pnl = round(float(np.mean(data['pnls'])), 2) if data['pnls'] else 0.0
+        r_win_pnls = [p for p in data['pnls'] if p > 0]
+        r_loss_pnls = [p for p in data['pnls'] if p <= 0]
+        r_sum_win = sum(r_win_pnls) if r_win_pnls else 0.0
+        r_sum_loss = abs(sum(r_loss_pnls)) if r_loss_pnls else 0.0
+        r_pf = round(r_sum_win / r_sum_loss, 2) if r_sum_loss > 0 else (99.9 if r_sum_win > 0 else 0.0)
+        regime_stats[regime] = {
+            'win_rate': r_win_rate,
+            'avg_return': r_avg_pnl,
+            'profit_factor': r_pf,
+            'sample_count': cnt
+        }
+
     return {
         'strategy_version': CURRENT_STRATEGY_VERSION,
         'strategy_rules': CURRENT_STRATEGY_RULES,
@@ -643,6 +871,10 @@ def evaluate_and_learn_from_history(strategy_version: str = CURRENT_STRATEGY_VER
         'sample_error_margin': sample_error_margin,
         'history_items': eval_items[::-1],
         'best_factors': best_factors[:4],
-        'adaptive_weights': adaptive_weights
+        'adaptive_weights': adaptive_weights,
+        # 신규 고도화 지표
+        'mfe_mae_stats': mfe_mae_stats,
+        'scenario_comparison': scenario_comparison,
+        'regime_performance': regime_stats
     }
 
