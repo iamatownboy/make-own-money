@@ -201,41 +201,175 @@ def get_market_context_regime() -> Dict[str, Any]:
         return {'regime': '정상장세', 'nasdaq_trend': '중립', 'volatility': '보통'}
 
 
-def backtest_pattern_reliability(df: pd.DataFrame, pattern_type: str = 'auto', holding_days: int = 20) -> Dict[str, Any]:
+def wilson_lower_bound(wins: int, total: int, z: float = 1.645) -> float:
     """
-    해당 종목의 과거 데이터(2년)에서 실제 스크리너 핵심 진입 패턴(evaluate_pattern_match)과 100% 동일한 조건이
-    발생했던 실제 시점들을 전수 시뮬레이션하여 20거래일 후 승률(Win Rate)과 평균 수익률을 산출합니다.
+    승률의 Wilson score 신뢰구간 하한(기본 90% 신뢰수준)을 반환합니다.
+    표본이 적을수록 하한이 크게 낮아지므로, 3~5건짜리 우연한 고승률이
+    점수에 반영되는 소표본 과적합을 구조적으로 차단합니다.
     """
+    if total <= 0:
+        return 0.0
+    p = wins / total
+    denom = 1 + (z ** 2) / total
+    centre = p + (z ** 2) / (2 * total)
+    margin = z * np.sqrt((p * (1 - p) / total) + (z ** 2) / (4 * total ** 2))
+    return max(0.0, ((centre - margin) / denom) * 100)
+
+
+def resolve_triple_barrier(
+    entry_price: float,
+    target_price: float,
+    stop_price: float,
+    forward_bars: pd.DataFrame,
+    fee_slippage_pct: float = 0.25
+) -> Dict[str, Any]:
+    """
+    실전 추적 엔진(tracker)과 동일한 청산 규칙으로 한 건의 진입을 정산합니다.
+    - 목표가 선도달 / 손절가 선도달 / 기간 만료의 3중 배리어
+    - 갭 체결 반영: 시가가 이미 배리어를 넘긴 경우 시가로 체결 (손실 과소계상 방지)
+    - 동일봉에서 목표·손절 동시 도달 시 보수적으로 손절 처리
+    """
+    if forward_bars.empty:
+        return {'net_return': -fee_slippage_pct, 'outcome': 'NO_DATA', 'gapped': False}
+
+    for _, row in forward_bars.iterrows():
+        bar_open = float(row['Open'])
+        bar_high = float(row['High'])
+        bar_low = float(row['Low'])
+
+        # 1) 시가 갭으로 이미 배리어를 벗어난 경우 -> 시가 체결
+        if bar_open >= target_price:
+            gross = ((bar_open / entry_price) - 1) * 100
+            return {'net_return': gross - fee_slippage_pct, 'outcome': 'TARGET', 'gapped': True}
+        if bar_open <= stop_price:
+            gross = ((bar_open / entry_price) - 1) * 100
+            return {'net_return': gross - fee_slippage_pct, 'outcome': 'STOP', 'gapped': True}
+
+        hit_target = bar_high >= target_price
+        hit_stop = bar_low <= stop_price
+
+        # 2) 동일봉 동시 도달 -> 보수적 손절 우선
+        if hit_stop:
+            gross = ((stop_price / entry_price) - 1) * 100
+            return {'net_return': gross - fee_slippage_pct, 'outcome': 'STOP', 'gapped': False}
+        if hit_target:
+            gross = ((target_price / entry_price) - 1) * 100
+            return {'net_return': gross - fee_slippage_pct, 'outcome': 'TARGET', 'gapped': False}
+
+    # 3) 기간 만료 -> 마지막 종가 청산
+    exit_price = float(forward_bars['Close'].iloc[-1])
+    gross = ((exit_price / entry_price) - 1) * 100
+    return {'net_return': gross - fee_slippage_pct, 'outcome': 'TIME', 'gapped': False}
+
+
+def backtest_pattern_reliability(
+    df: pd.DataFrame,
+    pattern_type: str = 'auto',
+    holding_days: int = 20,
+    fee_slippage_pct: float = 0.25,
+    min_signal_gap: int = None,
+    min_rr: float = 1.20
+) -> Dict[str, Any]:
+    """
+    과거 2년 데이터에서 실제 스크리너 진입 패턴(evaluate_pattern_match)과 동일한 조건이
+    발생한 시점을 시뮬레이션하여 승률과 평균 수익률을 산출합니다.
+
+    [정확도 보정 사항]
+    1) 신호 디듀프: 직전 신호로부터 최소 holding_days 경과한 시점만 독립 표본으로 인정.
+       (골든포켓처럼 수십 일 연속 참이 되는 패턴이 표본 수를 부풀리고,
+        보유기간이 통째로 겹쳐 표본 독립성이 깨지던 문제를 차단)
+    2) Triple-barrier 정산: 고정 20일 종가 청산이 아니라 실전과 동일하게
+       목표가/손절가/기간만료 선도달로 판정. (검증 대상 전략 = 실행 전략)
+    3) 갭 체결 반영으로 손실 과소계상 방지.
+    4) Wilson 하한 승률을 함께 산출해 소표본 고승률의 점수 반영을 억제.
+    """
+    if min_signal_gap is None:
+        min_signal_gap = holding_days
+
+    empty_result = {
+        'sample_count': 0,
+        'win_rate': None,
+        'win_rate_lb': None,
+        'avg_return': None,
+        'target_hit_rate': None,
+        'stop_hit_rate': None,
+        'pattern_tested': pattern_type,
+        'holding_days': holding_days,
+        'fee_slippage_applied': True,
+        'exit_model': 'triple_barrier',
+        'signal_dedup_gap': min_signal_gap,
+        'min_rr_gate': min_rr
+    }
+
     if len(df) < 60:
-        return {'sample_count': 0, 'win_rate': None, 'avg_return': None, 'status': '데이터 부족 (검증 불가)', 'pattern_tested': pattern_type}
+        return {**empty_result, 'status': '데이터 부족 (검증 불가)'}
 
     data = df.copy()
-    signals = []
+    results = []
+    last_signal_idx = -10 ** 9
 
-    # 과거 진입 시그널 탐색: 과거 i 시점까지의 데이터 슬라이스만으로 evaluate_pattern_match 평가
     for i in range(30, len(data) - holding_days):
+        # (1) 신호 디듀프 - 보유기간이 겹치는 중복 신호 제거
+        if (i - last_signal_idx) < min_signal_gap:
+            continue
+
         df_slice = data.iloc[:i + 1]
-        if evaluate_pattern_match(df_slice, pattern_type):
-            close_curr = float(data['Close'].iloc[i])
-            exit_price = float(data['Close'].iloc[i + holding_days])
-            gross_ret = ((exit_price / close_curr) - 1) * 100
-            net_ret = gross_ret - 0.25  # 왕복 거래 수수료 및 슬리피지(0.25%) 차감
-            signals.append(net_ret)
+        if not evaluate_pattern_match(df_slice, pattern_type):
+            continue
 
-    if not signals:
-        return {'sample_count': 0, 'win_rate': None, 'avg_return': None, 'status': '과거 2년 동일 시그널 부재', 'pattern_tested': pattern_type}
+        entry_price = float(data['Close'].iloc[i])
 
-    wins = [r for r in signals if r > 0]
-    win_rate = (len(wins) / len(signals)) * 100
-    avg_ret = np.mean(signals)
+        # (2) 진입 시점까지의 정보만으로 실전과 동일한 목표가/손절가 산출
+        scenario = predict_price_scenarios(df_slice, days_ahead=5)
+        target_price = float(scenario.get('bull_target_1') or 0.0)
+        stop_price = float(scenario.get('stop_loss') or 0.0)
+        if not (0 < stop_price < entry_price < target_price):
+            continue  # 유효한 배리어를 구성할 수 없는 시점은 표본에서 제외
+
+        # (3) 실전 진입 게이트(min_rr)를 통과했을 신호만 집계한다.
+        #     실전에서는 손익비 1.20 미만이면 추천 자체를 하지 않으므로,
+        #     그 신호까지 승률에 포함하면 '실행하지 않는 거래'로 전략을 평가하게 된다.
+        rr = (target_price - entry_price) / (entry_price - stop_price)
+        if rr < min_rr:
+            continue
+
+        last_signal_idx = i
+        forward_bars = data.iloc[i + 1: i + 1 + holding_days]
+        outcome = resolve_triple_barrier(
+            entry_price, target_price, stop_price, forward_bars, fee_slippage_pct
+        )
+        results.append(outcome)
+
+    if not results:
+        return {**empty_result, 'status': '과거 2년 독립 시그널 부재'}
+
+    net_returns = [r['net_return'] for r in results]
+    total = len(results)
+    target_hits = sum(1 for r in results if r['outcome'] == 'TARGET')
+    stop_hits = sum(1 for r in results if r['outcome'] == 'STOP')
+
+    # 실전 추적 엔진의 hit_success 정의와 동일: 목표 도달 또는 만료 시 플러스 마감
+    wins = sum(
+        1 for r in results
+        if r['outcome'] == 'TARGET' or (r['outcome'] == 'TIME' and r['net_return'] > 0)
+    )
+    win_rate = (wins / total) * 100
+    win_rate_lb = wilson_lower_bound(wins, total)
 
     return {
-        'sample_count': len(signals),
+        'sample_count': total,
         'win_rate': round(win_rate, 1),
-        'avg_return': round(avg_ret, 1),
-        'status': '검증 완료 (비용 0.25% 차감)',
+        'win_rate_lb': round(win_rate_lb, 1),
+        'avg_return': round(float(np.mean(net_returns)), 1),
+        'target_hit_rate': round((target_hits / total) * 100, 1),
+        'stop_hit_rate': round((stop_hits / total) * 100, 1),
+        'status': f'검증 완료 (독립표본 {total}건, 비용 {fee_slippage_pct}% 차감)',
         'pattern_tested': pattern_type,
-        'fee_slippage_applied': True
+        'holding_days': holding_days,
+        'fee_slippage_applied': True,
+        'exit_model': 'triple_barrier',
+        'signal_dedup_gap': min_signal_gap,
+        'min_rr_gate': min_rr
     }
 
 
@@ -395,25 +529,35 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
             
         # --- [3] 시장 모멘텀 & 과거 백테스트 검증 (30점) ---
         # 1) 백테스트 신뢰도 점수 (표본 3회 이상일 때만 엄밀하게 반영, 표본 부족 시 가산점 0점)
-        if bt_stats['sample_count'] >= 3 and bt_stats['win_rate'] is not None:
-            if bt_stats['win_rate'] >= 75:
+        # ※ 가산 기준을 '표본 승률'이 아닌 'Wilson 90% 신뢰하한'으로 변경.
+        #   3~5건짜리 우연한 100% 승률이 만점을 받아가던 소표본 과적합을 차단한다.
+        if bt_stats['sample_count'] >= 3 and bt_stats.get('win_rate_lb') is not None:
+            wr = bt_stats['win_rate']
+            lb = bt_stats['win_rate_lb']
+            n = bt_stats['sample_count']
+            avg_r = bt_stats['avg_return']
+            if lb >= 60:
                 mom_score += 15
-                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년간 동일 패턴 출현 시 승률 {bt_stats['win_rate']}% (평균 수익률 +{bt_stats['avg_return']}%, {bt_stats['sample_count']}회 검증)을 기록했습니다."})
-                tags.append(f"백테스트승률{int(bt_stats['win_rate'])}%")
-            elif bt_stats['win_rate'] >= 60:
+                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년간 동일 패턴 독립표본 {n}건에서 승률 {wr}% (신뢰하한 {lb}%, 평균 손익 {avg_r:+.1f}%)를 기록했습니다."})
+                tags.append(f"백테스트승률{int(wr)}%")
+            elif lb >= 45:
                 mom_score += 10
-                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 동일 패턴 출현 시 승률 {bt_stats['win_rate']}% (평균 수익률 +{bt_stats['avg_return']}%, {bt_stats['sample_count']}회)의 흐름을 보였습니다."})
-            elif bt_stats['win_rate'] < 50:
+                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 동일 패턴 독립표본 {n}건에서 승률 {wr}% (신뢰하한 {lb}%, 평균 손익 {avg_r:+.1f}%)의 흐름을 보였습니다."})
+                tags.append(f"백테스트승률{int(wr)}%")
+            elif wr < 50:
                 mom_score -= 5  # 과거 동일 패턴 승률 저조 시 감점
-                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 동일 패턴 승률이 {bt_stats['win_rate']}%로 저조하여 보수적 감점(-5점)이 적용되었습니다."})
+                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 동일 패턴 승률이 {wr}%(독립표본 {n}건)로 저조하여 보수적 감점(-5점)이 적용되었습니다."})
+            else:
+                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 동일 패턴 승률 {wr}%(독립표본 {n}건)이나 신뢰하한 {lb}%로 표본이 얇아 가산점은 부여하지 않았습니다."})
         else:
             # 증거 부재 = 0점 (중립 가산점 완전 배제)
             mom_score += 0
-            reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년간 유효한 동일 패턴 표본 수({bt_stats['sample_count']}회)가 적어 과거 승률 수치는 산출하지 않았습니다."})
+            reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년간 보유기간 비중복 독립 표본({bt_stats['sample_count']}회)이 적어 과거 승률 수치는 산출하지 않았습니다."})
             tags.append("백테스트표본부족")
             
         # 2) 52주 고점 대비 견고함
-        high_52 = float(df['High'].max())
+        #    ※ df는 2년치이므로 df['High'].max()는 '2년 고점'이었음. 실제 52주(252거래일)로 한정.
+        high_52 = float(df['High'].tail(min(252, len(df))).max())
         drop_from_high = ((high_52 - curr_price) / high_52) * 100
         if drop_from_high <= 15:
             mom_score += 15
@@ -587,6 +731,38 @@ def run_full_market_scan(force_refresh: bool = False) -> List[Dict[str, Any]]:
     qualified_results.sort(key=lambda x: x['total_score'], reverse=True)
     top_picks = qualified_results[:7]
 
+    # 적격 0건은 정상적인 결과일 수 있으므로(시장 국면 또는 패턴 신뢰도 미달),
+    # 침묵하지 않고 근접 미달 상위 종목과 미달 사유를 진단으로 남긴다.
+    scan_diagnostics = {
+        'scanned': len(results),
+        'universe_size': len(CORE_UNIVERSE),
+        'qualified': len(qualified_results),
+        'near_miss': []
+    }
+    if not qualified_results:
+        near = sorted(results, key=lambda x: x['total_score'], reverse=True)[:5]
+        for r in near:
+            blockers = []
+            if r['total_score'] < 68:
+                blockers.append(f"점수 {r['total_score']}/68")
+            if r['risk_reward_ratio'] < 1.20:
+                blockers.append(f"손익비 {r['risk_reward_ratio']}/1.20")
+            if r['pattern_status'] == "쿨다운(반등확인)":
+                blockers.append("쿨다운")
+            scan_diagnostics['near_miss'].append({
+                'ticker': r['ticker'],
+                'name': r['name'],
+                'total_score': r['total_score'],
+                'risk_reward_ratio': r['risk_reward_ratio'],
+                'blockers': blockers
+            })
+        near_desc = ', '.join(
+            "{}({}점)".format(n['ticker'], n['total_score'])
+            for n in scan_diagnostics['near_miss']
+        )
+        print("[스캔] 적격 종목 0건 (스캔 {}/{}). 근접: {}".format(
+            len(results), len(CORE_UNIVERSE), near_desc))
+
     # 실시간 나스닥 거시 시장 레짐 산출 및 추천 메타데이터에 부착
     market_context = get_market_context_regime()
     for p in top_picks:
@@ -606,7 +782,8 @@ def run_full_market_scan(force_refresh: bool = False) -> List[Dict[str, Any]]:
             json.dump({
                 'date': today_str,
                 'updated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                'recommendations': top_picks
+                'recommendations': top_picks,
+                'scan_diagnostics': scan_diagnostics
             }, f, ensure_ascii=False, indent=2, default=np_encoder)
     except Exception as e:
         print(f"로컬 캐시 저장 실패: {e}")

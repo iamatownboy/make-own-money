@@ -34,13 +34,25 @@ def calculate_all_indicators(df: pd.DataFrame) -> pd.DataFrame:
     data['EMA_120'] = close.ewm(span=120, adjust=False).mean() if len(data) >= 120 else np.nan
     data['EMA_200'] = close.ewm(span=200, adjust=False).mean() if len(data) >= 200 else np.nan
     
-    # 2. RSI (Relative Strength Index, 14)
+    # 2. RSI (Relative Strength Index, 14) - Wilder 평활(RMA) 적용
+    #    기존 단순이동평균(SMA) 방식은 TradingView 등 표준 플랫폼과 값이 달라
+    #    다이버전스 판정 및 과매수/과매도 임계 판단이 어긋남.
+    #    또한 손실이 0인 강세 구간은 RSI 100이어야 하나 NaN->50(중립)으로
+    #    잘못 기록되던 버그를 함께 수정.
     delta = close.diff()
-    gain = (delta.where(delta > 0, 0)).rolling(window=14, min_periods=1).mean()
-    loss = (-delta.where(delta < 0, 0)).rolling(window=14, min_periods=1).mean()
-    rs = gain / loss.replace(0, np.nan)
-    data['RSI_14'] = 100 - (100 / (1 + rs))
-    data['RSI_14'] = data['RSI_14'].fillna(50)
+    gain = delta.clip(lower=0)
+    loss = (-delta).clip(lower=0)
+    avg_gain = gain.ewm(alpha=1.0 / 14, adjust=False, min_periods=14).mean()
+    avg_loss = loss.ewm(alpha=1.0 / 14, adjust=False, min_periods=14).mean()
+
+    rs = avg_gain / avg_loss.replace(0, np.nan)
+    rsi = 100 - (100 / (1 + rs))
+    # 평균 손실 0 => 완전 강세(RSI 100), 손익 모두 0(보합 지속) => 중립 50
+    both_zero = (avg_gain == 0) & (avg_loss == 0)
+    zero_loss_only = (avg_loss == 0) & (avg_gain > 0)
+    rsi = rsi.mask(zero_loss_only, 100.0)
+    rsi = rsi.mask(both_zero, 50.0)
+    data['RSI_14'] = rsi.fillna(50.0)
     
     # 3. MACD (12, 26, 9)
     ema_12 = close.ewm(span=12, adjust=False).mean()
@@ -63,7 +75,8 @@ def calculate_all_indicators(df: pd.DataFrame) -> pd.DataFrame:
     tr2 = (high - prev_close).abs()
     tr3 = (low - prev_close).abs()
     tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
-    data['ATR_14'] = tr.rolling(window=14, min_periods=1).mean()
+    # Wilder 평활(RMA). 손절선/목표가 산출의 기준값이므로 표준 정의를 따름.
+    data['ATR_14'] = tr.ewm(alpha=1.0 / 14, adjust=False, min_periods=1).mean()
     
     # 6. Supertrend (10, 3)
     data = calculate_supertrend(data, period=10, multiplier=3.0)
@@ -90,7 +103,8 @@ def calculate_supertrend(df: pd.DataFrame, period: int = 10, multiplier: float =
     prev_close = np.roll(close, 1)
     prev_close[0] = close[0]
     tr = np.maximum(high - low, np.maximum(np.abs(high - prev_close), np.abs(low - prev_close)))
-    atr = pd.Series(tr).rolling(window=period, min_periods=1).mean().values
+    # Supertrend 표준 정의도 Wilder 평활 ATR을 사용 (SMA 사용 시 밴드가 어긋남)
+    atr = pd.Series(tr).ewm(alpha=1.0 / period, adjust=False, min_periods=1).mean().values
     
     hl2 = (high + low) / 2.0
     basic_upper = hl2 + (multiplier * atr)

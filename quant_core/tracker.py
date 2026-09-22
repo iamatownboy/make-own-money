@@ -446,52 +446,69 @@ def evaluate_and_learn_from_history(strategy_version: str = CURRENT_STRATEGY_VER
                 
                 resolved = False
                 for bar_date, row in df_after.iterrows():
+                    bar_open = float(row['Open'])
                     bar_high = float(row['High'])
                     bar_low = float(row['Low'])
-                    
-                    hit_t = bar_high >= t1
-                    hit_s = bar_low <= sl
                     fee_pct = float(item.get('fee_slippage_pct', 0.25))
-                    
-                    if hit_t and hit_s:
-                        item['hit_success'] = False
-                        item['status'] = '⚠️ 변동성 손절 이탈 (동일봉 도달)'
-                        item['is_completed'] = True
-                        item['exit_price'] = sl
-                        item['exit_date'] = str(bar_date.date())
-                        realized_pnl = round(((sl / rec_p) - 1) * 100, 2)
-                        item['realized_pnl_pct'] = realized_pnl
-                        item['realized_pnl_net_pct'] = round(realized_pnl - fee_pct, 2)
-                        diagnosis = diagnose_failure_reason(item, df_after.loc[:bar_date], df)
-                        item['failure_reason'] = diagnosis['full_diagnosis']
-                        resolved = True
-                        break
+
+                    # t1/sl이 0인(미설정) 경우 해당 배리어는 비활성 처리
+                    t_active = t1 > 0
+                    s_active = sl > 0
+
+                    hit_t = t_active and bar_high >= t1
+                    hit_s = s_active and bar_low <= sl
+
+                    # ── 청산가 결정 (갭 체결 반영) ─────────────────────────────
+                    # 시가가 이미 배리어를 넘겨 출발한 경우 지정가가 아니라 시가로 체결된다.
+                    # 기존 코드는 무조건 sl/t1로 기록해 갭하락 손실을 체계적으로 과소계상했음.
+                    exit_kind = None
+                    exit_p = None
+                    is_gap = False
+
+                    if t_active and bar_open >= t1:
+                        exit_kind, exit_p, is_gap = 'TARGET', bar_open, True
+                    elif s_active and bar_open <= sl:
+                        exit_kind, exit_p, is_gap = 'STOP', bar_open, True
+                    elif hit_t and hit_s:
+                        # 동일봉 동시 도달 -> 보수적 손절 우선
+                        exit_kind, exit_p = 'STOP_SAMEBAR', sl
                     elif hit_s:
-                        item['hit_success'] = False
-                        item['status'] = '⚠️ 손절선 이탈'
-                        item['is_completed'] = True
-                        item['exit_price'] = sl
-                        item['exit_date'] = str(bar_date.date())
-                        realized_pnl = round(((sl / rec_p) - 1) * 100, 2)
-                        item['realized_pnl_pct'] = realized_pnl
-                        item['realized_pnl_net_pct'] = round(realized_pnl - fee_pct, 2)
-                        diagnosis = diagnose_failure_reason(item, df_after.loc[:bar_date], df)
-                        item['failure_reason'] = diagnosis['full_diagnosis']
-                        resolved = True
-                        break
+                        exit_kind, exit_p = 'STOP', sl
                     elif hit_t:
-                        item['hit_success'] = True
-                        item['status'] = '🎯 목표가 도달 (성공)'
+                        exit_kind, exit_p = 'TARGET', t1
+
+                    if exit_kind is not None:
+                        realized_pnl = round(((exit_p / rec_p) - 1) * 100, 2)
                         item['is_completed'] = True
-                        item['exit_price'] = t1
+                        item['exit_price'] = round(exit_p, 2)
                         item['exit_date'] = str(bar_date.date())
-                        realized_pnl = round(((t1 / rec_p) - 1) * 100, 2)
+                        item['exit_kind'] = exit_kind
+                        item['exit_gapped'] = is_gap
                         item['realized_pnl_pct'] = realized_pnl
                         item['realized_pnl_net_pct'] = round(realized_pnl - fee_pct, 2)
-                        item['failure_reason'] = None
+
+                        if exit_kind == 'TARGET':
+                            item['hit_success'] = True
+                            item['status'] = '🎯 목표가 갭 도달 (성공)' if is_gap else '🎯 목표가 도달 (성공)'
+                            item['failure_reason'] = None
+                        else:
+                            item['hit_success'] = False
+                            if exit_kind == 'STOP_SAMEBAR':
+                                item['status'] = '⚠️ 변동성 손절 이탈 (동일봉 도달)'
+                            elif is_gap:
+                                item['status'] = '⚠️ 갭하락 손절 이탈 (시가 체결)'
+                            else:
+                                item['status'] = '⚠️ 손절선 이탈'
+                            diagnosis = diagnose_failure_reason(item, df_after.loc[:bar_date], df)
+                            extra = ''
+                            if is_gap:
+                                extra = f" · 손절선(${sl:.2f}) 미체결 갭하락으로 시가 ${exit_p:.2f} 체결"
+                            item['failure_reason'] = diagnosis['full_diagnosis'] + extra
+
                         resolved = True
                         break
-                        
+
+
                 if not resolved:
                     if len(df_after) >= 20:
                         exit_p = curr_p

@@ -1032,3 +1032,202 @@ def test_write_probe_missing_health_check_table_blocks_and_never_touches_busines
 
     # 2. 핵심 안전성 검증: 비즈니스 테이블(daily_recommendation_cache 등)에 대한 쓰기/삭제 시도가 0건이어야 함
     assert len(business_table_mutations) == 0, "전용 헬스체크 테이블 부재 시 비즈니스 테이블에 폴백하여 데이터를 건드려서는 안 됩니다."
+
+
+# ============================================================================
+# 정확도 보정 회귀 테스트 (우선순위 1~5)
+# 24. 백테스트 신호 디듀프 (보유기간 중복 표본 제거)
+# 25. Triple-barrier 정산 및 갭 체결
+# 26. 추적 엔진 갭하락 손절 체결
+# 27. Wilson 신뢰하한 소표본 억제
+# 28. RSI Wilder 평활 및 무손실 구간 RSI=100
+# 29. 52주 고점 윈도우 한정
+# ============================================================================
+
+from quant_core.screener import (
+    resolve_triple_barrier,
+    wilson_lower_bound,
+)
+import quant_core.screener as screener_mod
+
+
+# 24. 연속 참 패턴이 표본 수를 부풀리지 않는지 검증
+def test_backtest_signal_dedup_removes_overlapping_samples(monkeypatch):
+    df = make_dummy_ohlcv(days=200, base_price=100.0)
+
+    # 모든 시점에서 패턴이 참인 극단 케이스 (골든포켓 연속 참 상황을 모사)
+    monkeypatch.setattr(screener_mod, 'evaluate_pattern_match', lambda s, p='auto': True)
+    monkeypatch.setattr(
+        screener_mod, 'predict_price_scenarios',
+        lambda s, days_ahead=5: {
+            'bull_target_1': float(s['Close'].iloc[-1]) * 1.05,
+            'stop_loss': float(s['Close'].iloc[-1]) * 0.95,
+        }
+    )
+
+    res = backtest_pattern_reliability(df, pattern_type='auto', holding_days=20)
+
+    # 디듀프 전이라면 150건 가까이 나왔을 구간
+    scannable = len(df) - 30 - 20
+    assert res['sample_count'] <= (scannable // 20) + 1
+    assert res['sample_count'] < 15
+    assert res['signal_dedup_gap'] == 20
+    assert res['exit_model'] == 'triple_barrier'
+
+
+# 25-a. Triple-barrier: 손절 선도달 판정
+def test_triple_barrier_stop_before_target():
+    bars = pd.DataFrame({
+        'Open': [100.0, 99.0],
+        'High': [101.0, 99.5],
+        'Low': [98.0, 94.0],      # 둘째 봉에서 손절(95) 이탈
+        'Close': [99.0, 94.5],
+    })
+    res = resolve_triple_barrier(100.0, 110.0, 95.0, bars, fee_slippage_pct=0.25)
+    assert res['outcome'] == 'STOP'
+    assert res['gapped'] is False
+    assert res['net_return'] == pytest.approx(-5.25, abs=1e-6)
+
+
+# 25-b. 갭하락 시 손절가가 아닌 시가로 체결되어야 함 (손실 과소계상 방지)
+def test_triple_barrier_gap_down_fills_at_open():
+    bars = pd.DataFrame({
+        'Open': [85.0],           # 손절선 95를 건너뛰고 85에 갭 출발
+        'High': [86.0],
+        'Low': [80.0],
+        'Close': [82.0],
+    })
+    res = resolve_triple_barrier(100.0, 110.0, 95.0, bars, fee_slippage_pct=0.25)
+    assert res['outcome'] == 'STOP'
+    assert res['gapped'] is True
+    # 기존 로직이면 -5.25%로 기록됐을 손실이 실제 -15.25%로 잡혀야 한다
+    assert res['net_return'] == pytest.approx(-15.25, abs=1e-6)
+
+
+# 25-c. 동일봉 동시 도달은 보수적으로 손절 처리
+def test_triple_barrier_same_bar_prefers_stop():
+    bars = pd.DataFrame({
+        'Open': [100.0],
+        'High': [115.0],
+        'Low': [93.0],
+        'Close': [105.0],
+    })
+    res = resolve_triple_barrier(100.0, 110.0, 95.0, bars, fee_slippage_pct=0.25)
+    assert res['outcome'] == 'STOP'
+
+
+# 25-d. 배리어 미도달 시 기간 만료 종가 청산
+def test_triple_barrier_time_exit():
+    bars = pd.DataFrame({
+        'Open': [100.0, 101.0],
+        'High': [102.0, 103.0],
+        'Low': [99.0, 100.0],
+        'Close': [101.0, 102.0],
+    })
+    res = resolve_triple_barrier(100.0, 110.0, 95.0, bars, fee_slippage_pct=0.25)
+    assert res['outcome'] == 'TIME'
+    assert res['net_return'] == pytest.approx(1.75, abs=1e-6)
+
+
+# 26. 추적 엔진에서도 갭하락이 시가로 체결되는지 검증
+def test_outcome_gap_down_below_stop(monkeypatch, tmp_path):
+    test_hist_file = str(tmp_path / "test_history.json")
+    monkeypatch.setattr("quant_core.tracker.HISTORY_FILE", test_hist_file)
+    monkeypatch.setattr("quant_core.tracker.is_supabase_enabled", lambda: False)
+
+    record_daily_recommendations([{
+        'date': '2026-01-05',
+        'ticker': 'TEST_GAP',
+        'name': '갭하락테스트',
+        'current_price': 100.0,
+        'bull_target_1': 110.0,
+        'stop_loss': 95.0,
+        'tags': ['실적발표'],
+    }])
+
+    dates = [pd.Timestamp('2026-01-05'), pd.Timestamp('2026-01-06')]
+    mock_df = pd.DataFrame({
+        'Open': [100.0, 85.0],    # 손절선 95를 건너뛴 갭하락
+        'High': [101.0, 86.0],
+        'Low': [99.0, 82.0],
+        'Close': [100.0, 83.0],
+        'Volume': [1000000, 9000000],
+    }, index=dates)
+
+    class MockTicker:
+        def __init__(self, ticker):
+            pass
+        def history(self, *args, **kwargs):
+            return mock_df
+
+    monkeypatch.setattr("yfinance.Ticker", MockTicker)
+    res = evaluate_and_learn_from_history()
+    item = next(i for i in res['history_items'] if i['ticker'] == 'TEST_GAP')
+
+    assert item['is_completed'] is True
+    assert item['hit_success'] is False
+    assert item['exit_gapped'] is True
+    assert item['exit_price'] == 85.0                 # 95.0이 아니어야 한다
+    assert item['realized_pnl_pct'] == pytest.approx(-15.0, abs=1e-6)
+    assert '갭하락' in item['status']
+
+
+# 27. Wilson 신뢰하한이 소표본 고승률을 억제하는지 검증
+def test_wilson_lower_bound_penalizes_small_samples():
+    # 3전 3승(표본 승률 100%)이라도 하한은 가산 기준(60%)을 넘지 못해야 한다
+    assert wilson_lower_bound(3, 3) < 60.0
+    # 표본이 커지면 하한이 표본 승률에 수렴
+    assert wilson_lower_bound(80, 100) > wilson_lower_bound(8, 10)
+    assert wilson_lower_bound(0, 0) == 0.0
+
+
+# 28. RSI Wilder 평활 및 무손실 구간 처리 검증
+def test_rsi_wilder_and_zero_loss_handling():
+    from quant_core.indicators import calculate_all_indicators
+
+    # 단조 상승(손실 0) -> RSI는 100이어야 한다 (기존에는 NaN->50으로 기록됨)
+    n = 60
+    closes = np.array([100.0 * (1.01 ** i) for i in range(n)])
+    up_df = pd.DataFrame({
+        'Open': closes * 0.999,
+        'High': closes * 1.002,
+        'Low': closes * 0.998,
+        'Close': closes,
+        'Volume': [1000] * n,
+    }, index=pd.date_range(end=datetime.now(), periods=n, freq='B'))
+
+    out = calculate_all_indicators(up_df)
+    assert out['RSI_14'].iloc[-1] == pytest.approx(100.0, abs=1e-6)
+
+    # 완전 보합 -> 중립 50
+    flat = pd.DataFrame({
+        'Open': [100.0] * n,
+        'High': [100.0] * n,
+        'Low': [100.0] * n,
+        'Close': [100.0] * n,
+        'Volume': [1000] * n,
+    }, index=pd.date_range(end=datetime.now(), periods=n, freq='B'))
+    out_flat = calculate_all_indicators(flat)
+    assert out_flat['RSI_14'].iloc[-1] == pytest.approx(50.0, abs=1e-6)
+
+    # RSI는 항상 0~100 범위
+    mixed = calculate_all_indicators(make_dummy_ohlcv(days=200))
+    assert mixed['RSI_14'].min() >= 0.0
+    assert mixed['RSI_14'].max() <= 100.0
+
+
+# 29. 52주 고점이 2년 전체가 아닌 최근 252거래일로 한정되는지 검증
+def test_52week_high_window_is_bounded():
+    # 앞쪽 구간에 초고점, 최근 252일은 낮은 가격대
+    old = make_dummy_ohlcv(days=250, base_price=500.0, trend=0.0)
+    recent = make_dummy_ohlcv(days=260, base_price=100.0, trend=0.0)
+    recent.index = pd.date_range(start=old.index[-1] + pd.Timedelta(days=1),
+                                 periods=len(recent), freq='B')
+    df = pd.concat([old, recent])
+
+    two_year_high = float(df['High'].max())
+    high_52 = float(df['High'].tail(min(252, len(df))).max())
+
+    assert two_year_high > 400.0
+    assert high_52 < 200.0          # 52주 윈도우에는 과거 초고점이 포함되면 안 된다
+    assert high_52 < two_year_high
