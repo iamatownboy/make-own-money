@@ -1,5 +1,57 @@
 {
-  "date": "2026-09-21",
-  "updated_at": "2026-09-22 00:11:39",
-  "recommendations": []
+  "date": "2026-09-22",
+  "updated_at": "2026-09-22 23:39:56",
+  "recommendations": [],
+  "scan_diagnostics": {
+    "scanned": 82,
+    "universe_size": 82,
+    "qualified": 0,
+    "near_miss": [
+      {
+        "ticker": "GOOGL",
+        "name": "알파벳 (구글)",
+        "total_score": 64,
+        "risk_reward_ratio": 1.62,
+        "blockers": [
+          "점수 64/68"
+        ]
+      },
+      {
+        "ticker": "CEG",
+        "name": "컨스텔레이션 에너지",
+        "total_score": 63,
+        "risk_reward_ratio": 1.73,
+        "blockers": [
+          "점수 63/68"
+        ]
+      },
+      {
+        "ticker": "ASML",
+        "name": "ASML",
+        "total_score": 61,
+        "risk_reward_ratio": 1.72,
+        "blockers": [
+          "점수 61/68"
+        ]
+      },
+      {
+        "ticker": "MPWR",
+        "name": "모놀리식 파워",
+        "total_score": 60,
+        "risk_reward_ratio": 2.26,
+        "blockers": [
+          "점수 60/68"
+        ]
+      },
+      {
+        "ticker": "TXN",
+        "name": "텍사스 인스트루먼트",
+        "total_score": 57,
+        "risk_reward_ratio": 1.4,
+        "blockers": [
+          "점수 57/68"
+        ]
+      }
+    ]
+  }
 }
