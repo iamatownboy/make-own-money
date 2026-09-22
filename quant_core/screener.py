@@ -10,6 +10,7 @@ import numpy as np
 import yfinance as yf
 from datetime import datetime
 from typing import List, Dict, Any
+from threading import Lock
 import pytz
 
 
@@ -132,6 +133,58 @@ CORE_UNIVERSE = [
 RECOMMENDATION_CACHE_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'daily_recommendations.json')
 
 
+BENCHMARK_TICKER = 'QQQ'
+_BENCHMARK_CACHE = {}
+_BENCHMARK_LOCK = Lock()
+
+
+def get_benchmark_series(period: str = '2y') -> pd.Series:
+    """
+    벤치마크(QQQ) 종가 시계열을 1회만 받아 프로세스 내에서 재사용합니다.
+    실패 시 None을 반환하며, 호출부는 벤치마크 없이도 동작해야 합니다.
+    """
+    with _BENCHMARK_LOCK:
+        if period in _BENCHMARK_CACHE:
+            return _BENCHMARK_CACHE[period]
+    try:
+        bdf = yf.Ticker(BENCHMARK_TICKER).history(period=period, interval='1d')
+        if bdf.empty:
+            series = None
+        else:
+            if bdf.index.tz is not None:
+                bdf.index = bdf.index.tz_localize(None)
+            series = bdf['Close'].copy()
+            series.index = pd.to_datetime(series.index).normalize()
+    except Exception:
+        series = None
+    with _BENCHMARK_LOCK:
+        _BENCHMARK_CACHE[period] = series
+    return series
+
+
+def benchmark_return_between(series: pd.Series, start_date, end_date) -> float:
+    """
+    벤치마크의 두 날짜 사이 수익률(%)을 반환합니다.
+    거래일이 정확히 일치하지 않을 수 있으므로 해당 일자 이하의 마지막 값을 사용합니다.
+    """
+    if series is None or len(series) == 0:
+        return None
+    try:
+        s = pd.Timestamp(start_date).normalize()
+        e = pd.Timestamp(end_date).normalize()
+        start_slice = series.loc[:s]
+        end_slice = series.loc[:e]
+        if start_slice.empty or end_slice.empty:
+            return None
+        p0 = float(start_slice.iloc[-1])
+        p1 = float(end_slice.iloc[-1])
+        if p0 <= 0:
+            return None
+        return ((p1 / p0) - 1) * 100
+    except Exception:
+        return None
+
+
 def evaluate_pattern_match(df_slice: pd.DataFrame, pattern_type: str = 'auto') -> bool:
     """
     실시간 스크리너와 과거 백테스팅이 100% 동일하게 공유하는 단일 진입 패턴 판정 함수 (Single Source of Truth)
@@ -230,9 +283,9 @@ def resolve_triple_barrier(
     - 동일봉에서 목표·손절 동시 도달 시 보수적으로 손절 처리
     """
     if forward_bars.empty:
-        return {'net_return': -fee_slippage_pct, 'outcome': 'NO_DATA', 'gapped': False}
+        return {'net_return': -fee_slippage_pct, 'outcome': 'NO_DATA', 'gapped': False, 'exit_offset': 0}
 
-    for _, row in forward_bars.iterrows():
+    for offset, (_, row) in enumerate(forward_bars.iterrows(), start=1):
         bar_open = float(row['Open'])
         bar_high = float(row['High'])
         bar_low = float(row['Low'])
@@ -240,10 +293,10 @@ def resolve_triple_barrier(
         # 1) 시가 갭으로 이미 배리어를 벗어난 경우 -> 시가 체결
         if bar_open >= target_price:
             gross = ((bar_open / entry_price) - 1) * 100
-            return {'net_return': gross - fee_slippage_pct, 'outcome': 'TARGET', 'gapped': True}
+            return {'net_return': gross - fee_slippage_pct, 'outcome': 'TARGET', 'gapped': True, 'exit_offset': offset}
         if bar_open <= stop_price:
             gross = ((bar_open / entry_price) - 1) * 100
-            return {'net_return': gross - fee_slippage_pct, 'outcome': 'STOP', 'gapped': True}
+            return {'net_return': gross - fee_slippage_pct, 'outcome': 'STOP', 'gapped': True, 'exit_offset': offset}
 
         hit_target = bar_high >= target_price
         hit_stop = bar_low <= stop_price
@@ -251,15 +304,15 @@ def resolve_triple_barrier(
         # 2) 동일봉 동시 도달 -> 보수적 손절 우선
         if hit_stop:
             gross = ((stop_price / entry_price) - 1) * 100
-            return {'net_return': gross - fee_slippage_pct, 'outcome': 'STOP', 'gapped': False}
+            return {'net_return': gross - fee_slippage_pct, 'outcome': 'STOP', 'gapped': False, 'exit_offset': offset}
         if hit_target:
             gross = ((target_price / entry_price) - 1) * 100
-            return {'net_return': gross - fee_slippage_pct, 'outcome': 'TARGET', 'gapped': False}
+            return {'net_return': gross - fee_slippage_pct, 'outcome': 'TARGET', 'gapped': False, 'exit_offset': offset}
 
     # 3) 기간 만료 -> 마지막 종가 청산
     exit_price = float(forward_bars['Close'].iloc[-1])
     gross = ((exit_price / entry_price) - 1) * 100
-    return {'net_return': gross - fee_slippage_pct, 'outcome': 'TIME', 'gapped': False}
+    return {'net_return': gross - fee_slippage_pct, 'outcome': 'TIME', 'gapped': False, 'exit_offset': len(forward_bars)}
 
 
 def backtest_pattern_reliability(
@@ -268,7 +321,8 @@ def backtest_pattern_reliability(
     holding_days: int = 20,
     fee_slippage_pct: float = 0.25,
     min_signal_gap: int = None,
-    min_rr: float = 1.20
+    min_rr: float = 1.20,
+    benchmark: pd.Series = None
 ) -> Dict[str, Any]:
     """
     과거 2년 데이터에서 실제 스크리너 진입 패턴(evaluate_pattern_match)과 동일한 조건이
@@ -291,6 +345,12 @@ def backtest_pattern_reliability(
         'win_rate': None,
         'win_rate_lb': None,
         'avg_return': None,
+        'alpha_win_rate': None,
+        'alpha_win_rate_lb': None,
+        'avg_excess_return': None,
+        'avg_benchmark_return': None,
+        'benchmark_ticker': BENCHMARK_TICKER,
+        'benchmark_samples': 0,
         'target_hit_rate': None,
         'stop_hit_rate': None,
         'pattern_tested': pattern_type,
@@ -338,6 +398,19 @@ def backtest_pattern_reliability(
         outcome = resolve_triple_barrier(
             entry_price, target_price, stop_price, forward_bars, fee_slippage_pct
         )
+
+        # (4) 동일 보유기간 벤치마크(QQQ) 수익률 대비 초과수익 산출.
+        #     상승장 유니버스에서는 승률 자체가 베타일 수 있으므로,
+        #     '그냥 지수를 샀을 때보다 나았는가'를 별도로 측정한다.
+        outcome['excess_return'] = None
+        if benchmark is not None and outcome['exit_offset'] > 0:
+            entry_date = data.index[i]
+            exit_date = forward_bars.index[outcome['exit_offset'] - 1]
+            bench_ret = benchmark_return_between(benchmark, entry_date, exit_date)
+            if bench_ret is not None:
+                outcome['benchmark_return'] = bench_ret
+                outcome['excess_return'] = outcome['net_return'] - bench_ret
+
         results.append(outcome)
 
     if not results:
@@ -356,11 +429,35 @@ def backtest_pattern_reliability(
     win_rate = (wins / total) * 100
     win_rate_lb = wilson_lower_bound(wins, total)
 
+    # 벤치마크 대비 알파 집계 (초과수익 > 0 인 비율 = 알파 승률)
+    excess = [r['excess_return'] for r in results if r.get('excess_return') is not None]
+    if excess:
+        alpha_wins = sum(1 for e in excess if e > 0)
+        alpha_win_rate = round((alpha_wins / len(excess)) * 100, 1)
+        alpha_win_rate_lb = round(wilson_lower_bound(alpha_wins, len(excess)), 1)
+        avg_excess_return = round(float(np.mean(excess)), 2)
+        avg_benchmark_return = round(
+            float(np.mean([r['benchmark_return'] for r in results if r.get('benchmark_return') is not None])), 2
+        )
+        benchmark_samples = len(excess)
+    else:
+        alpha_win_rate = None
+        alpha_win_rate_lb = None
+        avg_excess_return = None
+        avg_benchmark_return = None
+        benchmark_samples = 0
+
     return {
         'sample_count': total,
         'win_rate': round(win_rate, 1),
         'win_rate_lb': round(win_rate_lb, 1),
         'avg_return': round(float(np.mean(net_returns)), 1),
+        'alpha_win_rate': alpha_win_rate,
+        'alpha_win_rate_lb': alpha_win_rate_lb,
+        'avg_excess_return': avg_excess_return,
+        'avg_benchmark_return': avg_benchmark_return,
+        'benchmark_ticker': BENCHMARK_TICKER,
+        'benchmark_samples': benchmark_samples,
         'target_hit_rate': round((target_hits / total) * 100, 1),
         'stop_hit_rate': round((stop_hits / total) * 100, 1),
         'status': f'검증 완료 (독립표본 {total}건, 비용 {fee_slippage_pct}% 차감)',
@@ -374,7 +471,7 @@ def backtest_pattern_reliability(
 
 
 
-def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dict[str, Any] = None) -> Dict[str, Any]:
+def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dict[str, Any] = None, benchmark: pd.Series = None) -> Dict[str, Any]:
     """
     단일 종목에 대해 기술적/기본적/모멘텀 분석을 수행하고, AI 자가 학습 피드백(실패 페널티 및 쿨다운)을 적용합니다.
     """
@@ -415,7 +512,7 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
             primary_pattern = 'auto'
             
         # 과거 패턴 신뢰도 백테스팅 (추천 패턴과 일치하는 과거 시점만 전수 시뮬레이션)
-        bt_stats = backtest_pattern_reliability(df, pattern_type=primary_pattern, holding_days=20)
+        bt_stats = backtest_pattern_reliability(df, pattern_type=primary_pattern, holding_days=20, benchmark=benchmark)
         
         last = df.iloc[-1]
         prev = df.iloc[-2]
@@ -529,26 +626,37 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
             
         # --- [3] 시장 모멘텀 & 과거 백테스트 검증 (30점) ---
         # 1) 백테스트 신뢰도 점수 (표본 3회 이상일 때만 엄밀하게 반영, 표본 부족 시 가산점 0점)
-        # ※ 가산 기준을 '표본 승률'이 아닌 'Wilson 90% 신뢰하한'으로 변경.
-        #   3~5건짜리 우연한 100% 승률이 만점을 받아가던 소표본 과적합을 차단한다.
-        if bt_stats['sample_count'] >= 3 and bt_stats.get('win_rate_lb') is not None:
+        # ※ 가산 기준: 절대 승률이 아니라 '벤치마크(QQQ) 대비 알파'의 Wilson 90% 신뢰하한.
+        #   상승장 성장주 유니버스에서 절대 승률은 대부분 베타이므로,
+        #   그냥 지수를 산 것보다 나았는지를 기준으로 점수를 준다.
+        #   벤치마크 수집 실패 시에만 절대 승률 하한으로 폴백한다.
+        if bt_stats['sample_count'] >= 3:
             wr = bt_stats['win_rate']
-            lb = bt_stats['win_rate_lb']
             n = bt_stats['sample_count']
             avg_r = bt_stats['avg_return']
-            if lb >= 60:
+            use_alpha = bt_stats.get('alpha_win_rate_lb') is not None
+            lb = bt_stats['alpha_win_rate_lb'] if use_alpha else bt_stats.get('win_rate_lb')
+            basis = "QQQ 대비 초과수익" if use_alpha else "절대 승률"
+            excess = bt_stats.get('avg_excess_return')
+
+            if lb is None:
+                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 독립표본 {n}건이나 통계적 신뢰하한을 산출하지 못해 가산점은 부여하지 않았습니다."})
+            elif lb >= 60:
                 mom_score += 15
-                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년간 동일 패턴 독립표본 {n}건에서 승률 {wr}% (신뢰하한 {lb}%, 평균 손익 {avg_r:+.1f}%)를 기록했습니다."})
+                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 독립표본 {n}건 기준 {basis} 우위가 확인되었습니다 (승률 {wr}%, 평균 손익 {avg_r:+.1f}%, 초과수익 {excess:+.2f}%p, 신뢰하한 {lb}%)."})
                 tags.append(f"백테스트승률{int(wr)}%")
             elif lb >= 45:
                 mom_score += 10
-                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 동일 패턴 독립표본 {n}건에서 승률 {wr}% (신뢰하한 {lb}%, 평균 손익 {avg_r:+.1f}%)의 흐름을 보였습니다."})
+                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 독립표본 {n}건 기준 {basis}가 완만한 우위를 보였습니다 (승률 {wr}%, 초과수익 {excess if excess is not None else '-'}%p, 신뢰하한 {lb}%)."})
                 tags.append(f"백테스트승률{int(wr)}%")
+            elif excess is not None and excess < 0:
+                mom_score -= 5
+                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 동일 패턴의 QQQ 대비 평균 초과수익이 {excess:+.2f}%p로 열위여서 보수적 감점(-5점)이 적용되었습니다 (독립표본 {n}건)."})
             elif wr < 50:
-                mom_score -= 5  # 과거 동일 패턴 승률 저조 시 감점
+                mom_score -= 5
                 reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 동일 패턴 승률이 {wr}%(독립표본 {n}건)로 저조하여 보수적 감점(-5점)이 적용되었습니다."})
             else:
-                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 동일 패턴 승률 {wr}%(독립표본 {n}건)이나 신뢰하한 {lb}%로 표본이 얇아 가산점은 부여하지 않았습니다."})
+                reasons.append({'category': '과거 통계 검증', 'text': f"과거 2년 승률 {wr}%(독립표본 {n}건)이나 {basis} 신뢰하한 {lb}%로 표본이 얇아 가산점은 부여하지 않았습니다."})
         else:
             # 증거 부재 = 0점 (중립 가산점 완전 배제)
             mom_score += 0
@@ -714,9 +822,12 @@ def run_full_market_scan(force_refresh: bool = False) -> List[Dict[str, Any]]:
 
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
+    # 벤치마크(QQQ)는 전 종목이 공유하므로 스캔 시작 전 1회만 수집
+    benchmark_series = get_benchmark_series(period='2y')
+
     results = []
     with ThreadPoolExecutor(max_workers=10) as executor:
-        futures = {executor.submit(analyze_single_stock_advanced, item, adaptive_data): item for item in CORE_UNIVERSE}
+        futures = {executor.submit(analyze_single_stock_advanced, item, adaptive_data, benchmark_series): item for item in CORE_UNIVERSE}
 
         for future in as_completed(futures):
             try:

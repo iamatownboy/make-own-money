@@ -262,10 +262,16 @@ def predict_price_scenarios(df: pd.DataFrame, days_ahead: int = 5) -> Dict[str, 
     valid_near_s = [s for s in sorted_supports if s <= current_price * 0.985 and s >= min_safe_sl]
     if valid_near_s:
         structural_sl = round(valid_near_s[0] * 0.995, 2)
-        stop_loss = max(structural_sl, atr_sl)
+        # 구조적 지지선과 ATR 기준선 중 '더 여유 있는(먼)' 쪽을 채택한다.
+        # 기존 max()는 둘 중 타이트한 쪽을 골라, 바로 아래 지지선이 가까우면
+        # 손절선이 종목의 정상 변동폭(ATR) 안쪽에 놓여 노이즈에 확정 손절되었다.
+        # (실측: 설정 손절폭 중앙값 -2.8% vs 실제 MAE 중앙값 -8.9%, 손절 터치율 80.8%)
+        # ATR 기준선은 변동성 하한선 역할을 해야 하므로 min()이 옳다.
+        stop_loss = min(structural_sl, atr_sl)
     else:
         stop_loss = atr_sl
-        
+
+    # 최대 손실 마지노선(-8%)보다 더 내려가지 않도록 clamp
     stop_loss = max(stop_loss, min_safe_sl)
     
     # 3. 실제 동적 손익비 (Risk-Reward Ratio) 산출

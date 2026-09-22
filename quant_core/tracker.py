@@ -382,6 +382,14 @@ def evaluate_and_learn_from_history(strategy_version: str = CURRENT_STRATEGY_VER
             'win_rate': 0.0,
             'avg_return': 0.0,
             'avg_return_net': 0.0,
+            'benchmark_ticker': 'QQQ',
+            'avg_benchmark_return': None,
+            'avg_excess_return': None,
+            'alpha_win_rate': None,
+            'alpha_win_rate_lb': None,
+            'excess_tstat': None,
+            'alpha_is_significant': False,
+            'benchmark_samples': 0,
             'avg_win': 0.0,
             'avg_loss': 0.0,
             'expected_value': 0.0,
@@ -565,6 +573,58 @@ def evaluate_and_learn_from_history(strategy_version: str = CURRENT_STRATEGY_VER
     avg_return = float(np.mean(total_pnls)) if total_pnls else 0.0
     avg_return_net = float(np.mean(total_net_pnls)) if total_net_pnls else 0.0
 
+    # ── 벤치마크(QQQ) 대비 초과수익 집계 ────────────────────────────────
+    # 상승장 유니버스에서는 절대 승률 대부분이 시장 베타다.
+    # '같은 기간 그냥 지수를 샀을 때보다 나았는가'를 별도 지표로 산출한다.
+    benchmark_series = None
+    try:
+        from .screener import get_benchmark_series, benchmark_return_between, wilson_lower_bound
+        candidate = get_benchmark_series(period='2y')
+        if candidate is not None and len(candidate) >= 50:
+            benchmark_series = candidate
+    except Exception:
+        benchmark_series = None
+
+    excess_list = []
+    bench_list = []
+    if benchmark_series is not None:
+        for it in completed_items:
+            pnl = it.get('realized_pnl_pct')
+            entry_d = it.get('date')
+            exit_d = it.get('exit_date')
+            if pnl is None or not entry_d or not exit_d:
+                continue
+            b_ret = benchmark_return_between(benchmark_series, entry_d, exit_d)
+            if b_ret is None:
+                continue
+            fee = float(it.get('fee_slippage_pct', 0.25))
+            excess = (pnl - fee) - b_ret
+            it['benchmark_return_pct'] = round(b_ret, 2)
+            it['excess_return_pct'] = round(excess, 2)
+            bench_list.append(b_ret)
+            excess_list.append(excess)
+
+    if excess_list:
+        alpha_wins = sum(1 for e in excess_list if e > 0)
+        alpha_win_rate = round((alpha_wins / len(excess_list)) * 100, 1)
+        alpha_win_rate_lb = round(wilson_lower_bound(alpha_wins, len(excess_list)), 1)
+        avg_excess_return = round(float(np.mean(excess_list)), 2)
+        avg_benchmark_return = round(float(np.mean(bench_list)), 2)
+        # 초과수익의 통계적 유의성 (|t| > 1.96 이면 95% 유의)
+        if len(excess_list) >= 2:
+            se = float(np.std(excess_list, ddof=1)) / np.sqrt(len(excess_list))
+            excess_tstat = round(avg_excess_return / se, 2) if se > 0 else 0.0
+        else:
+            excess_tstat = 0.0
+        alpha_is_significant = bool(abs(excess_tstat) > 1.96)
+    else:
+        alpha_win_rate = None
+        alpha_win_rate_lb = None
+        avg_excess_return = None
+        avg_benchmark_return = None
+        excess_tstat = None
+        alpha_is_significant = False
+
     # 팩터별 승률 집계 (1추천당 중복 태그 set으로 원천 제거)
     factor_hits = {}
     for it in completed_items:
@@ -650,6 +710,14 @@ def evaluate_and_learn_from_history(strategy_version: str = CURRENT_STRATEGY_VER
         'win_rate': round(win_rate, 1),
         'avg_return': round(avg_return, 1),
         'avg_return_net': round(avg_return_net, 1),
+        'benchmark_ticker': 'QQQ',
+        'avg_benchmark_return': avg_benchmark_return,
+        'avg_excess_return': avg_excess_return,
+        'alpha_win_rate': alpha_win_rate,
+        'alpha_win_rate_lb': alpha_win_rate_lb,
+        'excess_tstat': excess_tstat,
+        'alpha_is_significant': alpha_is_significant,
+        'benchmark_samples': len(excess_list),
         'avg_win': round(avg_win, 2),
         'avg_loss': round(avg_loss, 2),
         'expected_value': expected_value,

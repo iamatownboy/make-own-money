@@ -1231,3 +1231,97 @@ def test_52week_high_window_is_bounded():
     assert two_year_high > 400.0
     assert high_52 < 200.0          # 52주 윈도우에는 과거 초고점이 포함되면 안 된다
     assert high_52 < two_year_high
+
+
+# ============================================================================
+# 벤치마크 대비 평가 & 손절선 배치 회귀 테스트 (우선순위 6 + 배리어 버그)
+# ============================================================================
+
+from quant_core.screener import benchmark_return_between, backtest_pattern_reliability as _bt
+
+
+# 30. 손절선이 ATR 변동폭 안쪽으로 들어오지 않아야 함
+def test_stop_loss_not_inside_atr_noise():
+    from quant_core.indicators import calculate_all_indicators
+
+    df = calculate_all_indicators(make_dummy_ohlcv(days=200, base_price=100.0))
+    sc = predict_price_scenarios(df, days_ahead=5)
+
+    cp = sc['current_price']
+    atr = sc['atr']
+    sl = sc['stop_loss']
+
+    # 손절선은 ATR*1.5 기준선보다 타이트해서는 안 된다 (-8% 마지노선 clamp는 예외)
+    atr_floor = cp - (atr * 1.5)
+    min_safe = cp * 0.92
+    assert sl <= atr_floor + 0.01 or sl == pytest.approx(round(min_safe, 2), abs=0.02)
+    # 손절선은 항상 현재가 아래, -8%보다 깊지 않아야 한다
+    assert sl < cp
+    assert sl >= round(min_safe, 2) - 0.01
+
+
+# 31. 벤치마크 구간 수익률 계산 (거래일 불일치 시 직전 값 사용)
+def test_benchmark_return_between_handles_missing_dates():
+    idx = pd.to_datetime(['2026-01-05', '2026-01-06', '2026-01-08', '2026-01-09'])
+    series = pd.Series([100.0, 102.0, 105.0, 110.0], index=idx)
+
+    assert benchmark_return_between(series, '2026-01-05', '2026-01-09') == pytest.approx(10.0)
+    # 1/07은 휴장 -> 직전 거래일(1/06) 값 사용
+    assert benchmark_return_between(series, '2026-01-05', '2026-01-07') == pytest.approx(2.0)
+    # 시리즈 범위 밖 시작일 -> None
+    assert benchmark_return_between(series, '2026-01-01', '2026-01-09') is None
+    assert benchmark_return_between(None, '2026-01-05', '2026-01-09') is None
+
+
+# 32. 백테스트에 벤치마크를 주면 초과수익/알파 승률이 산출되어야 함
+def test_backtest_reports_alpha_when_benchmark_given(monkeypatch):
+    import quant_core.screener as sm
+
+    df = make_dummy_ohlcv(days=200, base_price=100.0)
+    monkeypatch.setattr(sm, 'evaluate_pattern_match', lambda s, p='auto': True)
+    monkeypatch.setattr(
+        sm, 'predict_price_scenarios',
+        lambda s, days_ahead=5: {
+            'bull_target_1': float(s['Close'].iloc[-1]) * 1.06,
+            'stop_loss': float(s['Close'].iloc[-1]) * 0.95,
+        }
+    )
+
+    # 벤치마크가 없으면 알파 지표는 None
+    no_bm = _bt(df, pattern_type='auto', holding_days=20)
+    assert no_bm['sample_count'] > 0
+    assert no_bm['alpha_win_rate'] is None
+    assert no_bm['benchmark_samples'] == 0
+
+    # 전 구간 보합인 벤치마크 -> 초과수익이 전략 순수익과 같아야 함
+    flat_bm = pd.Series(100.0, index=pd.to_datetime(df.index).normalize())
+    with_bm = _bt(df, pattern_type='auto', holding_days=20, benchmark=flat_bm)
+    assert with_bm['benchmark_samples'] == with_bm['sample_count']
+    assert with_bm['avg_benchmark_return'] == pytest.approx(0.0, abs=1e-6)
+    assert with_bm['avg_excess_return'] == pytest.approx(with_bm['avg_return'], abs=0.05)
+    assert with_bm['alpha_win_rate'] is not None
+    assert 0.0 <= with_bm['alpha_win_rate_lb'] <= with_bm['alpha_win_rate'] + 1e-6
+
+
+# 33. triple-barrier가 청산 시점 오프셋을 반환해야 함 (벤치마크 정렬용)
+def test_triple_barrier_reports_exit_offset():
+    bars = pd.DataFrame({
+        'Open': [100.0, 101.0, 104.0],
+        'High': [102.0, 103.0, 112.0],
+        'Low': [99.0, 100.0, 103.0],
+        'Close': [101.0, 102.0, 111.0],
+    })
+    res = resolve_triple_barrier(100.0, 110.0, 95.0, bars, fee_slippage_pct=0.25)
+    assert res['outcome'] == 'TARGET'
+    assert res['exit_offset'] == 3
+
+    # 배리어 미도달 -> 마지막 봉까지 보유
+    flat = pd.DataFrame({
+        'Open': [100.0, 100.0],
+        'High': [101.0, 101.0],
+        'Low': [99.0, 99.0],
+        'Close': [100.0, 100.0],
+    })
+    res2 = resolve_triple_barrier(100.0, 110.0, 95.0, flat, fee_slippage_pct=0.25)
+    assert res2['outcome'] == 'TIME'
+    assert res2['exit_offset'] == 2
