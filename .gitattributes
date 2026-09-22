@@ -1,0 +1,6 @@
+# 스크립트가 생성하는 파일 — 충돌 시 원격(봇이 올린) 버전을 채택한다.
+# 사용하려면 로컬에서 1회 등록 필요 (docs/GIT_WORKFLOW.md 참고):
+#   git config merge.keep-remote.name "generated file: keep incoming version"
+#   git config merge.keep-remote.driver 'cp -f "%B" "%A"'
+daily_recommendations.json   merge=keep-remote
+recommendation_history.json  merge=keep-remote
