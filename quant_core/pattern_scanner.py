@@ -17,6 +17,8 @@ import os
 import json
 import time
 import pickle
+import hashlib
+from collections import Counter
 import urllib.request
 from datetime import datetime
 from typing import Any, Dict, List, Optional
@@ -34,6 +36,9 @@ UNIVERSE_URL = 'https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt'
 UNIVERSE_CACHE = os.path.join(ROOT, 'data', 'universes', 'nasdaq_listed.csv')
 SETUPS_FILE = os.path.join(ROOT, 'pattern_setups.json')
 HISTORY_FILE = os.path.join(ROOT, 'pattern_history.json')
+PLACEBO_FILE = os.path.join(ROOT, 'pattern_placebo.json')
+PLACEBO_PER_REC = 3        # 진짜 추천 1건당 무작위 비교군 수
+PLACEBO_VOL_BAND = (0.67, 1.5)   # 비교군은 변동성이 진짜 추천의 0.67~1.5배인 종목 중에서만 뽑는다
 BENCHMARK = 'QQQ'
 
 MIN_PRICE = 5.0
@@ -243,8 +248,107 @@ def evaluate_history(full: Dict[str, pd.DataFrame], bench: Optional[pd.Series],
     return hist
 
 
-def history_summary(hist: Optional[List[Dict[str, Any]]] = None) -> Dict[str, Any]:
-    """추천 성적 요약. 적중률 = 결과가 난 추천 중 1차 목표에 손절보다 먼저 닿은 비율."""
+def _stable_seed(text: str) -> int:
+    return int(hashlib.md5(text.encode('utf-8')).hexdigest()[:8], 16)
+
+
+def _recent_vol(df: pd.DataFrame, asof: pd.Timestamp, days: int = 60) -> Optional[float]:
+    """추천일까지 최근 N거래일 일간 수익률 표준편차 (그 시점 정보만 사용)."""
+    c = df['Close'].loc[:asof].tail(days + 1)
+    if len(c) < days // 2:
+        return None
+    v = float(c.pct_change().dropna().std())
+    return v if v > 0 else None
+
+
+def ensure_placebos(hist: List[Dict[str, Any]], full: Dict[str, pd.DataFrame],
+                    pool: List[str]) -> List[Dict[str, Any]]:
+    """
+    무작위 비교군(위약): 진짜 추천 1건마다 같은 날 무작위 종목 PLACEBO_PER_REC 개에
+    '같은 모양의 가격표'를 붙인다. 가격표는 진짜 추천의 스윙 저점·고점을 그 종목의 추천일 종가에 맞춰
+    비율 그대로 옮긴 것(매수 구간·손절·목표까지의 거리 % 가 동일).
+
+    - 추천일 종가를 기준으로 만들기 때문에 나중에 만들어도 추천 당시 정보만 쓴다.
+    - 무작위 선택은 추천 ID 로 시드를 고정 -> 다시 돌려도 같은 종목. 결과를 보고 고를 수 없다.
+    - 차이 = '패턴 구간에 들어온 종목을 골랐다'는 것의 효과. 같은 날·같은 시장 조건끼리 비교된다.
+    - 변동성이 비슷한 종목(PLACEBO_VOL_BAND)에서만 뽑는다. 변동성이 낮은 종목에 같은 % 손절·목표를 붙이면
+      어느 쪽에도 잘 닿지 않아 비교가 기울기 때문이다.
+    """
+    pl = _load_json(PLACEBO_FILE, [])
+    have = Counter(p['rec_id'] for p in pl)
+    pool = sorted(set(pool))
+    for h in hist:
+        need = PLACEBO_PER_REC - have.get(h['id'], 0)
+        if need <= 0:
+            continue
+        rng = np.random.default_rng(_stable_seed(h['id']))
+        rec_date = pd.Timestamp(h['rec_date'])
+        own = full.get(h['ticker'])
+        own_vol = _recent_vol(own, rec_date) if own is not None and not own.empty else None
+        cands = [t for t in pool if t != h['ticker']]
+        order = rng.permutation(len(cands))
+        k = have.get(h['id'], 0)
+        for j in order:
+            if need <= 0:
+                break
+            t = cands[j]
+            df = full.get(t)
+            if df is None or df.empty:
+                continue
+            base = df.loc[:rec_date]
+            if base.empty or (rec_date - base.index[-1]).days > 5:
+                continue
+            if own_vol is not None:
+                v = _recent_vol(df, rec_date)
+                if v is None or not (PLACEBO_VOL_BAND[0] * own_vol <= v <= PLACEBO_VOL_BAND[1] * own_vol):
+                    continue
+            p = float(base['Close'].iloc[-1])
+            f = p / float(h['price'])
+            pl.append({'id': f"{h['id']}#p{k}", 'rec_id': h['id'], 'ticker': t, 'tf': h['tf'],
+                       'rec_date': h['rec_date'], 'price': p,
+                       'L': float(h['L']) * f, 'H': float(h['H']) * f})
+            k += 1
+            need -= 1
+    _save_json(PLACEBO_FILE, pl)
+    return pl
+
+
+def evaluate_placebos(full: Dict[str, pd.DataFrame], bench: Optional[pd.Series],
+                      fetch_missing: bool = True) -> List[Dict[str, Any]]:
+    pl = _load_json(PLACEBO_FILE, [])
+    need = [p['ticker'] for p in pl if not p.get('eval', {}).get('finished') and p['ticker'] not in full]
+    extra = download_daily(sorted(set(need)), '4y', verbose=False) if (need and fetch_missing) else {}
+    for p in pl:
+        if p.get('eval', {}).get('finished'):
+            continue
+        df = full.get(p['ticker'])
+        if df is None or df.empty:
+            df = extra.get(p['ticker'])
+        if df is None or df.empty:
+            continue
+        try:
+            p['eval'] = evaluate_recommendation(p, df, bench)
+        except Exception as exc:
+            p['eval'] = {'result': f'채점 오류: {exc}'}
+    _save_json(PLACEBO_FILE, pl)
+    return pl
+
+
+def _hit_stats(items: List[Dict[str, Any]]) -> Dict[str, Any]:
+    res = [(i.get('eval') or {}).get('result', '진행 중') for i in items]
+    hit, stop = res.count('적중'), res.count('손절')
+    dec = hit + stop
+    return {'decided': dec, 'hit': hit, 'stop': stop,
+            'hit_rate': round(hit / dec * 100, 1) if dec else None}
+
+
+def history_summary(hist: Optional[List[Dict[str, Any]]] = None,
+                    placebo: Optional[List[Dict[str, Any]]] = None) -> Dict[str, Any]:
+    """
+    추천 성적 요약. 적중률 = 결과가 난 추천 중 1차 목표에 손절보다 먼저 닿은 비율.
+    hist 를 직접 넘기면 비교군도 넘긴 것만 쓴다(파일을 읽지 않음).
+    """
+    from_file = hist is None
     hist = hist if hist is not None else _load_json(HISTORY_FILE, [])
     rows = []
     for h in hist:
@@ -276,6 +380,17 @@ def history_summary(hist: Optional[List[Dict[str, Any]]] = None) -> Dict[str, An
         by_tf[tf] = {'total': int(len(g)), 'decided': int(len(dg)),
                      'hit_rate': round(float((dg.result == '적중').mean() * 100), 1) if len(dg) else None}
     out['by_tf'] = by_tf
+
+    # 무작위 비교군 (같은 날짜들의 위약)
+    if placebo is None:
+        placebo = _load_json(PLACEBO_FILE, []) if from_file else []
+    if placebo:
+        b = _hit_stats(placebo)
+        out['baseline'] = {'total': len(placebo), **b}
+        # 공정 비교: 진짜 추천이 결과 난 날짜들에 한정한 비교군 적중률
+        decided_ids = {h.get('id') for h in hist if (h.get('eval') or {}).get('result') in ('적중', '손절')}
+        matched = [p for p in placebo if p['rec_id'] in decided_ids]
+        out['baseline_matched'] = _hit_stats(matched)
     return out
 
 
@@ -311,7 +426,9 @@ def run_pattern_scan(cache_dir: Optional[str] = None, verbose: bool = True) -> D
 
     added = append_history(res['setups'], rec_date)
     hist = evaluate_history(full, bench)
-    summary = history_summary(hist)
+    ensure_placebos(hist, full, list(full.keys()))
+    placebo = evaluate_placebos(full, bench)
+    summary = history_summary(hist, placebo)
     if verbose:
         print(f"  [4/4] 새 추천 기록 {added}개, 누적 {summary['total']}개 채점 완료")
 

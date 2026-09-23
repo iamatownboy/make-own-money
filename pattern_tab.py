@@ -125,9 +125,15 @@ def _score_line(summary):
         return '추천 기록을 쌓기 시작했습니다. 결과가 나오면 여기에 적중률이 표시됩니다.'
     decided = summary.get('decided', 0)
     if not decided:
-        return f'지금까지 추천 <b>{summary["total"]}건</b> · 아직 결과가 난 추천이 없습니다 (모두 진행 중).'
+        return (f'지금까지 추천 <b>{summary["total"]}건</b> · 아직 결과가 난 추천이 없습니다. '
+                f'같은 날 무작위 종목 비교군도 함께 기록 중입니다.')
     line = (f'지금까지 추천 <b>{summary["total"]}건</b> · 결과 난 {decided}건 중 '
             f'<b>1차 목표 먼저 {summary["hit_rate"]}%</b> (적중 {summary["hit"]} · 손절 {summary["stop"]})')
+    bm = summary.get('baseline_matched') or {}
+    if bm.get('hit_rate') is not None:
+        diff = summary['hit_rate'] - bm['hit_rate']
+        line += (f'<br>같은 날 무작위 종목 비교군 <b>{bm["hit_rate"]}%</b> ({bm["decided"]}건) → '
+                 f'차이 <b>{diff:+.1f}%p</b>')
     if summary.get('avg_excess') is not None:
         line += f' · 끝난 추천의 QQQ 대비 평균 {summary["avg_excess"]:+.1f}%p'
     return line

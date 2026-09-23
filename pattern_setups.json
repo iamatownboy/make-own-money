@@ -1,7 +1,7 @@
 {
  "date": "2026-09-22",
- "generated_at": "2026-09-23 06:19:11",
- "universe": 3125,
+ "generated_at": "2026-09-23 11:18:32",
+ "universe": 3124,
  "liquid": 1017,
  "setups": [
   {
@@ -1432,7 +1432,20 @@
     "decided": 0,
     "hit_rate": null
    }
+  },
+  "baseline": {
+   "total": 105,
+   "decided": 0,
+   "hit": 0,
+   "stop": 0,
+   "hit_rate": null
+  },
+  "baseline_matched": {
+   "decided": 0,
+   "hit": 0,
+   "stop": 0,
+   "hit_rate": null
   }
  },
- "elapsed_sec": 9.7
+ "elapsed_sec": 12.6
 }

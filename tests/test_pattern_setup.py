@@ -143,3 +143,58 @@ def test_history_summary_counts():
     assert s['hit_rate'] == pytest.approx(66.7, abs=0.1)
     assert s['by_tf']['1d']['hit_rate'] == 50.0
     assert s['avg_ret'] == pytest.approx(1.0, abs=1e-6)
+
+
+# 10. 무작위 비교군: 같은 모양의 가격표, 재현 가능, 변동성 비슷한 종목만
+def test_placebos_same_geometry_deterministic_and_vol_matched(tmp_path, monkeypatch):
+    import quant_core.pattern_scanner as ps
+    monkeypatch.setattr(ps, 'PLACEBO_FILE', str(tmp_path / 'placebo.json'))
+
+    idx = pd.bdate_range('2026-01-01', '2026-09-22')
+    r = np.random.default_rng(0)
+
+    def series(vol, start=50.0):
+        c = start * np.exp(np.cumsum(r.normal(0, vol, len(idx))))
+        return pd.DataFrame({'Open': c, 'High': c * 1.01, 'Low': c * 0.99, 'Close': c, 'Volume': 1e6}, index=idx)
+
+    full = {'REAL': series(0.03)}
+    for i in range(10):
+        full[f'SIM{i}'] = series(0.03)      # 비슷한 변동성
+        full[f'CALM{i}'] = series(0.003)    # 10분의 1 변동성 -> 제외되어야 함
+
+    hist = [{'id': 'REAL|1d|2026-03-01|2026-06-01', 'ticker': 'REAL', 'tf': '1d',
+             'rec_date': '2026-09-22', 'price': 20.0, 'L': 15.0, 'H': 40.0}]
+    pl = ps.ensure_placebos(hist, full, list(full.keys()))
+
+    assert len(pl) == ps.PLACEBO_PER_REC
+    assert all(p['ticker'].startswith('SIM') for p in pl)          # 변동성 비슷한 종목만
+    for p in pl:
+        f = p['price'] / 20.0
+        assert p['L'] == pytest.approx(15.0 * f)                    # 손절까지 거리 % 동일
+        assert p['H'] == pytest.approx(40.0 * f)
+
+    # 같은 입력이면 같은 비교군 (결과를 보고 고를 수 없음)
+    os.remove(ps.PLACEBO_FILE)
+    pl2 = ps.ensure_placebos(hist, full, list(full.keys()))
+    assert [p['ticker'] for p in pl] == [p['ticker'] for p in pl2]
+    # 이미 있으면 더 만들지 않음
+    assert len(ps.ensure_placebos(hist, full, list(full.keys()))) == ps.PLACEBO_PER_REC
+
+
+# 11. 요약: 결과 난 추천과 같은 날짜의 비교군끼리 비교
+def test_history_summary_includes_matched_baseline():
+    hist = [
+        {'id': 'A', 'tf': '1d', 'eval': {'result': '적중'}},
+        {'id': 'B', 'tf': '1d', 'eval': {'result': '손절'}},
+        {'id': 'C', 'tf': '1d', 'eval': {'result': '진행 중'}},
+    ]
+    placebo = [
+        {'rec_id': 'A', 'eval': {'result': '손절'}}, {'rec_id': 'A', 'eval': {'result': '적중'}},
+        {'rec_id': 'B', 'eval': {'result': '손절'}},
+        {'rec_id': 'C', 'eval': {'result': '적중'}},     # 진짜 추천이 아직 진행 중 -> 비교에서 제외
+    ]
+    s = history_summary(hist, placebo)
+    assert s['hit_rate'] == 50.0
+    assert s['baseline']['decided'] == 4
+    assert s['baseline_matched']['decided'] == 3
+    assert s['baseline_matched']['hit_rate'] == pytest.approx(33.3, abs=0.1)
