@@ -21,8 +21,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.03663920152514155,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 16.84727006530762
   }
  },
  {
@@ -47,8 +53,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": 0.012406131213630989,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 91.88999938964844
   }
  },
  {
@@ -70,8 +82,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": 0.03555769692259103,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 20.530000686645508
   }
  },
  {
@@ -93,8 +111,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.0008946957047633042,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 6.736026713240994
   }
  },
  {
@@ -116,8 +140,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.023760722752094843,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 59.32971507992008
   }
  },
  {
@@ -141,8 +171,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.009128034432957177,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 31.810366579223817
   }
  },
  {
@@ -166,8 +202,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.003539009087098477,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 19.780000686645508
   }
  },
  {
@@ -191,8 +233,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": 0.004583730708598521,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 49.31395900726318
   }
  },
  {
@@ -214,8 +262,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.01724507882137305,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 46.970001220703125
   }
  },
  {
@@ -239,8 +293,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.015021394230965934,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 9.319999694824219
   }
  },
  {
@@ -262,8 +322,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": 0.029786037296286372,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 108.51768809509278
   }
  },
  {
@@ -289,8 +355,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.011723957283080066,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 14.631539583206177
   }
  },
  {
@@ -315,8 +387,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": 0.012406131213630989,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 91.88999938964844
   }
  },
  {
@@ -341,8 +419,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.013411781642535203,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 65.51872218509283
   }
  },
  {
@@ -367,8 +451,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": 0.004552792303136544,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 129.58999633789062
   }
  },
  {
@@ -392,8 +482,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.004228566972527603,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 165.5399932861328
   }
  },
  {
@@ -416,9 +512,15 @@
   ],
   "rec_date": "2026-09-22",
   "eval": {
-   "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "result": "손절",
+   "finished": true,
+   "targets_hit": 0,
+   "ret": -0.05142335673759235,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": "2026-09-23",
+   "last_date": "2026-09-23",
+   "entry_price": 39.24827772924331
   }
  },
  {
@@ -440,8 +542,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.039833799783148716,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 30.567625037041605
   }
  },
  {
@@ -463,8 +571,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.08178231972142325,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 16.02016640943368
   }
  },
  {
@@ -487,9 +601,15 @@
   ],
   "rec_date": "2026-09-22",
   "eval": {
-   "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "result": "손절",
+   "finished": true,
+   "targets_hit": 0,
+   "ret": -0.03540238124128314,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": "2026-09-23",
+   "last_date": "2026-09-23",
+   "entry_price": 39.89228129316133
   }
  },
  {
@@ -514,8 +634,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.008913781342660632,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 66.30099162663404
   }
  },
  {
@@ -539,8 +665,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": 0.059059540649906594,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 44.869998931884766
   }
  },
  {
@@ -562,8 +694,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.006725137292053374,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 9.342831557894561
   }
  },
  {
@@ -585,8 +723,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.01797380044676211,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 6.119999885559082
   }
  },
  {
@@ -610,9 +754,15 @@
   ],
   "rec_date": "2026-09-22",
   "eval": {
-   "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "result": "적중",
+   "finished": false,
+   "targets_hit": 3,
+   "ret": 0.3680624576267699,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": "2026-09-23",
+   "last_date": "2026-09-23",
+   "entry_price": 30.50482007598877
   }
  },
  {
@@ -634,8 +784,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.013917236134877276,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 11.1451088831945
   }
  },
  {
@@ -657,8 +813,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": 0.03555769692259103,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 20.530000686645508
   }
  },
  {
@@ -680,8 +842,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.023760722752094843,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 59.32971507992008
   }
  },
  {
@@ -705,8 +873,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.022954906141604337,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 32.147953093313824
   }
  },
  {
@@ -730,8 +904,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.009128034432957177,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 31.810366579223817
   }
  },
  {
@@ -778,8 +958,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.003539009087098477,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 19.780000686645508
   }
  },
  {
@@ -803,8 +989,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": 0.0407225818375474,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 191.5399932861328
   }
  },
  {
@@ -829,8 +1021,14 @@
   "rec_date": "2026-09-22",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.050875942519157724,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 17.09997698858658
   }
  },
  {
@@ -850,6 +1048,672 @@
   "t1": 339.72,
   "signals": [],
   "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "finished": false,
+   "targets_hit": 0,
+   "ret": 0.048118015378417534,
+   "bench_ret": -0.008361651213807164,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-23",
+   "entry_price": 294.8999938964844
+  }
+ },
+ {
+  "id": "ALKT|1w|2026-06-26|2026-08-14",
+  "ticker": "ALKT",
+  "name": "Alkami Technology, Inc.",
+  "tf": "1w",
+  "price": 14.6,
+  "L": 13.979999542236328,
+  "H": 21.049999237060547,
+  "L_date": "2026-06-26",
+  "H_date": "2026-08-14",
+  "entry_date": "2026-09-23",
+  "buy_high": 15.493,
+  "buy_low": 14.786,
+  "stop": 13.98,
+  "t1": 17.515,
+  "signals": [
+   "RSI 과매도 25"
+  ],
+  "earnings_date": "2026-10-28",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "CYTK|1w|2026-03-13|2026-07-02",
+  "ticker": "CYTK",
+  "name": "Cytokinetics, Incorporated",
+  "tf": "1w",
+  "price": 65.81,
+  "L": 58.43000030517578,
+  "H": 88.30999755859375,
+  "L_date": "2026-03-13",
+  "H_date": "2026-07-02",
+  "entry_date": "2026-09-23",
+  "buy_high": 64.8243,
+  "buy_low": 61.8363,
+  "stop": 58.43,
+  "t1": 73.37,
+  "signals": [
+   "RSI 과매도 30"
+  ],
+  "earnings_date": "2026-11-05",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "SFD|1w|2025-03-14|2026-04-10",
+  "ticker": "SFD",
+  "name": "Smithfield Foods, Inc.",
+  "tf": "1w",
+  "price": 18.93,
+  "L": 16.971308375723062,
+  "H": 29.030089888777013,
+  "L_date": "2025-03-14",
+  "H_date": "2026-04-10",
+  "entry_date": "2026-09-23",
+  "buy_high": 19.5519,
+  "buy_low": 18.346,
+  "stop": 16.9713,
+  "t1": 23.0007,
+  "signals": [
+   "RSI 과매도 17"
+  ],
+  "earnings_date": "2026-10-27",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "STAA|1w|2026-02-20|2026-05-15",
+  "ticker": "STAA",
+  "name": "STAAR Surgical Company",
+  "tf": "1w",
+  "price": 19.8,
+  "L": 15.59000015258789,
+  "H": 35.869998931884766,
+  "L_date": "2026-02-20",
+  "H_date": "2026-05-15",
+  "entry_date": "2026-09-23",
+  "buy_high": 19.9299,
+  "buy_low": 17.9019,
+  "stop": 15.59,
+  "t1": 25.73,
+  "signals": [
+   "RSI 과매도 28"
+  ],
+  "earnings_date": "2026-11-11",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "TRUP|1w|2026-05-22|2026-08-28",
+  "ticker": "TRUP",
+  "name": "Trupanion, Inc.",
+  "tf": "1w",
+  "price": 22.88,
+  "L": 21.15999984741211,
+  "H": 32.09000015258789,
+  "L_date": "2026-05-22",
+  "H_date": "2026-08-28",
+  "entry_date": "2026-09-23",
+  "buy_high": 23.499,
+  "buy_low": 22.406,
+  "stop": 21.16,
+  "t1": 26.625,
+  "signals": [
+   "RSI 과매도 30"
+  ],
+  "earnings_date": "2026-11-05",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "ALOY|1w|2026-07-24|2026-08-14",
+  "ticker": "ALOY",
+  "name": "REalloys Inc.",
+  "tf": "1w",
+  "price": 8.67,
+  "L": 6.824999809265137,
+  "H": 15.350000381469727,
+  "L_date": "2026-07-24",
+  "H_date": "2026-08-14",
+  "entry_date": "2026-09-11",
+  "buy_high": 8.6493,
+  "buy_low": 7.7968,
+  "stop": 6.825,
+  "t1": 11.0875,
+  "signals": [],
+  "earnings_date": null,
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "ALKT|1d|2026-06-22|2026-08-14",
+  "ticker": "ALKT",
+  "name": "Alkami Technology, Inc.",
+  "tf": "1d",
+  "price": 14.6,
+  "L": 13.979999542236328,
+  "H": 21.049999237060547,
+  "L_date": "2026-06-22",
+  "H_date": "2026-08-14",
+  "entry_date": "2026-09-23",
+  "buy_high": 15.493,
+  "buy_low": 14.786,
+  "stop": 13.98,
+  "t1": 17.515,
+  "signals": [
+   "RSI 과매도 25"
+  ],
+  "earnings_date": "2026-10-28",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "BCAX|1d|2026-05-19|2026-07-07",
+  "ticker": "BCAX",
+  "name": "Bicara Therapeutics Inc.",
+  "tf": "1d",
+  "price": 20.485,
+  "L": 18.6200008392334,
+  "H": 30.989999771118164,
+  "L_date": "2026-05-19",
+  "H_date": "2026-07-07",
+  "entry_date": "2026-09-23",
+  "buy_high": 21.2672,
+  "buy_low": 20.0302,
+  "stop": 18.62,
+  "t1": 24.805,
+  "signals": [],
+  "earnings_date": "2026-11-10",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "CHTR|1d|2026-07-24|2026-09-03",
+  "ticker": "CHTR",
+  "name": "Charter Communications, Inc.",
+  "tf": "1d",
+  "price": 116.61,
+  "L": 111.55000305175781,
+  "H": 160.6999969482422,
+  "L_date": "2026-07-24",
+  "H_date": "2026-09-03",
+  "entry_date": "2026-09-23",
+  "buy_high": 122.0681,
+  "buy_low": 117.1531,
+  "stop": 111.55,
+  "t1": 136.125,
+  "signals": [
+   "반전 캔들"
+  ],
+  "earnings_date": "2026-10-30",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "DAVE|1d|2026-08-11|2026-09-04",
+  "ticker": "DAVE",
+  "name": "Dave Inc.",
+  "tf": "1d",
+  "price": 326.19,
+  "L": 302.1650085449219,
+  "H": 394.989990234375,
+  "L_date": "2026-08-11",
+  "H_date": "2026-09-04",
+  "entry_date": "2026-09-23",
+  "buy_high": 322.0296,
+  "buy_low": 312.7471,
+  "stop": 302.165,
+  "t1": 348.5775,
+  "signals": [
+   "200일선 위"
+  ],
+  "earnings_date": "2026-11-04",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "EVER|1d|2026-05-14|2026-07-21",
+  "ticker": "EVER",
+  "name": "EverQuote, Inc.",
+  "tf": "1d",
+  "price": 17.63,
+  "L": 17.25,
+  "H": 28.295000076293945,
+  "L_date": "2026-05-14",
+  "H_date": "2026-07-21",
+  "entry_date": "2026-09-23",
+  "buy_high": 19.6136,
+  "buy_low": 18.5091,
+  "stop": 17.25,
+  "t1": 22.7725,
+  "signals": [
+   "RSI 과매도 22"
+  ],
+  "earnings_date": "2026-11-02",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "FTDR|1d|2026-07-23|2026-08-07",
+  "ticker": "FTDR",
+  "name": "Frontdoor, Inc.",
+  "tf": "1d",
+  "price": 73.95,
+  "L": 69.95999908447266,
+  "H": 93.43000030517578,
+  "L_date": "2026-07-23",
+  "H_date": "2026-08-07",
+  "entry_date": "2026-09-23",
+  "buy_high": 74.9826,
+  "buy_low": 72.6356,
+  "stop": 69.96,
+  "t1": 81.695,
+  "signals": [
+   "200일선 위"
+  ],
+  "earnings_date": "2026-11-04",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "MBLY|1d|2026-07-23|2026-08-17",
+  "ticker": "MBLY",
+  "name": "Mobileye Global Inc.",
+  "tf": "1d",
+  "price": 7.61,
+  "L": 7.099999904632568,
+  "H": 9.430000305175781,
+  "L_date": "2026-07-23",
+  "H_date": "2026-08-17",
+  "entry_date": "2026-09-23",
+  "buy_high": 7.5986,
+  "buy_low": 7.3656,
+  "stop": 7.1,
+  "t1": 8.265,
+  "signals": [
+   "반전 캔들"
+  ],
+  "earnings_date": "2026-10-29",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "NKTR|1d|2026-06-09|2026-09-08",
+  "ticker": "NKTR",
+  "name": "Nektar Therapeutics",
+  "tf": "1d",
+  "price": 57.66,
+  "L": 54.130001068115234,
+  "H": 77.76000213623047,
+  "L_date": "2026-06-09",
+  "H_date": "2026-09-08",
+  "entry_date": "2026-09-23",
+  "buy_high": 59.1868,
+  "buy_low": 56.8238,
+  "stop": 54.13,
+  "t1": 65.945,
+  "signals": [
+   "RSI 과매도 25"
+  ],
+  "earnings_date": "2026-11-12",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "PRCT|1d|2026-07-24|2026-08-11",
+  "ticker": "PRCT",
+  "name": "PROCEPT BioRobotics Corporation",
+  "tf": "1d",
+  "price": 18.09,
+  "L": 16.665000915527344,
+  "H": 22.93000030517578,
+  "L_date": "2026-07-24",
+  "H_date": "2026-08-11",
+  "entry_date": "2026-09-23",
+  "buy_high": 18.0057,
+  "buy_low": 17.3792,
+  "stop": 16.665,
+  "t1": 19.7975,
+  "signals": [],
+  "earnings_date": "2026-11-04",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "ROOT|1d|2026-08-06|2026-08-27",
+  "ticker": "ROOT",
+  "name": "Root, Inc.",
+  "tf": "1d",
+  "price": 46.76,
+  "L": 45.13999938964844,
+  "H": 58.84000015258789,
+  "L_date": "2026-08-06",
+  "H_date": "2026-08-27",
+  "entry_date": "2026-09-23",
+  "buy_high": 48.0718,
+  "buy_low": 46.7018,
+  "stop": 45.14,
+  "t1": 51.99,
+  "signals": [],
+  "earnings_date": "2026-11-04",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "SFD|1d|2025-03-10|2026-04-10",
+  "ticker": "SFD",
+  "name": "Smithfield Foods, Inc.",
+  "tf": "1d",
+  "price": 18.93,
+  "L": 16.971308375723062,
+  "H": 29.030089888777013,
+  "L_date": "2025-03-10",
+  "H_date": "2026-04-10",
+  "entry_date": "2026-09-23",
+  "buy_high": 19.5519,
+  "buy_low": 18.346,
+  "stop": 16.9713,
+  "t1": 23.0007,
+  "signals": [
+   "RSI 과매도 17"
+  ],
+  "earnings_date": "2026-10-27",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "STAA|1d|2026-02-17|2026-05-14",
+  "ticker": "STAA",
+  "name": "STAAR Surgical Company",
+  "tf": "1d",
+  "price": 19.8,
+  "L": 15.59000015258789,
+  "H": 35.869998931884766,
+  "L_date": "2026-02-17",
+  "H_date": "2026-05-14",
+  "entry_date": "2026-09-23",
+  "buy_high": 19.9299,
+  "buy_low": 17.9019,
+  "stop": 15.59,
+  "t1": 25.73,
+  "signals": [
+   "RSI 과매도 28"
+  ],
+  "earnings_date": "2026-11-11",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "TRUP|1d|2026-05-21|2026-08-25",
+  "ticker": "TRUP",
+  "name": "Trupanion, Inc.",
+  "tf": "1d",
+  "price": 22.88,
+  "L": 21.15999984741211,
+  "H": 32.09000015258789,
+  "L_date": "2026-05-21",
+  "H_date": "2026-08-25",
+  "entry_date": "2026-09-23",
+  "buy_high": 23.499,
+  "buy_low": 22.406,
+  "stop": 21.16,
+  "t1": 26.625,
+  "signals": [
+   "RSI 과매도 30"
+  ],
+  "earnings_date": "2026-11-05",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "VITL|1d|2026-09-11|2026-09-21",
+  "ticker": "VITL",
+  "name": "Vital Farms, Inc.",
+  "tf": "1d",
+  "price": 10.31,
+  "L": 9.470000267028809,
+  "H": 12.604999542236328,
+  "L_date": "2026-09-11",
+  "H_date": "2026-09-21",
+  "entry_date": "2026-09-23",
+  "buy_high": 10.1409,
+  "buy_low": 9.8274,
+  "stop": 9.47,
+  "t1": 11.0375,
+  "signals": [],
+  "earnings_date": "2026-11-05",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "VRSK|1d|2026-05-14|2026-07-29",
+  "ticker": "VRSK",
+  "name": "Verisk Analytics, Inc.",
+  "tf": "1d",
+  "price": 171.8,
+  "L": 155.10003214028245,
+  "H": 225.475595010438,
+  "L_date": "2026-05-14",
+  "H_date": "2026-07-29",
+  "entry_date": "2026-09-23",
+  "buy_high": 170.1604,
+  "buy_low": 163.1228,
+  "stop": 155.1,
+  "t1": 190.2878,
+  "signals": [
+   "반전 캔들"
+  ],
+  "earnings_date": "2026-10-28",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "BKNG|1d|2026-05-20|2026-08-25",
+  "ticker": "BKNG",
+  "name": "Booking Holdings Inc.",
+  "tf": "1d",
+  "price": 155.9,
+  "L": 149.4026900553264,
+  "H": 216.79643346375497,
+  "L_date": "2026-05-20",
+  "H_date": "2026-08-25",
+  "entry_date": "2026-09-22",
+  "buy_high": 163.825,
+  "buy_low": 157.0856,
+  "stop": 149.4027,
+  "t1": 183.0996,
+  "signals": [
+   "RSI 과매도 21"
+  ],
+  "earnings_date": "2026-10-27",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "TTWO|1d|2026-03-27|2026-07-07",
+  "ticker": "TTWO",
+  "name": "Take-Two Interactive Software, Inc.",
+  "tf": "1d",
+  "price": 206.32,
+  "L": 187.6300048828125,
+  "H": 265.94000244140625,
+  "L_date": "2026-03-27",
+  "H_date": "2026-07-07",
+  "entry_date": "2026-09-21",
+  "buy_high": 204.3883,
+  "buy_low": 196.5573,
+  "stop": 187.63,
+  "t1": 226.785,
+  "signals": [
+   "반전 캔들"
+  ],
+  "earnings_date": "2026-11-09",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "VSEC|1d|2026-05-19|2026-08-12",
+  "ticker": "VSEC",
+  "name": "VSE Corporation",
+  "tf": "1d",
+  "price": 178.54,
+  "L": 156.1451059475726,
+  "H": 247.85000610351562,
+  "L_date": "2026-05-19",
+  "H_date": "2026-08-12",
+  "entry_date": "2026-09-15",
+  "buy_high": 175.77,
+  "buy_low": 166.5995,
+  "stop": 156.1451,
+  "t1": 201.9976,
+  "signals": [],
+  "earnings_date": "2026-11-02",
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "ALOY|1d|2026-07-24|2026-08-14",
+  "ticker": "ALOY",
+  "name": "REalloys Inc.",
+  "tf": "1d",
+  "price": 8.67,
+  "L": 6.824999809265137,
+  "H": 15.350000381469727,
+  "L_date": "2026-07-24",
+  "H_date": "2026-08-14",
+  "entry_date": "2026-09-11",
+  "buy_high": 8.6493,
+  "buy_low": 7.7968,
+  "stop": 6.825,
+  "t1": 11.0875,
+  "signals": [],
+  "earnings_date": null,
+  "rec_date": "2026-09-23",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "BCRX|1d|2026-05-06|2026-07-09",
+  "ticker": "BCRX",
+  "name": "BioCryst Pharmaceuticals, Inc.",
+  "tf": "1d",
+  "price": 8.57,
+  "L": 7.789999961853027,
+  "H": 11.220000267028809,
+  "L_date": "2026-05-06",
+  "H_date": "2026-07-09",
+  "entry_date": "2026-09-10",
+  "buy_high": 8.524,
+  "buy_low": 8.181,
+  "stop": 7.79,
+  "t1": 9.505,
+  "signals": [],
+  "earnings_date": "2026-11-02",
+  "rec_date": "2026-09-23",
   "eval": {
    "result": "진행 중",
    "days": 0,
