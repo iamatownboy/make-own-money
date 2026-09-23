@@ -22,7 +22,7 @@ def get_ny_market_date_str() -> str:
     except Exception:
         return datetime.now().strftime('%Y-%m-%d')
 
-from .data_loader import fetch_stock_data
+from .data_loader import fetch_stock_data, clean_ohlcv
 from .indicators import (
     calculate_all_indicators,
     calculate_supertrend,
@@ -147,12 +147,10 @@ def get_benchmark_series(period: str = '2y') -> pd.Series:
         if period in _BENCHMARK_CACHE:
             return _BENCHMARK_CACHE[period]
     try:
-        bdf = yf.Ticker(BENCHMARK_TICKER).history(period=period, interval='1d')
-        if bdf.empty:
+        bdf = clean_ohlcv(yf.Ticker(BENCHMARK_TICKER).history(period=period, interval='1d'))
+        if bdf is None or bdf.empty:
             series = None
         else:
-            if bdf.index.tz is not None:
-                bdf.index = bdf.index.tz_localize(None)
             series = bdf['Close'].copy()
             series.index = pd.to_datetime(series.index).normalize()
     except Exception:
@@ -172,13 +170,14 @@ def benchmark_return_between(series: pd.Series, start_date, end_date) -> float:
     try:
         s = pd.Timestamp(start_date).normalize()
         e = pd.Timestamp(end_date).normalize()
+        series = series.dropna()
         start_slice = series.loc[:s]
         end_slice = series.loc[:e]
         if start_slice.empty or end_slice.empty:
             return None
         p0 = float(start_slice.iloc[-1])
         p1 = float(end_slice.iloc[-1])
-        if p0 <= 0:
+        if not (np.isfinite(p0) and np.isfinite(p1)) or p0 <= 0:
             return None
         return ((p1 / p0) - 1) * 100
     except Exception:
@@ -224,8 +223,8 @@ def get_market_context_regime() -> Dict[str, Any]:
     실시간 나스닥 지수(QQQ)를 바탕으로 실제 거시 시장 레짐(Market Regime)을 산출합니다.
     """
     try:
-        df_mkt = yf.Ticker("QQQ").history(period="3mo", interval="1d")
-        if df_mkt.empty or len(df_mkt) < 20:
+        df_mkt = clean_ohlcv(yf.Ticker("QQQ").history(period="3mo", interval="1d"))
+        if df_mkt is None or df_mkt.empty or len(df_mkt) < 20:
             return {'regime': '정상장세', 'nasdaq_trend': '중립', 'volatility': '보통'}
 
         close = df_mkt['Close']
@@ -483,14 +482,11 @@ def analyze_single_stock_advanced(stock_item: Dict[str, str], adaptive_data: Dic
     try:
         t = yf.Ticker(ticker)
         # 2년치 데이터 수집 (충분한 백테스팅 표본 확보)
-        df = t.history(period='2y', interval='1d')
-        if df.empty or len(df) < 50:
-            df = t.history(period='1y', interval='1d')
-            if df.empty or len(df) < 30:
+        df = clean_ohlcv(t.history(period='2y', interval='1d'))
+        if df is None or df.empty or len(df) < 50:
+            df = clean_ohlcv(t.history(period='1y', interval='1d'))
+            if df is None or df.empty or len(df) < 30:
                 return None
-            
-        if df.index.tz is not None:
-            df.index = df.index.tz_localize(None)
             
         df = calculate_all_indicators(df)
         pred = predict_price_scenarios(df, days_ahead=5)

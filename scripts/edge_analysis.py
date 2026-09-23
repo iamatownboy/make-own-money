@@ -27,7 +27,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import numpy as np
 import pandas as pd
 import yfinance as yf
+from scipy import stats
 
+from quant_core.data_loader import clean_ohlcv
 from quant_core.indicators import calculate_all_indicators
 from quant_core.prediction import predict_price_scenarios
 from quant_core.screener import (
@@ -41,14 +43,126 @@ from quant_core.screener import (
 
 PATTERNS = ['fibonacci', 'trendline', 'divergence', 'auto']
 
+FEE_PCT = 0.25
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 청산 정책 (실험용) — 동일 진입 신호에 서로 다른 청산 규칙을 적용해 페어 비교한다.
+# 모든 정책은 갭 체결을 반영하고, 추적 손절 갱신에는 직전 봉 ATR만 사용한다(미래정보 차단).
+# ─────────────────────────────────────────────────────────────────────────────
+def _exit_fixed(df, i, entry, target, stop, max_days):
+    fwd = df.iloc[i + 1: i + 1 + max_days]
+    if fwd.empty:
+        return None
+    o = resolve_triple_barrier(entry, target, stop, fwd, FEE_PCT)
+    return o['net_return'], o['exit_offset'], o['outcome']
+
+
+def _exit_trailing(df, i, entry, stop, atr_mult, max_days, target=None):
+    highest = entry
+    for k in range(1, max_days + 1):
+        j = i + k
+        if j >= len(df):
+            break
+        o = float(df['Open'].iloc[j]); h = float(df['High'].iloc[j])
+        l = float(df['Low'].iloc[j]); c = float(df['Close'].iloc[j])
+        atr = float(df['ATR_14'].iloc[j - 1])
+        if target and o >= target:
+            return ((o / entry) - 1) * 100 - FEE_PCT, k, 'TARGET'
+        if o <= stop:
+            return ((o / entry) - 1) * 100 - FEE_PCT, k, 'STOP'
+        if target and h >= target:
+            return ((target / entry) - 1) * 100 - FEE_PCT, k, 'TARGET'
+        if l <= stop:
+            return ((stop / entry) - 1) * 100 - FEE_PCT, k, 'STOP'
+        highest = max(highest, c)
+        stop = max(stop, highest - atr * atr_mult)
+    j = min(i + max_days, len(df) - 1)
+    return ((float(df['Close'].iloc[j]) / entry) - 1) * 100 - FEE_PCT, j - i, 'TIME'
+
+
+def _exit_supertrend(df, i, entry, stop, max_days):
+    for k in range(1, max_days + 1):
+        j = i + k
+        if j >= len(df):
+            break
+        o = float(df['Open'].iloc[j]); l = float(df['Low'].iloc[j]); c = float(df['Close'].iloc[j])
+        if o <= stop:
+            return ((o / entry) - 1) * 100 - FEE_PCT, k, 'STOP'
+        if l <= stop:
+            return ((stop / entry) - 1) * 100 - FEE_PCT, k, 'STOP'
+        if float(df['Supertrend_Direction'].iloc[j]) == -1:
+            return ((c / entry) - 1) * 100 - FEE_PCT, k, 'TREND_EXIT'
+    j = min(i + max_days, len(df) - 1)
+    return ((float(df['Close'].iloc[j]) / entry) - 1) * 100 - FEE_PCT, j - i, 'TIME'
+
+
+EXIT_POLICIES = {
+    'fixed_t1_20d':     lambda df, i, e, t1, t2, st: _exit_fixed(df, i, e, t1, st, 20),
+    'fixed_t2_40d':     lambda df, i, e, t1, t2, st: _exit_fixed(df, i, e, t2, st, 40),
+    'trail_2atr_40d':   lambda df, i, e, t1, t2, st: _exit_trailing(df, i, e, st, 2.0, 40),
+    'trail_3atr_60d':   lambda df, i, e, t1, t2, st: _exit_trailing(df, i, e, st, 3.0, 60),
+    'trail_2atr_t1':    lambda df, i, e, t1, t2, st: _exit_trailing(df, i, e, st, 2.0, 40, target=t1),
+    'supertrend_40d':   lambda df, i, e, t1, t2, st: _exit_supertrend(df, i, e, st, 40),
+}
+BASELINE_POLICY = 'fixed_t1_20d'
+MAX_EXIT_HORIZON = 60  # EXIT_POLICIES 중 최장 보유 기간
+
+
+def _t(x) -> float:
+    x = np.asarray(x, dtype=float)
+    x = x[~np.isnan(x)]
+    if len(x) < 2:
+        return float('nan')
+    sd = x.std(ddof=1)
+    return float(x.mean() / (sd / np.sqrt(len(x)))) if sd > 0 else float('nan')
+
+
+def robustness_report(trades: pd.DataFrame, col: str) -> dict:
+    """
+    한 청산 정책의 초과수익이 '진짜 엣지'인지 판정하는 견고성 검증.
+    거래 단위 t값 하나로는 부족하다. 다음을 모두 통과해야 채택 후보가 된다.
+      1) 시기 클러스터 t : 같은 시기 거래는 서로 상관 -> 월 단위로 묶어 재검정
+      2) 시기 안정성     : 전반기/후반기 부호가 같아야 함
+      3) 이상치 의존성   : 중앙값·절사평균이 평균과 같은 부호여야 함
+      4) 생존 편향       : 종목의 사후 2년 성과 하위 1/3(패자)에서 유의한 손실이 없어야 함
+    """
+    x = trades[col]
+    mean = x.mean()
+    median = x.median()
+    trimmed = float(stats.trim_mean(x, 0.05))
+    top_share = (x.nlargest(max(1, len(x) // 100)).sum() / x.sum() * 100) if x.sum() > 0 else float('nan')
+
+    month_means = trades.groupby(trades['entry_date'].dt.to_period('M'))[col].mean()
+    month_t = _t(month_means)
+
+    mid = trades['entry_date'].median()
+    first, second = x[trades['entry_date'] <= mid], x[trades['entry_date'] > mid]
+
+    losers = x[trades['bh_group'] == '패자']
+    loser_t = _t(losers)
+
+    checks = {
+        '월클러스터 |t|>1.96': bool(abs(month_t) > 1.96) if month_t == month_t else False,
+        '전후반 부호 일치': bool(np.sign(first.mean()) == np.sign(second.mean()) == np.sign(mean)),
+        '중앙값·절사평균 부호 일치': bool(np.sign(median) == np.sign(trimmed) == np.sign(mean)),
+        '패자 종목 유의 손실 없음': bool(not (loser_t == loser_t and loser_t < -1.96)),
+    }
+    return {
+        'mean': mean, 'median': median, 'trimmed': trimmed, 'top1pct_share': top_share,
+        'trade_t': _t(x), 'month_t': month_t,
+        'first_half': first.mean(), 'second_half': second.mean(),
+        'loser': losers.mean(), 'loser_t': loser_t,
+        'winner': x[trades['bh_group'] == '승자'].mean(),
+        'checks': checks, 'passed': all(checks.values()),
+    }
+
 
 def load_benchmark_close(period: str) -> pd.Series:
     """레짐 판정용 벤치마크 종가 시계열."""
-    bdf = yf.Ticker(BENCHMARK_TICKER).history(period=period, interval='1d')
-    if bdf.empty:
+    bdf = clean_ohlcv(yf.Ticker(BENCHMARK_TICKER).history(period=period, interval='1d'))
+    if bdf is None or bdf.empty:
         return None
-    if bdf.index.tz is not None:
-        bdf.index = bdf.index.tz_localize(None)
     bdf.index = pd.to_datetime(bdf.index).normalize()
     return bdf['Close']
 
@@ -76,7 +190,7 @@ def regime_at(bench_close: pd.Series, date) -> str:
 
 
 def collect_trades(tickers, period='2y', holding_days=20, min_rr=1.20,
-                   fee_slippage_pct=0.25, verbose=True):
+                   fee_slippage_pct=0.25, verbose=True, with_exits=False):
     """실전 규칙으로 과거 독립 신호를 재생성하고 거래 단위로 정산한다."""
     bench_series = get_benchmark_series(period=period)
     bench_close = load_benchmark_close(period)
@@ -85,12 +199,12 @@ def collect_trades(tickers, period='2y', holding_days=20, min_rr=1.20,
     for idx, item in enumerate(tickers, start=1):
         ticker = item['ticker']
         try:
-            df = yf.Ticker(ticker).history(period=period, interval='1d')
-            if df.empty or len(df) < 60:
+            df = clean_ohlcv(yf.Ticker(ticker).history(period=period, interval='1d'))
+            if df is None or df.empty or len(df) < 60:
                 continue
-            if df.index.tz is not None:
-                df.index = df.index.tz_localize(None)
             df = calculate_all_indicators(df)
+            # 종목 자체의 기간 단순보유 수익률 (생존 편향 검증용, 사후 정보이므로 분류에만 사용)
+            buy_hold = (float(df['Close'].iloc[-1]) / float(df['Close'].iloc[0]) - 1) * 100
         except Exception as exc:
             if verbose:
                 print(f"  [{ticker}] 수집 실패: {exc}")
@@ -130,22 +244,61 @@ def collect_trades(tickers, period='2y', holding_days=20, min_rr=1.20,
                 if bench_ret is None or regime is None:
                     continue
 
-                trades.append({
+                rec = {
                     'ticker': ticker,
                     'pattern': pattern,
                     'regime': regime,
                     'entry_date': entry_date,
+                    'buy_hold_return': buy_hold,
                     'held_days': outcome['exit_offset'],
                     'net_return': outcome['net_return'],
                     'benchmark_return': bench_ret,
                     'excess_return': outcome['net_return'] - bench_ret,
                     'outcome': outcome['outcome'],
-                })
+                }
+
+                if with_exits:
+                    # 우측 절단(right-censoring) 방지: 가장 긴 정책(60일)의 창이 데이터 안에
+                    # 온전히 들어오는 신호만 비교한다. 그렇지 않으면 최근 신호일수록 장기 정책이
+                    # 강제 조기 청산되어 정책 간 비교가 불공정해진다.
+                    if i + MAX_EXIT_HORIZON >= len(df):
+                        continue
+                    target_2 = float(scen.get('bull_target_2') or 0.0)
+                    if target_2 <= target:
+                        target_2 = target * 1.05
+                    valid = True
+                    for name, fn in EXIT_POLICIES.items():
+                        res = fn(df, i, entry, target, target_2, stop)
+                        if res is None:
+                            valid = False
+                            break
+                        net, off, oc = res
+                        b = benchmark_return_between(
+                            bench_series, entry_date, df.index[min(i + off, len(df) - 1)]
+                        )
+                        if b is None:
+                            valid = False
+                            break
+                        rec[f'x_{name}'] = net - b
+                        rec[f'x_{name}_days'] = off
+                    if not valid:
+                        continue
+
+                trades.append(rec)
 
         if verbose and idx % 10 == 0:
             print(f"  ... {idx}/{len(tickers)} 종목 처리 (누적 거래 {len(trades)}건)")
 
-    return pd.DataFrame(trades)
+    out = pd.DataFrame(trades)
+    if not out.empty:
+        per_ticker = out.drop_duplicates('ticker').set_index('ticker')['buy_hold_return']
+        q1, q2 = per_ticker.quantile([1 / 3, 2 / 3])
+        out['bh_group'] = np.where(
+            out.buy_hold_return <= q1, '패자',
+            np.where(out.buy_hold_return <= q2, '중위', '승자')
+        )
+        out['entry_date'] = pd.to_datetime(out['entry_date'])
+    return out
 
 
 def summarize(df: pd.DataFrame, by: str, min_samples: int = 1) -> pd.DataFrame:
@@ -188,6 +341,54 @@ def print_table(title: str, table: pd.DataFrame):
               f"{r.excess:>+8.2f}{t:>7}{ci:>22}{r.target_hit_pct:>8.0f}%{mark:>6}")
 
 
+def print_exit_comparison(trades: pd.DataFrame):
+    """동일 진입 신호에 대한 청산 정책 페어 비교 + 견고성 판정."""
+    base = trades[f'x_{BASELINE_POLICY}']
+    print(f"\n■ 청산 정책 비교 — 동일 진입 신호 {len(trades)}건 (페어 비교)")
+    print('-' * 96)
+    print(f"{'정책':<17}{'초과평균':>9}{'중앙값':>8}{'절사평균':>9}{'거래t':>7}{'월t':>7}"
+          f"{'전반':>7}{'후반':>7}{'패자':>7}{'승자':>7}{'보유일':>7}{'판정':>8}")
+    print('-' * 96)
+    reports = {}
+    for name in EXIT_POLICIES:
+        col = f'x_{name}'
+        r = robustness_report(trades, col)
+        reports[name] = r
+        verdict = '채택후보' if r['passed'] else '기각'
+        print(f"{name:<17}{r['mean']:>+9.2f}{r['median']:>+8.2f}{r['trimmed']:>+9.2f}"
+              f"{r['trade_t']:>+7.2f}{r['month_t']:>+7.2f}{r['first_half']:>+7.2f}"
+              f"{r['second_half']:>+7.2f}{r['loser']:>+7.2f}{r['winner']:>+7.2f}"
+              f"{trades[col + '_days'].mean():>7.1f}{verdict:>8}")
+    print('-' * 96)
+    print("판정 기준: 월클러스터 |t|>1.96 · 전후반 부호 일치 · 중앙값/절사평균 부호 일치 · 패자 종목 유의 손실 없음")
+    for name, r in reports.items():
+        failed = [k for k, v in r['checks'].items() if not v]
+        if failed and name != BASELINE_POLICY:
+            share = r['top1pct_share']
+            share_txt = f"상위1% 거래가 초과합의 {share:.0f}%" if share == share else "초과합이 0 이하"
+            print(f"  {name:<17} 실패: {', '.join(failed)}  ({share_txt})")
+
+    # 현행 청산 대비 페어 개선 — "QQQ를 이기는가"와 별개로 "지금보다 나은가"를 검정
+    print(f"\n■ 현행 청산({BASELINE_POLICY}) 대비 개선폭 — 페어 차이")
+    print('-' * 96)
+    print(f"{'정책':<17}{'개선평균':>9}{'개선중앙값':>10}{'개선>0':>8}{'거래t':>7}{'월t':>7}"
+          f"{'상위20제외':>11}{'그때 월t':>9}{'패자':>7}{'승자':>7}")
+    print('-' * 96)
+    months = trades['entry_date'].dt.to_period('M')
+    for name in EXIT_POLICIES:
+        if name == BASELINE_POLICY:
+            continue
+        diff = trades[f'x_{name}'] - base
+        trimmed = diff.sort_values(ascending=False).iloc[20:]
+        print(f"{name:<17}{diff.mean():>+9.2f}{diff.median():>+10.2f}{(diff > 0).mean() * 100:>7.0f}%"
+              f"{_t(diff):>+7.2f}{_t(diff.groupby(months).mean()):>+7.2f}"
+              f"{trimmed.mean():>+11.2f}{_t(trimmed.groupby(months.loc[trimmed.index]).mean()):>+9.2f}"
+              f"{diff[trades.bh_group == '패자'].mean():>+7.2f}{diff[trades.bh_group == '승자'].mean():>+7.2f}")
+    print('-' * 96)
+    print(f"다중비교 보정: 정책 {len(EXIT_POLICIES) - 1}개 동시 검정 -> Bonferroni 기준 |t| > 2.5")
+    return reports
+
+
 def main():
     parser = argparse.ArgumentParser(description='전략 엣지 진단 (초과수익 t검정)')
     parser.add_argument('--limit', type=int, default=None, help='유니버스 앞 N개만 분석')
@@ -195,6 +396,7 @@ def main():
     parser.add_argument('--holding', type=int, default=20, help='최대 보유 거래일 (기본 20)')
     parser.add_argument('--min-rr', type=float, default=1.20, help='진입 손익비 게이트')
     parser.add_argument('--csv', default=None, help='거래 단위 결과를 CSV로 저장할 경로')
+    parser.add_argument('--exits', action='store_true', help='청산 정책 비교 및 견고성 검증 수행')
     args = parser.parse_args()
 
     universe = CORE_UNIVERSE[:args.limit] if args.limit else CORE_UNIVERSE
@@ -202,7 +404,8 @@ def main():
           f"기간 {args.period}, 보유 {args.holding}일, RR 게이트 {args.min_rr}")
 
     trades = collect_trades(
-        universe, period=args.period, holding_days=args.holding, min_rr=args.min_rr
+        universe, period=args.period, holding_days=args.holding, min_rr=args.min_rr,
+        with_exits=args.exits
     )
 
     if trades.empty:
@@ -224,6 +427,9 @@ def main():
 
     trades['cell'] = trades.regime + ' / ' + trades.pattern
     print_table('레짐 x 패턴 (표본 15건 이상)', summarize(trades, 'cell', min_samples=15))
+
+    if args.exits:
+        print_exit_comparison(trades)
 
     print("\n주의: 여러 그룹을 동시에 비교하면 우연히 t가 커지는 칸이 생긴다(다중비교).")
     print("      개별 칸의 t값만 보고 전략을 채택하지 말 것. 전체 t가 먼저 유의해야 한다.")

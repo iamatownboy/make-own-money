@@ -333,9 +333,10 @@ def get_realtime_usd_krw() -> float:
     """야후 파이낸스(USDKRW=X)에서 실시간 달러/원 환율을 가져옵니다."""
     try:
         ticker = yf.Ticker('USDKRW=X')
-        df = ticker.history(period='5d', interval='1d')
-        if not df.empty:
-            return round(float(df['Close'].iloc[-1]), 1)
+        # 미확정 당일 봉이 NaN으로 붙어 오는 경우가 있어 유효한 종가만 사용
+        closes = ticker.history(period='5d', interval='1d')['Close'].dropna()
+        if not closes.empty:
+            return round(float(closes.iloc[-1]), 1)
     except Exception:
         pass
     return 1380.0

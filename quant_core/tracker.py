@@ -13,6 +13,7 @@ import pytz
 from datetime import datetime, timedelta
 from typing import Dict, List, Any
 from .db import db_load_history, db_upsert_history_items, is_supabase_enabled
+from .data_loader import clean_ohlcv
 
 HISTORY_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'recommendation_history.json')
 
@@ -411,10 +412,8 @@ def evaluate_and_learn_from_history(strategy_version: str = CURRENT_STRATEGY_VER
     stock_dfs = {}
     for t in unique_tickers:
         try:
-            df = yf.Ticker(t).history(period='3mo', interval='1d')
-            if not df.empty:
-                if df.index.tz is not None:
-                    df.index = df.index.tz_localize(None)
+            df = clean_ohlcv(yf.Ticker(t).history(period='3mo', interval='1d'))
+            if df is not None and not df.empty:
                 stock_dfs[t] = df
         except Exception:
             pass

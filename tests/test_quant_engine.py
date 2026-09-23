@@ -1325,3 +1325,68 @@ def test_triple_barrier_reports_exit_offset():
     res2 = resolve_triple_barrier(100.0, 110.0, 95.0, flat, fee_slippage_pct=0.25)
     assert res2['outcome'] == 'TIME'
     assert res2['exit_offset'] == 2
+
+
+# ============================================================================
+# yfinance 미완성 봉(NaN) 정제 회귀 테스트
+# ============================================================================
+
+from quant_core.data_loader import clean_ohlcv
+
+
+# 34. 당일 미확정 봉(OHLC 전부 NaN, 거래량만 존재)이 제거되어야 함
+def test_clean_ohlcv_drops_unfinished_nan_bar():
+    idx = pd.to_datetime(['2026-09-18', '2026-09-21', '2026-09-22']).tz_localize('America/New_York')
+    raw = pd.DataFrame({
+        'Open':   [337.9, 335.3, np.nan],
+        'High':   [338.5, 339.6, np.nan],
+        'Low':    [332.5, 333.0, np.nan],
+        'Close':  [336.1, 339.0, np.nan],
+        'Volume': [86588200, 34999200, 40599377],
+    }, index=idx)
+
+    out = clean_ohlcv(raw)
+    assert len(out) == 2
+    assert out.index.tz is None
+    assert float(out['Close'].iloc[-1]) == pytest.approx(339.0)
+    assert not out[['Open', 'High', 'Low', 'Close']].isna().any().any()
+
+
+# 35. 중복 날짜는 마지막 값을 유지하고 정렬되어야 함
+def test_clean_ohlcv_dedups_and_sorts():
+    idx = pd.to_datetime(['2026-01-06', '2026-01-05', '2026-01-06'])
+    raw = pd.DataFrame({
+        'Open': [1.0, 2.0, 3.0], 'High': [1.0, 2.0, 3.0],
+        'Low': [1.0, 2.0, 3.0], 'Close': [1.0, 2.0, 3.0], 'Volume': [1, 1, 1],
+    }, index=idx)
+    out = clean_ohlcv(raw)
+    assert list(out.index) == list(pd.to_datetime(['2026-01-05', '2026-01-06']))
+    assert float(out['Close'].iloc[-1]) == 3.0
+
+
+# 36. NaN 봉이 남아 있으면 현재가·손절가가 NaN이 되는 문제가 정제 후 해소되어야 함
+def test_nan_bar_no_longer_poisons_prediction():
+    from quant_core.indicators import calculate_all_indicators
+
+    df = make_dummy_ohlcv(days=200, base_price=100.0)
+    nan_row = pd.DataFrame(
+        {'Open': [np.nan], 'High': [np.nan], 'Low': [np.nan], 'Close': [np.nan], 'Volume': [1000]},
+        index=[df.index[-1] + pd.Timedelta(days=1)]
+    )
+    poisoned = pd.concat([df, nan_row])
+
+    raw_pred = predict_price_scenarios(calculate_all_indicators(poisoned), days_ahead=5)
+    assert raw_pred['current_price'] != raw_pred['current_price']  # NaN (정제 전 버그 재현)
+
+    fixed_pred = predict_price_scenarios(calculate_all_indicators(clean_ohlcv(poisoned)), days_ahead=5)
+    assert np.isfinite(fixed_pred['current_price'])
+    assert np.isfinite(fixed_pred['stop_loss'])
+    assert fixed_pred['stop_loss'] < fixed_pred['current_price']
+
+
+# 37. 벤치마크 시계열 끝에 NaN이 있어도 수익률이 NaN으로 새지 않아야 함
+def test_benchmark_return_ignores_trailing_nan():
+    idx = pd.to_datetime(['2026-01-05', '2026-01-06', '2026-01-07'])
+    series = pd.Series([100.0, 110.0, np.nan], index=idx)
+    r = benchmark_return_between(series, '2026-01-05', '2026-01-07')
+    assert r == pytest.approx(10.0)   # NaN 대신 직전 유효값(1/06) 사용

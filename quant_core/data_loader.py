@@ -11,6 +11,34 @@ import yfinance as yf
 from datetime import datetime, timedelta
 from typing import Dict, Tuple, Optional
 
+OHLC_COLUMNS = ['Open', 'High', 'Low', 'Close']
+
+
+def clean_ohlcv(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    yfinance 시세를 분석 가능한 형태로 정제합니다. 모든 history() 결과는 이 함수를 거쳐야 합니다.
+
+    [배경] yfinance는 당일 봉이 확정되기 전, 해당 날짜 행을 OHLC 전부 NaN(거래량만 존재)으로
+    붙여 반환하는 경우가 있다. 이를 거르지 않으면
+      - 현재가 = df['Close'].iloc[-1] 이 NaN이 되어 손절가·목표가·손익비가 전부 NaN
+      - is_qualified 판정에서 NaN >= 1.2 가 False가 되어 해당 시점 스캔이 조용히 0건
+      - 추적 엔진의 기간 만료 청산가가 NaN
+      - 백테스트 평균 수익률(np.mean)이 NaN으로 오염
+    되는 문제가 발생한다.
+
+    처리: 타임존 제거, 인덱스 정렬, 중복 날짜 제거(마지막 값 유지), OHLC 중 하나라도 NaN인 행 제거.
+    """
+    if df is None or df.empty:
+        return df
+    out = df.copy()
+    if getattr(out.index, 'tz', None) is not None:
+        out.index = out.index.tz_localize(None)
+    out = out[~out.index.duplicated(keep='last')].sort_index()
+    present = [c for c in OHLC_COLUMNS if c in out.columns]
+    if present:
+        out = out.dropna(subset=present)
+    return out
+
 # 포트폴리오 종목 기본 메타데이터
 PORTFOLIO_CONFIG = {
     'RKLX': {
@@ -76,9 +104,9 @@ def fetch_stock_data(
     """
     try:
         t = yf.Ticker(ticker)
-        df = t.history(period=period, interval=interval)
+        df = clean_ohlcv(t.history(period=period, interval=interval))
         
-        if df.empty:
+        if df is None or df.empty:
             raise ValueError(f"'{ticker}' 데이터를 가져올 수 없습니다.")
         
         # 타임존 정보 정제
@@ -100,8 +128,8 @@ def fetch_stock_data(
             leverage = cfg['leverage']
             
             # 본주 데이터 가져오기
-            u_df = yf.Ticker(underlying).history(period=period, interval=interval)
-            if not u_df.empty:
+            u_df = clean_ohlcv(yf.Ticker(underlying).history(period=period, interval=interval))
+            if u_df is not None and not u_df.empty:
                 if u_df.index.tz is not None:
                     u_df.index = u_df.index.tz_localize(None)
                 
@@ -152,9 +180,9 @@ def get_latest_quote_info(ticker: str) -> Dict:
     })
     
     t = yf.Ticker(ticker)
-    data = t.history(period='5d', interval='1d')
+    data = clean_ohlcv(t.history(period='5d', interval='1d'))
     
-    if data.empty:
+    if data is None or data.empty:
         return {'ticker': ticker, 'name': cfg['name'], 'error': '시세 데이터 없음'}
     
     last_row = data.iloc[-1]
