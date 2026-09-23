@@ -41,3 +41,6 @@ env/
 # Personal Portfolio Data (Security)
 user_portfolio.json
 
+
+# 연구용 시세 캐시 (재생성 가능, 대용량)
+data/cache/
