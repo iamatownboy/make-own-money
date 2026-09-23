@@ -198,3 +198,16 @@ def test_history_summary_includes_matched_baseline():
     assert s['baseline']['decided'] == 4
     assert s['baseline_matched']['decided'] == 3
     assert s['baseline_matched']['hit_rate'] == pytest.approx(33.3, abs=0.1)
+
+
+# 12. 실적 발표일: 14일 이내만 경고, 조회 실패는 None
+def test_attach_earnings_flags_only_near_dates():
+    from quant_core.pattern_scanner import attach_earnings
+    setups = [{'ticker': 'A'}, {'ticker': 'B'}, {'ticker': 'C'}, {'ticker': 'D'}]
+    fake = lambda ts: {'A': '2026-09-30', 'B': '2026-10-20', 'C': None, 'D': '2026-09-22'}
+    attach_earnings(setups, '2026-09-22', fetch=fake)
+    by = {s['ticker']: s for s in setups}
+    assert by['A']['earnings_days'] == 8 and by['A']['earnings_soon'] is True
+    assert by['B']['earnings_days'] == 28 and by['B']['earnings_soon'] is False
+    assert by['C']['earnings_date'] is None and by['C']['earnings_soon'] is False
+    assert by['D']['earnings_days'] == 0 and by['D']['earnings_soon'] is True

@@ -1,6 +1,6 @@
 {
  "date": "2026-09-22",
- "generated_at": "2026-09-23 11:18:32",
+ "generated_at": "2026-09-23 11:20:50",
  "universe": 3124,
  "liquid": 1017,
  "setups": [
@@ -36,7 +36,10 @@
     "hit": 48.1,
     "random": 38.0,
     "n": 801
-   }
+   },
+   "earnings_date": "2026-11-05",
+   "earnings_days": 44,
+   "earnings_soon": false
   },
   {
    "id": "VC|1w|2026-03-20|2026-06-26",
@@ -70,7 +73,10 @@
     "hit": 48.1,
     "random": 38.0,
     "n": 801
-   }
+   },
+   "earnings_date": "2026-10-22",
+   "earnings_days": 30,
+   "earnings_soon": false
   },
   {
    "id": "HYMC|1w|2026-07-17|2026-08-14",
@@ -101,7 +107,10 @@
     "hit": 48.1,
     "random": 38.0,
     "n": 801
-   }
+   },
+   "earnings_date": "2026-10-27",
+   "earnings_days": 35,
+   "earnings_soon": false
   },
   {
    "id": "WEN|1w|2026-06-26|2026-07-02",
@@ -132,7 +141,10 @@
     "hit": 48.1,
     "random": 38.0,
     "n": 801
-   }
+   },
+   "earnings_date": "2026-11-06",
+   "earnings_days": 45,
+   "earnings_soon": false
   },
   {
    "id": "DRUG|1w|2026-06-18|2026-08-21",
@@ -163,7 +175,10 @@
     "hit": 48.1,
     "random": 38.0,
     "n": 801
-   }
+   },
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
   },
   {
    "id": "KOD|1w|2026-06-12|2026-08-07",
@@ -196,7 +211,10 @@
     "hit": 48.1,
     "random": 38.0,
     "n": 801
-   }
+   },
+   "earnings_date": "2026-11-12",
+   "earnings_days": 51,
+   "earnings_soon": false
   },
   {
    "id": "MATW|1w|2025-04-11|2026-05-01",
@@ -229,7 +247,10 @@
     "hit": 48.1,
     "random": 38.0,
     "n": 801
-   }
+   },
+   "earnings_date": "2026-11-19",
+   "earnings_days": 58,
+   "earnings_soon": false
   },
   {
    "id": "TBBK|1w|2025-04-11|2025-10-17",
@@ -262,7 +283,10 @@
     "hit": 48.1,
     "random": 38.0,
     "n": 801
-   }
+   },
+   "earnings_date": "2026-10-29",
+   "earnings_days": 37,
+   "earnings_soon": false
   },
   {
    "id": "KTOS|1w|2026-07-31|2026-08-14",
@@ -293,7 +317,10 @@
     "hit": 48.1,
     "random": 38.0,
     "n": 801
-   }
+   },
+   "earnings_date": "2026-11-03",
+   "earnings_days": 42,
+   "earnings_soon": false
   },
   {
    "id": "OSS|1w|2026-04-02|2026-06-05",
@@ -326,7 +353,10 @@
     "hit": 48.1,
     "random": 38.0,
     "n": 801
-   }
+   },
+   "earnings_date": "2026-11-04",
+   "earnings_days": 43,
+   "earnings_soon": false
   },
   {
    "id": "IRTC|1d|2026-06-18|2026-08-07",
@@ -357,7 +387,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-11-05",
+   "earnings_days": 44,
+   "earnings_soon": false
   },
   {
    "id": "TRVI|1d|2026-04-30|2026-07-17",
@@ -392,7 +425,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-11-12",
+   "earnings_days": 51,
+   "earnings_soon": false
   },
   {
    "id": "VC|1d|2026-03-19|2026-06-22",
@@ -426,7 +462,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-10-22",
+   "earnings_days": 30,
+   "earnings_soon": false
   },
   {
    "id": "EEFT|1d|2026-06-11|2026-07-29",
@@ -460,7 +499,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-10-21",
+   "earnings_days": 29,
+   "earnings_soon": false
   },
   {
    "id": "PEP|1d|2025-05-23|2026-02-12",
@@ -494,7 +536,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-10-08",
+   "earnings_days": 16,
+   "earnings_soon": false
   },
   {
    "id": "TXRH|1d|2026-05-04|2026-08-13",
@@ -527,7 +572,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-11-05",
+   "earnings_days": 44,
+   "earnings_soon": false
   },
   {
    "id": "XENE|1d|2025-11-07|2026-07-09",
@@ -560,7 +608,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-11-02",
+   "earnings_days": 41,
+   "earnings_soon": false
   },
   {
    "id": "ZG|1d|2026-06-25|2026-08-25",
@@ -591,7 +642,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-10-29",
+   "earnings_days": 37,
+   "earnings_soon": false
   },
   {
    "id": "JBIO|1d|2026-06-09|2026-08-14",
@@ -622,7 +676,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-11-12",
+   "earnings_days": 51,
+   "earnings_soon": false
   },
   {
    "id": "RAPP|1d|2026-07-08|2026-08-27",
@@ -655,7 +712,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-11-05",
+   "earnings_days": 44,
+   "earnings_soon": false
   },
   {
    "id": "BBIO|1d|2026-06-02|2026-07-09",
@@ -689,7 +749,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-10-28",
+   "earnings_days": 36,
+   "earnings_soon": false
   },
   {
    "id": "CBRL|1d|2026-06-17|2026-08-13",
@@ -722,7 +785,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-09-23",
+   "earnings_days": 1,
+   "earnings_soon": true
   },
   {
    "id": "METC|1d|2026-08-03|2026-09-02",
@@ -753,7 +819,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-10-26",
+   "earnings_days": 34,
+   "earnings_soon": false
   },
   {
    "id": "SOUN|1d|2026-07-29|2026-08-06",
@@ -784,7 +853,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-11-05",
+   "earnings_days": 44,
+   "earnings_soon": false
   },
   {
    "id": "VKTX|1d|2026-06-11|2026-07-07",
@@ -818,7 +890,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-10-28",
+   "earnings_days": 36,
+   "earnings_soon": false
   },
   {
    "id": "HLIT|1d|2026-07-29|2026-08-13",
@@ -849,7 +924,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-10-26",
+   "earnings_days": 34,
+   "earnings_soon": false
   },
   {
    "id": "HYMC|1d|2026-07-17|2026-08-12",
@@ -880,7 +958,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-10-27",
+   "earnings_days": 35,
+   "earnings_soon": false
   },
   {
    "id": "DRUG|1d|2026-06-16|2026-08-19",
@@ -911,7 +992,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
   },
   {
    "id": "COGT|1d|2026-05-19|2026-08-04",
@@ -944,7 +1028,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-11-03",
+   "earnings_days": 42,
+   "earnings_soon": false
   },
   {
    "id": "KOD|1d|2026-06-09|2026-08-07",
@@ -977,7 +1064,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-11-12",
+   "earnings_days": 51,
+   "earnings_soon": false
   },
   {
    "id": "QS|1d|2026-07-28|2026-08-12",
@@ -1008,7 +1098,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-10-21",
+   "earnings_days": 29,
+   "earnings_soon": false
   },
   {
    "id": "MATW|1d|2025-04-07|2026-05-01",
@@ -1041,7 +1134,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-11-19",
+   "earnings_days": 58,
+   "earnings_soon": false
   },
   {
    "id": "WDFC|1d|2026-01-09|2026-07-10",
@@ -1074,7 +1170,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-10-21",
+   "earnings_days": 29,
+   "earnings_soon": false
   },
   {
    "id": "DYN|1d|2026-05-19|2026-08-12",
@@ -1108,7 +1207,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-11-05",
+   "earnings_days": 44,
+   "earnings_soon": false
   },
   {
    "id": "CDNS|1d|2026-02-03|2026-06-02",
@@ -1139,7 +1241,10 @@
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
-   }
+   },
+   "earnings_date": "2026-10-26",
+   "earnings_days": 34,
+   "earnings_soon": false
   }
  ],
  "watch": [
@@ -1447,5 +1552,5 @@
    "hit_rate": null
   }
  },
- "elapsed_sec": 12.6
+ "elapsed_sec": 10.2
 }

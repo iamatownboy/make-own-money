@@ -85,6 +85,10 @@ def _card_html(s):
     badges += f'<span class="pt-b {pos_cls}">{escape(pos)}</span>'
     for a in s.get('also', []):
         badges += f'<span class="pt-b">{escape(a)}도 구간</span>'
+    if s.get('earnings_soon'):
+        dd = s.get('earnings_days')
+        label = '실적 발표 오늘' if dd == 0 else f'실적 발표 D-{dd}'
+        badges += f'<span class="pt-b dn" title="발표 직후 갭으로 손절선을 건너뛸 수 있습니다">{label}</span>'
 
     sig = ''
     if s.get('signals'):
@@ -96,6 +100,7 @@ def _card_html(s):
         f'스윙 저점 {_money(s["L"])} ({escape(s["L_date"])}) → 고점 {_money(s["H"])} ({escape(s["H_date"])}), +{s["swing_pct"]:.0f}%<br>'
         f'구간 진입일 {escape(s["entry_date"])} · 현재 되돌림 {s["retrace"]:.2f}<br>'
         f'2차 {_money(s["t2"])} · 3차 {_money(s["t3"])} · 4차 {_money(s["t4"])}<br>'
+        + (f'다음 실적 발표 {escape(s["earnings_date"])}<br>' if s.get('earnings_date') else '') +
         f'과거 같은 조건에서 1차 목표 먼저 도달 {br.get("hit", "-")}% (아무 때나 샀을 때 {br.get("random", "-")}%)'
         f'</div></details>'
     )

@@ -38,7 +38,8 @@ SETUPS_FILE = os.path.join(ROOT, 'pattern_setups.json')
 HISTORY_FILE = os.path.join(ROOT, 'pattern_history.json')
 PLACEBO_FILE = os.path.join(ROOT, 'pattern_placebo.json')
 PLACEBO_PER_REC = 3        # 진짜 추천 1건당 무작위 비교군 수
-PLACEBO_VOL_BAND = (0.67, 1.5)   # 비교군은 변동성이 진짜 추천의 0.67~1.5배인 종목 중에서만 뽑는다
+PLACEBO_VOL_BAND = (0.67, 1.5)
+EARNINGS_WARN_DAYS = 14          # 실적 발표가 이 기간 안이면 카드에 경고   # 비교군은 변동성이 진짜 추천의 0.67~1.5배인 종목 중에서만 뽑는다
 BENCHMARK = 'QQQ'
 
 MIN_PRICE = 5.0
@@ -192,6 +193,46 @@ def scan_universe(full: Dict[str, pd.DataFrame], names: Dict[str, str]) -> Dict[
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# 실적 발표일
+# ─────────────────────────────────────────────────────────────────────────────
+def fetch_earnings_dates(tickers: List[str], workers: int = 8) -> Dict[str, Optional[str]]:
+    """yfinance 캘린더에서 다음 실적 발표 예정일을 가져온다. 실패하면 None."""
+    import yfinance as yf
+    from concurrent.futures import ThreadPoolExecutor
+
+    today = pd.Timestamp(datetime.now().date())
+
+    def one(t):
+        try:
+            cal = yf.Ticker(t).calendar
+            dates = cal.get('Earnings Date') if isinstance(cal, dict) else None
+            if not dates:
+                return t, None
+            ds = sorted(pd.Timestamp(d) for d in dates)
+            upcoming = [d for d in ds if d >= today - pd.Timedelta(days=3)]
+            # 예정일이 없으면 지난 발표일이 돌아오는 경우가 있다 -> 비워 둔다 (과거 날짜를 '다음'으로 표시하지 않음)
+            return t, (str(upcoming[0].date()) if upcoming else None)
+        except Exception:
+            return t, None
+
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        return dict(ex.map(one, sorted(set(tickers))))
+
+
+def attach_earnings(setups: List[Dict[str, Any]], rec_date: str, fetch=fetch_earnings_dates) -> None:
+    """각 추천에 다음 실적 발표일과 추천일로부터 남은 날(달력일)을 붙인다."""
+    if not setups:
+        return
+    dates = fetch([s['ticker'] for s in setups])
+    base = pd.Timestamp(rec_date)
+    for s in setups:
+        d = dates.get(s['ticker'])
+        s['earnings_date'] = d
+        s['earnings_days'] = int((pd.Timestamp(d) - base).days) if d else None
+        s['earnings_soon'] = bool(d is not None and 0 <= s['earnings_days'] <= EARNINGS_WARN_DAYS)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # 기록·채점
 # ─────────────────────────────────────────────────────────────────────────────
 def _load_json(path: str, default):
@@ -217,6 +258,7 @@ def append_history(setups: List[Dict[str, Any]], rec_date: str) -> int:
             continue
         rec = {k: s[k] for k in ('id', 'ticker', 'name', 'tf', 'price', 'L', 'H', 'L_date', 'H_date',
                                  'entry_date', 'buy_high', 'buy_low', 'stop', 't1', 'signals')}
+        rec['earnings_date'] = s.get('earnings_date')   # 나중에 '실적 직전 추천'의 성적을 따로 보기 위해
         rec['rec_date'] = rec_date
         hist.append(rec)
         added += 1
@@ -421,6 +463,11 @@ def run_pattern_scan(cache_dir: Optional[str] = None, verbose: bool = True) -> D
     res = scan_universe(full, names)
     last_dates = [d.index[-1] for d in full.values() if d is not None and len(d)]
     rec_date = str(max(last_dates).date()) if last_dates else datetime.now().strftime('%Y-%m-%d')
+    try:
+        attach_earnings(res['setups'], rec_date)
+    except Exception as exc:
+        if verbose:
+            print(f"  [실적일] 조회 실패: {exc}")
     if verbose:
         print(f"  [3/4] 매수 구간 {len(res['setups'])}개, 구간 근접 {len(res['watch'])}개 (기준일 {rec_date})")
 
