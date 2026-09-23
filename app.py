@@ -1,8 +1,9 @@
 """
 app.py
 토스증권(Toss Securities) WTS 스타일 퀀트 트레이딩 대시보드
-- 모드 1: 🔥 오늘의 퀀트 유망주 (피보나치·추세선돌파·다이버전스 & 통계 실증 검증)
-- 모드 2: 💼 내 보유 포트폴리오 (토스 WTS 뷰 & 실시간 계좌)
+- 메인: 📐 패턴 구간 (나스닥 전 종목 피보나치 스윙 되돌림 매수 구간 + 추천 기록 채점)
+- 서브: 📊 점수제 추천 (기존 82종목 점수제 스크리너)
+- 💼 내 보유 포트폴리오 (토스 WTS 뷰 & 실시간 계좌)
 """
 
 import streamlit as st
@@ -21,6 +22,7 @@ from quant_core.indicators import calculate_all_indicators
 from quant_core.prediction import evaluate_technical_health, predict_price_scenarios
 from quant_core.screener import run_full_market_scan
 from quant_core.db import is_supabase_enabled, get_supabase_diagnostics
+from pattern_tab import render_pattern_tab
 
 # 1. 페이지 설정
 st.set_page_config(
@@ -473,10 +475,13 @@ def render_quant_performance_tracker(key_suffix: str = ""):
 
 # ==============================================================================
 has_holdings = bool(holdings)
-if has_holdings:
-    tab_rec, tab_port = st.tabs(["🔥 오늘의 퀀트 유망주", "💼 내 보유 포트폴리오 (토스 WTS)"])
-else:
-    tab_rec = st.container()
+_tab_names = ["📐 패턴 구간", "📊 점수제 추천"] + (["💼 포트폴리오"] if has_holdings else [])
+_tabs = st.tabs(_tab_names)
+tab_pattern, tab_rec = _tabs[0], _tabs[1]
+tab_port = _tabs[2] if has_holdings else None
+
+with tab_pattern:
+    render_pattern_tab()
 
 
 

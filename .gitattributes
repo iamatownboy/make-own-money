@@ -4,3 +4,5 @@
 #   git config merge.keep-remote.driver 'cp -f "%B" "%A"'
 daily_recommendations.json   merge=keep-remote
 recommendation_history.json  merge=keep-remote
+pattern_setups.json          merge=keep-remote
+pattern_history.json         merge=keep-remote

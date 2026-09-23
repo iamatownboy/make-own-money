@@ -14,10 +14,37 @@ if PROJECT_ROOT not in sys.path:
 
 from quant_core.screener import run_full_market_scan
 from quant_core.tracker import evaluate_and_learn_from_history, record_daily_recommendations
+from quant_core.pattern_scanner import run_pattern_scan
+
+
+def run_pattern_part():
+    """메인: 나스닥 전 종목 패턴 구간 스캔 + 추천 기록 채점"""
+    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 📐 [메인] 나스닥 패턴 구간 스캔 시작")
+    r = run_pattern_scan()
+    s = r.get('summary', {})
+    print(f"  ✅ 매수 구간 {len(r['setups'])}건 · 근접 {len(r['watch'])}건 · 소요 {r['elapsed_sec']}초")
+    for x in r['setups'][:15]:
+        print(f"    [{x['tf_label']}] {x['ticker']:<6} ${x['price']:.2f}  구간 ${x['buy_low']:.2f}~{x['buy_high']:.2f}"
+              f"  손절 ${x['stop']:.2f}  1차 ${x['t1']:.2f}")
+    if s.get('decided'):
+        print(f"  📊 누적 {s['total']}건 · 결과 {s['decided']}건 중 1차 목표 먼저 {s['hit_rate']}%")
 
 
 def main():
-    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 🚀 일일 나스닥 82개 종목 자동 퀀트 스캔 & 학습 시작")
+    try:
+        run_pattern_part()
+    except Exception as exc:
+        print(f"  ❌ 패턴 구간 스캔 실패: {exc}")
+
+    print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 📊 [서브] 점수제 82종목 스캔 & 학습 시작")
+    try:
+        run_score_part()
+    except Exception as exc:
+        print(f"  ❌ 점수제 스캔 실패: {exc}")
+    print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ✨ 모든 일일 작업 종료\n")
+
+
+def run_score_part():
 
     # 1. 기존 추천 종목 성과 추적 및 학습 모델 업데이트
     print("\n📊 1단계: 과거 추천 종목 실전 성과 추적 및 팩터 학습 중...")
@@ -58,7 +85,6 @@ def main():
     else:
         print("  ⚠️ 추천 조건에 부합하는 종목이 없습니다.")
 
-    print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ✨ 모든 일일 작업이 성공적으로 완료되었습니다.\n")
 
 
 if __name__ == '__main__':

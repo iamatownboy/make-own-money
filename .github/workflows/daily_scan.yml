@@ -28,7 +28,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Daily 82-Stock AI Quant Scan & Learning
+      - name: Run Daily Scan (Nasdaq pattern zones + 82-stock score screener)
         run: |
           python scripts/daily_scan.py
 
@@ -36,5 +36,5 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add daily_recommendations.json recommendation_history.json
+          git add daily_recommendations.json recommendation_history.json pattern_setups.json pattern_history.json data/universes/nasdaq_listed.csv
           git diff --quiet && git diff --staged --quiet || (git commit -m "chore(auto): Update daily recommendations and history [skip ci]" && git push)

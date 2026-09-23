@@ -1,0 +1,859 @@
+[
+ {
+  "id": "DYN|1w|2026-03-06|2026-08-14",
+  "ticker": "DYN",
+  "name": "Dyne Therapeutics, Inc.",
+  "tf": "1w",
+  "price": 17.12,
+  "L": 14.0,
+  "H": 27.30500030517578,
+  "L_date": "2026-03-06",
+  "H_date": "2026-08-14",
+  "entry_date": "2026-09-21",
+  "buy_high": 16.8473,
+  "buy_low": 15.5168,
+  "stop": 14.0,
+  "t1": 20.6525,
+  "signals": [
+   "RSI 과매도 23",
+   "반전 캔들"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "VC|1w|2026-03-20|2026-06-26",
+  "ticker": "VC",
+  "name": "Visteon Corporation",
+  "tf": "1w",
+  "price": 91.89,
+  "L": 82.91880135001928,
+  "H": 126.48244479985442,
+  "L_date": "2026-03-20",
+  "H_date": "2026-06-26",
+  "entry_date": "2026-09-21",
+  "buy_high": 92.2414,
+  "buy_low": 87.8851,
+  "stop": 82.9188,
+  "t1": 104.7006,
+  "signals": [
+   "RSI 과매도 26",
+   "RSI 상승 다이버전스"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "HYMC|1w|2026-07-17|2026-08-14",
+  "ticker": "HYMC",
+  "name": "Hycroft Mining Holding Corporation",
+  "tf": "1w",
+  "price": 20.53,
+  "L": 18.01799964904785,
+  "H": 29.770000457763672,
+  "L_date": "2026-07-17",
+  "H_date": "2026-08-14",
+  "entry_date": "2026-09-18",
+  "buy_high": 20.5329,
+  "buy_low": 19.3577,
+  "stop": 18.018,
+  "t1": 23.894,
+  "signals": [],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "WEN|1w|2026-06-26|2026-07-02",
+  "ticker": "WEN",
+  "name": "Wendy's Company (The)",
+  "tf": "1w",
+  "price": 6.7,
+  "L": 6.018807178531309,
+  "H": 9.370300331380305,
+  "L_date": "2026-06-26",
+  "H_date": "2026-07-02",
+  "entry_date": "2026-09-18",
+  "buy_high": 6.736,
+  "buy_low": 6.4009,
+  "stop": 6.0188,
+  "t1": 7.6946,
+  "signals": [],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "DRUG|1w|2026-06-18|2026-08-21",
+  "ticker": "DRUG",
+  "name": "Bright Minds Biosciences Inc.",
+  "tf": "1w",
+  "price": 59.46,
+  "L": 56.470001220703125,
+  "H": 87.0,
+  "L_date": "2026-06-18",
+  "H_date": "2026-08-21",
+  "entry_date": "2026-09-11",
+  "buy_high": 63.0034,
+  "buy_low": 59.9504,
+  "stop": 56.47,
+  "t1": 71.735,
+  "signals": [],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "KOD|1w|2026-06-12|2026-08-07",
+  "ticker": "KOD",
+  "name": "Kodiak Sciences Inc",
+  "tf": "1w",
+  "price": 32.42,
+  "L": 29.209999084472656,
+  "H": 46.869998931884766,
+  "L_date": "2026-06-12",
+  "H_date": "2026-08-07",
+  "entry_date": "2026-09-11",
+  "buy_high": 32.9892,
+  "buy_low": 31.2232,
+  "stop": 29.21,
+  "t1": 38.04,
+  "signals": [
+   "RSI 과매도 29"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "MATW|1w|2025-04-11|2026-05-01",
+  "ticker": "MATW",
+  "name": "Matthews International Corporation",
+  "tf": "1w",
+  "price": 19.78,
+  "L": 17.374223736417456,
+  "H": 30.31994447070994,
+  "L_date": "2025-04-11",
+  "H_date": "2026-05-01",
+  "entry_date": "2026-09-11",
+  "buy_high": 20.1446,
+  "buy_low": 18.85,
+  "stop": 17.3742,
+  "t1": 23.8471,
+  "signals": [
+   "RSI 상승 다이버전스"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "TBBK|1w|2025-04-11|2025-10-17",
+  "ticker": "TBBK",
+  "name": "The Bancorp, Inc.",
+  "tf": "1w",
+  "price": 50.28,
+  "L": 40.5099983215332,
+  "H": 81.6500015258789,
+  "L_date": "2025-04-11",
+  "H_date": "2025-10-17",
+  "entry_date": "2026-09-11",
+  "buy_high": 49.314,
+  "buy_low": 45.2,
+  "stop": 40.51,
+  "t1": 61.08,
+  "signals": [
+   "RSI 과매도 23"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "KTOS|1w|2026-07-31|2026-08-14",
+  "ticker": "KTOS",
+  "name": "Kratos Defense & Security Solutions, Inc.",
+  "tf": "1w",
+  "price": 48.59,
+  "L": 43.09000015258789,
+  "H": 67.0999984741211,
+  "L_date": "2026-07-31",
+  "H_date": "2026-08-14",
+  "entry_date": "2026-09-04",
+  "buy_high": 48.2281,
+  "buy_low": 45.8271,
+  "stop": 43.09,
+  "t1": 55.095,
+  "signals": [],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "OSS|1w|2026-04-02|2026-06-05",
+  "ticker": "OSS",
+  "name": "One Stop Systems, Inc.",
+  "tf": "1w",
+  "price": 9.32,
+  "L": 6.880000114440918,
+  "H": 20.8799991607666,
+  "L_date": "2026-04-02",
+  "H_date": "2026-06-05",
+  "entry_date": "2026-09-04",
+  "buy_high": 9.876,
+  "buy_low": 8.476,
+  "stop": 6.88,
+  "t1": 13.88,
+  "signals": [
+   "반전 캔들"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "IRTC|1d|2026-06-18|2026-08-07",
+  "ticker": "IRTC",
+  "name": "iRhythm Holdings, Inc.",
+  "tf": "1d",
+  "price": 110.38,
+  "L": 100.84600067138672,
+  "H": 136.69500732421875,
+  "L_date": "2026-06-18",
+  "H_date": "2026-08-07",
+  "entry_date": "2026-09-21",
+  "buy_high": 108.5177,
+  "buy_low": 104.9328,
+  "stop": 100.846,
+  "t1": 118.7705,
+  "signals": [],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "TRVI|1d|2026-04-30|2026-07-17",
+  "ticker": "TRVI",
+  "name": "Trevi Therapeutics, Inc.",
+  "tf": "1d",
+  "price": 14.89,
+  "L": 13.109999656677246,
+  "H": 20.219999313354492,
+  "L_date": "2026-04-30",
+  "H_date": "2026-07-17",
+  "entry_date": "2026-09-21",
+  "buy_high": 14.6315,
+  "buy_low": 13.9205,
+  "stop": 13.11,
+  "t1": 16.665,
+  "signals": [
+   "RSI 과매도 28",
+   "200일선 위",
+   "반전 캔들"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "VC|1d|2026-03-19|2026-06-22",
+  "ticker": "VC",
+  "name": "Visteon Corporation",
+  "tf": "1d",
+  "price": 91.89,
+  "L": 82.91880135001928,
+  "H": 126.48244479985442,
+  "L_date": "2026-03-19",
+  "H_date": "2026-06-22",
+  "entry_date": "2026-09-21",
+  "buy_high": 92.2414,
+  "buy_low": 87.8851,
+  "stop": 82.9188,
+  "t1": 104.7006,
+  "signals": [
+   "RSI 과매도 26",
+   "RSI 상승 다이버전스"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "EEFT|1d|2026-06-11|2026-07-29",
+  "ticker": "EEFT",
+  "name": "Euronet Worldwide, Inc.",
+  "tf": "1d",
+  "price": 66.1,
+  "L": 62.5,
+  "H": 83.97000122070312,
+  "L_date": "2026-06-11",
+  "H_date": "2026-07-29",
+  "entry_date": "2026-09-18",
+  "buy_high": 67.0946,
+  "buy_low": 64.9476,
+  "stop": 62.5,
+  "t1": 73.235,
+  "signals": [
+   "하락 빗각 돌파",
+   "반전 캔들"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "PEP|1d|2025-05-23|2026-02-12",
+  "ticker": "PEP",
+  "name": "PepsiCo, Inc.",
+  "tf": "1d",
+  "price": 129.59,
+  "L": 120.26618699614673,
+  "H": 166.41419598610082,
+  "L_date": "2025-05-23",
+  "H_date": "2026-02-12",
+  "entry_date": "2026-09-18",
+  "buy_high": 130.1419,
+  "buy_low": 125.5271,
+  "stop": 120.2662,
+  "t1": 143.3402,
+  "signals": [
+   "RSI 과매도 26",
+   "반전 캔들"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "TXRH|1d|2026-05-04|2026-08-13",
+  "ticker": "TXRH",
+  "name": "Texas Roadhouse, Inc.",
+  "tf": "1d",
+  "price": 165.54,
+  "L": 152.5849213219154,
+  "H": 215.470635041116,
+  "L_date": "2026-05-04",
+  "H_date": "2026-08-13",
+  "entry_date": "2026-09-18",
+  "buy_high": 166.0425,
+  "buy_low": 159.7539,
+  "stop": 152.5849,
+  "t1": 184.0278,
+  "signals": [
+   "RSI 과매도 20"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "XENE|1d|2025-11-07|2026-07-09",
+  "ticker": "XENE",
+  "name": "Xenon Pharmaceuticals Inc.",
+  "tf": "1d",
+  "price": 38.99,
+  "L": 37.22999954223633,
+  "H": 72.66000366210938,
+  "L_date": "2025-11-07",
+  "H_date": "2026-07-09",
+  "entry_date": "2026-09-18",
+  "buy_high": 44.812,
+  "buy_low": 41.269,
+  "stop": 37.23,
+  "t1": 54.945,
+  "signals": [
+   "RSI 과매도 13"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "ZG|1d|2026-06-25|2026-08-25",
+  "ticker": "ZG",
+  "name": "Zillow Group, Inc.",
+  "tf": "1d",
+  "price": 31.13,
+  "L": 29.030000686645508,
+  "H": 38.45000076293945,
+  "L_date": "2026-06-25",
+  "H_date": "2026-08-25",
+  "entry_date": "2026-09-17",
+  "buy_high": 31.0459,
+  "buy_low": 30.1039,
+  "stop": 29.03,
+  "t1": 33.74,
+  "signals": [],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "JBIO|1d|2026-06-09|2026-08-14",
+  "ticker": "JBIO",
+  "name": "Jade Biosciences, Inc.",
+  "tf": "1d",
+  "price": 16.74,
+  "L": 14.279999732971191,
+  "H": 25.0,
+  "L_date": "2026-06-09",
+  "H_date": "2026-08-14",
+  "entry_date": "2026-09-16",
+  "buy_high": 16.5741,
+  "buy_low": 15.5021,
+  "stop": 14.28,
+  "t1": 19.64,
+  "signals": [],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "RAPP|1d|2026-07-08|2026-08-27",
+  "ticker": "RAPP",
+  "name": "Rapport Therapeutics, Inc.",
+  "tf": "1d",
+  "price": 39.66,
+  "L": 38.47999954223633,
+  "H": 52.93000030517578,
+  "L_date": "2026-07-08",
+  "H_date": "2026-08-27",
+  "entry_date": "2026-09-16",
+  "buy_high": 41.5723,
+  "buy_low": 40.1273,
+  "stop": 38.48,
+  "t1": 45.705,
+  "signals": [
+   "200일선 위"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "BBIO|1d|2026-06-02|2026-07-09",
+  "ticker": "BBIO",
+  "name": "BridgeBio Pharma, Inc.",
+  "tf": "1d",
+  "price": 66.58,
+  "L": 62.5,
+  "H": 93.41500091552734,
+  "L_date": "2026-06-02",
+  "H_date": "2026-07-09",
+  "entry_date": "2026-09-15",
+  "buy_high": 69.1158,
+  "buy_low": 66.0243,
+  "stop": 62.5,
+  "t1": 77.9575,
+  "signals": [
+   "RSI 과매도 20",
+   "반전 캔들"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "CBRL|1d|2026-06-17|2026-08-13",
+  "ticker": "CBRL",
+  "name": "Cracker Barrel Old Country Store, Inc.",
+  "tf": "1d",
+  "price": 44.87,
+  "L": 42.37147867236138,
+  "H": 60.2599983215332,
+  "L_date": "2026-06-17",
+  "H_date": "2026-08-13",
+  "entry_date": "2026-09-15",
+  "buy_high": 46.1996,
+  "buy_low": 44.4108,
+  "stop": 42.3715,
+  "t1": 51.3157,
+  "signals": [
+   "200일선 위"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "METC|1d|2026-08-03|2026-09-02",
+  "ticker": "METC",
+  "name": "Ramaco Resources, Inc.",
+  "tf": "1d",
+  "price": 9.37,
+  "L": 8.5600004196167,
+  "H": 15.1899995803833,
+  "L_date": "2026-08-03",
+  "H_date": "2026-09-02",
+  "entry_date": "2026-09-15",
+  "buy_high": 9.9788,
+  "buy_low": 9.3158,
+  "stop": 8.56,
+  "t1": 11.875,
+  "signals": [],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "SOUN|1d|2026-07-29|2026-08-06",
+  "ticker": "SOUN",
+  "name": "SoundHound AI, Inc.",
+  "tf": "1d",
+  "price": 6.17,
+  "L": 5.650000095367432,
+  "H": 8.1899995803833,
+  "L_date": "2026-07-29",
+  "H_date": "2026-08-06",
+  "entry_date": "2026-09-15",
+  "buy_high": 6.1936,
+  "buy_low": 5.9396,
+  "stop": 5.65,
+  "t1": 6.92,
+  "signals": [],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "VKTX|1d|2026-06-11|2026-07-07",
+  "ticker": "VKTX",
+  "name": "Viking Therapeutics, Inc.",
+  "tf": "1d",
+  "price": 30.11,
+  "L": 27.15999984741211,
+  "H": 42.790000915527344,
+  "L_date": "2026-06-11",
+  "H_date": "2026-07-07",
+  "entry_date": "2026-09-15",
+  "buy_high": 30.5048,
+  "buy_low": 28.9418,
+  "stop": 27.16,
+  "t1": 34.975,
+  "signals": [
+   "하락 빗각 돌파",
+   "반전 캔들"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "HLIT|1d|2026-07-29|2026-08-13",
+  "ticker": "HLIT",
+  "name": "Harmonic Inc.",
+  "tf": "1d",
+  "price": 11.32,
+  "L": 10.449999809265137,
+  "H": 15.0600004196167,
+  "L_date": "2026-07-29",
+  "H_date": "2026-08-13",
+  "entry_date": "2026-09-14",
+  "buy_high": 11.4365,
+  "buy_low": 10.9755,
+  "stop": 10.45,
+  "t1": 12.755,
+  "signals": [],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "HYMC|1d|2026-07-17|2026-08-12",
+  "ticker": "HYMC",
+  "name": "Hycroft Mining Holding Corporation",
+  "tf": "1d",
+  "price": 20.53,
+  "L": 18.01799964904785,
+  "H": 29.770000457763672,
+  "L_date": "2026-07-17",
+  "H_date": "2026-08-12",
+  "entry_date": "2026-09-14",
+  "buy_high": 20.5329,
+  "buy_low": 19.3577,
+  "stop": 18.018,
+  "t1": 23.894,
+  "signals": [],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "DRUG|1d|2026-06-16|2026-08-19",
+  "ticker": "DRUG",
+  "name": "Bright Minds Biosciences Inc.",
+  "tf": "1d",
+  "price": 59.46,
+  "L": 56.470001220703125,
+  "H": 87.0,
+  "L_date": "2026-06-16",
+  "H_date": "2026-08-19",
+  "entry_date": "2026-09-11",
+  "buy_high": 63.0034,
+  "buy_low": 59.9504,
+  "stop": 56.47,
+  "t1": 71.735,
+  "signals": [],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "COGT|1d|2026-05-19|2026-08-04",
+  "ticker": "COGT",
+  "name": "Cogent Biosciences, Inc.",
+  "tf": "1d",
+  "price": 32.0,
+  "L": 30.8700008392334,
+  "H": 43.38999938964844,
+  "L_date": "2026-05-19",
+  "H_date": "2026-08-04",
+  "entry_date": "2026-09-10",
+  "buy_high": 33.5493,
+  "buy_low": 32.2973,
+  "stop": 30.87,
+  "t1": 37.13,
+  "signals": [
+   "반전 캔들"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "KOD|1d|2026-06-09|2026-08-07",
+  "ticker": "KOD",
+  "name": "Kodiak Sciences Inc",
+  "tf": "1d",
+  "price": 32.42,
+  "L": 29.209999084472656,
+  "H": 46.869998931884766,
+  "L_date": "2026-06-09",
+  "H_date": "2026-08-07",
+  "entry_date": "2026-09-10",
+  "buy_high": 32.9892,
+  "buy_low": 31.2232,
+  "stop": 29.21,
+  "t1": 38.04,
+  "signals": [
+   "RSI 과매도 29"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "QS|1d|2026-07-28|2026-08-12",
+  "ticker": "QS",
+  "name": "QuantumScape Corporation",
+  "tf": "1d",
+  "price": 5.1,
+  "L": 4.769999980926514,
+  "H": 6.53000020980835,
+  "L_date": "2026-07-28",
+  "H_date": "2026-08-12",
+  "entry_date": "2026-09-10",
+  "buy_high": 5.1466,
+  "buy_low": 4.9706,
+  "stop": 4.77,
+  "t1": 5.65,
+  "signals": [],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "MATW|1d|2025-04-07|2026-05-01",
+  "ticker": "MATW",
+  "name": "Matthews International Corporation",
+  "tf": "1d",
+  "price": 19.78,
+  "L": 17.374223736417456,
+  "H": 30.31994447070994,
+  "L_date": "2025-04-07",
+  "H_date": "2026-05-01",
+  "entry_date": "2026-09-09",
+  "buy_high": 20.1446,
+  "buy_low": 18.85,
+  "stop": 17.3742,
+  "t1": 23.8471,
+  "signals": [
+   "RSI 상승 다이버전스"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "WDFC|1d|2026-01-09|2026-07-10",
+  "ticker": "WDFC",
+  "name": "WD-40 Company",
+  "tf": "1d",
+  "price": 191.54,
+  "L": 172.94586477148297,
+  "H": 297.7107394120505,
+  "L_date": "2026-01-09",
+  "H_date": "2026-07-10",
+  "entry_date": "2026-09-09",
+  "buy_high": 199.6455,
+  "buy_low": 187.1691,
+  "stop": 172.9459,
+  "t1": 235.3283,
+  "signals": [
+   "RSI 과매도 26"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "DYN|1d|2026-05-19|2026-08-12",
+  "ticker": "DYN",
+  "name": "Dyne Therapeutics, Inc.",
+  "tf": "1d",
+  "price": 17.12,
+  "L": 15.869999885559082,
+  "H": 27.30500030517578,
+  "L_date": "2026-05-19",
+  "H_date": "2026-08-12",
+  "entry_date": "2026-09-08",
+  "buy_high": 18.3171,
+  "buy_low": 17.1736,
+  "stop": 15.87,
+  "t1": 21.5875,
+  "signals": [
+   "RSI 과매도 23",
+   "반전 캔들"
+  ],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "CDNS|1d|2026-02-03|2026-06-02",
+  "ticker": "CDNS",
+  "name": "Cadence Design Systems, Inc.",
+  "tf": "1d",
+  "price": 294.9,
+  "L": 262.75,
+  "H": 416.69000244140625,
+  "L_date": "2026-02-03",
+  "H_date": "2026-06-02",
+  "entry_date": "2026-09-04",
+  "buy_high": 295.6932,
+  "buy_low": 280.2992,
+  "stop": 262.75,
+  "t1": 339.72,
+  "signals": [],
+  "rec_date": "2026-09-22",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ }
+]
