@@ -4,21 +4,33 @@ on:
   schedule:
     # 매주 화~토요일 한국 시간 오전 06:30 (미국 장 마감 후, UTC 21:30 월~금)
     - cron: '30 21 * * 1-5'
-  workflow_dispatch: # GitHub 웹 UI에서 수동 실행 지원
+  workflow_dispatch: # GitHub 웹 UI에서 수동 실행 지원 (Actions > 이 워크플로 > Run workflow)
 
 permissions:
   contents: write
 
+# 스캔이 겹쳐 돌면 기록 파일이 서로 덮어쓸 수 있으므로 한 번에 하나만 실행
+concurrency:
+  group: daily-scan
+  cancel-in-progress: false
+
 jobs:
   run-daily-scan:
-    runs-on: ubuntu-latest
+    # ubuntu-latest 는 2026-10-19부터 Ubuntu 26 으로 바뀌므로 검증된 버전으로 고정
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          # 예전 실행을 'Re-run' 해도 항상 최신 main 코드로 돈다.
+          # (기본값은 원래 실행 당시의 커밋 -> 옛 코드가 돌고, 결과 push 가 거부됨)
+          ref: main
+          fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
           cache: 'pip'
@@ -45,4 +57,22 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add daily_recommendations.json recommendation_history.json pattern_setups.json pattern_history.json pattern_placebo.json data/universes/nasdaq_listed.csv
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(auto): Update daily recommendations and history [skip ci]" && git push)
+          if git diff --staged --quiet; then
+            echo "변경된 결과 없음 - 커밋 생략"
+            exit 0
+          fi
+          git commit -m "chore(auto): Update daily recommendations and history [skip ci]"
+          # 스캔(약 8분) 도중 main 에 다른 커밋이 올라오면 push 가 거부된다.
+          # 최신 main 위로 봇 커밋을 다시 얹어서(rebase) 최대 3번 재시도한다.
+          # 봇 결과 파일이 겹치면 방금 만든 결과를 우선한다(-X theirs = 다시 얹는 봇 커밋 쪽).
+          for i in 1 2 3; do
+            if git pull --rebase -X theirs origin main && git push origin HEAD:main; then
+              echo "push 완료"
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            echo "push 재시도 ${i}/3"
+            sleep $((i * 10))
+          done
+          echo "::error::결과 push 실패 (3회 재시도). main 브랜치 보호 규칙이나 권한을 확인하세요."
+          exit 1
