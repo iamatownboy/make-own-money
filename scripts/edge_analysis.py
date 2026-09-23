@@ -13,6 +13,11 @@ scripts/edge_analysis.py
     python scripts/edge_analysis.py                 # 기본 유니버스 전체
     python scripts/edge_analysis.py --limit 15      # 앞 15종목만 (빠른 확인)
     python scripts/edge_analysis.py --holding 10    # 보유기간 변경
+    python scripts/edge_analysis.py --exits         # 청산 정책 비교 + 견고성 검증
+    python scripts/edge_analysis.py --placebo       # 무작위 진입 대조군과 비교
+
+    # 생존 편향 없는 검증 (과거 시점 구성종목) — 가장 신뢰할 수 있는 설정
+    python scripts/edge_analysis.py --universe data/universes/ndx100_2024-09.csv --exits --placebo
 """
 
 import os
@@ -42,6 +47,22 @@ from quant_core.screener import (
 )
 
 PATTERNS = ['fibonacci', 'trendline', 'divergence', 'auto']
+
+
+def load_universe(spec: str):
+    """
+    분석 유니버스를 불러온다.
+      'core'          : screener.CORE_UNIVERSE (현행 82종목, 사후 선정 목록)
+      <CSV 경로>      : Symbol 열을 가진 CSV. 과거 시점 구성종목(point-in-time)으로
+                        생존 편향 없이 검증할 때 사용한다.
+                        예) data/universes/ndx100_2024-09.csv
+    """
+    if spec == 'core':
+        return CORE_UNIVERSE, 'CORE_UNIVERSE (사후 선정)'
+    df = pd.read_csv(spec)
+    col = 'Symbol' if 'Symbol' in df.columns else df.columns[0]
+    tickers = [str(t).strip().replace('.', '-') for t in df[col].dropna().unique()]
+    return [{'ticker': t} for t in tickers], os.path.basename(spec)
 
 FEE_PCT = 0.25
 
@@ -189,26 +210,116 @@ def regime_at(bench_close: pd.Series, date) -> str:
     return '박스권 횡보장'
 
 
+def _collect_placebo(df, ticker, bench_series, holding_days, min_rr, fee_pct,
+                     with_exits, sink):
+    """
+    위약(placebo) 대조군: 패턴 없이 고정 간격(holding_days)의 무작위 스케줄로 진입한다.
+    시작 오프셋을 5가지로 달리해 표본을 늘린다. 손절/목표/RR 게이트/정산 규칙은
+    패턴 진입과 완전히 동일하므로, 패턴 진입과의 차이가 곧 '패턴이 주는 정보'다.
+    동시에 같은 진입 시점의 '단순 보유(holding_days)' 결과도 기록해,
+    손절/목표 구조 자체의 효과를 분리한다.
+    """
+    horizon = MAX_EXIT_HORIZON if with_exits else holding_days
+    last_i = len(df) - horizon - 1
+    close = df['Close']
+    for offset in range(0, holding_days, max(1, holding_days // 5)):
+        for i in range(30 + offset, last_i, holding_days):
+            entry = float(close.iloc[i])
+            entry_date = df.index[i]
+
+            hold_net = (float(close.iloc[i + holding_days]) / entry - 1) * 100 - fee_pct
+            hold_bench = benchmark_return_between(bench_series, entry_date, df.index[i + holding_days])
+
+            scen = predict_price_scenarios(df.iloc[:i + 1], days_ahead=5)
+            target = float(scen.get('bull_target_1') or 0.0)
+            stop = float(scen.get('stop_loss') or 0.0)
+            barrier_ok = (0 < stop < entry < target) and (target - entry) / (entry - stop) >= min_rr
+
+            rec = {'ticker': ticker, 'entry_date': entry_date,
+                   'hold_net': hold_net,
+                   'hold_excess': hold_net - hold_bench if hold_bench is not None else np.nan,
+                   'barrier_net': np.nan, 'barrier_excess': np.nan}
+            if barrier_ok:
+                o = resolve_triple_barrier(entry, target, stop,
+                                           df.iloc[i + 1: i + 1 + holding_days], fee_pct)
+                b = benchmark_return_between(bench_series, entry_date,
+                                             df.index[i + o['exit_offset']])
+                rec['barrier_net'] = o['net_return']
+                rec['barrier_excess'] = o['net_return'] - b if b is not None else np.nan
+            sink.append(rec)
+
+
+def print_placebo_comparison(trades: pd.DataFrame, placebo: pd.DataFrame):
+    """패턴 진입 vs 무작위 진입, 그리고 단순 보유 대비 손절/목표 구조의 효과를 분해한다."""
+    placebo = placebo.copy()
+    placebo['entry_date'] = pd.to_datetime(placebo['entry_date'])
+    months_p = placebo['entry_date'].dt.to_period('M')
+    months_t = trades['entry_date'].dt.to_period('M')
+
+    hold = placebo.dropna(subset=['hold_excess'])
+    barrier = placebo.dropna(subset=['barrier_excess'])
+
+    print("\n■ 위약(무작위 진입) 대조 — 수익이 어디서 오고 어디서 새는가")
+    print('-' * 72)
+    print(f"{'구성':<30}{'n':>7}{'순수익':>9}{'QQQ초과':>10}{'거래t':>8}{'월t':>7}")
+    print('-' * 72)
+    specs = [
+        ('① 무작위 진입 + 단순 보유', hold, 'hold_net', 'hold_excess', months_p.loc[hold.index]),
+        ('② 무작위 진입 + 현행 손절/목표', barrier, 'barrier_net', 'barrier_excess', months_p.loc[barrier.index]),
+        ('③ 패턴 진입 + 현행 손절/목표', trades, 'net_return', 'excess_return', months_t),
+    ]
+    for label, df_, net_col, exc_col, months in specs:
+        exc = df_[exc_col]
+        print(f"{label:<30}{len(df_):>7}{df_[net_col].mean():>+9.2f}{exc.mean():>+10.2f}"
+              f"{_t(exc):>+8.2f}{_t(exc.groupby(months).mean()):>+7.2f}")
+    print('-' * 72)
+    print("  ①→② 차이 = 손절/목표 구조의 효과,  ②→③ 차이 = 패턴이 주는 정보")
+
+    # 패턴의 증분 정보: 같은 종목 안에서 [패턴 초과 - 무작위 초과]
+    g = pd.DataFrame({
+        'pattern': trades.groupby('ticker')['excess_return'].mean(),
+        'random': barrier.groupby('ticker')['barrier_excess'].mean(),
+    }).dropna()
+    diff = g['pattern'] - g['random']
+    pm = trades.groupby(months_t)['excess_return'].mean()
+    rm = barrier.groupby(months_p.loc[barrier.index])['barrier_excess'].mean()
+    mdiff = (pm - rm).dropna()
+    print(f"\n■ 패턴의 증분 정보 (같은 종목 내 [패턴 - 무작위], {len(g)}종목 페어)")
+    print(f"  평균 {diff.mean():+.2f}%p  중앙값 {diff.median():+.2f}%p  t={_t(diff):+.2f}  "
+          f"패턴이 나은 종목 {(diff > 0).mean() * 100:.0f}%")
+    print(f"  월 단위 페어: 평균 {mdiff.mean():+.2f}%p  t={_t(mdiff):+.2f}  ({len(mdiff)}개월)")
+    verdict = '패턴에 정보가 있음' if abs(_t(diff)) > 1.96 and diff.mean() > 0 else '무작위 진입과 구별되지 않음'
+    print(f"  -> {verdict}")
+
+
 def collect_trades(tickers, period='2y', holding_days=20, min_rr=1.20,
-                   fee_slippage_pct=0.25, verbose=True, with_exits=False):
+                   fee_slippage_pct=0.25, verbose=True, with_exits=False,
+                   placebo_sink=None):
     """실전 규칙으로 과거 독립 신호를 재생성하고 거래 단위로 정산한다."""
     bench_series = get_benchmark_series(period=period)
     bench_close = load_benchmark_close(period)
     trades = []
+    missing = []
 
     for idx, item in enumerate(tickers, start=1):
         ticker = item['ticker']
         try:
             df = clean_ohlcv(yf.Ticker(ticker).history(period=period, interval='1d'))
             if df is None or df.empty or len(df) < 60:
+                missing.append(ticker)
                 continue
             df = calculate_all_indicators(df)
             # 종목 자체의 기간 단순보유 수익률 (생존 편향 검증용, 사후 정보이므로 분류에만 사용)
             buy_hold = (float(df['Close'].iloc[-1]) / float(df['Close'].iloc[0]) - 1) * 100
         except Exception as exc:
+            missing.append(ticker)
             if verbose:
                 print(f"  [{ticker}] 수집 실패: {exc}")
             continue
+
+        if placebo_sink is not None:
+            _collect_placebo(df, ticker, bench_series, holding_days, min_rr,
+                             fee_slippage_pct, with_exits, placebo_sink)
 
         for pattern in PATTERNS:
             last_signal = -10 ** 9
@@ -298,6 +409,7 @@ def collect_trades(tickers, period='2y', holding_days=20, min_rr=1.20,
             np.where(out.buy_hold_return <= q2, '중위', '승자')
         )
         out['entry_date'] = pd.to_datetime(out['entry_date'])
+    out.attrs['missing_tickers'] = missing
     return out
 
 
@@ -397,20 +509,32 @@ def main():
     parser.add_argument('--min-rr', type=float, default=1.20, help='진입 손익비 게이트')
     parser.add_argument('--csv', default=None, help='거래 단위 결과를 CSV로 저장할 경로')
     parser.add_argument('--exits', action='store_true', help='청산 정책 비교 및 견고성 검증 수행')
+    parser.add_argument('--placebo', action='store_true',
+                        help='무작위 진입 대조군과 비교 (패턴의 증분 정보 및 손절/목표 구조 효과 분해)')
+    parser.add_argument('--universe', default='core',
+                        help="'core'(기본) 또는 Symbol 열이 있는 CSV 경로 (과거 시점 구성종목 검증용)")
     args = parser.parse_args()
 
-    universe = CORE_UNIVERSE[:args.limit] if args.limit else CORE_UNIVERSE
+    universe, universe_label = load_universe(args.universe)
+    universe = universe[:args.limit] if args.limit else universe
+    print(f"유니버스: {universe_label}")
     print(f"엣지 진단 시작: 종목 {len(universe)}개 x 패턴 {len(PATTERNS)}종, "
           f"기간 {args.period}, 보유 {args.holding}일, RR 게이트 {args.min_rr}")
 
+    placebo_rows = [] if args.placebo else None
     trades = collect_trades(
         universe, period=args.period, holding_days=args.holding, min_rr=args.min_rr,
-        with_exits=args.exits
+        with_exits=args.exits, placebo_sink=placebo_rows
     )
 
     if trades.empty:
         print("\n독립 신호가 없습니다. 기간 또는 게이트 조건을 확인하세요.")
         return
+
+    missing = trades.attrs.get('missing_tickers', [])
+    if missing:
+        print(f"\n시세 수집 실패 {len(missing)}종목 (상장폐지·피인수 등): {', '.join(missing)}")
+        print("  -> 이 종목들은 분석에서 빠지므로 생존 편향이 일부 남는다.")
 
     n = len(trades)
     mean = trades.excess_return.mean()
@@ -430,6 +554,9 @@ def main():
 
     if args.exits:
         print_exit_comparison(trades)
+
+    if args.placebo and placebo_rows:
+        print_placebo_comparison(trades, pd.DataFrame(placebo_rows))
 
     print("\n주의: 여러 그룹을 동시에 비교하면 우연히 t가 커지는 칸이 생긴다(다중비교).")
     print("      개별 칸의 t값만 보고 전략을 채택하지 말 것. 전체 t가 먼저 유의해야 한다.")
