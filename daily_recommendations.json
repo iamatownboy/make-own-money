@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-22",
-  "updated_at": "2026-09-22 23:39:56",
+  "date": "2026-09-23",
+  "updated_at": "2026-09-23 11:43:06",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,48 +8,53 @@
     "qualified": 0,
     "near_miss": [
       {
-        "ticker": "GOOGL",
-        "name": "알파벳 (구글)",
-        "total_score": 64,
-        "risk_reward_ratio": 1.62,
+        "ticker": "TSM",
+        "name": "TSMC",
+        "total_score": 45,
+        "risk_reward_ratio": 0.93,
         "blockers": [
-          "점수 64/68"
+          "점수 45/68",
+          "손익비 0.93/1.20"
         ]
       },
       {
-        "ticker": "CEG",
-        "name": "컨스텔레이션 에너지",
-        "total_score": 63,
-        "risk_reward_ratio": 1.73,
+        "ticker": "AMZN",
+        "name": "아마존",
+        "total_score": 40,
+        "risk_reward_ratio": 1.01,
         "blockers": [
-          "점수 63/68"
+          "점수 40/68",
+          "손익비 1.01/1.20"
         ]
       },
       {
-        "ticker": "ASML",
-        "name": "ASML",
-        "total_score": 61,
-        "risk_reward_ratio": 1.72,
+        "ticker": "XYZ",
+        "name": "블록 (구 스퀘어)",
+        "total_score": 38,
+        "risk_reward_ratio": 1.19,
         "blockers": [
-          "점수 61/68"
+          "점수 38/68",
+          "손익비 1.19/1.20"
         ]
       },
       {
-        "ticker": "MPWR",
-        "name": "모놀리식 파워",
-        "total_score": 60,
-        "risk_reward_ratio": 2.26,
+        "ticker": "DDOG",
+        "name": "데이터독",
+        "total_score": 36,
+        "risk_reward_ratio": 0.67,
         "blockers": [
-          "점수 60/68"
+          "점수 36/68",
+          "손익비 0.67/1.20"
         ]
       },
       {
-        "ticker": "TXN",
-        "name": "텍사스 인스트루먼트",
-        "total_score": 57,
-        "risk_reward_ratio": 1.4,
+        "ticker": "CCJ",
+        "name": "카메코",
+        "total_score": 36,
+        "risk_reward_ratio": 0.75,
         "blockers": [
-          "점수 57/68"
+          "점수 36/68",
+          "손익비 0.75/1.20"
         ]
       }
     ]

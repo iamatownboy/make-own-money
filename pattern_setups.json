@@ -1,6 +1,6 @@
 {
  "date": "2026-09-22",
- "generated_at": "2026-09-23 11:20:50",
+ "generated_at": "2026-09-23 11:42:43",
  "universe": 3124,
  "liquid": 1017,
  "setups": [
@@ -37,8 +37,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 44,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -74,8 +74,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-10-22",
-   "earnings_days": 30,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -108,8 +108,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-10-27",
-   "earnings_days": 35,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -142,8 +142,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-06",
-   "earnings_days": 45,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -212,8 +212,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-12",
-   "earnings_days": 51,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -223,7 +223,7 @@
    "tf": "1w",
    "tf_label": "주봉",
    "price": 19.78,
-   "L": 17.374223736417456,
+   "L": 17.374227286311942,
    "H": 30.31994447070994,
    "L_date": "2025-04-11",
    "H_date": "2026-05-01",
@@ -248,8 +248,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-19",
-   "earnings_days": 58,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -284,8 +284,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-10-29",
-   "earnings_days": 37,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -318,8 +318,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-03",
-   "earnings_days": 42,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -354,8 +354,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-04",
-   "earnings_days": 43,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -388,8 +388,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 44,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -426,8 +426,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-12",
-   "earnings_days": 51,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -463,8 +463,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-22",
-   "earnings_days": 30,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -500,8 +500,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-21",
-   "earnings_days": 29,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -511,15 +511,15 @@
    "tf": "1d",
    "tf_label": "일봉",
    "price": 129.59,
-   "L": 120.26618699614673,
-   "H": 166.41419598610082,
+   "L": 120.26617192493629,
+   "H": 166.41421163548557,
    "L_date": "2025-05-23",
    "H_date": "2026-02-12",
    "entry_date": "2026-09-18",
    "retrace": 0.798,
    "swing_pct": 38.4,
    "buy_high": 130.1419,
-   "buy_low": 125.5271,
+   "buy_low": 125.527,
    "stop": 120.2662,
    "t1": 143.3402,
    "t2": 147.1971,
@@ -537,8 +537,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-08",
-   "earnings_days": 16,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -573,8 +573,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 44,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -609,8 +609,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-02",
-   "earnings_days": 41,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -643,8 +643,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-29",
-   "earnings_days": 37,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -677,8 +677,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-12",
-   "earnings_days": 51,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -713,8 +713,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 44,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -750,8 +750,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-28",
-   "earnings_days": 36,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -786,9 +786,9 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-09-23",
-   "earnings_days": 1,
-   "earnings_soon": true
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
   },
   {
    "id": "METC|1d|2026-08-03|2026-09-02",
@@ -820,8 +820,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-26",
-   "earnings_days": 34,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -854,8 +854,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 44,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -891,8 +891,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-28",
-   "earnings_days": 36,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -925,8 +925,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-26",
-   "earnings_days": 34,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -959,8 +959,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-27",
-   "earnings_days": 35,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1029,8 +1029,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-03",
-   "earnings_days": 42,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1065,8 +1065,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-12",
-   "earnings_days": 51,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1099,8 +1099,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-21",
-   "earnings_days": 29,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1110,7 +1110,7 @@
    "tf": "1d",
    "tf_label": "일봉",
    "price": 19.78,
-   "L": 17.374223736417456,
+   "L": 17.374227286311942,
    "H": 30.31994447070994,
    "L_date": "2025-04-07",
    "H_date": "2026-05-01",
@@ -1135,8 +1135,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-19",
-   "earnings_days": 58,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1171,8 +1171,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-21",
-   "earnings_days": 29,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1208,8 +1208,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 44,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1242,8 +1242,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-26",
-   "earnings_days": 34,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   }
  ],
@@ -1552,5 +1552,5 @@
    "hit_rate": null
   }
  },
- "elapsed_sec": 10.2
+ "elapsed_sec": 250.0
 }
