@@ -6,3 +6,4 @@ daily_recommendations.json   merge=keep-remote
 recommendation_history.json  merge=keep-remote
 pattern_setups.json          merge=keep-remote
 pattern_history.json         merge=keep-remote
+pattern_placebo.json         merge=keep-remote

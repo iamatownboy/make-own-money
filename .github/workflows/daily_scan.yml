@@ -29,6 +29,14 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Daily Scan (Nasdaq pattern zones + 82-stock score screener)
+        env:
+          # 새 추천 알림 (설정한 것만 사용됨. 비어 있으면 알림 없이 진행)
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          APP_URL: ${{ secrets.APP_URL }}
         run: |
           python scripts/daily_scan.py
 
@@ -36,5 +44,5 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add daily_recommendations.json recommendation_history.json pattern_setups.json pattern_history.json data/universes/nasdaq_listed.csv
+          git add daily_recommendations.json recommendation_history.json pattern_setups.json pattern_history.json pattern_placebo.json data/universes/nasdaq_listed.csv
           git diff --quiet && git diff --staged --quiet || (git commit -m "chore(auto): Update daily recommendations and history [skip ci]" && git push)

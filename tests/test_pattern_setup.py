@@ -211,3 +211,58 @@ def test_attach_earnings_flags_only_near_dates():
     assert by['B']['earnings_days'] == 28 and by['B']['earnings_soon'] is False
     assert by['C']['earnings_date'] is None and by['C']['earnings_soon'] is False
     assert by['D']['earnings_days'] == 0 and by['D']['earnings_soon'] is True
+
+
+# 13. 알림: 메시지 형식, 설정 없으면 안 보냄, 설정 있으면 텔레그램 호출(토큰은 URL에만)
+def _setup(t, tf='1w', **kw):
+    base = {'id': f'{t}|{tf}', 'ticker': t, 'tf': tf, 'tf_label': '주봉' if tf == '1w' else '일봉',
+            'position': '구간 안', 'price': 91.89, 'buy_low': 87.89, 'buy_high': 92.24,
+            'stop': 82.92, 'stop_pct': -9.8, 't1': 104.7, 't1_pct': 13.9, 'earnings_soon': False}
+    base.update(kw)
+    return base
+
+
+def test_notifier_message_and_channels(monkeypatch):
+    from quant_core import notifier
+    setups = [_setup('VC', '1w'), _setup('VC', '1d'),
+              _setup('CBRL', '1d', earnings_soon=True, earnings_days=1)]
+    m = notifier.build_message(setups, '2026-09-22', 1017, 'https://app.example')
+    assert m['subject'] == '[패턴 구간] 새 추천 2종목 (2026-09-22)'   # VC 주봉·일봉은 하나로
+    assert 'VC · 주봉 · 일봉도' in m['text']
+    assert '⚠ 실적 발표 D-1' in m['text']
+    assert '손절 $82.92 (-9.8%)' in m['text'] and m['text'].endswith('https://app.example')
+
+    for k in ('TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID', 'ALERT_EMAIL_TO', 'SMTP_USER', 'SMTP_PASSWORD'):
+        monkeypatch.delenv(k, raising=False)
+    assert notifier.notify_new_setups(setups, '2026-09-22') == []      # 설정 없음 -> 조용히 건너뜀
+    assert notifier.notify_new_setups([], '2026-09-22') == []          # 새 추천 없음 -> 안 보냄
+
+    calls = []
+
+    class Resp:
+        status = 200
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+
+    def fake_urlopen(req, timeout=0):
+        calls.append((req.full_url, json.loads(req.data.decode('utf-8'))))
+        return Resp()
+
+    import json
+    monkeypatch.setenv('TELEGRAM_BOT_TOKEN', 'SECRET123')
+    monkeypatch.setenv('TELEGRAM_CHAT_ID', '42')
+    monkeypatch.setattr(notifier.urllib.request, 'urlopen', fake_urlopen)
+    assert notifier.notify_new_setups(setups, '2026-09-22') == ['telegram']
+    url, body = calls[0]
+    assert url == 'https://api.telegram.org/botSECRET123/sendMessage'
+    assert body['chat_id'] == '42' and 'SECRET123' not in body['text']
+
+
+# 14. 기록: 새 추천 ID만 돌려주고, 같은 날 다시 돌려도 중복 기록·중복 알림 없음
+def test_append_history_returns_only_new_ids(tmp_path, monkeypatch):
+    import quant_core.pattern_scanner as ps
+    monkeypatch.setattr(ps, 'HISTORY_FILE', str(tmp_path / 'h.json'))
+    s = dict(_setup('VC'), name='Visteon', L=82.92, H=126.48, L_date='2026-03-20', H_date='2026-06-26',
+             entry_date='2026-09-21', signals=[])
+    assert ps.append_history([s], '2026-09-22') == ['VC|1w']
+    assert ps.append_history([s], '2026-09-23') == []

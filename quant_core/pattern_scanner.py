@@ -248,11 +248,11 @@ def _save_json(path: str, obj) -> None:
         json.dump(obj, f, ensure_ascii=False, indent=1, default=float)
 
 
-def append_history(setups: List[Dict[str, Any]], rec_date: str) -> int:
-    """처음 나타난 추천만 기록한다. 추천 당시 값은 이후 바꾸지 않는다."""
+def append_history(setups: List[Dict[str, Any]], rec_date: str) -> List[str]:
+    """처음 나타난 추천만 기록한다. 추천 당시 값은 이후 바꾸지 않는다. 새로 기록한 ID 목록을 돌려준다."""
     hist = _load_json(HISTORY_FILE, [])
     seen = {h['id'] for h in hist}
-    added = 0
+    added: List[str] = []
     for s in setups:
         if s['id'] in seen:
             continue
@@ -261,7 +261,8 @@ def append_history(setups: List[Dict[str, Any]], rec_date: str) -> int:
         rec['earnings_date'] = s.get('earnings_date')   # 나중에 '실적 직전 추천'의 성적을 따로 보기 위해
         rec['rec_date'] = rec_date
         hist.append(rec)
-        added += 1
+        seen.add(s['id'])
+        added.append(s['id'])
     _save_json(HISTORY_FILE, hist)
     return added
 
@@ -471,13 +472,26 @@ def run_pattern_scan(cache_dir: Optional[str] = None, verbose: bool = True) -> D
     if verbose:
         print(f"  [3/4] 매수 구간 {len(res['setups'])}개, 구간 근접 {len(res['watch'])}개 (기준일 {rec_date})")
 
-    added = append_history(res['setups'], rec_date)
+    new_ids = append_history(res['setups'], rec_date)
+    added = len(new_ids)
     hist = evaluate_history(full, bench)
     ensure_placebos(hist, full, list(full.keys()))
     placebo = evaluate_placebos(full, bench)
     summary = history_summary(hist, placebo)
     if verbose:
         print(f"  [4/4] 새 추천 기록 {added}개, 누적 {summary['total']}개 채점 완료")
+
+    # 새 추천이 있을 때만 알림 (설정이 없으면 조용히 건너뜀)
+    sent = []
+    try:
+        from .notifier import notify_new_setups
+        new_set = set(new_ids)
+        sent = notify_new_setups([s for s in res['setups'] if s['id'] in new_set], rec_date, len(liquid))
+    except Exception as exc:
+        if verbose:
+            print(f"  [알림] 실패: {type(exc).__name__}")
+    if verbose and new_ids:
+        print(f"  [알림] 새 추천 {added}건 -> {', '.join(sent) if sent else '설정된 채널 없음'}")
 
     payload = {
         'date': rec_date,
