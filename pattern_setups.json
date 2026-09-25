@@ -1,43 +1,75 @@
 {
- "date": "2026-09-23",
- "generated_at": "2026-09-23 23:53:07",
- "universe": 3124,
- "liquid": 1010,
+ "date": "2026-09-24",
+ "generated_at": "2026-09-25 00:00:34",
+ "universe": 3125,
+ "liquid": 1009,
  "setups": [
   {
-   "id": "ALKT|1w|2026-06-26|2026-08-14",
-   "ticker": "ALKT",
-   "name": "Alkami Technology, Inc.",
+   "id": "ALM|1w|2026-07-31|2026-09-11",
+   "ticker": "ALM",
+   "name": "Almonty Industries Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 14.6,
-   "L": 13.979999542236328,
-   "H": 21.049999237060547,
-   "L_date": "2026-06-26",
-   "H_date": "2026-08-14",
-   "entry_date": "2026-09-23",
-   "retrace": 0.912,
-   "swing_pct": 50.6,
-   "buy_high": 15.493,
-   "buy_low": 14.786,
-   "stop": 13.98,
-   "t1": 17.515,
-   "t2": 17.62,
-   "t3": 19.582,
-   "t4": 23.1766,
-   "stop_pct": -4.2,
-   "position": "구간 아래",
-   "t1_pct": 20.0,
-   "signals": [
-    "RSI 과매도 25"
-   ],
+   "price": 12.4,
+   "L": 10.739999771118164,
+   "H": 19.450000762939453,
+   "L_date": "2026-07-31",
+   "H_date": "2026-09-11",
+   "entry_date": "2026-09-24",
+   "retrace": 0.809,
+   "swing_pct": 81.1,
+   "buy_high": 12.6039,
+   "buy_low": 11.7329,
+   "stop": 10.74,
+   "t1": 15.095,
+   "t2": 15.91,
+   "t3": 17.9349,
+   "t4": 21.6448,
+   "stop_pct": -13.4,
+   "position": "구간 안",
+   "t1_pct": 21.7,
+   "signals": [],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-10-28",
-   "earnings_days": 35,
+   "earnings_date": "2026-11-06",
+   "earnings_days": 43,
+   "earnings_soon": false
+  },
+  {
+   "id": "CRVS|1w|2026-06-12|2026-07-10",
+   "ticker": "CRVS",
+   "name": "Corvus Pharmaceuticals, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 11.8,
+   "L": 10.829999923706055,
+   "H": 16.469999313354492,
+   "L_date": "2026-06-12",
+   "H_date": "2026-07-10",
+   "entry_date": "2026-09-24",
+   "retrace": 0.828,
+   "swing_pct": 52.1,
+   "buy_high": 12.037,
+   "buy_low": 11.473,
+   "stop": 10.83,
+   "t1": 13.65,
+   "t2": 13.9875,
+   "t3": 15.4075,
+   "t4": 18.0091,
+   "stop_pct": -8.2,
+   "position": "구간 안",
+   "t1_pct": 15.7,
+   "signals": [],
+   "base_rate": {
+    "hit": 48.1,
+    "random": 38.0,
+    "n": 801
+   },
+   "earnings_date": "2026-11-03",
+   "earnings_days": 40,
    "earnings_soon": false
   },
   {
@@ -46,26 +78,26 @@
    "name": "Cytokinetics, Incorporated",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 65.81,
+   "price": 65.66,
    "L": 58.43000030517578,
    "H": 88.30999755859375,
    "L_date": "2026-03-13",
    "H_date": "2026-07-02",
-   "entry_date": "2026-09-23",
-   "retrace": 0.753,
+   "entry_date": "2026-09-24",
+   "retrace": 0.758,
    "swing_pct": 51.1,
    "buy_high": 64.8243,
    "buy_low": 61.8363,
    "stop": 58.43,
    "t1": 73.37,
-   "t2": 76.5175,
-   "t3": 83.2628,
-   "t4": 95.6213,
-   "stop_pct": -11.2,
+   "t2": 76.52,
+   "t3": 83.2639,
+   "t4": 95.6198,
+   "stop_pct": -11.0,
    "position": "구간 위",
-   "t1_pct": 11.5,
+   "t1_pct": 11.7,
    "signals": [
-    "RSI 과매도 30"
+    "RSI 과매도 29"
    ],
    "base_rate": {
     "hit": 48.1,
@@ -73,7 +105,7 @@
     "n": 801
    },
    "earnings_date": "2026-11-05",
-   "earnings_days": 43,
+   "earnings_days": 42,
    "earnings_soon": false
   },
   {
@@ -82,26 +114,26 @@
    "name": "Dyne Therapeutics, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 16.23,
+   "price": 16.51,
    "L": 14.0,
    "H": 27.30500030517578,
    "L_date": "2026-03-06",
    "H_date": "2026-08-14",
-   "entry_date": "2026-09-23",
-   "retrace": 0.832,
+   "entry_date": "2026-09-24",
+   "retrace": 0.811,
    "swing_pct": 95.0,
    "buy_high": 16.8473,
    "buy_low": 15.5168,
    "stop": 14.0,
    "t1": 20.6525,
-   "t2": 21.7425,
-   "t3": 24.9243,
-   "t4": 30.7538,
-   "stop_pct": -13.7,
+   "t2": 21.5925,
+   "t3": 24.8601,
+   "t4": 30.8468,
+   "stop_pct": -15.2,
    "position": "구간 안",
-   "t1_pct": 27.2,
+   "t1_pct": 25.1,
    "signals": [
-    "RSI 과매도 20"
+    "RSI 과매도 23"
    ],
    "base_rate": {
     "hit": 48.1,
@@ -109,7 +141,7 @@
     "n": 801
    },
    "earnings_date": "2026-11-05",
-   "earnings_days": 43,
+   "earnings_days": 42,
    "earnings_soon": false
   },
   {
@@ -145,7 +177,7 @@
     "n": 801
    },
    "earnings_date": "2026-10-27",
-   "earnings_days": 34,
+   "earnings_days": 33,
    "earnings_soon": false
   },
   {
@@ -181,7 +213,7 @@
     "n": 801
    },
    "earnings_date": "2026-11-11",
-   "earnings_days": 49,
+   "earnings_days": 48,
    "earnings_soon": false
   },
   {
@@ -202,9 +234,9 @@
    "buy_low": 22.406,
    "stop": 21.16,
    "t1": 26.625,
-   "t2": 27.445,
-   "t3": 30.1019,
-   "t4": 34.9699,
+   "t2": 27.44,
+   "t3": 30.0998,
+   "t4": 34.973,
    "stop_pct": -7.5,
    "position": "구간 안",
    "t1_pct": 16.4,
@@ -217,7 +249,7 @@
     "n": 801
    },
    "earnings_date": "2026-11-05",
-   "earnings_days": 43,
+   "earnings_days": 42,
    "earnings_soon": false
   },
   {
@@ -253,7 +285,77 @@
     "n": 801
    },
    "earnings_date": "2026-10-22",
-   "earnings_days": 29,
+   "earnings_days": 28,
+   "earnings_soon": false
+  },
+  {
+   "id": "HROW|1w|2026-05-15|2026-07-17",
+   "ticker": "HROW",
+   "name": "Harrow, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 33.1,
+   "L": 28.540000915527344,
+   "H": 47.5,
+   "L_date": "2026-05-15",
+   "H_date": "2026-07-17",
+   "entry_date": "2026-09-18",
+   "retrace": 0.759,
+   "swing_pct": 66.4,
+   "buy_high": 32.5974,
+   "buy_low": 30.7014,
+   "stop": 28.54,
+   "t1": 38.02,
+   "t2": 39.7,
+   "t3": 44.1616,
+   "t4": 52.336,
+   "stop_pct": -13.8,
+   "position": "구간 위",
+   "t1_pct": 14.9,
+   "signals": [],
+   "base_rate": {
+    "hit": 48.1,
+    "random": 38.0,
+    "n": 801
+   },
+   "earnings_date": "2026-11-09",
+   "earnings_days": 46,
+   "earnings_soon": false
+  },
+  {
+   "id": "HYMC|1w|2026-07-17|2026-08-14",
+   "ticker": "HYMC",
+   "name": "Hycroft Mining Holding Corporation",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 20.89,
+   "L": 18.01799964904785,
+   "H": 29.770000457763672,
+   "L_date": "2026-07-17",
+   "H_date": "2026-08-14",
+   "entry_date": "2026-09-18",
+   "retrace": 0.756,
+   "swing_pct": 65.2,
+   "buy_high": 20.5329,
+   "buy_low": 19.3577,
+   "stop": 18.018,
+   "t1": 23.894,
+   "t2": 24.695,
+   "t3": 27.5979,
+   "t4": 32.9165,
+   "stop_pct": -13.7,
+   "position": "구간 위",
+   "t1_pct": 14.4,
+   "signals": [
+    "반전 캔들"
+   ],
+   "base_rate": {
+    "hit": 48.1,
+    "random": 38.0,
+    "n": 801
+   },
+   "earnings_date": "2026-10-27",
+   "earnings_days": 33,
    "earnings_soon": false
   },
   {
@@ -287,7 +389,7 @@
     "n": 801
    },
    "earnings_date": "2026-11-06",
-   "earnings_days": 44,
+   "earnings_days": 43,
    "earnings_soon": false
   },
   {
@@ -296,13 +398,13 @@
    "name": "REalloys Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 8.67,
+   "price": 8.52,
    "L": 6.824999809265137,
    "H": 15.350000381469727,
    "L_date": "2026-07-24",
    "H_date": "2026-08-14",
    "entry_date": "2026-09-11",
-   "retrace": 0.784,
+   "retrace": 0.801,
    "swing_pct": 124.9,
    "buy_high": 8.6493,
    "buy_low": 7.7968,
@@ -311,46 +413,10 @@
    "t2": 11.64,
    "t3": 13.7621,
    "t4": 17.6502,
-   "stop_pct": -21.3,
-   "position": "구간 위",
-   "t1_pct": 27.9,
+   "stop_pct": -19.9,
+   "position": "구간 안",
+   "t1_pct": 30.1,
    "signals": [],
-   "base_rate": {
-    "hit": 48.1,
-    "random": 38.0,
-    "n": 801
-   },
-   "earnings_date": null,
-   "earnings_days": null,
-   "earnings_soon": false
-  },
-  {
-   "id": "DRUG|1w|2026-06-18|2026-08-21",
-   "ticker": "DRUG",
-   "name": "Bright Minds Biosciences Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 57.92,
-   "L": 56.470001220703125,
-   "H": 87.0,
-   "L_date": "2026-06-18",
-   "H_date": "2026-08-21",
-   "entry_date": "2026-09-11",
-   "retrace": 0.953,
-   "swing_pct": 54.1,
-   "buy_high": 63.0034,
-   "buy_low": 59.9504,
-   "stop": 56.47,
-   "t1": 71.735,
-   "t2": 71.775,
-   "t3": 80.4837,
-   "t4": 96.4395,
-   "stop_pct": -2.5,
-   "position": "구간 아래",
-   "t1_pct": 23.9,
-   "signals": [
-    "RSI 과매도 29"
-   ],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
@@ -366,34 +432,32 @@
    "name": "Kodiak Sciences Inc",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 31.52,
+   "price": 33.22,
    "L": 29.209999084472656,
    "H": 46.869998931884766,
    "L_date": "2026-06-12",
    "H_date": "2026-08-07",
    "entry_date": "2026-09-11",
-   "retrace": 0.869,
+   "retrace": 0.773,
    "swing_pct": 60.5,
    "buy_high": 32.9892,
    "buy_low": 31.2232,
    "stop": 29.21,
    "t1": 38.04,
-   "t2": 38.835,
-   "t3": 43.431,
-   "t4": 51.8517,
-   "stop_pct": -7.3,
-   "position": "구간 안",
-   "t1_pct": 20.7,
-   "signals": [
-    "RSI 과매도 26"
-   ],
+   "t2": 38.34,
+   "t3": 43.2192,
+   "t4": 52.1586,
+   "stop_pct": -12.1,
+   "position": "구간 위",
+   "t1_pct": 14.5,
+   "signals": [],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
    },
    "earnings_date": "2026-11-12",
-   "earnings_days": 50,
+   "earnings_days": 49,
    "earnings_soon": false
   },
   {
@@ -402,25 +466,26 @@
    "name": "Matthews International Corporation",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 19.71,
-   "L": 17.3742255113647,
-   "H": 30.319942408693425,
+   "price": 19.22,
+   "L": 17.374227286311942,
+   "H": 30.31994447070994,
    "L_date": "2025-04-11",
    "H_date": "2026-05-01",
    "entry_date": "2026-09-11",
-   "retrace": 0.82,
+   "retrace": 0.857,
    "swing_pct": 74.5,
    "buy_high": 20.1446,
    "buy_low": 18.85,
    "stop": 17.3742,
    "t1": 23.8471,
-   "t2": 24.915,
-   "t3": 28.0066,
-   "t4": 33.671,
-   "stop_pct": -11.9,
+   "t2": 24.7375,
+   "t3": 27.9306,
+   "t4": 33.7811,
+   "stop_pct": -9.6,
    "position": "구간 안",
-   "t1_pct": 21.0,
+   "t1_pct": 24.1,
    "signals": [
+    "RSI 과매도 28",
     "RSI 상승 다이버전스"
    ],
    "base_rate": {
@@ -429,7 +494,7 @@
     "n": 801
    },
    "earnings_date": "2026-11-19",
-   "earnings_days": 57,
+   "earnings_days": 56,
    "earnings_soon": false
   },
   {
@@ -465,7 +530,7 @@
     "n": 801
    },
    "earnings_date": "2026-10-29",
-   "earnings_days": 36,
+   "earnings_days": 35,
    "earnings_soon": false
   },
   {
@@ -474,32 +539,34 @@
    "name": "Kratos Defense & Security Solutions, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 46.16,
+   "price": 47.02,
    "L": 43.09000015258789,
    "H": 67.0999984741211,
    "L_date": "2026-07-31",
    "H_date": "2026-08-14",
    "entry_date": "2026-09-04",
-   "retrace": 0.872,
+   "retrace": 0.836,
    "swing_pct": 55.7,
    "buy_high": 48.2281,
    "buy_low": 45.8271,
    "stop": 43.09,
    "t1": 55.095,
-   "t2": 56.285,
-   "t3": 62.4712,
-   "t4": 73.8053,
-   "stop_pct": -6.7,
+   "t2": 55.955,
+   "t3": 62.3299,
+   "t4": 74.0099,
+   "stop_pct": -8.4,
    "position": "구간 안",
-   "t1_pct": 19.4,
-   "signals": [],
+   "t1_pct": 17.2,
+   "signals": [
+    "반전 캔들"
+   ],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
    },
    "earnings_date": "2026-11-03",
-   "earnings_days": 41,
+   "earnings_days": 40,
    "earnings_soon": false
   },
   {
@@ -533,43 +600,143 @@
     "n": 801
    },
    "earnings_date": "2026-11-04",
-   "earnings_days": 42,
+   "earnings_days": 41,
    "earnings_soon": false
   },
   {
-   "id": "ALKT|1d|2026-06-22|2026-08-14",
-   "ticker": "ALKT",
-   "name": "Alkami Technology, Inc.",
+   "id": "ALM|1d|2026-07-29|2026-09-08",
+   "ticker": "ALM",
+   "name": "Almonty Industries Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 14.6,
-   "L": 13.979999542236328,
-   "H": 21.049999237060547,
-   "L_date": "2026-06-22",
-   "H_date": "2026-08-14",
-   "entry_date": "2026-09-23",
-   "retrace": 0.912,
-   "swing_pct": 50.6,
-   "buy_high": 15.493,
-   "buy_low": 14.786,
-   "stop": 13.98,
-   "t1": 17.515,
-   "t2": 17.62,
-   "t3": 19.582,
-   "t4": 23.1766,
-   "stop_pct": -4.2,
-   "position": "구간 아래",
-   "t1_pct": 20.0,
-   "signals": [
-    "RSI 과매도 25"
-   ],
+   "price": 12.4,
+   "L": 10.739999771118164,
+   "H": 19.450000762939453,
+   "L_date": "2026-07-29",
+   "H_date": "2026-09-08",
+   "entry_date": "2026-09-24",
+   "retrace": 0.809,
+   "swing_pct": 81.1,
+   "buy_high": 12.6039,
+   "buy_low": 11.7329,
+   "stop": 10.74,
+   "t1": 15.095,
+   "t2": 15.91,
+   "t3": 17.9349,
+   "t4": 21.6448,
+   "stop_pct": -13.4,
+   "position": "구간 안",
+   "t1_pct": 21.7,
+   "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-28",
-   "earnings_days": 35,
+   "earnings_date": "2026-11-06",
+   "earnings_days": 43,
+   "earnings_soon": false
+  },
+  {
+   "id": "CRVS|1d|2026-06-09|2026-07-09",
+   "ticker": "CRVS",
+   "name": "Corvus Pharmaceuticals, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 11.8,
+   "L": 10.829999923706055,
+   "H": 16.469999313354492,
+   "L_date": "2026-06-09",
+   "H_date": "2026-07-09",
+   "entry_date": "2026-09-24",
+   "retrace": 0.828,
+   "swing_pct": 52.1,
+   "buy_high": 12.037,
+   "buy_low": 11.473,
+   "stop": 10.83,
+   "t1": 13.65,
+   "t2": 13.9875,
+   "t3": 15.4075,
+   "t4": 18.0091,
+   "stop_pct": -8.2,
+   "position": "구간 안",
+   "t1_pct": 15.7,
+   "signals": [],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": "2026-11-03",
+   "earnings_days": 40,
+   "earnings_soon": false
+  },
+  {
+   "id": "CSGP|1d|2026-07-29|2026-08-19",
+   "ticker": "CSGP",
+   "name": "CoStar Group, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 27.855,
+   "L": 25.889999389648438,
+   "H": 33.81999969482422,
+   "L_date": "2026-07-29",
+   "H_date": "2026-08-19",
+   "entry_date": "2026-09-24",
+   "retrace": 0.752,
+   "swing_pct": 30.6,
+   "buy_high": 27.587,
+   "buy_low": 26.794,
+   "stop": 25.89,
+   "t1": 29.855,
+   "t2": 30.55,
+   "t3": 32.4204,
+   "t4": 35.8474,
+   "stop_pct": -7.1,
+   "position": "구간 위",
+   "t1_pct": 7.2,
+   "signals": [],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": "2026-10-27",
+   "earnings_days": 33,
+   "earnings_soon": false
+  },
+  {
+   "id": "INTU|1d|2026-06-22|2026-08-24",
+   "ticker": "INTU",
+   "name": "Intuit Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 277.13,
+   "L": 251.72492815683486,
+   "H": 372.9800109863281,
+   "L_date": "2026-06-22",
+   "H_date": "2026-08-24",
+   "entry_date": "2026-09-24",
+   "retrace": 0.79,
+   "swing_pct": 48.2,
+   "buy_high": 277.6735,
+   "buy_low": 265.548,
+   "stop": 251.7249,
+   "t1": 312.3525,
+   "t2": 324.88,
+   "t3": 352.3932,
+   "t4": 402.802,
+   "stop_pct": -9.2,
+   "position": "구간 안",
+   "t1_pct": 12.7,
+   "signals": [],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": "2026-11-19",
+   "earnings_days": 56,
    "earnings_soon": false
   },
   {
@@ -578,32 +745,34 @@
    "name": "Bicara Therapeutics Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 20.485,
+   "price": 19.78,
    "L": 18.6200008392334,
    "H": 30.989999771118164,
    "L_date": "2026-05-19",
    "H_date": "2026-07-07",
    "entry_date": "2026-09-23",
-   "retrace": 0.849,
+   "retrace": 0.906,
    "swing_pct": 66.4,
    "buy_high": 21.2672,
    "buy_low": 20.0302,
    "stop": 18.62,
    "t1": 24.805,
-   "t2": 25.735,
-   "t3": 28.7409,
-   "t4": 34.2481,
-   "stop_pct": -9.1,
-   "position": "구간 안",
-   "t1_pct": 21.1,
-   "signals": [],
+   "t2": 25.16,
+   "t3": 28.4948,
+   "t4": 34.6046,
+   "stop_pct": -5.9,
+   "position": "구간 아래",
+   "t1_pct": 25.4,
+   "signals": [
+    "RSI 과매도 28"
+   ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
    "earnings_date": "2026-11-10",
-   "earnings_days": 48,
+   "earnings_days": 47,
    "earnings_soon": false
   },
   {
@@ -612,13 +781,13 @@
    "name": "Charter Communications, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 116.61,
+   "price": 117.55,
    "L": 111.55000305175781,
    "H": 160.6999969482422,
    "L_date": "2026-07-24",
    "H_date": "2026-09-03",
    "entry_date": "2026-09-23",
-   "retrace": 0.897,
+   "retrace": 0.878,
    "swing_pct": 44.1,
    "buy_high": 122.0681,
    "buy_low": 117.1531,
@@ -627,9 +796,9 @@
    "t2": 136.675,
    "t3": 150.4173,
    "t4": 175.5955,
-   "stop_pct": -4.3,
-   "position": "구간 아래",
-   "t1_pct": 16.7,
+   "stop_pct": -5.1,
+   "position": "구간 안",
+   "t1_pct": 15.8,
    "signals": [
     "반전 캔들"
    ],
@@ -639,43 +808,7 @@
     "n": 1959
    },
    "earnings_date": "2026-10-30",
-   "earnings_days": 37,
-   "earnings_soon": false
-  },
-  {
-   "id": "DAVE|1d|2026-08-11|2026-09-04",
-   "ticker": "DAVE",
-   "name": "Dave Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 326.19,
-   "L": 302.1650085449219,
-   "H": 394.989990234375,
-   "L_date": "2026-08-11",
-   "H_date": "2026-09-04",
-   "entry_date": "2026-09-23",
-   "retrace": 0.741,
-   "swing_pct": 30.7,
-   "buy_high": 322.0296,
-   "buy_low": 312.7471,
-   "stop": 302.165,
-   "t1": 348.5775,
-   "t2": 355.82,
-   "t3": 378.2252,
-   "t4": 419.2754,
-   "stop_pct": -7.4,
-   "position": "구간 위",
-   "t1_pct": 6.9,
-   "signals": [
-    "200일선 위"
-   ],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-11-04",
-   "earnings_days": 42,
+   "earnings_days": 36,
    "earnings_soon": false
   },
   {
@@ -684,26 +817,26 @@
    "name": "EverQuote, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 17.63,
+   "price": 18.06,
    "L": 17.25,
    "H": 28.295000076293945,
    "L_date": "2026-05-14",
    "H_date": "2026-07-21",
    "entry_date": "2026-09-23",
-   "retrace": 0.966,
+   "retrace": 0.927,
    "swing_pct": 64.0,
    "buy_high": 19.6136,
    "buy_low": 18.5091,
    "stop": 17.25,
    "t1": 22.7725,
-   "t2": 22.8425,
-   "t3": 25.9613,
-   "t4": 31.6756,
-   "stop_pct": -2.2,
+   "t2": 22.8375,
+   "t3": 25.9592,
+   "t4": 31.6787,
+   "stop_pct": -4.5,
    "position": "구간 아래",
-   "t1_pct": 29.2,
+   "t1_pct": 26.1,
    "signals": [
-    "RSI 과매도 22"
+    "RSI 과매도 25"
    ],
    "base_rate": {
     "hit": 46.0,
@@ -711,7 +844,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-02",
-   "earnings_days": 40,
+   "earnings_days": 39,
    "earnings_soon": false
   },
   {
@@ -720,24 +853,24 @@
    "name": "Frontdoor, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 73.95,
+   "price": 71.88,
    "L": 69.95999908447266,
    "H": 93.43000030517578,
    "L_date": "2026-07-23",
    "H_date": "2026-08-07",
    "entry_date": "2026-09-23",
-   "retrace": 0.83,
+   "retrace": 0.918,
    "swing_pct": 33.5,
    "buy_high": 74.9826,
    "buy_low": 72.6356,
    "stop": 69.96,
    "t1": 81.695,
-   "t2": 83.265,
-   "t3": 89.0794,
-   "t4": 99.7323,
-   "stop_pct": -5.4,
-   "position": "구간 안",
-   "t1_pct": 10.5,
+   "t2": 81.84,
+   "t3": 88.4695,
+   "t4": 100.6158,
+   "stop_pct": -2.7,
+   "position": "구간 아래",
+   "t1_pct": 13.7,
    "signals": [
     "200일선 위"
    ],
@@ -747,7 +880,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-04",
-   "earnings_days": 42,
+   "earnings_days": 41,
    "earnings_soon": false
   },
   {
@@ -756,13 +889,13 @@
    "name": "Mobileye Global Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 7.61,
+   "price": 7.69,
    "L": 7.099999904632568,
    "H": 9.430000305175781,
    "L_date": "2026-07-23",
    "H_date": "2026-08-17",
    "entry_date": "2026-09-23",
-   "retrace": 0.781,
+   "retrace": 0.747,
    "swing_pct": 32.8,
    "buy_high": 7.5986,
    "buy_low": 7.3656,
@@ -771,9 +904,9 @@
    "t2": 8.44,
    "t3": 9.0063,
    "t4": 10.0438,
-   "stop_pct": -6.7,
+   "stop_pct": -7.7,
    "position": "구간 위",
-   "t1_pct": 8.6,
+   "t1_pct": 7.5,
    "signals": [
     "반전 캔들"
    ],
@@ -783,7 +916,7 @@
     "n": 1959
    },
    "earnings_date": "2026-10-29",
-   "earnings_days": 36,
+   "earnings_days": 35,
    "earnings_soon": false
   },
   {
@@ -819,7 +952,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-12",
-   "earnings_days": 50,
+   "earnings_days": 49,
    "earnings_soon": false
   },
   {
@@ -853,7 +986,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-04",
-   "earnings_days": 42,
+   "earnings_days": 41,
    "earnings_soon": false
   },
   {
@@ -887,7 +1020,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-04",
-   "earnings_days": 42,
+   "earnings_days": 41,
    "earnings_soon": false
   },
   {
@@ -923,7 +1056,7 @@
     "n": 1959
    },
    "earnings_date": "2026-10-27",
-   "earnings_days": 34,
+   "earnings_days": 33,
    "earnings_soon": false
   },
   {
@@ -959,7 +1092,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-11",
-   "earnings_days": 49,
+   "earnings_days": 48,
    "earnings_soon": false
   },
   {
@@ -980,9 +1113,9 @@
    "buy_low": 22.406,
    "stop": 21.16,
    "t1": 26.625,
-   "t2": 27.445,
-   "t3": 30.1019,
-   "t4": 34.9699,
+   "t2": 27.44,
+   "t3": 30.0998,
+   "t4": 34.973,
    "stop_pct": -7.5,
    "position": "구간 안",
    "t1_pct": 16.4,
@@ -995,7 +1128,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-05",
-   "earnings_days": 43,
+   "earnings_days": 42,
    "earnings_soon": false
   },
   {
@@ -1029,7 +1162,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-05",
-   "earnings_days": 43,
+   "earnings_days": 42,
    "earnings_soon": false
   },
   {
@@ -1050,9 +1183,9 @@
    "buy_low": 163.1228,
    "stop": 155.1,
    "t1": 190.2878,
-   "t2": 197.6553,
-   "t3": 213.5685,
-   "t4": 242.7242,
+   "t2": 197.5478,
+   "t3": 213.5225,
+   "t4": 242.7908,
    "stop_pct": -9.7,
    "position": "구간 위",
    "t1_pct": 10.8,
@@ -1065,7 +1198,7 @@
     "n": 1959
    },
    "earnings_date": "2026-10-28",
-   "earnings_days": 35,
+   "earnings_days": 34,
    "earnings_soon": false
   },
   {
@@ -1074,26 +1207,27 @@
    "name": "Booking Holdings Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 155.9,
+   "price": 157.41,
    "L": 149.4026900553264,
    "H": 216.79643346375497,
    "L_date": "2026-05-20",
    "H_date": "2026-08-25",
    "entry_date": "2026-09-22",
-   "retrace": 0.904,
+   "retrace": 0.881,
    "swing_pct": 45.1,
    "buy_high": 163.825,
    "buy_low": 157.0856,
    "stop": 149.4027,
    "t1": 183.0996,
-   "t2": 186.0807,
-   "t3": 203.6501,
-   "t4": 235.8402,
-   "stop_pct": -4.2,
-   "position": "구간 아래",
-   "t1_pct": 17.4,
+   "t2": 186.0832,
+   "t3": 203.6512,
+   "t4": 235.8386,
+   "stop_pct": -5.1,
+   "position": "구간 안",
+   "t1_pct": 16.3,
    "signals": [
-    "RSI 과매도 21"
+    "RSI 과매도 24",
+    "반전 캔들"
    ],
    "base_rate": {
     "hit": 46.0,
@@ -1101,7 +1235,7 @@
     "n": 1959
    },
    "earnings_date": "2026-10-27",
-   "earnings_days": 34,
+   "earnings_days": 33,
    "earnings_soon": false
   },
   {
@@ -1138,7 +1272,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-12",
-   "earnings_days": 50,
+   "earnings_days": 49,
    "earnings_soon": false
   },
   {
@@ -1159,9 +1293,9 @@
    "buy_low": 196.5573,
    "stop": 187.63,
    "t1": 226.785,
-   "t2": 234.5625,
-   "t3": 252.5104,
-   "t4": 285.3941,
+   "t2": 234.565,
+   "t3": 252.5115,
+   "t4": 285.3925,
    "stop_pct": -9.1,
    "position": "구간 위",
    "t1_pct": 9.9,
@@ -1174,7 +1308,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-09",
-   "earnings_days": 47,
+   "earnings_days": 46,
    "earnings_soon": false
   },
   {
@@ -1210,7 +1344,7 @@
     "n": 1959
    },
    "earnings_date": "2026-10-22",
-   "earnings_days": 29,
+   "earnings_days": 28,
    "earnings_soon": false
   },
   {
@@ -1219,24 +1353,24 @@
    "name": "Euronet Worldwide, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 64.64,
+   "price": 64.33,
    "L": 62.5,
    "H": 83.97000122070312,
    "L_date": "2026-06-11",
    "H_date": "2026-07-29",
    "entry_date": "2026-09-18",
-   "retrace": 0.9,
+   "retrace": 0.915,
    "swing_pct": 34.4,
    "buy_high": 67.0946,
    "buy_low": 64.9476,
    "stop": 62.5,
    "t1": 73.235,
-   "t2": 74.2925,
-   "t3": 79.828,
-   "t4": 89.9701,
-   "stop_pct": -3.3,
+   "t2": 73.76,
+   "t3": 79.6001,
+   "t4": 90.3002,
+   "stop_pct": -2.8,
    "position": "구간 아래",
-   "t1_pct": 13.3,
+   "t1_pct": 13.8,
    "signals": [],
    "base_rate": {
     "hit": 46.0,
@@ -1244,7 +1378,41 @@
     "n": 1959
    },
    "earnings_date": "2026-10-21",
-   "earnings_days": 28,
+   "earnings_days": 27,
+   "earnings_soon": false
+  },
+  {
+   "id": "HROW|1d|2026-05-13|2026-07-17",
+   "ticker": "HROW",
+   "name": "Harrow, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 33.1,
+   "L": 28.540000915527344,
+   "H": 47.5,
+   "L_date": "2026-05-13",
+   "H_date": "2026-07-17",
+   "entry_date": "2026-09-18",
+   "retrace": 0.759,
+   "swing_pct": 66.4,
+   "buy_high": 32.5974,
+   "buy_low": 30.7014,
+   "stop": 28.54,
+   "t1": 38.02,
+   "t2": 39.7,
+   "t3": 44.1616,
+   "t4": 52.336,
+   "stop_pct": -13.8,
+   "position": "구간 위",
+   "t1_pct": 14.9,
+   "signals": [],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": "2026-11-09",
+   "earnings_days": 46,
    "earnings_soon": false
   },
   {
@@ -1254,8 +1422,8 @@
    "tf": "1d",
    "tf_label": "일봉",
    "price": 130.18,
-   "L": 120.26618699614673,
-   "H": 166.41421163548557,
+   "L": 120.26617946054151,
+   "H": 166.41419598610082,
    "L_date": "2025-05-23",
    "H_date": "2026-02-12",
    "entry_date": "2026-09-18",
@@ -1280,8 +1448,8 @@
     "n": 1959
    },
    "earnings_date": "2026-10-08",
-   "earnings_days": 15,
-   "earnings_soon": false
+   "earnings_days": 14,
+   "earnings_soon": true
   },
   {
    "id": "TXRH|1d|2026-05-04|2026-08-13",
@@ -1301,9 +1469,9 @@
    "buy_low": 159.7539,
    "stop": 152.5849,
    "t1": 184.0278,
-   "t2": 189.4103,
-   "t3": 204.3168,
-   "t4": 231.628,
+   "t2": 189.4053,
+   "t3": 204.3147,
+   "t4": 231.6311,
    "stop_pct": -7.4,
    "position": "구간 안",
    "t1_pct": 11.6,
@@ -1317,7 +1485,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-05",
-   "earnings_days": 43,
+   "earnings_days": 42,
    "earnings_soon": false
   },
   {
@@ -1351,7 +1519,7 @@
     "n": 1959
    },
    "earnings_date": "2026-10-29",
-   "earnings_days": 36,
+   "earnings_days": 35,
    "earnings_soon": false
   },
   {
@@ -1360,24 +1528,24 @@
    "name": "Jade Biosciences, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 14.71,
+   "price": 14.73,
    "L": 14.279999732971191,
    "H": 25.0,
    "L_date": "2026-06-09",
    "H_date": "2026-08-14",
    "entry_date": "2026-09-16",
-   "retrace": 0.96,
+   "retrace": 0.958,
    "swing_pct": 75.1,
    "buy_high": 16.5741,
    "buy_low": 15.5021,
    "stop": 14.28,
    "t1": 19.64,
-   "t2": 19.79,
-   "t3": 22.7701,
-   "t4": 28.2302,
-   "stop_pct": -2.9,
+   "t2": 19.725,
+   "t3": 22.7423,
+   "t4": 28.2705,
+   "stop_pct": -3.1,
    "position": "구간 아래",
-   "t1_pct": 33.5,
+   "t1_pct": 33.3,
    "signals": [
     "RSI 과매도 23"
    ],
@@ -1387,7 +1555,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-12",
-   "earnings_days": 50,
+   "earnings_days": 49,
    "earnings_soon": false
   },
   {
@@ -1396,13 +1564,13 @@
    "name": "BridgeBio Pharma, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 65.71,
+   "price": 66.28,
    "L": 62.5,
    "H": 93.41500091552734,
    "L_date": "2026-06-02",
    "H_date": "2026-07-09",
    "entry_date": "2026-09-15",
-   "retrace": 0.896,
+   "retrace": 0.878,
    "swing_pct": 49.5,
    "buy_high": 69.1158,
    "buy_low": 66.0243,
@@ -1411,11 +1579,11 @@
    "t2": 79.1575,
    "t3": 87.3128,
    "t4": 102.2547,
-   "stop_pct": -4.9,
-   "position": "구간 아래",
-   "t1_pct": 18.6,
+   "stop_pct": -5.7,
+   "position": "구간 안",
+   "t1_pct": 17.6,
    "signals": [
-    "RSI 과매도 19"
+    "RSI 과매도 22"
    ],
    "base_rate": {
     "hit": 46.0,
@@ -1423,7 +1591,43 @@
     "n": 1959
    },
    "earnings_date": "2026-10-28",
-   "earnings_days": 35,
+   "earnings_days": 34,
+   "earnings_soon": false
+  },
+  {
+   "id": "BLMN|1d|2026-05-06|2026-08-05",
+   "ticker": "BLMN",
+   "name": "Bloomin' Brands, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 8.12,
+   "L": 6.989999771118164,
+   "H": 12.630000114440918,
+   "L_date": "2026-05-06",
+   "H_date": "2026-08-05",
+   "entry_date": "2026-09-15",
+   "retrace": 0.8,
+   "swing_pct": 80.7,
+   "buy_high": 8.197,
+   "buy_low": 7.633,
+   "stop": 6.99,
+   "t1": 9.81,
+   "t2": 10.27,
+   "t3": 11.6199,
+   "t4": 14.0932,
+   "stop_pct": -13.9,
+   "position": "구간 안",
+   "t1_pct": 20.8,
+   "signals": [
+    "200일선 위"
+   ],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": "2026-11-05",
+   "earnings_days": 42,
    "earnings_soon": false
   },
   {
@@ -1432,32 +1636,34 @@
    "name": "Ramaco Resources, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 9.28,
+   "price": 9.14,
    "L": 8.5600004196167,
    "H": 15.1899995803833,
    "L_date": "2026-08-03",
    "H_date": "2026-09-02",
    "entry_date": "2026-09-15",
-   "retrace": 0.891,
+   "retrace": 0.913,
    "swing_pct": 77.5,
    "buy_high": 9.9788,
    "buy_low": 9.3158,
    "stop": 8.56,
    "t1": 11.875,
-   "t2": 12.195,
-   "t3": 13.9081,
-   "t4": 17.0469,
-   "stop_pct": -7.8,
+   "t2": 12.0125,
+   "t3": 13.83,
+   "t4": 17.16,
+   "stop_pct": -6.3,
    "position": "구간 아래",
-   "t1_pct": 28.0,
-   "signals": [],
+   "t1_pct": 29.9,
+   "signals": [
+    "반전 캔들"
+   ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
    "earnings_date": "2026-10-26",
-   "earnings_days": 33,
+   "earnings_days": 32,
    "earnings_soon": false
   },
   {
@@ -1491,7 +1697,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-05",
-   "earnings_days": 43,
+   "earnings_days": 42,
    "earnings_soon": false
   },
   {
@@ -1525,7 +1731,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-02",
-   "earnings_days": 40,
+   "earnings_days": 39,
    "earnings_soon": false
   },
   {
@@ -1534,13 +1740,13 @@
    "name": "Harmonic Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 10.99,
+   "price": 10.945,
    "L": 10.449999809265137,
    "H": 15.0600004196167,
    "L_date": "2026-07-29",
    "H_date": "2026-08-13",
    "entry_date": "2026-09-14",
-   "retrace": 0.883,
+   "retrace": 0.893,
    "swing_pct": 44.1,
    "buy_high": 11.4365,
    "buy_low": 10.9755,
@@ -1549,16 +1755,54 @@
    "t2": 12.9,
    "t3": 14.1355,
    "t4": 16.3992,
-   "stop_pct": -4.9,
-   "position": "구간 안",
-   "t1_pct": 16.1,
-   "signals": [],
+   "stop_pct": -4.5,
+   "position": "구간 아래",
+   "t1_pct": 16.5,
+   "signals": [
+    "반전 캔들"
+   ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
    "earnings_date": "2026-10-26",
+   "earnings_days": 32,
+   "earnings_soon": false
+  },
+  {
+   "id": "HYMC|1d|2026-07-17|2026-08-12",
+   "ticker": "HYMC",
+   "name": "Hycroft Mining Holding Corporation",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 20.89,
+   "L": 18.01799964904785,
+   "H": 29.770000457763672,
+   "L_date": "2026-07-17",
+   "H_date": "2026-08-12",
+   "entry_date": "2026-09-14",
+   "retrace": 0.756,
+   "swing_pct": 65.2,
+   "buy_high": 20.5329,
+   "buy_low": 19.3577,
+   "stop": 18.018,
+   "t1": 23.894,
+   "t2": 24.695,
+   "t3": 27.5979,
+   "t4": 32.9165,
+   "stop_pct": -13.7,
+   "position": "구간 위",
+   "t1_pct": 14.4,
+   "signals": [
+    "반전 캔들"
+   ],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": "2026-10-27",
    "earnings_days": 33,
    "earnings_soon": false
   },
@@ -1568,13 +1812,13 @@
    "name": "REalloys Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 8.67,
+   "price": 8.52,
    "L": 6.824999809265137,
    "H": 15.350000381469727,
    "L_date": "2026-07-24",
    "H_date": "2026-08-14",
    "entry_date": "2026-09-11",
-   "retrace": 0.784,
+   "retrace": 0.801,
    "swing_pct": 124.9,
    "buy_high": 8.6493,
    "buy_low": 7.7968,
@@ -1583,46 +1827,10 @@
    "t2": 11.64,
    "t3": 13.7621,
    "t4": 17.6502,
-   "stop_pct": -21.3,
-   "position": "구간 위",
-   "t1_pct": 27.9,
+   "stop_pct": -19.9,
+   "position": "구간 안",
+   "t1_pct": 30.1,
    "signals": [],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": null,
-   "earnings_days": null,
-   "earnings_soon": false
-  },
-  {
-   "id": "DRUG|1d|2026-06-16|2026-08-19",
-   "ticker": "DRUG",
-   "name": "Bright Minds Biosciences Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 57.92,
-   "L": 56.470001220703125,
-   "H": 87.0,
-   "L_date": "2026-06-16",
-   "H_date": "2026-08-19",
-   "entry_date": "2026-09-11",
-   "retrace": 0.953,
-   "swing_pct": 54.1,
-   "buy_high": 63.0034,
-   "buy_low": 59.9504,
-   "stop": 56.47,
-   "t1": 71.735,
-   "t2": 71.775,
-   "t3": 80.4837,
-   "t4": 96.4395,
-   "stop_pct": -2.5,
-   "position": "구간 아래",
-   "t1_pct": 23.9,
-   "signals": [
-    "RSI 과매도 29"
-   ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
@@ -1638,13 +1846,13 @@
    "name": "BioCryst Pharmaceuticals, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 8.57,
+   "price": 8.52,
    "L": 7.789999961853027,
    "H": 11.220000267028809,
    "L_date": "2026-05-06",
    "H_date": "2026-07-09",
    "entry_date": "2026-09-10",
-   "retrace": 0.773,
+   "retrace": 0.787,
    "swing_pct": 44.0,
    "buy_high": 8.524,
    "buy_low": 8.181,
@@ -1653,51 +1861,19 @@
    "t2": 9.62,
    "t3": 10.5352,
    "t4": 12.212,
-   "stop_pct": -9.1,
-   "position": "구간 위",
-   "t1_pct": 10.9,
-   "signals": [],
+   "stop_pct": -8.6,
+   "position": "구간 안",
+   "t1_pct": 11.6,
+   "signals": [
+    "반전 캔들"
+   ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
    "earnings_date": "2026-11-02",
-   "earnings_days": 40,
-   "earnings_soon": false
-  },
-  {
-   "id": "COGT|1d|2026-05-19|2026-08-04",
-   "ticker": "COGT",
-   "name": "Cogent Biosciences, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 31.41,
-   "L": 30.8700008392334,
-   "H": 43.38999938964844,
-   "L_date": "2026-05-19",
-   "H_date": "2026-08-04",
-   "entry_date": "2026-09-10",
-   "retrace": 0.957,
-   "swing_pct": 40.6,
-   "buy_high": 33.5493,
-   "buy_low": 32.2973,
-   "stop": 30.87,
-   "t1": 37.13,
-   "t2": 37.135,
-   "t3": 40.7129,
-   "t4": 47.2681,
-   "stop_pct": -1.7,
-   "position": "구간 아래",
-   "t1_pct": 18.2,
-   "signals": [],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-11-03",
-   "earnings_days": 41,
+   "earnings_days": 39,
    "earnings_soon": false
   },
   {
@@ -1706,34 +1882,32 @@
    "name": "Kodiak Sciences Inc",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 31.52,
+   "price": 33.22,
    "L": 29.209999084472656,
    "H": 46.869998931884766,
    "L_date": "2026-06-09",
    "H_date": "2026-08-07",
    "entry_date": "2026-09-10",
-   "retrace": 0.869,
+   "retrace": 0.773,
    "swing_pct": 60.5,
    "buy_high": 32.9892,
    "buy_low": 31.2232,
    "stop": 29.21,
    "t1": 38.04,
-   "t2": 38.835,
-   "t3": 43.431,
-   "t4": 51.8517,
-   "stop_pct": -7.3,
-   "position": "구간 안",
-   "t1_pct": 20.7,
-   "signals": [
-    "RSI 과매도 26"
-   ],
+   "t2": 38.34,
+   "t3": 43.2192,
+   "t4": 52.1586,
+   "stop_pct": -12.1,
+   "position": "구간 위",
+   "t1_pct": 14.5,
+   "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
    "earnings_date": "2026-11-12",
-   "earnings_days": 50,
+   "earnings_days": 49,
    "earnings_soon": false
   },
   {
@@ -1742,25 +1916,26 @@
    "name": "Matthews International Corporation",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 19.71,
-   "L": 17.3742255113647,
-   "H": 30.319942408693425,
+   "price": 19.22,
+   "L": 17.374227286311942,
+   "H": 30.31994447070994,
    "L_date": "2025-04-07",
    "H_date": "2026-05-01",
    "entry_date": "2026-09-09",
-   "retrace": 0.82,
+   "retrace": 0.857,
    "swing_pct": 74.5,
    "buy_high": 20.1446,
    "buy_low": 18.85,
    "stop": 17.3742,
    "t1": 23.8471,
-   "t2": 24.915,
-   "t3": 28.0066,
-   "t4": 33.671,
-   "stop_pct": -11.9,
+   "t2": 24.7375,
+   "t3": 27.9306,
+   "t4": 33.7811,
+   "stop_pct": -9.6,
    "position": "구간 안",
-   "t1_pct": 21.0,
+   "t1_pct": 24.1,
    "signals": [
+    "RSI 과매도 28",
     "RSI 상승 다이버전스"
    ],
    "base_rate": {
@@ -1769,7 +1944,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-19",
-   "earnings_days": 57,
+   "earnings_days": 56,
    "earnings_soon": false
   },
   {
@@ -1803,63 +1978,18 @@
     "n": 1959
    },
    "earnings_date": "2026-10-21",
-   "earnings_days": 28,
-   "earnings_soon": false
-  },
-  {
-   "id": "DYN|1d|2026-05-19|2026-08-12",
-   "ticker": "DYN",
-   "name": "Dyne Therapeutics, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 16.23,
-   "L": 15.869999885559082,
-   "H": 27.30500030517578,
-   "L_date": "2026-05-19",
-   "H_date": "2026-08-12",
-   "entry_date": "2026-09-08",
-   "retrace": 0.969,
-   "swing_pct": 72.1,
-   "buy_high": 18.3171,
-   "buy_low": 17.1736,
-   "stop": 15.87,
-   "t1": 21.5875,
-   "t2": 21.7425,
-   "t3": 24.9243,
-   "t4": 30.7538,
-   "stop_pct": -2.2,
-   "position": "구간 아래",
-   "t1_pct": 33.0,
-   "signals": [
-    "RSI 과매도 20"
-   ],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 43,
+   "earnings_days": 27,
    "earnings_soon": false
   }
  ],
  "watch": [
   {
-   "ticker": "FTAI",
-   "name": "FTAI Aviation Ltd.",
+   "ticker": "DOO",
+   "name": "BRP Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 186.01,
-   "buy_high": 185.6956,
-   "distance_pct": 0.2
-  },
-  {
-   "ticker": "LMAT",
-   "name": "LeMaitre Vascular, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 80.58,
-   "buy_high": 80.4419,
+   "price": 55.39,
+   "buy_high": 55.2624,
    "distance_pct": 0.2
   },
   {
@@ -1881,13 +2011,22 @@
    "distance_pct": 0.3
   },
   {
+   "ticker": "LMAT",
+   "name": "LeMaitre Vascular, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 80.82,
+   "buy_high": 80.4419,
+   "distance_pct": 0.5
+  },
+  {
    "ticker": "JBIO",
    "name": "Jade Biosciences, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 14.71,
+   "price": 14.73,
    "buy_high": 14.6184,
-   "distance_pct": 0.6
+   "distance_pct": 0.8
   },
   {
    "ticker": "RGTI",
@@ -1899,31 +2038,40 @@
    "distance_pct": 1.0
   },
   {
-   "ticker": "CG",
-   "name": "The Carlyle Group Inc.",
+   "ticker": "CHKP",
+   "name": "Check Point Software Technologies Ltd.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 39.92,
-   "buy_high": 39.4649,
+   "price": 136.29,
+   "buy_high": 134.6795,
    "distance_pct": 1.2
   },
   {
-   "ticker": "MBLY",
-   "name": "Mobileye Global Inc.",
+   "ticker": "NXPI",
+   "name": "NXP Semiconductors N.V.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 7.61,
-   "buy_high": 7.4951,
-   "distance_pct": 1.5
+   "price": 230.16,
+   "buy_high": 227.3733,
+   "distance_pct": 1.2
   },
   {
-   "ticker": "INTR",
-   "name": "Inter & Co. Inc.",
+   "ticker": "BZ",
+   "name": "KANZHUN LIMITED",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 5.24,
-   "buy_high": 5.156,
-   "distance_pct": 1.6
+   "price": 14.22,
+   "buy_high": 14.0177,
+   "distance_pct": 1.4
+  },
+  {
+   "ticker": "APLD",
+   "name": "Applied Digital Corporation",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 27.06,
+   "buy_high": 26.5751,
+   "distance_pct": 1.8
   },
   {
    "ticker": "PRVA",
@@ -1935,58 +2083,22 @@
    "distance_pct": 2.2
   },
   {
-   "ticker": "HAPN",
-   "name": "Happen, Inc.",
+   "ticker": "MBLY",
+   "name": "Mobileye Global Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 15.15,
-   "buy_high": 14.805,
-   "distance_pct": 2.3
-  },
-  {
-   "ticker": "APLD",
-   "name": "Applied Digital Corporation",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 27.23,
-   "buy_high": 26.5751,
-   "distance_pct": 2.5
-  },
-  {
-   "ticker": "GSHD",
-   "name": "Goosehead Insurance, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 43.52,
-   "buy_high": 42.3984,
+   "price": 7.69,
+   "buy_high": 7.4951,
    "distance_pct": 2.6
   },
   {
-   "ticker": "BEAM",
-   "name": "Beam Therapeutics Inc.",
+   "ticker": "MGEE",
+   "name": "MGE Energy Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 24.37,
-   "buy_high": 23.6989,
+   "price": 68.49,
+   "buy_high": 66.6412,
    "distance_pct": 2.8
-  },
-  {
-   "ticker": "BZ",
-   "name": "KANZHUN LIMITED",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 14.41,
-   "buy_high": 14.0177,
-   "distance_pct": 2.8
-  },
-  {
-   "ticker": "DOO",
-   "name": "BRP Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 56.84,
-   "buy_high": 55.2624,
-   "distance_pct": 2.9
   },
   {
    "ticker": "RIVN",
@@ -2007,57 +2119,48 @@
    "distance_pct": 2.9
   },
   {
-   "ticker": "HROW",
-   "name": "Harrow, Inc.",
+   "ticker": "GSHD",
+   "name": "Goosehead Insurance, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 33.6,
-   "buy_high": 32.5974,
-   "distance_pct": 3.1
-  },
-  {
-   "ticker": "KC",
-   "name": "Kingsoft Cloud Holdings Limited",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 9.68,
-   "buy_high": 9.3751,
-   "distance_pct": 3.3
-  },
-  {
-   "ticker": "AVAV",
-   "name": "AeroVironment, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 155.94,
-   "buy_high": 150.7428,
-   "distance_pct": 3.4
-  },
-  {
-   "ticker": "HYMC",
-   "name": "Hycroft Mining Holding Corporation",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 21.26,
-   "buy_high": 20.5329,
-   "distance_pct": 3.5
-  },
-  {
-   "ticker": "NXPI",
-   "name": "NXP Semiconductors N.V.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 235.44,
-   "buy_high": 227.3732,
-   "distance_pct": 3.5
+   "price": 43.65,
+   "buy_high": 42.3984,
+   "distance_pct": 3.0
   },
   {
    "ticker": "HLNE",
    "name": "Hamilton Lane Incorporated",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 85.7,
+   "price": 85.34,
    "buy_high": 82.6553,
+   "distance_pct": 3.2
+  },
+  {
+   "ticker": "MRAM",
+   "name": "Everspin Technologies, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 17.88,
+   "buy_high": 17.309,
+   "distance_pct": 3.3
+  },
+  {
+   "ticker": "CWST",
+   "name": "Casella Waste Systems, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 83.83,
+   "buy_high": 81.0204,
+   "distance_pct": 3.5
+  },
+  {
+   "ticker": "HAPN",
+   "name": "Happen, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 15.35,
+   "buy_high": 14.805,
    "distance_pct": 3.7
   },
   {
@@ -2070,12 +2173,12 @@
    "distance_pct": 3.8
   },
   {
-   "ticker": "EVER",
-   "name": "EverQuote, Inc.",
+   "ticker": "KC",
+   "name": "Kingsoft Cloud Holdings Limited",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 17.63,
-   "buy_high": 16.9648,
+   "price": 9.74,
+   "buy_high": 9.3751,
    "distance_pct": 3.9
   },
   {
@@ -2088,22 +2191,13 @@
    "distance_pct": 4.0
   },
   {
-   "ticker": "CWST",
-   "name": "Casella Waste Systems, Inc.",
+   "ticker": "BEAM",
+   "name": "Beam Therapeutics Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 84.8,
-   "buy_high": 81.0204,
-   "distance_pct": 4.7
-  },
-  {
-   "ticker": "CHKP",
-   "name": "Check Point Software Technologies Ltd.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 141.16,
-   "buy_high": 134.6795,
-   "distance_pct": 4.8
+   "price": 24.66,
+   "buy_high": 23.6989,
+   "distance_pct": 4.1
   },
   {
    "ticker": "NN",
@@ -2113,43 +2207,88 @@
    "price": 14.39,
    "buy_high": 13.7224,
    "distance_pct": 4.9
+  },
+  {
+   "ticker": "VELO",
+   "name": "Velo3D, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 10.97,
+   "buy_high": 10.3749,
+   "distance_pct": 5.7
+  },
+  {
+   "ticker": "DSGX",
+   "name": "The Descartes Systems Group Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 80.13,
+   "buy_high": 75.4287,
+   "distance_pct": 6.2
+  },
+  {
+   "ticker": "STOK",
+   "name": "Stoke Therapeutics, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 26.11,
+   "buy_high": 24.5786,
+   "distance_pct": 6.2
+  },
+  {
+   "ticker": "TPG",
+   "name": "TPG Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 44.93,
+   "buy_high": 42.2359,
+   "distance_pct": 6.4
+  },
+  {
+   "ticker": "ALGM",
+   "name": "Allegro MicroSystems, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 35.13,
+   "buy_high": 32.973,
+   "distance_pct": 6.5
   }
  ],
  "summary": {
-  "total": 61,
-  "hit": 1,
-  "stop": 2,
-  "open": 58,
-  "hit_rate": 33.3,
-  "decided": 3,
-  "avg_ret": -4.34,
-  "avg_excess": -3.51,
-  "finished": 2,
+  "total": 70,
+  "hit": 2,
+  "stop": 7,
+  "open": 61,
+  "hit_rate": 22.2,
+  "decided": 9,
+  "avg_ret": -4.14,
+  "avg_excess": -3.55,
+  "finished": 7,
   "by_tf": {
    "1d": {
-    "total": 45,
-    "decided": 3,
-    "hit_rate": 33.3
+    "total": 51,
+    "decided": 7,
+    "hit_rate": 28.6
    },
    "1w": {
-    "total": 16,
-    "decided": 0,
-    "hit_rate": null
+    "total": 19,
+    "decided": 2,
+    "hit_rate": 0.0
    }
   },
   "baseline": {
-   "total": 183,
-   "decided": 12,
+   "total": 210,
+   "decided": 20,
    "hit": 0,
-   "stop": 12,
+   "stop": 20,
    "hit_rate": 0.0
   },
   "baseline_matched": {
-   "decided": 1,
+   "decided": 11,
    "hit": 0,
-   "stop": 1,
+   "stop": 11,
    "hit_rate": 0.0
   }
  },
- "elapsed_sec": 283.5
+ "elapsed_sec": 289.3
 }

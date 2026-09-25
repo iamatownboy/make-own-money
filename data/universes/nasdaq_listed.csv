@@ -141,6 +141,7 @@ ALNT,Allient Inc.
 ALNY,"Alnylam Pharmaceuticals, Inc."
 ALOV,"Aldabra 4 Liquidity Opportunity Vehicle, Inc."
 ALOY,REalloys Inc.
+ALP,Alpha Compute Corp
 ALPX,Alpex Acquisition Corporation
 ALRM,"Alarm.com Holdings, Inc."
 ALRS,Alerus Financial Corporation
@@ -817,7 +818,6 @@ DNUT,"Krispy Kreme, Inc."
 DOCU,"DocuSign, Inc."
 DOGZ,Dogness (International) Corporation
 DOMH,Dominari Holdings Inc.
-DOMO,"Domo, Inc."
 DOO,BRP Inc.
 DORM,"Dorman Products, Inc."
 DOX,Amdocs Limited
@@ -1012,7 +1012,6 @@ FFIV,"F5, Inc."
 FGBI,"First Guaranty Bancshares, Inc."
 FGI,FGI Industries Ltd.
 FGII,FG Imperii Acquisition Corp.
-FGL,Founder Group Limited
 FGNX,FG Nexus Inc.
 FHB,"First Hawaiian, Inc."
 FHTX,Foghorn Therapeutics Inc.
@@ -1028,6 +1027,7 @@ FISV,"Fiserv, Inc."
 FIVE,"Five Below, Inc."
 FIVN,"Five9, Inc."
 FIZZ,National Beverage Corp.
+FJDI,ARC Group Securities Acquisition I
 FKWL,Franklin Wireless Corp.
 FLEX,Flex Ltd.
 FLGT,"Fulgent Genetics, Inc."
@@ -1322,13 +1322,13 @@ HTO,H2O America
 HTOO,Fusion Fuel Green PLC
 HTZ,"Hertz Global Holdings, Inc"
 HUBC,Hub Cyber Security Ltd.
+HUCK,"Huckleberry.ai, Inc."
 HUHU,HUHUTECH International Group Inc.
 HUIZ,Huize Holding Limited
 HURA,"TuHURA Biosciences, Inc."
 HURC,"Hurco Companies, Inc."
 HURN,Huron Consulting Group Inc.
 HUT,Hut 8 Corp.
-HVII,Hennessy Capital Investment Corp. VII
 HVMC,Highview Merger Corp.
 HWBK,"Hawthorn Bancshares, Inc."
 HWC,Hancock Whitney Corporation
@@ -1379,6 +1379,7 @@ ILAG,Intelligent Living Application Group Inc.
 ILLU,Illumination Acquisition Corp I
 ILMN,"Illumina, Inc."
 IMA,"ImageneBio, Inc."
+IMCC,IM Cannabis Corp.
 IMCR,Immunocore Holdings plc
 IMDX,Insight Molecular Diagnostics Inc.
 IMKTA,"Ingles Markets, Incorporated"
@@ -1411,7 +1412,6 @@ INHD,Inno Holdings Inc.
 INIO,INNIO N.V.
 INKT,"MiNK Therapeutics, Inc."
 INLF,INLIF LIMITED
-INM,InMed Pharmaceuticals Inc.
 INMB,INmune Bio Inc.
 INMD,InMode Ltd.
 INNV,InnovAge Holding Corp.
@@ -2069,6 +2069,7 @@ ONCH,1RT Acquisition Corp.
 ONCO,"Onconetix, Inc."
 ONDS,Ondas Inc
 ONEG,OneConstruction Group Limited
+ONEN,ONE Nuclear Energy Inc.
 ONEW,OneWater Marine Inc.
 OPAD,Offerpad Solutions Inc.
 OPAL,OPAL Fuels Inc.
@@ -2362,7 +2363,6 @@ RDWR,Radware Ltd.
 RDZN,"Roadzen, Inc."
 REAL,"The RealReal, Inc."
 REAX,Real REMAX Group Inc.
-REBN,"Reborn Coffee, Inc."
 RECT,Rectitude Holdings Ltd
 REFI,"Chicago Atlantic Real Estate Finance, Inc."
 REG,Regency Centers Corporation
@@ -2714,7 +2714,6 @@ TBBK,"The Bancorp, Inc."
 TBCH,Turtle Beach Corporation
 TBLA,Taboola.com Ltd.
 TBLD,Thornburg Income Builder Opportunities Trust
-TBPH,"Theravance Biopharma, Inc."
 TC,Token Cat Limited
 TCBI,"Texas Capital Bancshares, Inc."
 TCBK,TriCo Bancshares
@@ -3095,7 +3094,9 @@ YORW,The York Water Company
 YQ,17 Education & Technology Group Inc.
 YSWY,"Yesway, Inc."
 YSXT,"YSX Tech. Co., Ltd"
+YTRA,"Yatra Online, Inc."
 YXT,YXT.COM GROUP HOLDING LIMITED
+YYAI,AiRWA Inc.
 Z,"Zillow Group, Inc."
 ZBIO,"Zenas BioPharma, Inc."
 ZBRA,Zebra Technologies Corporation

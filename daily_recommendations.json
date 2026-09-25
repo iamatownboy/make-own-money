@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-23",
-  "updated_at": "2026-09-23 23:53:30",
+  "date": "2026-09-24",
+  "updated_at": "2026-09-25 00:00:57",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -36,18 +36,17 @@
         ]
       },
       {
-        "ticker": "ASML",
-        "name": "ASML",
-        "total_score": 61,
-        "risk_reward_ratio": 0.93,
+        "ticker": "TXN",
+        "name": "텍사스 인스트루먼트",
+        "total_score": 62,
+        "risk_reward_ratio": 1.3,
         "blockers": [
-          "점수 61/68",
-          "손익비 0.93/1.20"
+          "점수 62/68"
         ]
       },
       {
-        "ticker": "TSM",
-        "name": "TSMC",
+        "ticker": "ASML",
+        "name": "ASML",
         "total_score": 61,
         "risk_reward_ratio": 0.93,
         "blockers": [
