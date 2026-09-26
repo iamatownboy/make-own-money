@@ -1,8 +1,8 @@
 {
- "date": "2026-09-24",
- "generated_at": "2026-09-25 00:00:34",
- "universe": 3125,
- "liquid": 1009,
+ "date": "2026-09-25",
+ "generated_at": "2026-09-26 00:01:46",
+ "universe": 3124,
+ "liquid": 1006,
  "setups": [
   {
    "id": "ALM|1w|2026-07-31|2026-09-11",
@@ -34,8 +34,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-06",
-   "earnings_days": 43,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -68,8 +68,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-03",
-   "earnings_days": 40,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -104,8 +104,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 42,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -140,8 +140,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 42,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -150,34 +150,35 @@
    "name": "Smithfield Foods, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 18.93,
-   "L": 16.971308375723062,
+   "price": 19.01,
+   "L": 16.971306486822755,
    "H": 29.030089888777013,
    "L_date": "2025-03-14",
    "H_date": "2026-04-10",
-   "entry_date": "2026-09-23",
-   "retrace": 0.838,
+   "entry_date": "2026-09-24",
+   "retrace": 0.831,
    "swing_pct": 71.1,
    "buy_high": 19.5519,
    "buy_low": 18.346,
    "stop": 16.9713,
    "t1": 23.0007,
-   "t2": 23.9675,
-   "t3": 26.8633,
-   "t4": 32.1689,
-   "stop_pct": -10.3,
+   "t2": 23.921,
+   "t3": 26.8434,
+   "t4": 32.1977,
+   "stop_pct": -10.7,
    "position": "구간 안",
-   "t1_pct": 21.5,
+   "t1_pct": 21.0,
    "signals": [
-    "RSI 과매도 17"
+    "RSI 과매도 18",
+    "반전 캔들"
    ],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-10-27",
-   "earnings_days": 33,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -186,34 +187,34 @@
    "name": "STAAR Surgical Company",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 19.8,
+   "price": 19.08,
    "L": 15.59000015258789,
    "H": 35.869998931884766,
    "L_date": "2026-02-20",
    "H_date": "2026-05-15",
-   "entry_date": "2026-09-23",
-   "retrace": 0.792,
+   "entry_date": "2026-09-24",
+   "retrace": 0.828,
    "swing_pct": 130.1,
    "buy_high": 19.9299,
    "buy_low": 17.9019,
    "stop": 15.59,
    "t1": 25.73,
-   "t2": 27.76,
-   "t3": 32.3989,
-   "t4": 40.8982,
-   "stop_pct": -21.3,
+   "t2": 27.46,
+   "t3": 32.2705,
+   "t4": 41.0842,
+   "stop_pct": -18.3,
    "position": "구간 안",
-   "t1_pct": 29.9,
+   "t1_pct": 34.9,
    "signals": [
-    "RSI 과매도 28"
+    "RSI 과매도 27"
    ],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-11",
-   "earnings_days": 48,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -222,34 +223,34 @@
    "name": "Trupanion, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 22.88,
+   "price": 22.42,
    "L": 21.15999984741211,
    "H": 32.09000015258789,
    "L_date": "2026-05-22",
    "H_date": "2026-08-28",
-   "entry_date": "2026-09-23",
-   "retrace": 0.843,
+   "entry_date": "2026-09-24",
+   "retrace": 0.885,
    "swing_pct": 51.7,
    "buy_high": 23.499,
    "buy_low": 22.406,
    "stop": 21.16,
    "t1": 26.625,
-   "t2": 27.44,
-   "t3": 30.0998,
-   "t4": 34.973,
-   "stop_pct": -7.5,
+   "t2": 27.22,
+   "t3": 30.0056,
+   "t4": 35.1094,
+   "stop_pct": -5.6,
    "position": "구간 안",
-   "t1_pct": 16.4,
+   "t1_pct": 18.8,
    "signals": [
-    "RSI 과매도 30"
+    "RSI 과매도 28"
    ],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 42,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -258,25 +259,26 @@
    "name": "Visteon Corporation",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 93.03,
+   "price": 89.85,
    "L": 82.91880135001928,
    "H": 126.48244479985442,
    "L_date": "2026-03-20",
    "H_date": "2026-06-26",
-   "entry_date": "2026-09-23",
-   "retrace": 0.768,
+   "entry_date": "2026-09-24",
+   "retrace": 0.841,
    "swing_pct": 52.5,
    "buy_high": 92.2414,
    "buy_low": 87.8851,
    "stop": 82.9188,
    "t1": 104.7006,
-   "t2": 108.0962,
-   "t3": 118.6131,
-   "t4": 137.8819,
-   "stop_pct": -10.9,
-   "position": "구간 위",
-   "t1_pct": 12.5,
+   "t2": 107.6712,
+   "t3": 118.4312,
+   "t4": 138.1454,
+   "stop_pct": -7.7,
+   "position": "구간 안",
+   "t1_pct": 16.5,
    "signals": [
+    "RSI 과매도 25",
     "RSI 상승 다이버전스"
    ],
    "base_rate": {
@@ -284,8 +286,45 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-10-22",
-   "earnings_days": 28,
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
+  },
+  {
+   "id": "WYNN|1w|2025-04-11|2025-12-05",
+   "ticker": "WYNN",
+   "name": "Wynn Resorts, Limited",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 80.19,
+   "L": 64.33207179964494,
+   "H": 133.74719542327162,
+   "L_date": "2025-04-11",
+   "H_date": "2025-12-05",
+   "entry_date": "2026-09-24",
+   "retrace": 0.772,
+   "swing_pct": 107.9,
+   "buy_high": 79.1869,
+   "buy_low": 72.2454,
+   "stop": 64.3321,
+   "t1": 99.0396,
+   "t2": 105.4036,
+   "t3": 121.6161,
+   "t4": 151.3202,
+   "stop_pct": -19.8,
+   "position": "구간 위",
+   "t1_pct": 23.5,
+   "signals": [
+    "RSI 과매도 22",
+    "반전 캔들"
+   ],
+   "base_rate": {
+    "hit": 48.1,
+    "random": 38.0,
+    "n": 801
+   },
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -318,8 +357,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-09",
-   "earnings_days": 46,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -354,8 +393,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-10-27",
-   "earnings_days": 33,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -364,32 +403,32 @@
    "name": "Wendy's Company (The)",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 6.73,
+   "price": 6.51,
    "L": 6.018807178531309,
    "H": 9.370300331380305,
    "L_date": "2026-06-26",
    "H_date": "2026-07-02",
    "entry_date": "2026-09-18",
-   "retrace": 0.788,
+   "retrace": 0.853,
    "swing_pct": 55.7,
    "buy_high": 6.736,
    "buy_low": 6.4009,
    "stop": 6.0188,
    "t1": 7.6946,
-   "t2": 7.9852,
-   "t3": 8.7775,
-   "t4": 10.2291,
-   "stop_pct": -10.6,
+   "t2": 7.9352,
+   "t3": 8.7561,
+   "t4": 10.2601,
+   "stop_pct": -7.5,
    "position": "구간 안",
-   "t1_pct": 14.3,
+   "t1_pct": 18.2,
    "signals": [],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-06",
-   "earnings_days": 43,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -456,8 +495,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-12",
-   "earnings_days": 49,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -467,8 +506,8 @@
    "tf": "1w",
    "tf_label": "주봉",
    "price": 19.22,
-   "L": 17.374227286311942,
-   "H": 30.31994447070994,
+   "L": 17.3742255113647,
+   "H": 30.319942408693425,
    "L_date": "2025-04-11",
    "H_date": "2026-05-01",
    "entry_date": "2026-09-11",
@@ -478,9 +517,9 @@
    "buy_low": 18.85,
    "stop": 17.3742,
    "t1": 23.8471,
-   "t2": 24.7375,
-   "t3": 27.9306,
-   "t4": 33.7811,
+   "t2": 24.74,
+   "t3": 27.9317,
+   "t4": 33.7795,
    "stop_pct": -9.6,
    "position": "구간 안",
    "t1_pct": 24.1,
@@ -493,8 +532,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-19",
-   "earnings_days": 56,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -503,13 +542,13 @@
    "name": "The Bancorp, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 49.54,
+   "price": 49.99,
    "L": 40.5099983215332,
    "H": 81.6500015258789,
    "L_date": "2025-04-11",
    "H_date": "2025-10-17",
    "entry_date": "2026-09-11",
-   "retrace": 0.781,
+   "retrace": 0.77,
    "swing_pct": 101.6,
    "buy_high": 49.314,
    "buy_low": 45.2,
@@ -518,19 +557,19 @@
    "t2": 65.03,
    "t3": 74.5366,
    "t4": 91.9544,
-   "stop_pct": -18.2,
+   "stop_pct": -19.0,
    "position": "구간 위",
-   "t1_pct": 23.3,
+   "t1_pct": 22.2,
    "signals": [
-    "RSI 과매도 22"
+    "RSI 과매도 25"
    ],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-10-29",
-   "earnings_days": 35,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -565,8 +604,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-03",
-   "earnings_days": 40,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -575,13 +614,13 @@
    "name": "One Stop Systems, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 9.18,
+   "price": 9.31,
    "L": 6.880000114440918,
    "H": 20.8799991607666,
    "L_date": "2026-04-02",
    "H_date": "2026-06-05",
    "entry_date": "2026-09-04",
-   "retrace": 0.836,
+   "retrace": 0.826,
    "swing_pct": 203.5,
    "buy_high": 9.876,
    "buy_low": 8.476,
@@ -590,17 +629,19 @@
    "t2": 14.575,
    "t3": 18.1815,
    "t4": 24.7891,
-   "stop_pct": -25.1,
+   "stop_pct": -26.1,
    "position": "구간 안",
-   "t1_pct": 51.2,
-   "signals": [],
+   "t1_pct": 49.1,
+   "signals": [
+    "반전 캔들"
+   ],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-04",
-   "earnings_days": 41,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -633,8 +674,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-06",
-   "earnings_days": 43,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -667,8 +708,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-03",
-   "earnings_days": 40,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -677,7 +718,7 @@
    "name": "CoStar Group, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 27.855,
+   "price": 27.86,
    "L": 25.889999389648438,
    "H": 33.81999969482422,
    "L_date": "2026-07-29",
@@ -695,14 +736,16 @@
    "stop_pct": -7.1,
    "position": "구간 위",
    "t1_pct": 7.2,
-   "signals": [],
+   "signals": [
+    "반전 캔들"
+   ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-27",
-   "earnings_days": 33,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -729,14 +772,125 @@
    "stop_pct": -9.2,
    "position": "구간 안",
    "t1_pct": 12.7,
-   "signals": [],
+   "signals": [
+    "RSI 과매도 30"
+   ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-19",
-   "earnings_days": 56,
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
+  },
+  {
+   "id": "QURE|1d|2026-07-28|2026-08-25",
+   "ticker": "QURE",
+   "name": "uniQure N.V.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 38.32,
+   "L": 35.34000015258789,
+   "H": 51.720001220703125,
+   "L_date": "2026-07-28",
+   "H_date": "2026-08-25",
+   "entry_date": "2026-09-24",
+   "retrace": 0.818,
+   "swing_pct": 46.3,
+   "buy_high": 38.8453,
+   "buy_low": 37.2073,
+   "stop": 35.34,
+   "t1": 43.53,
+   "t2": 44.27,
+   "t3": 48.5314,
+   "t4": 56.339,
+   "stop_pct": -7.8,
+   "position": "구간 안",
+   "t1_pct": 13.6,
+   "signals": [
+    "200일선 위"
+   ],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
+  },
+  {
+   "id": "VOR|1d|2026-07-17|2026-09-08",
+   "ticker": "VOR",
+   "name": "Vor Biopharma Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 18.44,
+   "L": 16.670000076293945,
+   "H": 26.0,
+   "L_date": "2026-07-17",
+   "H_date": "2026-09-08",
+   "entry_date": "2026-09-24",
+   "retrace": 0.81,
+   "swing_pct": 56.0,
+   "buy_high": 18.6666,
+   "buy_low": 17.7336,
+   "stop": 16.67,
+   "t1": 21.335,
+   "t2": 21.775,
+   "t3": 24.1917,
+   "t4": 28.6195,
+   "stop_pct": -9.6,
+   "position": "구간 안",
+   "t1_pct": 15.7,
+   "signals": [
+    "200일선 위"
+   ],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
+  },
+  {
+   "id": "WYNN|1d|2025-04-08|2025-12-01",
+   "ticker": "WYNN",
+   "name": "Wynn Resorts, Limited",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 80.19,
+   "L": 64.33207179964494,
+   "H": 133.74719542327162,
+   "L_date": "2025-04-08",
+   "H_date": "2025-12-01",
+   "entry_date": "2026-09-24",
+   "retrace": 0.772,
+   "swing_pct": 107.9,
+   "buy_high": 79.1869,
+   "buy_low": 72.2454,
+   "stop": 64.3321,
+   "t1": 99.0396,
+   "t2": 105.4036,
+   "t3": 121.6161,
+   "t4": 151.3202,
+   "stop_pct": -19.8,
+   "position": "구간 위",
+   "t1_pct": 23.5,
+   "signals": [
+    "RSI 과매도 22",
+    "반전 캔들"
+   ],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -763,88 +917,14 @@
    "stop_pct": -5.9,
    "position": "구간 아래",
    "t1_pct": 25.4,
-   "signals": [
-    "RSI 과매도 28"
-   ],
+   "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-10",
-   "earnings_days": 47,
-   "earnings_soon": false
-  },
-  {
-   "id": "CHTR|1d|2026-07-24|2026-09-03",
-   "ticker": "CHTR",
-   "name": "Charter Communications, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 117.55,
-   "L": 111.55000305175781,
-   "H": 160.6999969482422,
-   "L_date": "2026-07-24",
-   "H_date": "2026-09-03",
-   "entry_date": "2026-09-23",
-   "retrace": 0.878,
-   "swing_pct": 44.1,
-   "buy_high": 122.0681,
-   "buy_low": 117.1531,
-   "stop": 111.55,
-   "t1": 136.125,
-   "t2": 136.675,
-   "t3": 150.4173,
-   "t4": 175.5955,
-   "stop_pct": -5.1,
-   "position": "구간 안",
-   "t1_pct": 15.8,
-   "signals": [
-    "반전 캔들"
-   ],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-10-30",
-   "earnings_days": 36,
-   "earnings_soon": false
-  },
-  {
-   "id": "EVER|1d|2026-05-14|2026-07-21",
-   "ticker": "EVER",
-   "name": "EverQuote, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 18.06,
-   "L": 17.25,
-   "H": 28.295000076293945,
-   "L_date": "2026-05-14",
-   "H_date": "2026-07-21",
-   "entry_date": "2026-09-23",
-   "retrace": 0.927,
-   "swing_pct": 64.0,
-   "buy_high": 19.6136,
-   "buy_low": 18.5091,
-   "stop": 17.25,
-   "t1": 22.7725,
-   "t2": 22.8375,
-   "t3": 25.9592,
-   "t4": 31.6787,
-   "stop_pct": -4.5,
-   "position": "구간 아래",
-   "t1_pct": 26.1,
-   "signals": [
-    "RSI 과매도 25"
-   ],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-11-02",
-   "earnings_days": 39,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -879,8 +959,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-04",
-   "earnings_days": 41,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -915,8 +995,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-29",
-   "earnings_days": 35,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -925,34 +1005,35 @@
    "name": "Nektar Therapeutics",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 57.66,
+   "price": 59.38,
    "L": 54.130001068115234,
    "H": 77.76000213623047,
    "L_date": "2026-06-09",
    "H_date": "2026-09-08",
    "entry_date": "2026-09-23",
-   "retrace": 0.851,
+   "retrace": 0.778,
    "swing_pct": 43.7,
    "buy_high": 59.1868,
    "buy_low": 56.8238,
    "stop": 54.13,
    "t1": 65.945,
-   "t2": 67.34,
-   "t3": 73.3002,
-   "t4": 84.2204,
-   "stop_pct": -6.1,
-   "position": "구간 안",
-   "t1_pct": 14.4,
+   "t2": 66.985,
+   "t3": 73.1483,
+   "t4": 84.4405,
+   "stop_pct": -8.8,
+   "position": "구간 위",
+   "t1_pct": 11.1,
    "signals": [
-    "RSI 과매도 25"
+    "RSI 과매도 30",
+    "하락 빗각 돌파"
    ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-12",
-   "earnings_days": 49,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -961,32 +1042,32 @@
    "name": "PROCEPT BioRobotics Corporation",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 18.09,
+   "price": 17.5,
    "L": 16.665000915527344,
    "H": 22.93000030517578,
    "L_date": "2026-07-24",
    "H_date": "2026-08-11",
    "entry_date": "2026-09-23",
-   "retrace": 0.773,
+   "retrace": 0.867,
    "swing_pct": 37.6,
    "buy_high": 18.0057,
    "buy_low": 17.3792,
    "stop": 16.665,
    "t1": 19.7975,
-   "t2": 20.4375,
-   "t3": 21.8632,
-   "t4": 24.4754,
-   "stop_pct": -7.9,
-   "position": "구간 위",
-   "t1_pct": 9.4,
+   "t2": 20.09,
+   "t3": 21.7145,
+   "t4": 24.6908,
+   "stop_pct": -4.8,
+   "position": "구간 안",
+   "t1_pct": 13.1,
    "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-04",
-   "earnings_days": 41,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -995,13 +1076,13 @@
    "name": "Root, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 46.76,
+   "price": 47.81,
    "L": 45.13999938964844,
    "H": 58.84000015258789,
    "L_date": "2026-08-06",
    "H_date": "2026-08-27",
    "entry_date": "2026-09-23",
-   "retrace": 0.882,
+   "retrace": 0.805,
    "swing_pct": 30.4,
    "buy_high": 48.0718,
    "buy_low": 46.7018,
@@ -1010,53 +1091,17 @@
    "t2": 52.62,
    "t3": 56.1778,
    "t4": 62.6964,
-   "stop_pct": -3.5,
+   "stop_pct": -5.6,
    "position": "구간 안",
-   "t1_pct": 11.2,
+   "t1_pct": 8.7,
    "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-04",
-   "earnings_days": 41,
-   "earnings_soon": false
-  },
-  {
-   "id": "SFD|1d|2025-03-10|2026-04-10",
-   "ticker": "SFD",
-   "name": "Smithfield Foods, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 18.93,
-   "L": 16.971308375723062,
-   "H": 29.030089888777013,
-   "L_date": "2025-03-10",
-   "H_date": "2026-04-10",
-   "entry_date": "2026-09-23",
-   "retrace": 0.838,
-   "swing_pct": 71.1,
-   "buy_high": 19.5519,
-   "buy_low": 18.346,
-   "stop": 16.9713,
-   "t1": 23.0007,
-   "t2": 23.9675,
-   "t3": 26.8633,
-   "t4": 32.1689,
-   "stop_pct": -10.3,
-   "position": "구간 안",
-   "t1_pct": 21.5,
-   "signals": [
-    "RSI 과매도 17"
-   ],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-10-27",
-   "earnings_days": 33,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1065,34 +1110,34 @@
    "name": "STAAR Surgical Company",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 19.8,
+   "price": 19.08,
    "L": 15.59000015258789,
    "H": 35.869998931884766,
    "L_date": "2026-02-17",
    "H_date": "2026-05-14",
    "entry_date": "2026-09-23",
-   "retrace": 0.792,
+   "retrace": 0.828,
    "swing_pct": 130.1,
    "buy_high": 19.9299,
    "buy_low": 17.9019,
    "stop": 15.59,
    "t1": 25.73,
-   "t2": 27.76,
-   "t3": 32.3989,
-   "t4": 40.8982,
-   "stop_pct": -21.3,
+   "t2": 27.46,
+   "t3": 32.2705,
+   "t4": 41.0842,
+   "stop_pct": -18.3,
    "position": "구간 안",
-   "t1_pct": 29.9,
+   "t1_pct": 34.9,
    "signals": [
-    "RSI 과매도 28"
+    "RSI 과매도 27"
    ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-11",
-   "earnings_days": 48,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1101,34 +1146,34 @@
    "name": "Trupanion, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 22.88,
+   "price": 22.42,
    "L": 21.15999984741211,
    "H": 32.09000015258789,
    "L_date": "2026-05-21",
    "H_date": "2026-08-25",
    "entry_date": "2026-09-23",
-   "retrace": 0.843,
+   "retrace": 0.885,
    "swing_pct": 51.7,
    "buy_high": 23.499,
    "buy_low": 22.406,
    "stop": 21.16,
    "t1": 26.625,
-   "t2": 27.44,
-   "t3": 30.0998,
-   "t4": 34.973,
-   "stop_pct": -7.5,
+   "t2": 27.22,
+   "t3": 30.0056,
+   "t4": 35.1094,
+   "stop_pct": -5.6,
    "position": "구간 안",
-   "t1_pct": 16.4,
+   "t1_pct": 18.8,
    "signals": [
-    "RSI 과매도 30"
+    "RSI 과매도 28"
    ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 42,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1137,32 +1182,32 @@
    "name": "Vital Farms, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 10.31,
+   "price": 10.09,
    "L": 9.470000267028809,
    "H": 12.604999542236328,
    "L_date": "2026-09-11",
    "H_date": "2026-09-21",
    "entry_date": "2026-09-23",
-   "retrace": 0.732,
+   "retrace": 0.802,
    "swing_pct": 33.1,
    "buy_high": 10.1409,
    "buy_low": 9.8274,
    "stop": 9.47,
    "t1": 11.0375,
-   "t2": 11.3525,
-   "t3": 12.0689,
-   "t4": 13.3815,
-   "stop_pct": -8.1,
-   "position": "구간 위",
-   "t1_pct": 7.1,
+   "t2": 11.2625,
+   "t3": 12.0304,
+   "t4": 13.4373,
+   "stop_pct": -6.1,
+   "position": "구간 안",
+   "t1_pct": 9.4,
    "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 42,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1171,34 +1216,32 @@
    "name": "Verisk Analytics, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 171.8,
+   "price": 168.65,
    "L": 155.10003214028245,
    "H": 225.475595010438,
    "L_date": "2026-05-14",
    "H_date": "2026-07-29",
    "entry_date": "2026-09-23",
-   "retrace": 0.763,
+   "retrace": 0.807,
    "swing_pct": 45.4,
    "buy_high": 170.1604,
    "buy_low": 163.1228,
    "stop": 155.1,
    "t1": 190.2878,
-   "t2": 197.5478,
-   "t3": 213.5225,
-   "t4": 242.7908,
-   "stop_pct": -9.7,
-   "position": "구간 위",
-   "t1_pct": 10.8,
-   "signals": [
-    "반전 캔들"
-   ],
+   "t2": 196.5478,
+   "t3": 213.0945,
+   "t4": 243.4108,
+   "stop_pct": -8.0,
+   "position": "구간 안",
+   "t1_pct": 12.8,
+   "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-28",
-   "earnings_days": 34,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1234,71 +1277,34 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-27",
-   "earnings_days": 33,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
-   "id": "TRVI|1d|2026-04-30|2026-07-17",
-   "ticker": "TRVI",
-   "name": "Trevi Therapeutics, Inc.",
+   "id": "CHTR|1d|2026-07-24|2026-09-03",
+   "ticker": "CHTR",
+   "name": "Charter Communications, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 14.46,
-   "L": 13.109999656677246,
-   "H": 20.219999313354492,
-   "L_date": "2026-04-30",
-   "H_date": "2026-07-17",
-   "entry_date": "2026-09-21",
-   "retrace": 0.81,
-   "swing_pct": 54.2,
-   "buy_high": 14.6315,
-   "buy_low": 13.9205,
-   "stop": 13.11,
-   "t1": 16.665,
-   "t2": 17.315,
-   "t3": 18.9767,
-   "t4": 22.0211,
-   "stop_pct": -9.3,
+   "price": 117.55,
+   "L": 111.55000305175781,
+   "H": 160.6999969482422,
+   "L_date": "2026-07-24",
+   "H_date": "2026-09-03",
+   "entry_date": "2026-09-22",
+   "retrace": 0.878,
+   "swing_pct": 44.1,
+   "buy_high": 122.0681,
+   "buy_low": 117.1531,
+   "stop": 111.55,
+   "t1": 136.125,
+   "t2": 136.675,
+   "t3": 150.4173,
+   "t4": 175.5955,
+   "stop_pct": -5.1,
    "position": "구간 안",
-   "t1_pct": 15.2,
-   "signals": [
-    "RSI 과매도 25",
-    "200일선 위"
-   ],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-11-12",
-   "earnings_days": 49,
-   "earnings_soon": false
-  },
-  {
-   "id": "TTWO|1d|2026-03-27|2026-07-07",
-   "ticker": "TTWO",
-   "name": "Take-Two Interactive Software, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 206.32,
-   "L": 187.6300048828125,
-   "H": 265.94000244140625,
-   "L_date": "2026-03-27",
-   "H_date": "2026-07-07",
-   "entry_date": "2026-09-21",
-   "retrace": 0.761,
-   "swing_pct": 41.7,
-   "buy_high": 204.3883,
-   "buy_low": 196.5573,
-   "stop": 187.63,
-   "t1": 226.785,
-   "t2": 234.565,
-   "t3": 252.5115,
-   "t4": 285.3925,
-   "stop_pct": -9.1,
-   "position": "구간 위",
-   "t1_pct": 9.9,
+   "t1_pct": 15.8,
    "signals": [
     "반전 캔들"
    ],
@@ -1307,8 +1313,151 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-09",
-   "earnings_days": 46,
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
+  },
+  {
+   "id": "EVER|1d|2026-05-14|2026-07-21",
+   "ticker": "EVER",
+   "name": "EverQuote, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 18.06,
+   "L": 17.25,
+   "H": 28.295000076293945,
+   "L_date": "2026-05-14",
+   "H_date": "2026-07-21",
+   "entry_date": "2026-09-22",
+   "retrace": 0.927,
+   "swing_pct": 64.0,
+   "buy_high": 19.6136,
+   "buy_low": 18.5091,
+   "stop": 17.25,
+   "t1": 22.7725,
+   "t2": 22.8375,
+   "t3": 25.9592,
+   "t4": 31.6787,
+   "stop_pct": -4.5,
+   "position": "구간 아래",
+   "t1_pct": 26.1,
+   "signals": [
+    "RSI 과매도 25"
+   ],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
+  },
+  {
+   "id": "SFD|1d|2025-03-10|2026-04-10",
+   "ticker": "SFD",
+   "name": "Smithfield Foods, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 19.01,
+   "L": 16.971306486822755,
+   "H": 29.030089888777013,
+   "L_date": "2025-03-10",
+   "H_date": "2026-04-10",
+   "entry_date": "2026-09-22",
+   "retrace": 0.831,
+   "swing_pct": 71.1,
+   "buy_high": 19.5519,
+   "buy_low": 18.346,
+   "stop": 16.9713,
+   "t1": 23.0007,
+   "t2": 23.921,
+   "t3": 26.8434,
+   "t4": 32.1977,
+   "stop_pct": -10.7,
+   "position": "구간 안",
+   "t1_pct": 21.0,
+   "signals": [
+    "RSI 과매도 18",
+    "반전 캔들"
+   ],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
+  },
+  {
+   "id": "TRVI|1d|2026-04-30|2026-07-17",
+   "ticker": "TRVI",
+   "name": "Trevi Therapeutics, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 14.675,
+   "L": 13.109999656677246,
+   "H": 20.219999313354492,
+   "L_date": "2026-04-30",
+   "H_date": "2026-07-17",
+   "entry_date": "2026-09-21",
+   "retrace": 0.78,
+   "swing_pct": 54.2,
+   "buy_high": 14.6315,
+   "buy_low": 13.9205,
+   "stop": 13.11,
+   "t1": 16.665,
+   "t2": 17.11,
+   "t3": 18.8889,
+   "t4": 22.1482,
+   "stop_pct": -10.7,
+   "position": "구간 위",
+   "t1_pct": 13.6,
+   "signals": [
+    "200일선 위"
+   ],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
+  },
+  {
+   "id": "TTWO|1d|2026-03-27|2026-07-07",
+   "ticker": "TTWO",
+   "name": "Take-Two Interactive Software, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 202.98,
+   "L": 187.6300048828125,
+   "H": 265.94000244140625,
+   "L_date": "2026-03-27",
+   "H_date": "2026-07-07",
+   "entry_date": "2026-09-21",
+   "retrace": 0.804,
+   "swing_pct": 41.7,
+   "buy_high": 204.3883,
+   "buy_low": 196.5573,
+   "stop": 187.63,
+   "t1": 226.785,
+   "t2": 234.155,
+   "t3": 252.336,
+   "t4": 285.6467,
+   "stop_pct": -7.6,
+   "position": "구간 안",
+   "t1_pct": 11.7,
+   "signals": [],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1317,25 +1466,26 @@
    "name": "Visteon Corporation",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 93.03,
+   "price": 89.85,
    "L": 82.91880135001928,
    "H": 126.48244479985442,
    "L_date": "2026-03-19",
    "H_date": "2026-06-22",
    "entry_date": "2026-09-21",
-   "retrace": 0.768,
+   "retrace": 0.841,
    "swing_pct": 52.5,
    "buy_high": 92.2414,
    "buy_low": 87.8851,
    "stop": 82.9188,
    "t1": 104.7006,
-   "t2": 108.0962,
-   "t3": 118.6131,
-   "t4": 137.8819,
-   "stop_pct": -10.9,
-   "position": "구간 위",
-   "t1_pct": 12.5,
+   "t2": 107.6712,
+   "t3": 118.4312,
+   "t4": 138.1454,
+   "stop_pct": -7.7,
+   "position": "구간 안",
+   "t1_pct": 16.5,
    "signals": [
+    "RSI 과매도 25",
     "RSI 상승 다이버전스"
    ],
    "base_rate": {
@@ -1343,8 +1493,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-22",
-   "earnings_days": 28,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1377,8 +1527,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-21",
-   "earnings_days": 27,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1411,8 +1561,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-09",
-   "earnings_days": 46,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1421,13 +1571,13 @@
    "name": "PepsiCo, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 130.18,
-   "L": 120.26617946054151,
-   "H": 166.41419598610082,
+   "price": 128.15,
+   "L": 120.26618699614673,
+   "H": 166.41421163548557,
    "L_date": "2025-05-23",
    "H_date": "2026-02-12",
    "entry_date": "2026-09-18",
-   "retrace": 0.785,
+   "retrace": 0.829,
    "swing_pct": 38.4,
    "buy_high": 130.1419,
    "buy_low": 125.5271,
@@ -1436,20 +1586,20 @@
    "t2": 147.1971,
    "t3": 158.1893,
    "t4": 178.3288,
-   "stop_pct": -7.6,
-   "position": "구간 위",
-   "t1_pct": 10.1,
+   "stop_pct": -6.2,
+   "position": "구간 안",
+   "t1_pct": 11.9,
    "signals": [
-    "RSI 과매도 29"
+    "RSI 과매도 28"
    ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-08",
-   "earnings_days": 14,
-   "earnings_soon": true
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
   },
   {
    "id": "TXRH|1d|2026-05-04|2026-08-13",
@@ -1457,69 +1607,34 @@
    "name": "Texas Roadhouse, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 164.84,
+   "price": 161.55,
    "L": 152.5849213219154,
    "H": 215.470635041116,
    "L_date": "2026-05-04",
    "H_date": "2026-08-13",
    "entry_date": "2026-09-18",
-   "retrace": 0.805,
+   "retrace": 0.857,
    "swing_pct": 41.2,
    "buy_high": 166.0425,
    "buy_low": 159.7539,
    "stop": 152.5849,
    "t1": 184.0278,
-   "t2": 189.4053,
-   "t3": 204.3147,
-   "t4": 231.6311,
-   "stop_pct": -7.4,
+   "t2": 187.4453,
+   "t3": 203.4758,
+   "t4": 232.8463,
+   "stop_pct": -5.5,
    "position": "구간 안",
-   "t1_pct": 11.6,
+   "t1_pct": 13.9,
    "signals": [
-    "RSI 과매도 20",
-    "반전 캔들"
+    "RSI 과매도 18"
    ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 42,
-   "earnings_soon": false
-  },
-  {
-   "id": "ZG|1d|2026-06-25|2026-08-25",
-   "ticker": "ZG",
-   "name": "Zillow Group, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 29.35,
-   "L": 29.030000686645508,
-   "H": 38.45000076293945,
-   "L_date": "2026-06-25",
-   "H_date": "2026-08-25",
-   "entry_date": "2026-09-17",
-   "retrace": 0.966,
-   "swing_pct": 32.4,
-   "buy_high": 31.0459,
-   "buy_low": 30.1039,
-   "stop": 29.03,
-   "t1": 33.74,
-   "t2": 33.89,
-   "t3": 36.4983,
-   "t4": 41.2772,
-   "stop_pct": -1.1,
-   "position": "구간 아래",
-   "t1_pct": 15.0,
-   "signals": [],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-10-29",
-   "earnings_days": 35,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1554,8 +1669,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-12",
-   "earnings_days": 49,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1583,15 +1698,15 @@
    "position": "구간 안",
    "t1_pct": 17.6,
    "signals": [
-    "RSI 과매도 22"
+    "RSI 과매도 29"
    ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-28",
-   "earnings_days": 34,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1626,8 +1741,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 42,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1648,9 +1763,9 @@
    "buy_low": 9.3158,
    "stop": 8.56,
    "t1": 11.875,
-   "t2": 12.0125,
-   "t3": 13.83,
-   "t4": 17.16,
+   "t2": 12.015,
+   "t3": 13.8311,
+   "t4": 17.1585,
    "stop_pct": -6.3,
    "position": "구간 아래",
    "t1_pct": 29.9,
@@ -1662,8 +1777,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-26",
-   "earnings_days": 32,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1672,13 +1787,13 @@
    "name": "SoundHound AI, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 6.01,
+   "price": 6.1,
    "L": 5.650000095367432,
    "H": 8.1899995803833,
    "L_date": "2026-07-29",
    "H_date": "2026-08-06",
    "entry_date": "2026-09-15",
-   "retrace": 0.858,
+   "retrace": 0.823,
    "swing_pct": 45.0,
    "buy_high": 6.1936,
    "buy_low": 5.9396,
@@ -1687,51 +1802,17 @@
    "t2": 7.01,
    "t3": 7.685,
    "t4": 8.9216,
-   "stop_pct": -6.0,
+   "stop_pct": -7.4,
    "position": "구간 안",
-   "t1_pct": 15.1,
+   "t1_pct": 13.4,
    "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 42,
-   "earnings_soon": false
-  },
-  {
-   "id": "VSEC|1d|2026-05-19|2026-08-12",
-   "ticker": "VSEC",
-   "name": "VSE Corporation",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 178.54,
-   "L": 156.1451059475726,
-   "H": 247.85000610351562,
-   "L_date": "2026-05-19",
-   "H_date": "2026-08-12",
-   "entry_date": "2026-09-15",
-   "retrace": 0.756,
-   "swing_pct": 58.7,
-   "buy_high": 175.77,
-   "buy_low": 166.5995,
-   "stop": 156.1451,
-   "t1": 201.9976,
-   "t2": 210.26,
-   "t3": 231.7615,
-   "t4": 271.1558,
-   "stop_pct": -12.5,
-   "position": "구간 위",
-   "t1_pct": 13.1,
-   "signals": [],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-11-02",
-   "earnings_days": 39,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1740,13 +1821,13 @@
    "name": "Harmonic Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 10.945,
+   "price": 10.95,
    "L": 10.449999809265137,
    "H": 15.0600004196167,
    "L_date": "2026-07-29",
    "H_date": "2026-08-13",
    "entry_date": "2026-09-14",
-   "retrace": 0.893,
+   "retrace": 0.892,
    "swing_pct": 44.1,
    "buy_high": 11.4365,
    "buy_low": 10.9755,
@@ -1755,7 +1836,7 @@
    "t2": 12.9,
    "t3": 14.1355,
    "t4": 16.3992,
-   "stop_pct": -4.5,
+   "stop_pct": -4.6,
    "position": "구간 아래",
    "t1_pct": 16.5,
    "signals": [
@@ -1766,8 +1847,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-26",
-   "earnings_days": 32,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1802,8 +1883,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-27",
-   "earnings_days": 33,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1830,6 +1911,76 @@
    "stop_pct": -19.9,
    "position": "구간 안",
    "t1_pct": 30.1,
+   "signals": [],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
+  },
+  {
+   "id": "OMDA|1d|2026-07-30|2026-08-27",
+   "ticker": "OMDA",
+   "name": "Omada Health, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 19.72,
+   "L": 18.239999771118164,
+   "H": 25.450000762939453,
+   "L_date": "2026-07-30",
+   "H_date": "2026-08-27",
+   "entry_date": "2026-09-11",
+   "retrace": 0.795,
+   "swing_pct": 39.5,
+   "buy_high": 19.7829,
+   "buy_low": 19.0619,
+   "stop": 18.24,
+   "t1": 21.845,
+   "t2": 22.38,
+   "t3": 24.136,
+   "t4": 27.3534,
+   "stop_pct": -7.5,
+   "position": "구간 안",
+   "t1_pct": 10.8,
+   "signals": [
+    "200일선 위"
+   ],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
+  },
+  {
+   "id": "REYN|1d|2025-06-18|2026-07-02",
+   "ticker": "REYN",
+   "name": "Reynolds Consumer Products Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 21.59,
+   "L": 19.91544635584869,
+   "H": 27.080625302228693,
+   "L_date": "2025-06-18",
+   "H_date": "2026-07-02",
+   "entry_date": "2026-09-11",
+   "retrace": 0.766,
+   "swing_pct": 36.0,
+   "buy_high": 21.4488,
+   "buy_low": 20.7323,
+   "stop": 19.9154,
+   "t1": 23.498,
+   "t2": 24.1728,
+   "t3": 25.8361,
+   "t4": 28.8835,
+   "stop_pct": -7.8,
+   "position": "구간 위",
+   "t1_pct": 8.8,
    "signals": [],
    "base_rate": {
     "hit": 46.0,
@@ -1872,8 +2023,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-02",
-   "earnings_days": 39,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -1906,83 +2057,21 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-12",
-   "earnings_days": 49,
-   "earnings_soon": false
-  },
-  {
-   "id": "MATW|1d|2025-04-07|2026-05-01",
-   "ticker": "MATW",
-   "name": "Matthews International Corporation",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 19.22,
-   "L": 17.374227286311942,
-   "H": 30.31994447070994,
-   "L_date": "2025-04-07",
-   "H_date": "2026-05-01",
-   "entry_date": "2026-09-09",
-   "retrace": 0.857,
-   "swing_pct": 74.5,
-   "buy_high": 20.1446,
-   "buy_low": 18.85,
-   "stop": 17.3742,
-   "t1": 23.8471,
-   "t2": 24.7375,
-   "t3": 27.9306,
-   "t4": 33.7811,
-   "stop_pct": -9.6,
-   "position": "구간 안",
-   "t1_pct": 24.1,
-   "signals": [
-    "RSI 과매도 28",
-    "RSI 상승 다이버전스"
-   ],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-11-19",
-   "earnings_days": 56,
-   "earnings_soon": false
-  },
-  {
-   "id": "WDFC|1d|2026-01-09|2026-07-10",
-   "ticker": "WDFC",
-   "name": "WD-40 Company",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 199.34,
-   "L": 172.94586477148297,
-   "H": 297.7107394120505,
-   "L_date": "2026-01-09",
-   "H_date": "2026-07-10",
-   "entry_date": "2026-09-09",
-   "retrace": 0.788,
-   "swing_pct": 72.1,
-   "buy_high": 199.6455,
-   "buy_low": 187.1691,
-   "stop": 172.9459,
-   "t1": 235.3283,
-   "t2": 242.7454,
-   "t3": 274.1856,
-   "t4": 331.7893,
-   "stop_pct": -13.2,
-   "position": "구간 안",
-   "t1_pct": 18.1,
-   "signals": [],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-10-21",
-   "earnings_days": 27,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   }
  ],
  "watch": [
+  {
+   "ticker": "UFPI",
+   "name": "UFP Industries, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 78.81,
+   "buy_high": 78.7703,
+   "distance_pct": 0.1
+  },
   {
    "ticker": "DOO",
    "name": "BRP Inc.",
@@ -1991,24 +2080,6 @@
    "price": 55.39,
    "buy_high": 55.2624,
    "distance_pct": 0.2
-  },
-  {
-   "ticker": "QBTS",
-   "name": "D-Wave Quantum Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 16.81,
-   "buy_high": 16.7732,
-   "distance_pct": 0.2
-  },
-  {
-   "ticker": "ROOT",
-   "name": "Root, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 46.76,
-   "buy_high": 46.5981,
-   "distance_pct": 0.3
   },
   {
    "ticker": "LMAT",
@@ -2029,15 +2100,6 @@
    "distance_pct": 0.8
   },
   {
-   "ticker": "RGTI",
-   "name": "Rigetti Computing, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 16.005,
-   "buy_high": 15.8534,
-   "distance_pct": 1.0
-  },
-  {
    "ticker": "CHKP",
    "name": "Check Point Software Technologies Ltd.",
    "tf": "1w",
@@ -2052,7 +2114,7 @@
    "tf": "1w",
    "tf_label": "주봉",
    "price": 230.16,
-   "buy_high": 227.3733,
+   "buy_high": 227.3732,
    "distance_pct": 1.2
   },
   {
@@ -2074,13 +2136,13 @@
    "distance_pct": 1.8
   },
   {
-   "ticker": "PRVA",
-   "name": "Privia Health Group, Inc.",
+   "ticker": "VOR",
+   "name": "Vor Biopharma Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 19.1,
-   "buy_high": 18.6806,
-   "distance_pct": 2.2
+   "price": 18.44,
+   "buy_high": 18.0221,
+   "distance_pct": 2.3
   },
   {
    "ticker": "MBLY",
@@ -2089,6 +2151,24 @@
    "tf_label": "주봉",
    "price": 7.69,
    "buy_high": 7.4951,
+   "distance_pct": 2.6
+  },
+  {
+   "ticker": "ROCK",
+   "name": "Gibraltar Industries, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 39.7,
+   "buy_high": 38.7003,
+   "distance_pct": 2.6
+  },
+  {
+   "ticker": "ROOT",
+   "name": "Root, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 47.81,
+   "buy_high": 46.5981,
    "distance_pct": 2.6
   },
   {
@@ -2101,21 +2181,12 @@
    "distance_pct": 2.8
   },
   {
-   "ticker": "RIVN",
-   "name": "Rivian Automotive, Inc.",
+   "ticker": "STOK",
+   "name": "Stoke Therapeutics, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 15.02,
-   "buy_high": 14.5942,
-   "distance_pct": 2.9
-  },
-  {
-   "ticker": "WYNN",
-   "name": "Wynn Resorts, Limited",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 81.45,
-   "buy_high": 79.1869,
+   "price": 25.29,
+   "buy_high": 24.5786,
    "distance_pct": 2.9
   },
   {
@@ -2146,6 +2217,15 @@
    "distance_pct": 3.3
   },
   {
+   "ticker": "TPG",
+   "name": "TPG Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 43.63,
+   "buy_high": 42.2359,
+   "distance_pct": 3.3
+  },
+  {
    "ticker": "CWST",
    "name": "Casella Waste Systems, Inc.",
    "tf": "1w",
@@ -2164,12 +2244,12 @@
    "distance_pct": 3.7
   },
   {
-   "ticker": "UFPI",
-   "name": "UFP Industries, Inc.",
+   "ticker": "PRVA",
+   "name": "Privia Health Group, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 81.78,
-   "buy_high": 78.7703,
+   "price": 19.39,
+   "buy_high": 18.6806,
    "distance_pct": 3.8
   },
   {
@@ -2182,15 +2262,6 @@
    "distance_pct": 3.9
   },
   {
-   "ticker": "ROCK",
-   "name": "Gibraltar Industries, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 40.24,
-   "buy_high": 38.7003,
-   "distance_pct": 4.0
-  },
-  {
    "ticker": "BEAM",
    "name": "Beam Therapeutics Inc.",
    "tf": "1w",
@@ -2200,22 +2271,49 @@
    "distance_pct": 4.1
   },
   {
-   "ticker": "NN",
-   "name": "NextNav Inc.",
+   "ticker": "RGTI",
+   "name": "Rigetti Computing, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 14.39,
-   "buy_high": 13.7224,
-   "distance_pct": 4.9
+   "price": 16.5,
+   "buy_high": 15.8534,
+   "distance_pct": 4.1
   },
   {
-   "ticker": "VELO",
-   "name": "Velo3D, Inc.",
+   "ticker": "QBTS",
+   "name": "D-Wave Quantum Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 10.97,
-   "buy_high": 10.3749,
-   "distance_pct": 5.7
+   "price": 17.48,
+   "buy_high": 16.7732,
+   "distance_pct": 4.2
+  },
+  {
+   "ticker": "RIVN",
+   "name": "Rivian Automotive, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 15.29,
+   "buy_high": 14.5942,
+   "distance_pct": 4.8
+  },
+  {
+   "ticker": "SHLS",
+   "name": "Shoals Technologies Group, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 7.45,
+   "buy_high": 7.0885,
+   "distance_pct": 5.1
+  },
+  {
+   "ticker": "SION",
+   "name": "Sionna Therapeutics, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 5.23,
+   "buy_high": 4.9784,
+   "distance_pct": 5.1
   },
   {
    "ticker": "DSGX",
@@ -2227,68 +2325,50 @@
    "distance_pct": 6.2
   },
   {
-   "ticker": "STOK",
-   "name": "Stoke Therapeutics, Inc.",
+   "ticker": "VELO",
+   "name": "Velo3D, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 26.11,
-   "buy_high": 24.5786,
+   "price": 11.02,
+   "buy_high": 10.3749,
    "distance_pct": 6.2
-  },
-  {
-   "ticker": "TPG",
-   "name": "TPG Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 44.93,
-   "buy_high": 42.2359,
-   "distance_pct": 6.4
-  },
-  {
-   "ticker": "ALGM",
-   "name": "Allegro MicroSystems, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 35.13,
-   "buy_high": 32.973,
-   "distance_pct": 6.5
   }
  ],
  "summary": {
-  "total": 70,
+  "total": 76,
   "hit": 2,
-  "stop": 7,
-  "open": 61,
-  "hit_rate": 22.2,
-  "decided": 9,
-  "avg_ret": -4.14,
-  "avg_excess": -3.55,
-  "finished": 7,
+  "stop": 8,
+  "open": 66,
+  "hit_rate": 20.0,
+  "decided": 10,
+  "avg_ret": -4.25,
+  "avg_excess": -3.63,
+  "finished": 8,
   "by_tf": {
    "1d": {
-    "total": 51,
-    "decided": 7,
-    "hit_rate": 28.6
+    "total": 56,
+    "decided": 8,
+    "hit_rate": 25.0
    },
    "1w": {
-    "total": 19,
+    "total": 20,
     "decided": 2,
     "hit_rate": 0.0
    }
   },
   "baseline": {
-   "total": 210,
-   "decided": 20,
+   "total": 228,
+   "decided": 23,
    "hit": 0,
-   "stop": 20,
+   "stop": 23,
    "hit_rate": 0.0
   },
   "baseline_matched": {
-   "decided": 11,
+   "decided": 12,
    "hit": 0,
-   "stop": 11,
+   "stop": 12,
    "hit_rate": 0.0
   }
  },
- "elapsed_sec": 289.3
+ "elapsed_sec": 178.7
 }
