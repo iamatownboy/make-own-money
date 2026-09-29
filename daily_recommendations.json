@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-25",
-  "updated_at": "2026-09-26 00:02:09",
+  "date": "2026-09-28",
+  "updated_at": "2026-09-29 01:08:41",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,52 +8,53 @@
     "qualified": 0,
     "near_miss": [
       {
-        "ticker": "DDOG",
-        "name": "데이터독",
-        "total_score": 47,
+        "ticker": "ASML",
+        "name": "ASML",
+        "total_score": 61,
+        "risk_reward_ratio": 0.85,
+        "blockers": [
+          "점수 61/68",
+          "손익비 0.85/1.20"
+        ]
+      },
+      {
+        "ticker": "AVGO",
+        "name": "브로드컴",
+        "total_score": 58,
+        "risk_reward_ratio": 1.06,
+        "blockers": [
+          "점수 58/68",
+          "손익비 1.06/1.20"
+        ]
+      },
+      {
+        "ticker": "LRCX",
+        "name": "램리서치",
+        "total_score": 57,
         "risk_reward_ratio": 0.93,
         "blockers": [
-          "점수 47/68",
+          "점수 57/68",
           "손익비 0.93/1.20"
         ]
       },
       {
-        "ticker": "AMD",
-        "name": "AMD",
-        "total_score": 38,
-        "risk_reward_ratio": 0.58,
-        "blockers": [
-          "점수 38/68",
-          "손익비 0.58/1.20"
-        ]
-      },
-      {
-        "ticker": "ACHR",
-        "name": "아처 에비에이션",
-        "total_score": 36,
-        "risk_reward_ratio": 0.7,
-        "blockers": [
-          "점수 36/68",
-          "손익비 0.7/1.20"
-        ]
-      },
-      {
-        "ticker": "ADI",
-        "name": "아날로그 디바이스",
-        "total_score": 35,
+        "ticker": "MPWR",
+        "name": "모놀리식 파워",
+        "total_score": 56,
         "risk_reward_ratio": 0.93,
         "blockers": [
-          "점수 35/68",
+          "점수 56/68",
           "손익비 0.93/1.20"
         ]
       },
       {
-        "ticker": "AMZN",
-        "name": "아마존",
-        "total_score": 33,
-        "risk_reward_ratio": 1.27,
+        "ticker": "CDNS",
+        "name": "케이던스",
+        "total_score": 54,
+        "risk_reward_ratio": 0.85,
         "blockers": [
-          "점수 33/68"
+          "점수 54/68",
+          "손익비 0.85/1.20"
         ]
       }
     ]
