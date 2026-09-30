@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-28",
-  "updated_at": "2026-09-29 01:08:41",
+  "date": "2026-09-29",
+  "updated_at": "2026-09-30 00:40:23",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,53 +8,50 @@
     "qualified": 0,
     "near_miss": [
       {
-        "ticker": "ASML",
-        "name": "ASML",
-        "total_score": 61,
-        "risk_reward_ratio": 0.85,
-        "blockers": [
-          "점수 61/68",
-          "손익비 0.85/1.20"
-        ]
-      },
-      {
-        "ticker": "AVGO",
-        "name": "브로드컴",
-        "total_score": 58,
-        "risk_reward_ratio": 1.06,
-        "blockers": [
-          "점수 58/68",
-          "손익비 1.06/1.20"
-        ]
-      },
-      {
         "ticker": "LRCX",
         "name": "램리서치",
-        "total_score": 57,
+        "total_score": 69,
         "risk_reward_ratio": 0.93,
         "blockers": [
-          "점수 57/68",
           "손익비 0.93/1.20"
+        ]
+      },
+      {
+        "ticker": "AMAT",
+        "name": "어플라이드 머티어리얼즈",
+        "total_score": 61,
+        "risk_reward_ratio": 1.62,
+        "blockers": [
+          "점수 61/68"
         ]
       },
       {
         "ticker": "MPWR",
         "name": "모놀리식 파워",
-        "total_score": 56,
+        "total_score": 61,
         "risk_reward_ratio": 0.93,
         "blockers": [
-          "점수 56/68",
+          "점수 61/68",
           "손익비 0.93/1.20"
         ]
       },
       {
-        "ticker": "CDNS",
-        "name": "케이던스",
-        "total_score": 54,
-        "risk_reward_ratio": 0.85,
+        "ticker": "CRSP",
+        "name": "크리스퍼 테라퓨틱스",
+        "total_score": 60,
+        "risk_reward_ratio": 0.66,
         "blockers": [
-          "점수 54/68",
-          "손익비 0.85/1.20"
+          "점수 60/68",
+          "손익비 0.66/1.20"
+        ]
+      },
+      {
+        "ticker": "AMZN",
+        "name": "아마존",
+        "total_score": 58,
+        "risk_reward_ratio": 1.22,
+        "blockers": [
+          "점수 58/68"
         ]
       }
     ]

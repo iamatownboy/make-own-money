@@ -23,11 +23,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.048510493124049536,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.030109917556572774,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 16.84727006530762
   }
  },
@@ -55,12 +55,12 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.016632229751355032,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.03271407568490148,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
-   "entry_price": 91.98999786376953
+   "last_date": "2026-09-28",
+   "entry_price": 89.89068770933315
   }
  },
  {
@@ -84,11 +84,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.046124533643143506,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.045435675259063224,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 20.532927822113038
   }
  },
@@ -113,12 +113,12 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.02761665450946904,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.026534479443826364,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
-   "entry_price": 6.736026713240994
+   "last_date": "2026-09-28",
+   "entry_price": 6.56417688305465
   }
  },
  {
@@ -170,14 +170,14 @@
   ],
   "rec_date": "2026-09-22",
   "eval": {
-   "result": "진행 중",
-   "finished": false,
-   "targets_hit": 0,
-   "ret": 0.008354979493745862,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
-   "event_date": null,
-   "last_date": "2026-09-25",
+   "result": "적중",
+   "finished": true,
+   "targets_hit": 4,
+   "ret": 0.9235112147272855,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
+   "event_date": "2026-09-28",
+   "last_date": "2026-09-28",
    "entry_price": 32.08195440296503
   }
  },
@@ -204,12 +204,12 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.04821693078000888,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": 0.007976851251129125,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
-   "entry_price": 19.90999984741211
+   "last_date": "2026-09-28",
+   "entry_price": 19.36552454903592
   }
  },
  {
@@ -235,11 +235,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.025673112629327477,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.003122019869229997,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 49.31395900726318
   }
  },
@@ -264,11 +264,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.012500732174118179,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.046052313663923594,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 46.19750152556932
   }
  },
@@ -295,11 +295,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.017989426425942368,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.05714285425948795,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 9.449999809265137
   }
  },
@@ -324,11 +324,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.017161341998856994,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": 0.03761884767993795,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 108.51768809509278
   }
  },
@@ -357,11 +357,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.01514124569969022,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.015824716418883278,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 14.631539583206177
   }
  },
@@ -389,12 +389,12 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.016632229751355032,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.03271407568490148,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
-   "entry_price": 91.98999786376953
+   "last_date": "2026-09-28",
+   "entry_price": 89.89068770933315
   }
  },
  {
@@ -421,11 +421,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.004490720148048188,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.005920101219009433,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 65.31668167196362
   }
  },
@@ -453,11 +453,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.011616984930880925,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.012615932401690677,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 130.1418609199969
   }
  },
@@ -484,11 +484,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.018960541243504325,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.026943979680301045,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 162.83748688609234
   }
  },
@@ -570,14 +570,14 @@
   "signals": [],
   "rec_date": "2026-09-22",
   "eval": {
-   "result": "진행 중",
-   "finished": false,
+   "result": "손절",
+   "finished": true,
    "targets_hit": 0,
-   "ret": -0.09988450133685622,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
-   "event_date": null,
-   "last_date": "2026-09-25",
+   "ret": -0.1086235081451945,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
+   "event_date": "2026-09-28",
+   "last_date": "2026-09-28",
    "entry_price": 16.02016640943368
   }
  },
@@ -636,11 +636,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.029091704033212817,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.013692199360373025,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 67.53469917520124
   }
  },
@@ -667,11 +667,11 @@
    "result": "적중",
    "finished": false,
    "targets_hit": 2,
-   "ret": 0.13965337906742215,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": 0.1607615385690757,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": "2026-09-24",
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 45.47999954223633
   }
  },
@@ -696,11 +696,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.050928798524213614,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.05513763611102229,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 9.504029248530305
   }
  },
@@ -725,11 +725,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.0035780684521113937,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.0329157226360014,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 6.028430055338098
   }
  },
@@ -757,11 +757,11 @@
    "result": "적중",
    "finished": false,
    "targets_hit": 3,
-   "ret": 0.3181523111530533,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": 0.29741786174725626,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": "2026-09-23",
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 30.50482007598877
   }
  },
@@ -786,11 +786,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.010830472126551527,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.04946291445297313,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 11.130549333188137
   }
  },
@@ -815,11 +815,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.046124533643143506,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": -0.045435675259063224,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 20.532927822113038
   }
  },
@@ -903,14 +903,14 @@
   ],
   "rec_date": "2026-09-22",
   "eval": {
-   "result": "진행 중",
-   "finished": false,
-   "targets_hit": 0,
-   "ret": 0.008354979493745862,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
-   "event_date": null,
-   "last_date": "2026-09-25",
+   "result": "적중",
+   "finished": true,
+   "targets_hit": 4,
+   "ret": 0.9235112147272855,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
+   "event_date": "2026-09-28",
+   "last_date": "2026-09-28",
    "entry_price": 32.08195440296503
   }
  },
@@ -932,9 +932,15 @@
   "signals": [],
   "rec_date": "2026-09-22",
   "eval": {
-   "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "result": "손절",
+   "finished": true,
+   "targets_hit": 0,
+   "ret": -0.047905306308180795,
+   "bench_ret": -0.008508878334300252,
+   "days": 2,
+   "event_date": "2026-09-24",
+   "last_date": "2026-09-24",
+   "entry_price": 5.010005845564035
   }
  },
  {
@@ -960,12 +966,12 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.04821693078000888,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": 0.007976851251129125,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
-   "entry_price": 19.90999984741211
+   "last_date": "2026-09-28",
+   "entry_price": 19.36552454903592
   }
  },
  {
@@ -991,11 +997,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.025433777223246024,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": 0.04978632745536449,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 194.22999572753906
   }
  },
@@ -1020,14 +1026,14 @@
   ],
   "rec_date": "2026-09-22",
   "eval": {
-   "result": "진행 중",
-   "finished": false,
+   "result": "손절",
+   "finished": true,
    "targets_hit": 0,
-   "ret": -0.06311804277149957,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
-   "event_date": null,
-   "last_date": "2026-09-25",
+   "ret": -0.07305384382359892,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
+   "event_date": "2026-09-28",
+   "last_date": "2026-09-28",
    "entry_price": 17.109947056794347
   }
  },
@@ -1052,11 +1058,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.10293388019720395,
-   "bench_ret": -0.00396010741128916,
-   "days": 3,
+   "ret": 0.1048615789076226,
+   "bench_ret": -0.014622845843895949,
+   "days": 4,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 295.6931605224609
   }
  },
@@ -1116,11 +1122,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.002534790276460419,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": 0.020604673531861017,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 64.82431971740722
   }
  },
@@ -1148,11 +1154,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.005810914346445539,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": 0.011093453834506217,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 18.93000030517578
   }
  },
@@ -1180,11 +1186,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.03585863733228578,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": 0.054040487040528884,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 19.799999237060547
   }
  },
@@ -1212,11 +1218,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.022944284551810634,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": 0.027802855208015398,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 22.640529105218423
   }
  },
@@ -1242,11 +1248,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.028979020249166654,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": -0.02651642692613876,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 8.64934993171692
   }
  },
@@ -1301,14 +1307,14 @@
   "earnings_date": "2026-11-10",
   "rec_date": "2026-09-23",
   "eval": {
-   "result": "진행 중",
-   "finished": false,
+   "result": "손절",
+   "finished": true,
    "targets_hit": 0,
-   "ret": -0.05159401362636795,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
-   "event_date": null,
-   "last_date": "2026-09-25",
+   "ret": -0.0807224828821077,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
+   "event_date": "2026-09-28",
+   "last_date": "2026-09-28",
    "entry_price": 20.255037779680066
   }
  },
@@ -1333,14 +1339,14 @@
   "earnings_date": "2026-10-30",
   "rec_date": "2026-09-23",
   "eval": {
-   "result": "진행 중",
-   "finished": false,
+   "result": "손절",
+   "finished": true,
    "targets_hit": 0,
-   "ret": -0.033425906651952775,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
-   "event_date": null,
-   "last_date": "2026-09-25",
+   "ret": -0.04506828832113774,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
+   "event_date": "2026-09-28",
+   "last_date": "2026-09-28",
    "entry_price": 116.8146388767864
   }
  },
@@ -1368,12 +1374,12 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.008851517556063948,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": 0.010650359831234635,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
-   "entry_price": 322.02955462646486
+   "last_date": "2026-09-28",
+   "entry_price": 317.32043538834137
   }
  },
  {
@@ -1400,11 +1406,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.05728872813161945,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": 0.05445269639930861,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 17.6299991607666
   }
  },
@@ -1432,11 +1438,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.009593842148720944,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": -0.00500630833357163,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 73.28689496193483
   }
  },
@@ -1464,11 +1470,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.05677080090467501,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": 0.026502207064154515,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 7.598619990348816
   }
  },
@@ -1496,11 +1502,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.003124721065109193,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": 0.05522725060715494,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 57.238856834986066
   }
  },
@@ -1526,11 +1532,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.027529610682115013,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": -0.02470270513716677,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 17.686914637065673
   }
  },
@@ -1556,11 +1562,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.014318599091575734,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": -1.885769238407775e-05,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 46.73088077881089
   }
  },
@@ -1588,11 +1594,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.005810914346445539,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": 0.011093453834506217,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 18.93000030517578
   }
  },
@@ -1620,11 +1626,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.03585863733228578,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": 0.054040487040528884,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 19.799999237060547
   }
  },
@@ -1652,11 +1658,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.022944284551810634,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": 0.027802855208015398,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 22.640529105218423
   }
  },
@@ -1682,11 +1688,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.0031737526459837406,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": -0.031225118317156908,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 9.98167919000578
   }
  },
@@ -1714,11 +1720,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.005585294029266108,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": -0.014047911767882337,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 170.16040259449574
   }
  },
@@ -1746,11 +1752,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.047785349148770306,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": 0.04727406675752599,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 156.47288548311596
   }
  },
@@ -1778,11 +1784,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.014425195958078674,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": -0.009972869359136327,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 204.38834436035157
   }
  },
@@ -1808,11 +1814,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.028446555063618595,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": -0.006371741331617886,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 175.7699545809444
   }
  },
@@ -1838,11 +1844,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.028979020249166654,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": -0.02651642692613876,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 8.64934993171692
   }
  },
@@ -1868,11 +1874,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.007740493947340443,
-   "bench_ret": 0.004438658315207178,
-   "days": 2,
+   "ret": -0.006337357251591458,
+   "bench_ret": -0.006313990012339454,
+   "days": 3,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 8.524020027160645
   }
  },
@@ -1898,11 +1904,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.10645166847634058,
-   "bench_ret": 0.004587808023302609,
-   "days": 1,
+   "ret": 0.06532261649478222,
+   "bench_ret": -0.0061664369715426215,
+   "days": 2,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 12.399999618530273
   }
  },
@@ -1928,11 +1934,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.0012190191033311093,
-   "bench_ret": 0.004587808023302609,
-   "days": 1,
+   "ret": 0.020269384311756733,
+   "bench_ret": -0.0061664369715426215,
+   "days": 2,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 11.634182175883117
   }
  },
@@ -1958,12 +1964,12 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.014496812166469253,
-   "bench_ret": 0.004587808023302609,
-   "days": 1,
+   "ret": -0.0006655318855641745,
+   "bench_ret": -0.0061664369715426215,
+   "days": 2,
    "event_date": null,
-   "last_date": "2026-09-25",
-   "entry_price": 32.59744071960449
+   "last_date": "2026-09-28",
+   "entry_price": 31.621045195302067
   }
  },
  {
@@ -1988,11 +1994,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.10645166847634058,
-   "bench_ret": 0.004587808023302609,
-   "days": 1,
+   "ret": 0.06532261649478222,
+   "bench_ret": -0.0061664369715426215,
+   "days": 2,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 12.399999618530273
   }
  },
@@ -2018,11 +2024,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.0012190191033311093,
-   "bench_ret": 0.004587808023302609,
-   "days": 1,
+   "ret": 0.020269384311756733,
+   "bench_ret": -0.0061664369715426215,
+   "days": 2,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 11.634182175883117
   }
  },
@@ -2048,11 +2054,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.018232513246061233,
-   "bench_ret": 0.004587808023302609,
-   "days": 1,
+   "ret": -0.020553833230088858,
+   "bench_ret": -0.0061664369715426215,
+   "days": 2,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 27.587019454956053
   }
  },
@@ -2078,12 +2084,12 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.00483526256371003,
-   "bench_ret": 0.004587808023302609,
-   "days": 1,
+   "ret": -0.006693642852291237,
+   "bench_ret": -0.0061664369715426215,
+   "days": 2,
    "event_date": null,
-   "last_date": "2026-09-25",
-   "entry_price": 277.1300048828125
+   "last_date": "2026-09-28",
+   "entry_price": 271.21541300719116
   }
  },
  {
@@ -2108,12 +2114,12 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": 0.014496812166469253,
-   "bench_ret": 0.004587808023302609,
-   "days": 1,
+   "ret": -0.0006655318855641745,
+   "bench_ret": -0.0061664369715426215,
+   "days": 2,
    "event_date": null,
-   "last_date": "2026-09-25",
-   "entry_price": 32.59744071960449
+   "last_date": "2026-09-28",
+   "entry_price": 31.621045195302067
   }
  },
  {
@@ -2140,11 +2146,11 @@
    "result": "진행 중",
    "finished": false,
    "targets_hit": 0,
-   "ret": -0.029556622475449545,
-   "bench_ret": 0.004587808023302609,
-   "days": 1,
+   "ret": -0.02586207402791274,
+   "bench_ret": -0.0061664369715426215,
+   "days": 2,
    "event_date": null,
-   "last_date": "2026-09-25",
+   "last_date": "2026-09-28",
    "entry_price": 8.119999885559082
   }
  },
@@ -2171,8 +2177,14 @@
   "rec_date": "2026-09-25",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": 0.016834706864306437,
+   "bench_ret": -0.010705131904801934,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-28",
+   "entry_price": 79.18690825510105
   }
  },
  {
@@ -2197,8 +2209,14 @@
   "rec_date": "2026-09-25",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": 0.037077929003697774,
+   "bench_ret": -0.010705131904801934,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-28",
+   "entry_price": 37.71172784278983
   }
  },
  {
@@ -2223,8 +2241,14 @@
   "rec_date": "2026-09-25",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.011339146146362888,
+   "bench_ret": -0.010705131904801934,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-28",
+   "entry_price": 18.520000457763672
   }
  },
  {
@@ -2250,8 +2274,14 @@
   "rec_date": "2026-09-25",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": 0.016834706864306437,
+   "bench_ret": -0.010705131904801934,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-28",
+   "entry_price": 79.18690825510105
   }
  },
  {
@@ -2276,8 +2306,14 @@
   "rec_date": "2026-09-25",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": -0.013733492363135147,
+   "bench_ret": -0.010705131904801934,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-28",
+   "entry_price": 19.65999984741211
   }
  },
  {
@@ -2300,8 +2336,14 @@
   "rec_date": "2026-09-25",
   "eval": {
    "result": "진행 중",
-   "days": 0,
-   "targets_hit": 0
+   "finished": false,
+   "targets_hit": 0,
+   "ret": 0.02942847295715212,
+   "bench_ret": -0.010705131904801934,
+   "days": 1,
+   "event_date": null,
+   "last_date": "2026-09-28",
+   "entry_price": 21.448794650374012
   }
  },
  {
@@ -2346,6 +2388,283 @@
   "signals": [],
   "earnings_date": "2026-11-24",
   "rec_date": "2026-09-28",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "HAPN|1w|2026-03-20|2026-08-07",
+  "ticker": "HAPN",
+  "name": "Happen, Inc.",
+  "tf": "1w",
+  "price": 14.9,
+  "L": 13.050000190734863,
+  "H": 21.250999450683594,
+  "L_date": "2026-03-20",
+  "H_date": "2026-08-07",
+  "entry_date": "2026-09-28",
+  "buy_high": 14.805,
+  "buy_low": 13.9849,
+  "stop": 13.05,
+  "t1": 17.1505,
+  "signals": [
+   "RSI 과매도 24",
+   "반전 캔들"
+  ],
+  "earnings_date": "2026-10-21",
+  "rec_date": "2026-09-29",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "USAR|1w|2026-07-31|2026-08-28",
+  "ticker": "USAR",
+  "name": "USA Rare Earth, Inc.",
+  "tf": "1w",
+  "price": 14.415,
+  "L": 12.930000305175781,
+  "H": 20.520000457763672,
+  "L_date": "2026-07-31",
+  "H_date": "2026-08-28",
+  "entry_date": "2026-09-28",
+  "buy_high": 14.5543,
+  "buy_low": 13.7953,
+  "stop": 12.93,
+  "t1": 16.725,
+  "signals": [],
+  "earnings_date": "2026-11-05",
+  "rec_date": "2026-09-29",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "VOR|1w|2026-07-02|2026-09-11",
+  "ticker": "VOR",
+  "name": "Vor Biopharma Inc.",
+  "tf": "1w",
+  "price": 18.31,
+  "L": 15.850000381469727,
+  "H": 26.0,
+  "L_date": "2026-07-02",
+  "H_date": "2026-09-11",
+  "entry_date": "2026-09-25",
+  "buy_high": 18.0221,
+  "buy_low": 17.0071,
+  "stop": 15.85,
+  "t1": 20.925,
+  "signals": [
+   "200일선 위",
+   "반전 캔들"
+  ],
+  "earnings_date": "2026-11-12",
+  "rec_date": "2026-09-29",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "KC|1w|2026-06-26|2026-08-07",
+  "ticker": "KC",
+  "name": "Kingsoft Cloud Holdings Limited",
+  "tf": "1w",
+  "price": 9.15,
+  "L": 8.350000381469727,
+  "H": 13.140000343322754,
+  "L_date": "2026-06-26",
+  "H_date": "2026-08-07",
+  "entry_date": "2026-09-18",
+  "buy_high": 9.3751,
+  "buy_low": 8.8961,
+  "stop": 8.35,
+  "t1": 10.745,
+  "signals": [],
+  "earnings_date": "2026-11-18",
+  "rec_date": "2026-09-29",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "ADSK|1d|2026-06-22|2026-08-27",
+  "ticker": "ADSK",
+  "name": "Autodesk, Inc.",
+  "tf": "1d",
+  "price": 207.19,
+  "L": 185.5,
+  "H": 271.7200012207031,
+  "L_date": "2026-06-22",
+  "H_date": "2026-08-27",
+  "entry_date": "2026-09-28",
+  "buy_high": 203.9511,
+  "buy_low": 195.3291,
+  "stop": 185.5,
+  "t1": 228.61,
+  "signals": [
+   "반전 캔들"
+  ],
+  "earnings_date": "2026-11-27",
+  "rec_date": "2026-09-29",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "BL|1d|2026-05-13|2026-08-28",
+  "ticker": "BL",
+  "name": "BlackLine, Inc.",
+  "tf": "1d",
+  "price": 26.56,
+  "L": 24.700000762939453,
+  "H": 34.70000076293945,
+  "L_date": "2026-05-13",
+  "H_date": "2026-08-28",
+  "entry_date": "2026-09-28",
+  "buy_high": 26.84,
+  "buy_low": 25.84,
+  "stop": 24.7,
+  "t1": 29.7,
+  "signals": [
+   "반전 캔들"
+  ],
+  "earnings_date": "2026-11-03",
+  "rec_date": "2026-09-29",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "HAPN|1d|2026-03-19|2026-08-04",
+  "ticker": "HAPN",
+  "name": "Happen, Inc.",
+  "tf": "1d",
+  "price": 14.9,
+  "L": 13.050000190734863,
+  "H": 21.250999450683594,
+  "L_date": "2026-03-19",
+  "H_date": "2026-08-04",
+  "entry_date": "2026-09-28",
+  "buy_high": 14.805,
+  "buy_low": 13.9849,
+  "stop": 13.05,
+  "t1": 17.1505,
+  "signals": [
+   "RSI 과매도 24",
+   "반전 캔들"
+  ],
+  "earnings_date": "2026-10-21",
+  "rec_date": "2026-09-29",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "MDB|1d|2026-06-25|2026-08-14",
+  "ticker": "MDB",
+  "name": "MongoDB, Inc.",
+  "tf": "1d",
+  "price": 334.68,
+  "L": 290.57000732421875,
+  "H": 473.1000061035156,
+  "L_date": "2026-06-25",
+  "H_date": "2026-08-14",
+  "entry_date": "2026-09-28",
+  "buy_high": 329.6314,
+  "buy_low": 311.3784,
+  "stop": 290.57,
+  "t1": 381.835,
+  "signals": [],
+  "earnings_date": "2026-12-01",
+  "rec_date": "2026-09-29",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "USAR|1d|2026-07-29|2026-08-26",
+  "ticker": "USAR",
+  "name": "USA Rare Earth, Inc.",
+  "tf": "1d",
+  "price": 14.415,
+  "L": 12.930000305175781,
+  "H": 20.520000457763672,
+  "L_date": "2026-07-29",
+  "H_date": "2026-08-26",
+  "entry_date": "2026-09-28",
+  "buy_high": 14.5543,
+  "buy_low": 13.7953,
+  "stop": 12.93,
+  "t1": 16.725,
+  "signals": [],
+  "earnings_date": "2026-11-05",
+  "rec_date": "2026-09-29",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "KC|1d|2026-06-26|2026-08-04",
+  "ticker": "KC",
+  "name": "Kingsoft Cloud Holdings Limited",
+  "tf": "1d",
+  "price": 9.15,
+  "L": 8.350000381469727,
+  "H": 13.140000343322754,
+  "L_date": "2026-06-26",
+  "H_date": "2026-08-04",
+  "entry_date": "2026-09-16",
+  "buy_high": 9.3751,
+  "buy_low": 8.8961,
+  "stop": 8.35,
+  "t1": 10.745,
+  "signals": [],
+  "earnings_date": "2026-11-18",
+  "rec_date": "2026-09-29",
+  "eval": {
+   "result": "진행 중",
+   "days": 0,
+   "targets_hit": 0
+  }
+ },
+ {
+  "id": "NNE|1d|2026-07-29|2026-08-14",
+  "ticker": "NNE",
+  "name": "Nano Nuclear Energy Inc.",
+  "tf": "1d",
+  "price": 16.16,
+  "L": 14.710000038146973,
+  "H": 21.1299991607666,
+  "L_date": "2026-07-29",
+  "H_date": "2026-08-14",
+  "entry_date": "2026-09-14",
+  "buy_high": 16.0839,
+  "buy_low": 15.4419,
+  "stop": 14.71,
+  "t1": 17.92,
+  "signals": [],
+  "earnings_date": null,
+  "rec_date": "2026-09-29",
   "eval": {
    "result": "진행 중",
    "days": 0,
