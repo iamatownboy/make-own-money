@@ -5,7 +5,8 @@ quant_core/pattern_scanner.py
 흐름
 ----
 1. 나스닥 공식 상장 목록(nasdaqtrader.com)에서 보통주만 추림 (ETF·테스트·워런트·우선주·유닛 제외)
-2. 최근 3개월 시세로 유동성 필터: 주가 $5 이상, 최근 60일 하루 거래대금 중앙값 $10M 이상
+2. 유동성·규모 필터: 주가 $5 이상, 최근 60일 하루 거래대금 중앙값 $30M 이상(1차 거름망) →
+   시가총액 MIN_MARKET_CAP(기본 $10B) 이상인 대형주만 남김. 잡주·소형 테마주는 변동성이 커서 제외
 3. 남은 종목의 4년 일봉으로 일봉(스윙 +30%)·주봉(스윙 +50%) 매수 구간 탐지
 4. 오늘 결과 -> pattern_setups.json
    새 추천 -> pattern_history.json 에 추가 (추천 당시 값은 이후 바꾸지 않는다)
@@ -43,7 +44,12 @@ EARNINGS_WARN_DAYS = 14          # 실적 발표가 이 기간 안이면 카드�
 BENCHMARK = 'QQQ'
 
 MIN_PRICE = 5.0
-MIN_DOLLAR_VOLUME = 10_000_000
+MIN_DOLLAR_VOLUME = 30_000_000        # 시가총액을 조회할 후보를 줄이는 1차 거름망
+# 대형주(유명한 종목)만 추천. 환경변수 MIN_MARKET_CAP 으로 조절, 0 이하면 시가총액 필터를 끈다.
+MIN_MARKET_CAP = float(os.environ.get('MIN_MARKET_CAP', 10_000_000_000))
+MARKET_CAP_CACHE = os.path.join(ROOT, 'data', 'universes', 'market_cap_cache.json')
+MARKET_CAP_TTL_DAYS = 7               # 시가총액은 며칠 단위로만 바뀌어도 충분 -> 매일 조회하지 않음
+FALLBACK_DOLLAR_VOLUME = 100_000_000  # 시가총액 조회가 대부분 실패했을 때 대신 쓰는 거래대금 기준
 EXCLUDE_NAME = (r'\bWarrants?\b|\bRights?\b|\bUnits?\b|Preferred|\bNotes\b|Debentures?|'
                 r'Subordinated|Beneficial Interest|Contingent Value')
 
@@ -124,16 +130,81 @@ def download_daily(tickers: List[str], period: str, batch: int = 150,
     return out
 
 
-def liquid_tickers(short: Dict[str, pd.DataFrame]) -> List[str]:
+def _median_dollar_volume(d: pd.DataFrame) -> float:
+    tail = d.tail(60)
+    return float((tail['Close'] * tail['Volume']).median())
+
+
+def liquid_tickers(short: Dict[str, pd.DataFrame], min_dollar: float = MIN_DOLLAR_VOLUME) -> List[str]:
     keep = []
     for t, d in short.items():
         if d is None or len(d) < 40:
             continue
-        tail = d.tail(60)
-        dollar = (tail['Close'] * tail['Volume']).median()
-        if float(d['Close'].iloc[-1]) >= MIN_PRICE and dollar >= MIN_DOLLAR_VOLUME:
+        if float(d['Close'].iloc[-1]) >= MIN_PRICE and _median_dollar_volume(d) >= min_dollar:
             keep.append(t)
     return keep
+
+
+def fetch_market_caps(tickers: List[str], workers: int = 8) -> Dict[str, Optional[float]]:
+    """yfinance 에서 시가총액(USD)을 가져온다. 실패하면 None."""
+    import yfinance as yf
+    from concurrent.futures import ThreadPoolExecutor
+
+    def one(t):
+        try:
+            v = getattr(yf.Ticker(t).fast_info, 'market_cap', None)
+            return t, (float(v) if v else None)
+        except Exception:
+            return t, None
+
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        return dict(ex.map(one, sorted(set(tickers))))
+
+
+def load_market_caps(tickers: List[str], fetch=fetch_market_caps,
+                     today: Optional[pd.Timestamp] = None) -> Dict[str, float]:
+    """
+    시가총액을 캐시(MARKET_CAP_CACHE)와 함께 돌려준다. 캐시가 MARKET_CAP_TTL_DAYS 일 안이면 다시 조회하지 않고,
+    조회에 실패한 종목은 오래된 값이라도 쓴다. 값을 끝내 못 구한 종목은 결과에 없다.
+    """
+    today = pd.Timestamp(today if today is not None else datetime.now().date())
+    cache = _load_json(MARKET_CAP_CACHE, {})
+    caps: Dict[str, float] = {}
+    todo: List[str] = []
+    for t in tickers:
+        c = cache.get(t)
+        if c and (today - pd.Timestamp(c['date'])).days <= MARKET_CAP_TTL_DAYS:
+            caps[t] = float(c['cap'])
+        else:
+            todo.append(t)
+    got = fetch(todo) if todo else {}
+    for t in todo:
+        v = got.get(t)
+        if v:
+            caps[t] = float(v)
+            cache[t] = {'cap': float(v), 'date': str(today.date())}
+        elif t in cache:
+            caps[t] = float(cache[t]['cap'])      # 조회 실패 -> 마지막으로 안 값
+    if todo:
+        keep = set(tickers)
+        _save_json(MARKET_CAP_CACHE, {t: c for t, c in cache.items() if t in keep})
+    return caps
+
+
+def large_cap_tickers(liquid: List[str], short: Dict[str, pd.DataFrame],
+                      fetch=fetch_market_caps) -> Dict[str, Any]:
+    """
+    유동성 필터를 통과한 종목 중 시가총액 MIN_MARKET_CAP 이상만 남긴다.
+    시가총액 조회가 절반 넘게 실패하면(네트워크 문제 등) 거래대금 FALLBACK_DOLLAR_VOLUME 이상으로 대신 거른다.
+    돌려주는 값: {'tickers': [...], 'mode': 'market_cap' | 'off' | 'fallback'}
+    """
+    if MIN_MARKET_CAP <= 0:
+        return {'tickers': list(liquid), 'mode': 'off'}
+    caps = load_market_caps(liquid, fetch=fetch)
+    if liquid and len(caps) < len(liquid) * 0.5:
+        keep = [t for t in liquid if _median_dollar_volume(short[t]) >= FALLBACK_DOLLAR_VOLUME]
+        return {'tickers': keep, 'mode': 'fallback'}
+    return {'tickers': [t for t in liquid if caps.get(t, 0) >= MIN_MARKET_CAP], 'mode': 'market_cap'}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -454,8 +525,15 @@ def run_pattern_scan(cache_dir: Optional[str] = None, verbose: bool = True) -> D
     c_full = os.path.join(cache_dir, 'nasdaq_4y.pkl') if cache_dir else None
     short = download_daily(list(uni.ticker), '3mo', cache_path=c_short, verbose=verbose)
     liquid = liquid_tickers(short)
+    big = large_cap_tickers(liquid, short)
+    n_liquid, liquid, cap_mode = len(liquid), big['tickers'], big['mode']
     if verbose:
-        print(f"  [2/4] 유동성 필터(주가 ${MIN_PRICE:.0f}+, 거래대금 ${MIN_DOLLAR_VOLUME / 1e6:.0f}M+) 통과 {len(liquid):,}개")
+        if cap_mode == 'market_cap':
+            print(f"  [2/4] 유동성 필터 통과 {n_liquid:,}개 -> 시가총액 ${MIN_MARKET_CAP / 1e9:.0f}B+ 대형주 {len(liquid):,}개")
+        elif cap_mode == 'fallback':
+            print(f"  [2/4] ⚠️ 시가총액 조회 실패 -> 거래대금 ${FALLBACK_DOLLAR_VOLUME / 1e6:.0f}M+ 로 대체: {len(liquid):,}개")
+        else:
+            print(f"  [2/4] 유동성 필터(주가 ${MIN_PRICE:.0f}+, 거래대금 ${MIN_DOLLAR_VOLUME / 1e6:.0f}M+) 통과 {len(liquid):,}개")
 
     full = download_daily(liquid + [BENCHMARK], '4y', cache_path=c_full, verbose=verbose)
     bench_df = full.pop(BENCHMARK, None)
@@ -497,6 +575,7 @@ def run_pattern_scan(cache_dir: Optional[str] = None, verbose: bool = True) -> D
         'date': rec_date,
         'generated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'universe': int(len(uni)), 'liquid': int(len(liquid)),
+        'min_market_cap': MIN_MARKET_CAP if cap_mode == 'market_cap' else None,
         'setups': res['setups'], 'watch': res['watch'][:30],
         'summary': summary,
         'elapsed_sec': round(time.time() - t0, 1),

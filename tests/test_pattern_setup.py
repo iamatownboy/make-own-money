@@ -266,3 +266,45 @@ def test_append_history_returns_only_new_ids(tmp_path, monkeypatch):
              entry_date='2026-09-21', signals=[])
     assert ps.append_history([s], '2026-09-22') == ['VC|1w']
     assert ps.append_history([s], '2026-09-23') == []
+
+
+# 15. 대형주 필터: 시가총액 기준 미만·조회 실패 종목 제외, 캐시 재사용, 조회 대량 실패 시 거래대금으로 대체
+def _vol_df(dollar, price=50.0):
+    idx = pd.bdate_range('2026-06-01', periods=60)
+    return pd.DataFrame({'Open': price, 'High': price, 'Low': price, 'Close': price,
+                         'Volume': dollar / price}, index=idx)
+
+
+def test_large_cap_filter_cache_and_fallback(tmp_path, monkeypatch):
+    import quant_core.pattern_scanner as ps
+    monkeypatch.setattr(ps, 'MARKET_CAP_CACHE', str(tmp_path / 'cap.json'))
+    monkeypatch.setattr(ps, 'MIN_MARKET_CAP', 10e9)
+    short = {t: _vol_df(200e6) for t in ('BIG', 'MID', 'SMALL', 'NONE')}
+    liquid = list(short)
+    calls = []
+
+    def fetch(ts):
+        calls.append(sorted(ts))
+        return {'BIG': 500e9, 'MID': 12e9, 'SMALL': 0.8e9, 'NONE': None}
+
+    r = ps.large_cap_tickers(liquid, short, fetch=fetch)
+    assert r['mode'] == 'market_cap' and r['tickers'] == ['BIG', 'MID']     # 소형주·시총 미확인 종목 제외
+
+    # 같은 주에 다시 돌리면 캐시를 쓰고 값을 못 구한 종목(NONE)만 다시 조회
+    ps.large_cap_tickers(liquid, short, fetch=fetch)
+    assert calls[1] == ['NONE']
+
+    # 조회 실패 시 마지막으로 안 값 사용 (캐시가 만료돼도)
+    old = pd.Timestamp.now().normalize() + pd.Timedelta(days=30)
+    caps = ps.load_market_caps(liquid, fetch=lambda ts: {}, today=old)
+    assert caps['BIG'] == 500e9 and 'NONE' not in caps
+
+    # 조회가 절반 넘게 실패 -> 거래대금 $100M 이상으로 대체
+    short2 = {'A': _vol_df(500e6), 'B': _vol_df(40e6), 'C': _vol_df(500e6)}
+    monkeypatch.setattr(ps, 'MARKET_CAP_CACHE', str(tmp_path / 'cap2.json'))
+    r2 = ps.large_cap_tickers(list(short2), short2, fetch=lambda ts: {})
+    assert r2['mode'] == 'fallback' and r2['tickers'] == ['A', 'C']
+
+    # 0 이하면 필터 끔
+    monkeypatch.setattr(ps, 'MIN_MARKET_CAP', 0)
+    assert ps.large_cap_tickers(liquid, short, fetch=fetch)['mode'] == 'off'
