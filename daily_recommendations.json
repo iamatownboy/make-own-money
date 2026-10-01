@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-29",
-  "updated_at": "2026-09-30 00:40:23",
+  "date": "2026-09-30",
+  "updated_at": "2026-10-01 00:45:44",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -10,48 +10,50 @@
       {
         "ticker": "LRCX",
         "name": "램리서치",
-        "total_score": 69,
+        "total_score": 40,
         "risk_reward_ratio": 0.93,
         "blockers": [
+          "점수 40/68",
           "손익비 0.93/1.20"
-        ]
-      },
-      {
-        "ticker": "AMAT",
-        "name": "어플라이드 머티어리얼즈",
-        "total_score": 61,
-        "risk_reward_ratio": 1.62,
-        "blockers": [
-          "점수 61/68"
-        ]
-      },
-      {
-        "ticker": "MPWR",
-        "name": "모놀리식 파워",
-        "total_score": 61,
-        "risk_reward_ratio": 0.93,
-        "blockers": [
-          "점수 61/68",
-          "손익비 0.93/1.20"
-        ]
-      },
-      {
-        "ticker": "CRSP",
-        "name": "크리스퍼 테라퓨틱스",
-        "total_score": 60,
-        "risk_reward_ratio": 0.66,
-        "blockers": [
-          "점수 60/68",
-          "손익비 0.66/1.20"
         ]
       },
       {
         "ticker": "AMZN",
         "name": "아마존",
-        "total_score": 58,
-        "risk_reward_ratio": 1.22,
+        "total_score": 38,
+        "risk_reward_ratio": 1.19,
         "blockers": [
-          "점수 58/68"
+          "점수 38/68",
+          "손익비 1.19/1.20"
+        ]
+      },
+      {
+        "ticker": "ARM",
+        "name": "ARM 홀딩스",
+        "total_score": 38,
+        "risk_reward_ratio": 0.76,
+        "blockers": [
+          "점수 38/68",
+          "손익비 0.76/1.20"
+        ]
+      },
+      {
+        "ticker": "WOLF",
+        "name": "울프스피드",
+        "total_score": 36,
+        "risk_reward_ratio": 1.33,
+        "blockers": [
+          "점수 36/68"
+        ]
+      },
+      {
+        "ticker": "PANW",
+        "name": "팔로알토 네트웍스",
+        "total_score": 35,
+        "risk_reward_ratio": 0.93,
+        "blockers": [
+          "점수 35/68",
+          "손익비 0.93/1.20"
         ]
       }
     ]
