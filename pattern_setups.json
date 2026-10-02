@@ -1,7 +1,7 @@
 {
  "date": "2026-09-30",
- "generated_at": "2026-10-01 06:18:31",
- "universe": 3130,
+ "generated_at": "2026-10-02 01:00:03",
+ "universe": 3132,
  "liquid": 289,
  "min_market_cap": 10000000000.0,
  "setups": [
@@ -35,8 +35,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-10-27",
+   "earnings_days": 27,
    "earnings_soon": false
   },
   {
@@ -71,8 +71,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-10-30",
+   "earnings_days": 30,
    "earnings_soon": false
   },
   {
@@ -105,8 +105,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-10-27",
+   "earnings_days": 27,
    "earnings_soon": false
   },
   {
@@ -139,8 +139,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-11-19",
+   "earnings_days": 50,
    "earnings_soon": false
   },
   {
@@ -173,8 +173,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-10-28",
+   "earnings_days": 28,
    "earnings_soon": false
   },
   {
@@ -209,8 +209,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-10-27",
+   "earnings_days": 27,
    "earnings_soon": false
   },
   {
@@ -245,8 +245,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-11-09",
+   "earnings_days": 40,
    "earnings_soon": false
   },
   {
@@ -256,7 +256,7 @@
    "tf": "1d",
    "tf_label": "일봉",
    "price": 126.72,
-   "L": 120.26617946054151,
+   "L": 120.26617192493629,
    "H": 166.41421163548557,
    "L_date": "2025-05-23",
    "H_date": "2026-02-12",
@@ -264,7 +264,7 @@
    "retrace": 0.86,
    "swing_pct": 38.4,
    "buy_high": 130.1419,
-   "buy_low": 125.5271,
+   "buy_low": 125.527,
    "stop": 120.2662,
    "t1": 143.3402,
    "t2": 146.4171,
@@ -281,9 +281,9 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
-   "earnings_soon": false
+   "earnings_date": "2026-10-08",
+   "earnings_days": 8,
+   "earnings_soon": true
   },
   {
    "id": "TXRH|1d|2026-05-04|2026-08-13",
@@ -317,8 +317,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-11-05",
+   "earnings_days": 36,
    "earnings_soon": false
   }
  ],
@@ -356,7 +356,7 @@
    "tf": "1w",
    "tf_label": "주봉",
    "price": 237.53,
-   "buy_high": 227.3733,
+   "buy_high": 227.3732,
    "distance_pct": 4.5
   },
   {
@@ -558,5 +558,5 @@
    "hit_rate": 3.3
   }
  },
- "elapsed_sec": 191.3
+ "elapsed_sec": 201.3
 }

@@ -1,6 +1,6 @@
 {
   "date": "2026-10-01",
-  "updated_at": "2026-10-01 06:18:47",
+  "updated_at": "2026-10-02 01:00:21",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,51 +8,53 @@
     "qualified": 0,
     "near_miss": [
       {
-        "ticker": "AMD",
-        "name": "AMD",
-        "total_score": 38,
-        "risk_reward_ratio": 0.75,
+        "ticker": "MPWR",
+        "name": "모놀리식 파워",
+        "total_score": 61,
+        "risk_reward_ratio": 0.93,
         "blockers": [
-          "점수 38/68",
-          "손익비 0.75/1.20"
-        ]
-      },
-      {
-        "ticker": "ARM",
-        "name": "ARM 홀딩스",
-        "total_score": 38,
-        "risk_reward_ratio": 0.94,
-        "blockers": [
-          "점수 38/68",
-          "손익비 0.94/1.20"
-        ]
-      },
-      {
-        "ticker": "WOLF",
-        "name": "울프스피드",
-        "total_score": 36,
-        "risk_reward_ratio": 1.33,
-        "blockers": [
-          "점수 36/68"
-        ]
-      },
-      {
-        "ticker": "AMZN",
-        "name": "아마존",
-        "total_score": 33,
-        "risk_reward_ratio": 1.37,
-        "blockers": [
-          "점수 33/68"
+          "점수 61/68",
+          "손익비 0.93/1.20"
         ]
       },
       {
         "ticker": "GOOGL",
         "name": "알파벳 (구글)",
-        "total_score": 31,
+        "total_score": 57,
         "risk_reward_ratio": 1.06,
         "blockers": [
-          "점수 31/68",
+          "점수 57/68",
           "손익비 1.06/1.20"
+        ]
+      },
+      {
+        "ticker": "AMAT",
+        "name": "어플라이드 머티어리얼즈",
+        "total_score": 57,
+        "risk_reward_ratio": 0.81,
+        "blockers": [
+          "점수 57/68",
+          "손익비 0.81/1.20"
+        ]
+      },
+      {
+        "ticker": "SNOW",
+        "name": "스노우플레이크",
+        "total_score": 57,
+        "risk_reward_ratio": 0.78,
+        "blockers": [
+          "점수 57/68",
+          "손익비 0.78/1.20"
+        ]
+      },
+      {
+        "ticker": "AMD",
+        "name": "AMD",
+        "total_score": 56,
+        "risk_reward_ratio": 0.75,
+        "blockers": [
+          "점수 56/68",
+          "손익비 0.75/1.20"
         ]
       }
     ]
