@@ -1,12 +1,22 @@
 {
-  "date": "2026-10-01",
-  "updated_at": "2026-10-02 01:00:21",
+  "date": "2026-10-02",
+  "updated_at": "2026-10-03 00:37:55",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
     "universe_size": 82,
     "qualified": 0,
     "near_miss": [
+      {
+        "ticker": "TXN",
+        "name": "텍사스 인스트루먼트",
+        "total_score": 62,
+        "risk_reward_ratio": 0.93,
+        "blockers": [
+          "점수 62/68",
+          "손익비 0.93/1.20"
+        ]
+      },
       {
         "ticker": "MPWR",
         "name": "모놀리식 파워",
@@ -18,43 +28,33 @@
         ]
       },
       {
-        "ticker": "GOOGL",
-        "name": "알파벳 (구글)",
-        "total_score": 57,
-        "risk_reward_ratio": 1.06,
+        "ticker": "MU",
+        "name": "마이크론",
+        "total_score": 58,
+        "risk_reward_ratio": 0.73,
         "blockers": [
-          "점수 57/68",
-          "손익비 1.06/1.20"
+          "점수 58/68",
+          "손익비 0.73/1.20"
         ]
       },
       {
-        "ticker": "AMAT",
-        "name": "어플라이드 머티어리얼즈",
-        "total_score": 57,
-        "risk_reward_ratio": 0.81,
+        "ticker": "ON",
+        "name": "온세미",
+        "total_score": 58,
+        "risk_reward_ratio": 0.62,
         "blockers": [
-          "점수 57/68",
-          "손익비 0.81/1.20"
+          "점수 58/68",
+          "손익비 0.62/1.20"
         ]
       },
       {
         "ticker": "SNOW",
         "name": "스노우플레이크",
-        "total_score": 57,
-        "risk_reward_ratio": 0.78,
+        "total_score": 58,
+        "risk_reward_ratio": 0.93,
         "blockers": [
-          "점수 57/68",
-          "손익비 0.78/1.20"
-        ]
-      },
-      {
-        "ticker": "AMD",
-        "name": "AMD",
-        "total_score": 56,
-        "risk_reward_ratio": 0.75,
-        "blockers": [
-          "점수 56/68",
-          "손익비 0.75/1.20"
+          "점수 58/68",
+          "손익비 0.93/1.20"
         ]
       }
     ]
