@@ -478,7 +478,6 @@ BYFC,Broadway Financial Corporation
 BYND,"Beyond Meat, Inc."
 BYRN,"Byrna Technologies, Inc."
 BZ,KANZHUN LIMITED
-BZAI,"Blaize Holdings, Inc."
 BZFD,"BuzzFeed, Inc."
 BZUN,Baozun Inc.
 CAAS,"China Automotive Systems, Inc."
@@ -508,6 +507,7 @@ CAST,"FreeCast, Inc."
 CASY,"Caseys General Stores, Inc."
 CATL,Catalyst Acquisition Corp.
 CATY,Cathay General Bancorp
+CBAT,CBAK Energy Technology Limited
 CBC,"Central Bancompany, Inc."
 CBFV,"CB Financial Services, Inc."
 CBIO,"Crescent Biopharma, Inc."
@@ -859,7 +859,6 @@ DXCM,"DexCom, Inc."
 DXPE,"DXP Enterprises, Inc."
 DXR,Daxor Corporation
 DXST,Decent Holding Inc.
-DYAI,"Dyadic International, Inc."
 DYN,"Dyne Therapeutics, Inc."
 DYNC,Dynamix Corporation
 DYOR,Insight Digital Partners II
@@ -927,6 +926,7 @@ ENVX,Enovix Corporation
 EOCN,Eocene Ltd.
 EOLS,"Evolus, Inc."
 EOSE,"Eos Energy Enterprises, Inc."
+EPOW,E-Power Inc.
 EPRX,Eupraxia Pharmaceuticals Inc.
 EPSM,Epsium Enterprise Limited
 EPSN,Epsilon Energy Ltd.
@@ -1240,7 +1240,6 @@ GURE,"Gulf Resources, Inc."
 GVH,Globavend Holdings Limited
 GWAV,"Greenwave Technology Solutions, Inc."
 GWRS,"Global Water Resources, Inc."
-GXAI,Gaxos.ai Inc.
 GYGY,"Game Your Game, Inc."
 GYRE,"Gyre Therapeutics, Inc."
 GYRO,"Gyrodyne , LLC"
@@ -1444,6 +1443,7 @@ IPDN,"Professional Diversity Network, Inc."
 IPFX,Inflection Point Acquisition Corp. VI
 IPGP,IPG Photonics Corporation
 IPHA,Innate Pharma S.A.
+IPHX,Inflection Point Acquisition Corp. VIII
 IPM,Intelligent Protection Management Corp.
 IPSC,"Century Therapeutics, Inc."
 IPVV,"InterPrivate Investment Partners V, Inc."
@@ -1692,7 +1692,6 @@ LSTR,"Landstar System, Inc."
 LTBR,Lightbridge Corporation
 LTGO,"Latigo Biotherapeutics, Inc."
 LTGR,Long Table Growth Corp.
-LTRN,Lantern Pharma Inc.
 LTRX,"Lantronix, Inc."
 LUCD,Lucid Diagnostics Inc.
 LUCY,"Innovative Eyewear, Inc."
@@ -1958,7 +1957,6 @@ NNBR,"NN, Inc."
 NNDM,Nano Dimension Ltd.
 NNE,Nano Nuclear Energy Inc.
 NNNN,Anbio Biotechnology
-NNOX,NANO-X IMAGING LTD
 NODK,"NI Holdings, Inc."
 NOEM,CO2 Energy Transition Corp.
 NOMA,NOMADAR Corp.
@@ -2109,7 +2107,6 @@ OSUR,"OraSure Technologies, Inc."
 OSW,OneSpaWorld Holdings Limited
 OTEX,Open Text Corporation
 OTGA,OTG Acquisition Corp. I
-OTLK,"Outlook Therapeutics, Inc."
 OTLY,Oatly Group AB
 OTTR,Otter Tail Corporation
 OUST,"Ouster, Inc."
@@ -2722,6 +2719,7 @@ TAVI,Tavia Acquisition Corp.
 TAYD,"Taylor Devices, Inc."
 TBBK,"The Bancorp, Inc."
 TBCH,Turtle Beach Corporation
+TBCV,"Thunder Bridge Capital Partners V, Ltd."
 TBLA,Taboola.com Ltd.
 TBLD,Thornburg Income Builder Opportunities Trust
 TC,Token Cat Limited
@@ -2980,7 +2978,6 @@ WABC,Westamerica Bancorporation
 WAFD,"WaFd, Inc."
 WAFDP,"WaFd, Inc."
 WAFU,Wah Fu Education Group Limited
-WALD,Waldencast plc
 WASH,"Washington Trust Bancorp, Inc."
 WATR,Air Water Ventures Limited
 WATT,Energous Corporation
@@ -3012,7 +3009,6 @@ WIMI,WiMi Hologram Cloud Inc.
 WINA,Winmark Corporation
 WING,Wingstop Inc.
 WIX,Wix.com Ltd.
-WKEY,WISeKey International Holding Ltd
 WKHS,"Workhorse Group, Inc."
 WLCO,Wilco 63 Corporation
 WLDN,"Willdan Group, Inc."
@@ -3027,6 +3023,7 @@ WNW,Meiwu Technology Company Limited
 WOK,WORK Medical Technology Group LTD
 WOOF,"Petco Health and Wellness Company, Inc."
 WPRT,Westport Fuel Systems Inc
+WQEY,WISeQey Corp
 WRAP,"Wrap Technologies, Inc."
 WRD,WeRide Inc.
 WRLD,World Acceptance Corporation
