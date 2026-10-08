@@ -359,10 +359,10 @@
       "월가목표+36%"
     ],
     "pattern_status": "타점 임박",
-    "status": "📈 보유 12일차 추적 중",
+    "status": "📈 보유 13일차 추적 중",
     "max_price": 12.07,
-    "current_price": 10.43,
-    "current_pnl_pct": -3.34,
+    "current_price": 10.62,
+    "current_pnl_pct": -1.58,
     "hit_success": false,
     "strategy_version": "legacy",
     "recommendation_id": "2026-09-17_RDW_legacy",

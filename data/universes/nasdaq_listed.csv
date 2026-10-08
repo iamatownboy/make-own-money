@@ -1,5 +1,4 @@
 ticker,name
-AACG,ATA Creativity Global
 AACI,Armada Acquisition Corp. III
 AACO,Abony Acquisition Corp. I
 AACP,Apogee Acquisition Corp
@@ -325,8 +324,8 @@ BANR,Banner Corporation
 BANX,ArrowMark Financial Corp.
 BATRA,"Atlanta Braves Holdings, Inc."
 BATRK,"Atlanta Braves Holdings, Inc."
+BBCI,Bradbury Capital Inc.
 BBCP,"Concrete Pumping Holdings, Inc."
-BBGI,"Beasley Broadcast Group, Inc."
 BBIO,"BridgeBio Pharma, Inc."
 BBNX,"Beta Bionics, Inc."
 BBOT,"BridgeBio Oncology Therapeutics, Inc."
@@ -387,7 +386,6 @@ BKYI,"BIO-key International, Inc."
 BL,"BlackLine, Inc."
 BLBD,Blue Bird Corporation
 BLDP,"Ballard Power Systems, Inc."
-BLFS,"BioLife Solutions, Inc."
 BLIN,"Bridgeline Digital, Inc."
 BLIV,BeLive Holdings
 BLKB,"Blackbaud, Inc."
@@ -2574,10 +2572,8 @@ SLMT,Brera Holdings PLC
 SLN,Silence Therapeutics Plc
 SLNG,"Stabilis Solutions, Inc."
 SLNH,"Soluna Holdings, Inc."
-SLP,"Simulations Plus, Inc."
 SLRC,SLR Investment Corp.
 SLS,"SELLAS Life Sciences Group, Inc."
-SLSN,"Solesence, Inc."
 SMBC,"Southern Missouri Bancorp, Inc."
 SMCI,"Super Micro Computer, Inc."
 SMID,Smith-Midland Corporation
@@ -2982,7 +2978,6 @@ WATT,Energous Corporation
 WAVE,Eco Wave Power Global AB (publ)
 WAY,Waystar Holding Corp.
 WB,Weibo Corporation
-WBD,"Warner Bros. Discovery, Inc."
 WBTN,WEBTOON Entertainment Inc.
 WCCB,West Coast Community Bancorp
 WCT,Wellchange Holdings Company Limited
@@ -3020,6 +3015,7 @@ WNEB,"Western New England Bancorp, Inc."
 WNW,Meiwu Technology Company Limited
 WOK,WORK Medical Technology Group LTD
 WOOF,"Petco Health and Wellness Company, Inc."
+WORX,SCWorx Corp.
 WPRT,Westport Fuel Systems Inc
 WQEY,WISeQey Corp
 WRAP,"Wrap Technologies, Inc."
@@ -3055,7 +3051,6 @@ XCBE,X3 Acquisition Corp. Ltd.
 XCH,XCHG Limited
 XE,"X-Energy, Inc."
 XEL,Xcel Energy Inc.
-XELB,"Xcel Brands, Inc"
 XENE,Xenon Pharmaceuticals Inc.
 XERS,"Xeris Biopharma Holdings, Inc."
 XFOR,"X4 Pharmaceuticals, Inc."

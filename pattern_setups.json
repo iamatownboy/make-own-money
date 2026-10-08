@@ -1,8 +1,8 @@
 {
  "date": "2026-10-06",
- "generated_at": "2026-10-07 00:55:10",
- "universe": 3131,
- "liquid": 287,
+ "generated_at": "2026-10-08 01:10:27",
+ "universe": 3126,
+ "liquid": 286,
  "min_market_cap": 10000000000.0,
  "setups": [
   {
@@ -37,8 +37,8 @@
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-10-28",
+   "earnings_days": 22,
    "earnings_soon": false
   },
   {
@@ -73,8 +73,42 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-10-28",
+   "earnings_days": 22,
+   "earnings_soon": false
+  },
+  {
+   "id": "RIVN|1d|2026-05-19|2026-07-06",
+   "ticker": "RIVN",
+   "name": "Rivian Automotive, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 14.51,
+   "L": 12.649999618530273,
+   "H": 20.200000762939453,
+   "L_date": "2026-05-19",
+   "H_date": "2026-07-06",
+   "entry_date": "2026-10-02",
+   "retrace": 0.754,
+   "swing_pct": 59.7,
+   "buy_high": 14.2657,
+   "buy_low": 13.5107,
+   "stop": 12.65,
+   "t1": 16.425,
+   "t2": 17.08,
+   "t3": 18.8646,
+   "t4": 22.1344,
+   "stop_pct": -12.8,
+   "position": "구간 위",
+   "t1_pct": 13.2,
+   "signals": [],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": "2026-10-29",
+   "earnings_days": 23,
    "earnings_soon": false
   },
   {
@@ -83,13 +117,13 @@
    "name": "Gaming and Leisure Properties, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 37.91,
-   "L": 34.742678758454694,
+   "price": 38.08,
+   "L": 34.7426823987289,
    "H": 47.33600452055881,
    "L_date": "2022-10-13",
    "H_date": "2026-03-02",
    "entry_date": "2026-10-01",
-   "retrace": 0.748,
+   "retrace": 0.735,
    "swing_pct": 36.2,
    "buy_high": 37.4377,
    "buy_low": 36.1783,
@@ -98,19 +132,17 @@
    "t2": 42.333,
    "t3": 45.1947,
    "t4": 50.4379,
-   "stop_pct": -8.4,
+   "stop_pct": -8.8,
    "position": "구간 위",
-   "t1_pct": 8.3,
-   "signals": [
-    "반전 캔들"
-   ],
+   "t1_pct": 7.8,
+   "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-10-29",
+   "earnings_days": 23,
    "earnings_soon": false
   },
   {
@@ -119,13 +151,13 @@
    "name": "SoFi Technologies, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 15.92,
+   "price": 15.76,
    "L": 14.880000114440918,
    "H": 19.4950008392334,
    "L_date": "2026-07-29",
    "H_date": "2026-08-28",
    "entry_date": "2026-09-29",
-   "retrace": 0.775,
+   "retrace": 0.809,
    "swing_pct": 31.0,
    "buy_high": 15.8676,
    "buy_low": 15.4061,
@@ -134,17 +166,17 @@
    "t2": 17.5125,
    "t3": 18.6465,
    "t4": 20.7242,
-   "stop_pct": -6.5,
-   "position": "구간 위",
-   "t1_pct": 8.0,
+   "stop_pct": -5.6,
+   "position": "구간 안",
+   "t1_pct": 9.1,
    "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-10-27",
+   "earnings_days": 21,
    "earnings_soon": false
   },
   {
@@ -179,8 +211,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-10-30",
+   "earnings_days": 24,
    "earnings_soon": false
   },
   {
@@ -215,8 +247,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-10-27",
+   "earnings_days": 21,
    "earnings_soon": false
   },
   {
@@ -251,8 +283,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-11-05",
+   "earnings_days": 30,
    "earnings_soon": false
   },
   {
@@ -288,21 +320,12 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": null,
-   "earnings_days": null,
+   "earnings_date": "2026-11-03",
+   "earnings_days": 28,
    "earnings_soon": false
   }
  ],
  "watch": [
-  {
-   "ticker": "RIVN",
-   "name": "Rivian Automotive, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 14.6,
-   "buy_high": 14.5942,
-   "distance_pct": 0.0
-  },
   {
    "ticker": "AXON",
    "name": "Axon Enterprise, Inc.",
@@ -326,45 +349,27 @@
    "name": "JD.com, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 26.36,
+   "price": 26.5,
    "buy_high": 24.5192,
-   "distance_pct": 7.5
-  },
-  {
-   "ticker": "ASTS",
-   "name": "AST SpaceMobile, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 58.44,
-   "buy_high": 57.5679,
-   "distance_pct": 1.5
-  },
-  {
-   "ticker": "JD",
-   "name": "JD.com, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 26.36,
-   "buy_high": 25.9404,
-   "distance_pct": 1.6
+   "distance_pct": 8.1
   },
   {
    "ticker": "GEHC",
    "name": "GE HealthCare Technologies Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 65.74,
+   "price": 64.77,
    "buy_high": 64.3656,
-   "distance_pct": 2.1
+   "distance_pct": 0.6
   },
   {
-   "ticker": "RIVN",
-   "name": "Rivian Automotive, Inc.",
+   "ticker": "JD",
+   "name": "JD.com, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 14.6,
-   "buy_high": 14.2657,
-   "distance_pct": 2.3
+   "price": 26.5,
+   "buy_high": 25.9404,
+   "distance_pct": 2.2
   },
   {
    "ticker": "AMKR",
@@ -386,20 +391,20 @@
   }
  ],
  "summary": {
-  "total": 102,
+  "total": 103,
   "hit": 8,
-  "stop": 27,
+  "stop": 28,
   "open": 67,
-  "hit_rate": 22.9,
-  "decided": 35,
-  "avg_ret": -0.3,
-  "avg_excess": 0.1,
-  "finished": 29,
+  "hit_rate": 22.2,
+  "decided": 36,
+  "avg_ret": -0.56,
+  "avg_excess": -0.22,
+  "finished": 30,
   "by_tf": {
    "1d": {
-    "total": 74,
-    "decided": 28,
-    "hit_rate": 25.0
+    "total": 75,
+    "decided": 29,
+    "hit_rate": 24.1
    },
    "1w": {
     "total": 28,
@@ -408,18 +413,18 @@
    }
   },
   "baseline": {
-   "total": 306,
-   "decided": 99,
-   "hit": 18,
-   "stop": 81,
-   "hit_rate": 18.2
+   "total": 309,
+   "decided": 107,
+   "hit": 23,
+   "stop": 84,
+   "hit_rate": 21.5
   },
   "baseline_matched": {
-   "decided": 58,
-   "hit": 7,
-   "stop": 51,
-   "hit_rate": 12.1
+   "decided": 63,
+   "hit": 10,
+   "stop": 53,
+   "hit_rate": 15.9
   }
  },
- "elapsed_sec": 268.5
+ "elapsed_sec": 235.8
 }
