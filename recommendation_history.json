@@ -359,15 +359,22 @@
       "월가목표+36%"
     ],
     "pattern_status": "타점 임박",
-    "status": "📈 보유 13일차 추적 중",
+    "status": "⚠️ 손절선 이탈",
     "max_price": 12.07,
-    "current_price": 10.62,
-    "current_pnl_pct": -1.58,
+    "current_price": 9.76,
+    "current_pnl_pct": -9.55,
     "hit_success": false,
     "strategy_version": "legacy",
     "recommendation_id": "2026-09-17_RDW_legacy",
     "fee_slippage_pct": 0.25,
-    "is_completed": false
+    "is_completed": true,
+    "exit_price": 9.91,
+    "exit_date": "2026-10-07",
+    "exit_kind": "STOP",
+    "exit_gapped": false,
+    "realized_pnl_pct": -8.16,
+    "realized_pnl_net_pct": -8.41,
+    "failure_reason": "'피보나치지지' 패턴 지지선 붕괴 및 단기 차익 실현 매물 출회"
   },
   {
     "date": "2026-09-17",

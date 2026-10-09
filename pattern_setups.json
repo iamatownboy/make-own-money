@@ -1,7 +1,7 @@
 {
- "date": "2026-10-06",
- "generated_at": "2026-10-08 01:10:27",
- "universe": 3126,
+ "date": "2026-10-07",
+ "generated_at": "2026-10-09 01:21:54",
+ "universe": 3124,
  "liquid": 286,
  "min_market_cap": 10000000000.0,
  "setups": [
@@ -11,13 +11,13 @@
    "name": "Align Technology, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 141.45,
+   "price": 139.87,
    "L": 122.0,
    "H": 200.44000244140625,
    "L_date": "2025-09-26",
    "H_date": "2026-04-24",
-   "entry_date": "2026-10-06",
-   "retrace": 0.752,
+   "entry_date": "2026-10-07",
+   "retrace": 0.772,
    "swing_pct": 64.3,
    "buy_high": 138.7862,
    "buy_low": 130.9422,
@@ -26,19 +26,53 @@
    "t2": 169.4,
    "t3": 187.1549,
    "t4": 219.6848,
-   "stop_pct": -13.8,
+   "stop_pct": -12.8,
    "position": "구간 위",
-   "t1_pct": 14.0,
+   "t1_pct": 15.3,
    "signals": [
-    "RSI 상승 다이버전스"
+    "하락 빗각 돌파"
    ],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-10-28",
-   "earnings_days": 22,
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
+  },
+  {
+   "id": "AXON|1w|2026-04-10|2026-07-10",
+   "ticker": "AXON",
+   "name": "Axon Enterprise, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 406.0,
+   "L": 339.010009765625,
+   "H": 665.0700073242188,
+   "L_date": "2026-04-10",
+   "H_date": "2026-07-10",
+   "entry_date": "2026-10-02",
+   "retrace": 0.795,
+   "swing_pct": 96.2,
+   "buy_high": 408.7868,
+   "buy_low": 376.1808,
+   "stop": 339.01,
+   "t1": 502.04,
+   "t2": 535.185,
+   "t3": 609.4792,
+   "t4": 745.5987,
+   "stop_pct": -16.5,
+   "position": "구간 안",
+   "t1_pct": 23.7,
+   "signals": [],
+   "base_rate": {
+    "hit": 48.1,
+    "random": 38.0,
+    "n": 801
+   },
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -47,13 +81,13 @@
    "name": "Align Technology, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 141.45,
+   "price": 139.87,
    "L": 122.0,
    "H": 200.44000244140625,
    "L_date": "2025-09-25",
    "H_date": "2026-04-21",
    "entry_date": "2026-10-05",
-   "retrace": 0.752,
+   "retrace": 0.772,
    "swing_pct": 64.3,
    "buy_high": 138.7862,
    "buy_low": 130.9422,
@@ -62,19 +96,19 @@
    "t2": 169.4,
    "t3": 187.1549,
    "t4": 219.6848,
-   "stop_pct": -13.8,
+   "stop_pct": -12.8,
    "position": "구간 위",
-   "t1_pct": 14.0,
+   "t1_pct": 15.3,
    "signals": [
-    "RSI 상승 다이버전스"
+    "하락 빗각 돌파"
    ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-28",
-   "earnings_days": 22,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -83,13 +117,13 @@
    "name": "Rivian Automotive, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 14.51,
+   "price": 14.34,
    "L": 12.649999618530273,
    "H": 20.200000762939453,
    "L_date": "2026-05-19",
    "H_date": "2026-07-06",
    "entry_date": "2026-10-02",
-   "retrace": 0.754,
+   "retrace": 0.776,
    "swing_pct": 59.7,
    "buy_high": 14.2657,
    "buy_low": 13.5107,
@@ -98,17 +132,19 @@
    "t2": 17.08,
    "t3": 18.8646,
    "t4": 22.1344,
-   "stop_pct": -12.8,
+   "stop_pct": -11.8,
    "position": "구간 위",
-   "t1_pct": 13.2,
-   "signals": [],
+   "t1_pct": 14.5,
+   "signals": [
+    "반전 캔들"
+   ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-29",
-   "earnings_days": 23,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -117,32 +153,32 @@
    "name": "Gaming and Leisure Properties, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 38.08,
-   "L": 34.7426823987289,
+   "price": 37.78,
+   "L": 34.742675118180486,
    "H": 47.33600452055881,
    "L_date": "2022-10-13",
    "H_date": "2026-03-02",
    "entry_date": "2026-10-01",
-   "retrace": 0.735,
+   "retrace": 0.759,
    "swing_pct": 36.2,
-   "buy_high": 37.4377,
+   "buy_high": 37.4376,
    "buy_low": 36.1783,
    "stop": 34.7427,
    "t1": 41.0393,
    "t2": 42.333,
    "t3": 45.1947,
    "t4": 50.4379,
-   "stop_pct": -8.8,
+   "stop_pct": -8.0,
    "position": "구간 위",
-   "t1_pct": 7.8,
+   "t1_pct": 8.6,
    "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-29",
-   "earnings_days": 23,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -151,32 +187,32 @@
    "name": "SoFi Technologies, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 15.76,
+   "price": 15.66,
    "L": 14.880000114440918,
    "H": 19.4950008392334,
    "L_date": "2026-07-29",
    "H_date": "2026-08-28",
    "entry_date": "2026-09-29",
-   "retrace": 0.809,
+   "retrace": 0.831,
    "swing_pct": 31.0,
    "buy_high": 15.8676,
    "buy_low": 15.4061,
    "stop": 14.88,
    "t1": 17.1875,
-   "t2": 17.5125,
-   "t3": 18.6465,
-   "t4": 20.7242,
-   "stop_pct": -5.6,
+   "t2": 17.473,
+   "t3": 18.6296,
+   "t4": 20.7486,
+   "stop_pct": -5.0,
    "position": "구간 안",
-   "t1_pct": 9.1,
+   "t1_pct": 9.8,
    "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-27",
-   "earnings_days": 21,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -185,13 +221,13 @@
    "name": "Sanofi",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 39.56,
+   "price": 40.2,
    "L": 37.10302533264027,
    "H": 54.54309741622116,
    "L_date": "2023-10-27",
    "H_date": "2025-03-10",
    "entry_date": "2026-09-25",
-   "retrace": 0.859,
+   "retrace": 0.822,
    "swing_pct": 47.0,
    "buy_high": 40.8352,
    "buy_low": 39.0912,
@@ -200,19 +236,17 @@
    "t2": 46.8615,
    "t3": 51.2554,
    "t4": 59.3057,
-   "stop_pct": -6.2,
+   "stop_pct": -7.7,
    "position": "구간 안",
-   "t1_pct": 15.8,
-   "signals": [
-    "RSI 과매도 27"
-   ],
+   "t1_pct": 14.0,
+   "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-30",
-   "earnings_days": 24,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -221,13 +255,13 @@
    "name": "CoStar Group, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 27.63,
+   "price": 27.6,
    "L": 25.889999389648438,
    "H": 33.81999969482422,
    "L_date": "2026-07-29",
    "H_date": "2026-08-19",
    "entry_date": "2026-09-24",
-   "retrace": 0.781,
+   "retrace": 0.784,
    "swing_pct": 30.6,
    "buy_high": 27.587,
    "buy_low": 26.794,
@@ -236,9 +270,9 @@
    "t2": 30.17,
    "t3": 32.2578,
    "t4": 36.083,
-   "stop_pct": -6.3,
+   "stop_pct": -6.2,
    "position": "구간 위",
-   "t1_pct": 8.1,
+   "t1_pct": 8.2,
    "signals": [
     "반전 캔들"
    ],
@@ -247,8 +281,8 @@
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-10-27",
-   "earnings_days": 21,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   },
   {
@@ -257,13 +291,13 @@
    "name": "Verisk Analytics, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 165.2,
+   "price": 168.68,
    "L": 155.10003214028245,
    "H": 225.475595010438,
    "L_date": "2026-05-14",
    "H_date": "2026-07-29",
    "entry_date": "2026-09-23",
-   "retrace": 0.856,
+   "retrace": 0.807,
    "swing_pct": 45.4,
    "buy_high": 170.1604,
    "buy_low": 163.1228,
@@ -272,139 +306,118 @@
    "t2": 193.4928,
    "t3": 211.787,
    "t4": 245.3049,
-   "stop_pct": -6.1,
+   "stop_pct": -8.1,
    "position": "구간 안",
-   "t1_pct": 15.2,
-   "signals": [
-    "반전 캔들"
-   ],
+   "t1_pct": 12.8,
+   "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
-   "earnings_date": "2026-11-05",
-   "earnings_days": 30,
-   "earnings_soon": false
-  },
-  {
-   "id": "BKNG|1d|2026-05-20|2026-08-25",
-   "ticker": "BKNG",
-   "name": "Booking Holdings Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 157.63,
-   "L": 149.4026900553264,
-   "H": 216.79643346375497,
-   "L_date": "2026-05-20",
-   "H_date": "2026-08-25",
-   "entry_date": "2026-09-22",
-   "retrace": 0.878,
-   "swing_pct": 45.1,
-   "buy_high": 163.825,
-   "buy_low": 157.0856,
-   "stop": 149.4027,
-   "t1": 183.0996,
-   "t2": 185.4282,
-   "t3": 203.3708,
-   "t4": 236.2447,
-   "stop_pct": -5.2,
-   "position": "구간 안",
-   "t1_pct": 16.2,
-   "signals": [
-    "RSI 과매도 29",
-    "반전 캔들"
-   ],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-11-03",
-   "earnings_days": 28,
+   "earnings_date": null,
+   "earnings_days": null,
    "earnings_soon": false
   }
  ],
  "watch": [
   {
-   "ticker": "AXON",
-   "name": "Axon Enterprise, Inc.",
+   "ticker": "INSM",
+   "name": "Insmed Incorporated",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 418.62,
-   "buy_high": 408.7868,
-   "distance_pct": 2.4
+   "price": 101.74,
+   "buy_high": 100.5143,
+   "distance_pct": 1.2
   },
   {
    "ticker": "ALNY",
    "name": "Alnylam Pharmaceuticals, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 223.94,
+   "price": 224.41,
    "buy_high": 217.644,
-   "distance_pct": 2.9
+   "distance_pct": 3.1
   },
   {
-   "ticker": "JD",
-   "name": "JD.com, Inc.",
+   "ticker": "NXPI",
+   "name": "NXP Semiconductors N.V.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 26.5,
-   "buy_high": 24.5192,
-   "distance_pct": 8.1
+   "price": 235.22,
+   "buy_high": 227.3732,
+   "distance_pct": 3.5
   },
   {
-   "ticker": "GEHC",
-   "name": "GE HealthCare Technologies Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 64.77,
-   "buy_high": 64.3656,
-   "distance_pct": 0.6
-  },
-  {
-   "ticker": "JD",
-   "name": "JD.com, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 26.5,
-   "buy_high": 25.9404,
-   "distance_pct": 2.2
+   "ticker": "GFS",
+   "name": "GlobalFoundries Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 48.07,
+   "buy_high": 43.0348,
+   "distance_pct": 11.7
   },
   {
    "ticker": "AMKR",
    "name": "Amkor Technology, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 53.39,
+   "price": 52.27,
    "buy_high": 52.1106,
-   "distance_pct": 2.5
+   "distance_pct": 0.3
   },
   {
-   "ticker": "AKAM",
-   "name": "Akamai Technologies, Inc.",
+   "ticker": "GEHC",
+   "name": "GE HealthCare Technologies Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 108.62,
-   "buy_high": 104.9673,
-   "distance_pct": 3.5
+   "price": 64.67,
+   "buy_high": 64.3656,
+   "distance_pct": 0.5
+  },
+  {
+   "ticker": "BMRN",
+   "name": "BioMarin Pharmaceutical Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 55.2,
+   "buy_high": 53.9081,
+   "distance_pct": 2.4
+  },
+  {
+   "ticker": "STRL",
+   "name": "Sterling Infrastructure, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 534.13,
+   "buy_high": 500.2113,
+   "distance_pct": 6.8
+  },
+  {
+   "ticker": "MKSI",
+   "name": "MKS Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 273.15,
+   "buy_high": 253.0294,
+   "distance_pct": 8.0
   }
  ],
  "summary": {
   "total": 103,
   "hit": 8,
-  "stop": 28,
-  "open": 67,
-  "hit_rate": 22.2,
-  "decided": 36,
-  "avg_ret": -0.56,
-  "avg_excess": -0.22,
-  "finished": 30,
+  "stop": 29,
+  "open": 66,
+  "hit_rate": 21.6,
+  "decided": 37,
+  "avg_ret": -0.75,
+  "avg_excess": -0.47,
+  "finished": 31,
   "by_tf": {
    "1d": {
     "total": 75,
-    "decided": 29,
-    "hit_rate": 24.1
+    "decided": 30,
+    "hit_rate": 23.3
    },
    "1w": {
     "total": 28,
@@ -414,17 +427,17 @@
   },
   "baseline": {
    "total": 309,
-   "decided": 107,
-   "hit": 23,
-   "stop": 84,
-   "hit_rate": 21.5
+   "decided": 127,
+   "hit": 26,
+   "stop": 101,
+   "hit_rate": 20.5
   },
   "baseline_matched": {
-   "decided": 63,
-   "hit": 10,
-   "stop": 53,
+   "decided": 69,
+   "hit": 11,
+   "stop": 58,
    "hit_rate": 15.9
   }
  },
- "elapsed_sec": 235.8
+ "elapsed_sec": 260.9
 }
