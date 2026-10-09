@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-08",
-  "updated_at": "2026-10-09 01:22:08",
+  "date": "2026-10-09",
+  "updated_at": "2026-10-09 08:03:49",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,52 +8,52 @@
     "qualified": 0,
     "near_miss": [
       {
-        "ticker": "ARM",
-        "name": "ARM 홀딩스",
-        "total_score": 41,
-        "risk_reward_ratio": 0.85,
+        "ticker": "AMAT",
+        "name": "어플라이드 머티어리얼즈",
+        "total_score": 61,
+        "risk_reward_ratio": 0.81,
         "blockers": [
-          "점수 41/68",
-          "손익비 0.85/1.20"
-        ]
-      },
-      {
-        "ticker": "PATH",
-        "name": "유아이패스",
-        "total_score": 38,
-        "risk_reward_ratio": 0.55,
-        "blockers": [
-          "점수 38/68",
-          "손익비 0.55/1.20"
-        ]
-      },
-      {
-        "ticker": "VRTX",
-        "name": "버텍스 파마슈티컬",
-        "total_score": 38,
-        "risk_reward_ratio": 1.29,
-        "blockers": [
-          "점수 38/68"
-        ]
-      },
-      {
-        "ticker": "SNOW",
-        "name": "스노우플레이크",
-        "total_score": 35,
-        "risk_reward_ratio": 0.93,
-        "blockers": [
-          "점수 35/68",
-          "손익비 0.93/1.20"
+          "점수 61/68",
+          "손익비 0.81/1.20"
         ]
       },
       {
         "ticker": "GOOGL",
         "name": "알파벳 (구글)",
-        "total_score": 33,
+        "total_score": 59,
         "risk_reward_ratio": 0.98,
         "blockers": [
-          "점수 33/68",
+          "점수 59/68",
           "손익비 0.98/1.20"
+        ]
+      },
+      {
+        "ticker": "TXN",
+        "name": "텍사스 인스트루먼트",
+        "total_score": 59,
+        "risk_reward_ratio": 0.87,
+        "blockers": [
+          "점수 59/68",
+          "손익비 0.87/1.20"
+        ]
+      },
+      {
+        "ticker": "ASML",
+        "name": "ASML",
+        "total_score": 56,
+        "risk_reward_ratio": 1.31,
+        "blockers": [
+          "점수 56/68"
+        ]
+      },
+      {
+        "ticker": "LRCX",
+        "name": "램리서치",
+        "total_score": 56,
+        "risk_reward_ratio": 0.85,
+        "blockers": [
+          "점수 56/68",
+          "손익비 0.85/1.20"
         ]
       }
     ]
