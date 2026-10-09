@@ -46,7 +46,17 @@ CSS = """
 .pt-card summary {cursor:pointer; color:#8b8fa3;}
 .pt-card details div {margin-top:6px; line-height:1.7;}
 .pt-note {font-size:11.5px; color:#6b6f82; margin-top:18px; line-height:1.6;}
-@media (max-width: 640px) { .pt-grid {grid-template-columns:repeat(3, 1fr); gap:6px;} .pt-v {font-size:13px;} }
+.pt-sec {font-size:12.5px; color:#8b8fa3; margin:0 0 6px 2px;}
+.pt-etf {display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-bottom:6px;}
+.pt-ec {display:block; background:#17181f; border:1px solid #23252f; border-radius:12px; padding:10px 12px;}
+.pt-ec, .pt-ec:hover, .pt-ec * {text-decoration:none !important;}
+.pt-ec .pt-tk {font-size:15px;}
+.pt-ec .pt-px {font-size:14px; margin-top:4px;}
+.pt-ec .pt-es {font-size:11.5px; color:#8b8fa3; margin-top:2px; line-height:1.5;}
+.pt-ec .up {color:#4ade80;} .pt-ec .dn {color:#ff6b6b;}
+.pt-etf-note {font-size:11.5px; color:#6b6f82; margin:0 0 16px 2px; line-height:1.6;}
+@media (max-width: 640px) { .pt-grid {grid-template-columns:repeat(3, 1fr); gap:6px;} .pt-v {font-size:13px;}
+                            .pt-etf {grid-template-columns:repeat(2, 1fr);} }
 </style>
 """
 
@@ -125,6 +135,29 @@ def _card_html(s):
 </div>"""
 
 
+def _etf_board_html(board):
+    """지수·ETF 현황판. 추천이 아니라 현황이다 (추천 기록·적중률에는 들어가지 않는다)."""
+    cells = ''
+    for e in board:
+        up = e['chg_pct'] >= 0
+        extra = ''
+        if e.get('status') == 'zone':
+            extra = (f'<div class="pt-es"><span class="pt-b in">{escape(e["tf_label"])} 매수 구간</span><br>'
+                     f'구간 {_money(e["buy_low"])}~{_money(e["buy_high"])}<br>손절 {_money(e["stop"])} · 1차 {_money(e["t1"])}</div>')
+        elif e.get('status') == 'watch':
+            extra = (f'<div class="pt-es"><span class="pt-b up">{escape(e["tf_label"])} 구간 근접</span><br>'
+                     f'구간 상단 {_money(e["buy_high"])}</div>')
+        cells += (
+            f'<a class="pt-ec" href="https://www.tradingview.com/chart/?symbol={escape(e["ticker"])}" target="_blank">'
+            f'<div><span class="pt-tk">{escape(e["ticker"])}</span><span class="pt-nm">{escape(e["name"])}</span></div>'
+            f'<div class="pt-px">{_money(e["price"])} <span class="pt-sub {"up" if up else "dn"}">{e["chg_pct"]:+.1f}%</span></div>'
+            f'<div class="pt-es">52주 고점 대비 {e["from_high_pct"]:+.1f}%</div>{extra}</a>')
+    return (f'<div class="pt-sec">지수·ETF 현황 (1배)</div><div class="pt-etf">{cells}</div>'
+            '<div class="pt-etf-note">주식과 같은 규칙(스윙 +30%·주봉 +50%)에 해당할 때만 구간을 표시합니다. '
+            '이 규칙은 1배 지수 ETF에서 거의 뜨지 않고, 기준을 낮춰도 무작위 진입보다 성적이 낮아 '
+            '추천 기록·적중률에는 넣지 않습니다.</div>')
+
+
 def _score_line(summary):
     if not summary or not summary.get('total'):
         return '추천 기록을 쌓기 시작했습니다. 결과가 나오면 여기에 적중률이 표시됩니다.'
@@ -163,6 +196,8 @@ def render_pattern_tab():
         f'<div class="pt-head">{escape(data["date"])} 종가 기준 · {_universe_label(data)} {data.get("liquid", 0):,}종목 중 '
         f'<b style="color:#fff">{len(cards)}종목</b>이 매수 구간</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="pt-score">{_score_line(data.get("summary"))}</div>', unsafe_allow_html=True)
+    if data.get('etf'):
+        st.markdown(_etf_board_html(data['etf']), unsafe_allow_html=True)
 
     if not cards:
         st.markdown('<div class="pt-score">오늘은 매수 구간에 들어온 종목이 없습니다.</div>', unsafe_allow_html=True)

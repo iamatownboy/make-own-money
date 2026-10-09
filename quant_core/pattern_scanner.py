@@ -52,6 +52,11 @@ NDX_URL = 'https://api.nasdaq.com/api/quote/list-type/nasdaq100'
 NDX_CACHE = os.path.join(ROOT, 'data', 'universes', 'ndx100_current.csv')
 NDX_MIN_SYMBOLS = 90                  # 이보다 적게 오면 응답이 깨진 것으로 보고 저장해 둔 목록을 쓴다
 
+# 지수·섹터 ETF 현황판 (전부 레버리지 없는 1배). 화면에 현황만 보여주고 추천 기록·적중률·비교군에는 넣지 않는다.
+# 주식 규칙(스윙 +30% / 주봉 +50%)이 1배 지수 ETF에서는 거의 뜨지 않고 기준을 낮추면 무작위 진입보다 성적이
+# 낮아서(docs/PATTERN_SCANNER.md, scripts/etf_swing_check.py) '추천'이 아니라 '현황'으로 둔다.
+ETF_WATCHLIST = [('QQQ', '나스닥100'), ('SMH', '반도체'), ('SPY', 'S&P 500'), ('GLD', '금')]
+
 MIN_PRICE = 5.0
 MIN_DOLLAR_VOLUME = 30_000_000        # 시가총액을 조회할 후보를 줄이는 1차 거름망 ('nasdaq' 모드)
 # 'nasdaq' 모드에서 대형주만 추천. 환경변수 MIN_MARKET_CAP 으로 조절, 0 이하면 시가총액 필터를 끈다.
@@ -297,6 +302,40 @@ def scan_universe(full: Dict[str, pd.DataFrame], names: Dict[str, str]) -> Dict[
     setups.sort(key=lambda s: (s['tf'] != '1w', -pd.Timestamp(s['entry_date']).value))
     watch.sort(key=lambda w: (w['tf'] != '1w', w['distance_pct']))
     return {'setups': setups, 'watch': watch}
+
+
+def etf_board(etf_full: Dict[str, pd.DataFrame]) -> List[Dict[str, Any]]:
+    """
+    지수·ETF 현황: 현재가, 전일 대비, 52주 고점 대비. 주식과 같은 규칙에 해당하면(구간 안 / 구간 근접)
+    매수 구간·손절·1차 목표도 붙인다. 시세가 모자란 ETF는 건너뛴다.
+    """
+    out = []
+    for t, label in ETF_WATCHLIST:
+        d = etf_full.get(t)
+        if d is None or len(d) < 60:
+            continue
+        price = float(d['Close'].iloc[-1])
+        row = {'ticker': t, 'name': label, 'price': round(price, 2),
+               'chg_pct': round((price / float(d['Close'].iloc[-2]) - 1) * 100, 2),
+               'from_high_pct': round((price / float(d['High'].tail(252).max()) - 1) * 100, 1),
+               'status': None}
+        found = {}
+        for tf in ('1w', '1d'):
+            try:
+                res = find_live_setup(d if tf == '1d' else to_weekly(d), tf)
+            except Exception:
+                continue
+            if res.get('status') in ('zone', 'watch'):
+                found.setdefault(res['status'], (tf, res))
+        pick = found.get('zone') or found.get('watch')
+        if pick:
+            tf, res = pick
+            lv = res['levels']
+            row.update(status=res['status'], tf_label=TIMEFRAMES[tf]['label'], retrace=round(res['retrace'], 3),
+                       buy_high=round(lv['entry1'], 2), buy_low=round(lv['entry2'], 2),
+                       stop=round(lv['stop'], 2), t1=round(lv['t1'], 2))
+        out.append(row)
+    return out
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -585,9 +624,18 @@ def run_pattern_scan(cache_dir: Optional[str] = None, verbose: bool = True) -> D
         liquid, cap_mode, n_universe = picked['tickers'], picked['mode'], len(uni)
 
     c_full = os.path.join(cache_dir, 'nasdaq_4y.pkl') if cache_dir else None
-    full = download_daily(liquid + [BENCHMARK], '4y', cache_path=c_full, verbose=verbose)
-    bench_df = full.pop(BENCHMARK, None)
+    etf_tickers = [t for t, _ in ETF_WATCHLIST]
+    extra = [t for t in etf_tickers + [BENCHMARK] if t not in liquid]       # QQQ 는 벤치마크이자 ETF
+    full = download_daily(liquid + list(dict.fromkeys(extra)), '4y', cache_path=c_full, verbose=verbose)
+    bench_df = full.get(BENCHMARK)
     bench = bench_df['Close'] if bench_df is not None and not bench_df.empty else None
+    etf_full = {t: full[t] for t in etf_tickers if t in full}
+    for t in etf_tickers + [BENCHMARK]:
+        full.pop(t, None)           # 주식 스캔·채점·비교군 풀에는 ETF 가 섞이지 않게 한다
+    board = etf_board(etf_full)
+    if verbose:
+        print(f"  [ETF] 현황판 {len(board)}종 (구간 {sum(e['status'] == 'zone' for e in board)}, "
+              f"근접 {sum(e['status'] == 'watch' for e in board)})")
 
     res = scan_universe(full, names)
     last_dates = [d.index[-1] for d in full.values() if d is not None and len(d)]
@@ -626,7 +674,7 @@ def run_pattern_scan(cache_dir: Optional[str] = None, verbose: bool = True) -> D
         'date': rec_date,
         'generated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'universe': int(n_universe), 'universe_name': 'ndx100' if ndx_mode else 'nasdaq',
-        'liquid': int(len(liquid)),
+        'liquid': int(len(liquid)), 'etf': board,
         'min_market_cap': MIN_MARKET_CAP if cap_mode == 'market_cap' else None,
         'setups': res['setups'], 'watch': res['watch'][:30],
         'summary': summary,

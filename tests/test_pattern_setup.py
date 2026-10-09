@@ -358,17 +358,19 @@ def test_load_ndx100_saves_list_and_falls_back(tmp_path, monkeypatch):
         ps.load_ndx100()
 
 
-# 17. 나스닥100 모드 스캔: 구성종목 + 벤치마크만 내려받고, 유동성·시총 조회는 하지 않으며, 결과에 유니버스 이름을 남긴다
+# 17. 나스닥100 모드 스캔: 구성종목 + ETF + 벤치마크만 내려받고, 유동성·시총 조회는 하지 않으며,
+#     ETF 는 현황판에만 쓰고 주식 스캔·비교군 풀에는 섞이지 않는다
 def test_run_pattern_scan_ndx_mode_scans_only_members(tmp_path, monkeypatch):
     import quant_core.pattern_scanner as ps
     for attr, name in (('SETUPS_FILE', 's.json'), ('HISTORY_FILE', 'h.json'), ('PLACEBO_FILE', 'p.json')):
         monkeypatch.setattr(ps, attr, str(tmp_path / name))
     monkeypatch.setattr(ps, 'PATTERN_UNIVERSE', 'ndx100')
+    monkeypatch.setattr(ps, 'ETF_WATCHLIST', [('QQQ', '나스닥100'), ('GLD', '금')])    # QQQ = 벤치마크이기도 함
     monkeypatch.setattr(ps, 'load_nasdaq_universe', lambda: pd.DataFrame(
         {'ticker': ['AAA', 'BBB', 'ZZZ'], 'name': ['Alpha', 'Beta', 'Zeta']}))
     monkeypatch.setattr(ps, 'load_ndx100', lambda: pd.DataFrame(
         {'ticker': ['AAA', 'BBB'], 'name': ['Alpha Inc. Common Stock', 'Beta Inc. Common Stock']}))
-    asked = []
+    asked, pools = [], []
 
     def fake_download(tickers, period, **kw):
         asked.append((list(tickers), period))
@@ -382,11 +384,31 @@ def test_run_pattern_scan_ndx_mode_scans_only_members(tmp_path, monkeypatch):
     monkeypatch.setattr(ps, 'download_daily', fake_download)
     monkeypatch.setattr(ps, 'large_cap_tickers', boom)
     monkeypatch.setattr(ps, 'liquid_tickers', boom)
+    monkeypatch.setattr(ps, 'ensure_placebos', lambda hist, full, pool: pools.append(sorted(pool)) or [])
     out = ps.run_pattern_scan(verbose=False)
-    assert asked == [(['AAA', 'BBB', 'QQQ'], '4y')]        # 'ZZZ'(나스닥 비구성종목)·3개월 유동성 조회 없음
+    assert asked == [(['AAA', 'BBB', 'QQQ', 'GLD'], '4y')]  # 'ZZZ'(비구성종목)·3개월 유동성 조회 없음, QQQ 중복 없음
+    assert pools == [['AAA', 'BBB']]                       # ETF·벤치마크는 무작위 비교군 풀에서 제외
+    assert [e['ticker'] for e in out['etf']] == ['QQQ', 'GLD']
     assert out['universe_name'] == 'ndx100' and out['universe'] == 2 and out['liquid'] == 2
     assert out['min_market_cap'] is None
     assert json.load(open(ps.SETUPS_FILE, encoding='utf-8'))['universe_name'] == 'ndx100'
+
+
+# 17-1. ETF 현황판: 숫자 계산, 규칙에 해당하면 구간 표시, 해당 없으면 구간 없음, 시세 부족은 건너뜀
+def test_etf_board_numbers_and_strict_rule(monkeypatch):
+    import quant_core.pattern_scanner as ps
+    monkeypatch.setattr(ps, 'ETF_WATCHLIST', [('ZON', '구간'), ('FLT', '평평'), ('NEW', '신규')])
+    zone = _swing_then_pullback(120)                                   # 일봉 규칙에 해당 (고점 200 -> 현재 120)
+    idx = pd.bdate_range('2025-01-01', periods=80)
+    flat = pd.DataFrame({'Open': 50.0, 'High': 51.0, 'Low': 49.0, 'Close': 50.0, 'Volume': 1e6}, index=idx)
+    rows = ps.etf_board({'ZON': zone, 'FLT': flat, 'NEW': flat.head(30)})
+    assert [r['ticker'] for r in rows] == ['ZON', 'FLT']              # 시세 60봉 미만 NEW 는 건너뜀
+    z, f = rows
+    assert z['status'] == 'zone' and z['tf_label'] == '일봉'
+    assert z['price'] == 120.0 and z['from_high_pct'] == pytest.approx((120 / 200 - 1) * 100, abs=0.1)
+    assert z['chg_pct'] == pytest.approx((120 / 141 - 1) * 100, abs=0.01)
+    assert z['stop'] == 99.0 and z['buy_low'] < z['buy_high'] and z['t1'] == pytest.approx(149.5)
+    assert f['status'] is None and 'buy_high' not in f and f['from_high_pct'] == pytest.approx(-2.0, abs=0.1)
 
 
 # 18. 알림 문구에 유니버스 이름이 들어간다 (기본값은 기존 '나스닥')
