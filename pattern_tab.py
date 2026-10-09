@@ -145,8 +145,10 @@ def _score_line(summary):
 
 
 def _universe_label(data):
+    if data.get('universe_name') == 'ndx100':
+        return '나스닥100'
     cap = data.get('min_market_cap')
-    return f'시총 ${cap / 1e9:.0f}B 이상 대형주' if cap else '상장 종목'
+    return f'나스닥 시총 ${cap / 1e9:.0f}B 이상 대형주' if cap else '나스닥 상장 종목'
 
 
 def render_pattern_tab():
@@ -158,7 +160,7 @@ def render_pattern_tab():
 
     cards = _group_by_ticker(data.get('setups', []))
     st.markdown(
-        f'<div class="pt-head">{escape(data["date"])} 종가 기준 · 나스닥 {_universe_label(data)} {data.get("liquid", 0):,}종목 중 '
+        f'<div class="pt-head">{escape(data["date"])} 종가 기준 · {_universe_label(data)} {data.get("liquid", 0):,}종목 중 '
         f'<b style="color:#fff">{len(cards)}종목</b>이 매수 구간</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="pt-score">{_score_line(data.get("summary"))}</div>', unsafe_allow_html=True)
 

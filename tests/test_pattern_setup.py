@@ -1,6 +1,7 @@
 """
 패턴 구간 추천의 규칙·탐지·채점 테스트.
 """
+import json
 import os
 import sys
 
@@ -308,3 +309,89 @@ def test_large_cap_filter_cache_and_fallback(tmp_path, monkeypatch):
     # 0 이하면 필터 끔
     monkeypatch.setattr(ps, 'MIN_MARKET_CAP', 0)
     assert ps.large_cap_tickers(liquid, short, fetch=fetch)['mode'] == 'off'
+
+
+# 16. 나스닥100 유니버스: 응답 파싱, 조회 실패·이상 응답 시 저장본 사용, 저장본도 없으면 오류
+def _ndx_raw(symbols):
+    rows = [{'symbol': s, 'companyName': f'{s} Inc. Common Stock'} for s in symbols]
+    return json.dumps({'data': {'data': {'rows': rows}}}).encode('utf-8')
+
+
+class _Resp:
+    def __init__(self, body):
+        self.body = body
+
+    def read(self):
+        return self.body
+
+
+def test_parse_ndx100_drops_bad_symbols_and_duplicates():
+    from quant_core.pattern_scanner import parse_ndx100
+    d = parse_ndx100(_ndx_raw(['AAPL', 'MSFT', 'MSFT', 'BRK.B', '']).decode())
+    assert list(d.ticker) == ['AAPL', 'MSFT']
+
+
+def test_load_ndx100_saves_list_and_falls_back(tmp_path, monkeypatch):
+    import quant_core.pattern_scanner as ps
+    monkeypatch.setattr(ps, 'NDX_CACHE', str(tmp_path / 'ndx.csv'))
+    syms = [f'T{chr(65 + i // 26)}{chr(65 + i % 26)}' for i in range(100)]
+    body = {'v': _ndx_raw(syms)}
+
+    def urlopen(req, timeout=0):
+        if body['v'] is None:
+            raise OSError('network down')
+        assert req.get_header('User-agent')        # 공식 API 는 User-Agent 없으면 막힌다
+        return _Resp(body['v'])
+
+    monkeypatch.setattr(ps.urllib.request, 'urlopen', urlopen)
+    assert list(ps.load_ndx100().ticker) == syms
+    assert os.path.exists(ps.NDX_CACHE)
+
+    body['v'] = None                                # 조회 실패 -> 저장본
+    assert list(ps.load_ndx100().ticker) == syms
+    body['v'] = _ndx_raw(syms[:20])                 # 종목이 너무 적게 온 이상 응답 -> 저장본, 저장본을 덮어쓰지 않음
+    assert list(ps.load_ndx100().ticker) == syms
+    assert len(pd.read_csv(ps.NDX_CACHE)) == 100
+
+    os.remove(ps.NDX_CACHE)                         # 저장본도 없으면 조용히 넘어가지 않고 오류
+    with pytest.raises(ValueError):
+        ps.load_ndx100()
+
+
+# 17. 나스닥100 모드 스캔: 구성종목 + 벤치마크만 내려받고, 유동성·시총 조회는 하지 않으며, 결과에 유니버스 이름을 남긴다
+def test_run_pattern_scan_ndx_mode_scans_only_members(tmp_path, monkeypatch):
+    import quant_core.pattern_scanner as ps
+    for attr, name in (('SETUPS_FILE', 's.json'), ('HISTORY_FILE', 'h.json'), ('PLACEBO_FILE', 'p.json')):
+        monkeypatch.setattr(ps, attr, str(tmp_path / name))
+    monkeypatch.setattr(ps, 'PATTERN_UNIVERSE', 'ndx100')
+    monkeypatch.setattr(ps, 'load_nasdaq_universe', lambda: pd.DataFrame(
+        {'ticker': ['AAA', 'BBB', 'ZZZ'], 'name': ['Alpha', 'Beta', 'Zeta']}))
+    monkeypatch.setattr(ps, 'load_ndx100', lambda: pd.DataFrame(
+        {'ticker': ['AAA', 'BBB'], 'name': ['Alpha Inc. Common Stock', 'Beta Inc. Common Stock']}))
+    asked = []
+
+    def fake_download(tickers, period, **kw):
+        asked.append((list(tickers), period))
+        idx = pd.bdate_range('2025-01-01', periods=300)
+        return {t: pd.DataFrame({'Open': 100.0, 'High': 101.0, 'Low': 99.0, 'Close': 100.0,
+                                 'Volume': 1e6}, index=idx) for t in tickers}
+
+    def boom(*a, **kw):
+        raise AssertionError('나스닥100 모드에서는 유동성·시총 필터를 쓰지 않는다')
+
+    monkeypatch.setattr(ps, 'download_daily', fake_download)
+    monkeypatch.setattr(ps, 'large_cap_tickers', boom)
+    monkeypatch.setattr(ps, 'liquid_tickers', boom)
+    out = ps.run_pattern_scan(verbose=False)
+    assert asked == [(['AAA', 'BBB', 'QQQ'], '4y')]        # 'ZZZ'(나스닥 비구성종목)·3개월 유동성 조회 없음
+    assert out['universe_name'] == 'ndx100' and out['universe'] == 2 and out['liquid'] == 2
+    assert out['min_market_cap'] is None
+    assert json.load(open(ps.SETUPS_FILE, encoding='utf-8'))['universe_name'] == 'ndx100'
+
+
+# 18. 알림 문구에 유니버스 이름이 들어간다 (기본값은 기존 '나스닥')
+def test_notifier_message_names_universe():
+    from quant_core import notifier
+    setups = [_setup('AAPL')]
+    assert '나스닥100 100종목 중' in notifier.build_message(setups, '2026-10-08', 100, '', '나스닥100')['text']
+    assert '나스닥 1,017종목 중' in notifier.build_message(setups, '2026-10-08', 1017)['text']

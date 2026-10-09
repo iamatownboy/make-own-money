@@ -35,11 +35,11 @@ def _merge_by_ticker(setups: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
 
 def build_message(new_setups: List[Dict[str, Any]], date: str, liquid: int = 0,
-                  app_url: str = '') -> Dict[str, str]:
+                  app_url: str = '', universe: str = '나스닥') -> Dict[str, str]:
     items = _merge_by_ticker(new_setups)
     subject = f"[패턴 구간] 새 추천 {len(items)}종목 ({date})"
     lines = [f"📐 패턴 구간 새 추천 · {date} 종가 기준",
-             f"나스닥 {liquid:,}종목 중 새로 {len(items)}종목이 매수 구간에 들어왔습니다." if liquid
+             f"{universe} {liquid:,}종목 중 새로 {len(items)}종목이 매수 구간에 들어왔습니다." if liquid
              else f"새로 {len(items)}종목이 매수 구간에 들어왔습니다.", ""]
     for s in items[:MAX_ITEMS]:
         tf = s['tf_label'] + (' · ' + '·'.join(a + '도' for a in s['also']) if s['also'] else '')
@@ -88,11 +88,12 @@ def send_email(subject: str, text: str) -> bool:
     return True
 
 
-def notify_new_setups(new_setups: List[Dict[str, Any]], date: str, liquid: int = 0) -> List[str]:
+def notify_new_setups(new_setups: List[Dict[str, Any]], date: str, liquid: int = 0,
+                      universe: str = '나스닥') -> List[str]:
     """새 추천이 있을 때만 설정된 채널로 보낸다. 보낸 채널 이름 목록을 돌려준다."""
     if not new_setups:
         return []
-    msg = build_message(new_setups, date, liquid, os.getenv('APP_URL', '').strip())
+    msg = build_message(new_setups, date, liquid, os.getenv('APP_URL', '').strip(), universe)
     sent = []
     for name, fn in (('telegram', lambda: send_telegram(msg['text'])),
                      ('email', lambda: send_email(msg['subject'], msg['text']))):
