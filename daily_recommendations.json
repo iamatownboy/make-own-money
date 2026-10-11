@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-09",
-  "updated_at": "2026-10-10 01:03:01",
+  "date": "2026-10-11",
+  "updated_at": "2026-10-11 05:37:03",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,52 +8,51 @@
     "qualified": 0,
     "near_miss": [
       {
-        "ticker": "AMAT",
-        "name": "어플라이드 머티어리얼즈",
-        "total_score": 61,
-        "risk_reward_ratio": 0.81,
+        "ticker": "XYZ",
+        "name": "블록 (구 스퀘어)",
+        "total_score": 68,
+        "risk_reward_ratio": 0.97,
         "blockers": [
-          "점수 61/68",
-          "손익비 0.81/1.20"
+          "손익비 0.97/1.20"
         ]
       },
       {
         "ticker": "GOOGL",
         "name": "알파벳 (구글)",
-        "total_score": 59,
-        "risk_reward_ratio": 0.98,
+        "total_score": 64,
+        "risk_reward_ratio": 0.99,
         "blockers": [
-          "점수 59/68",
-          "손익비 0.98/1.20"
+          "점수 64/68",
+          "손익비 0.99/1.20"
+        ]
+      },
+      {
+        "ticker": "TSM",
+        "name": "TSMC",
+        "total_score": 61,
+        "risk_reward_ratio": 1.04,
+        "blockers": [
+          "점수 61/68",
+          "손익비 1.04/1.20"
         ]
       },
       {
         "ticker": "TXN",
         "name": "텍사스 인스트루먼트",
+        "total_score": 61,
+        "risk_reward_ratio": 0.93,
+        "blockers": [
+          "점수 61/68",
+          "손익비 0.93/1.20"
+        ]
+      },
+      {
+        "ticker": "PATH",
+        "name": "유아이패스",
         "total_score": 59,
-        "risk_reward_ratio": 0.87,
+        "risk_reward_ratio": 1.55,
         "blockers": [
-          "점수 59/68",
-          "손익비 0.87/1.20"
-        ]
-      },
-      {
-        "ticker": "ASML",
-        "name": "ASML",
-        "total_score": 56,
-        "risk_reward_ratio": 1.31,
-        "blockers": [
-          "점수 56/68"
-        ]
-      },
-      {
-        "ticker": "LRCX",
-        "name": "램리서치",
-        "total_score": 56,
-        "risk_reward_ratio": 0.85,
-        "blockers": [
-          "점수 56/68",
-          "손익비 0.85/1.20"
+          "점수 59/68"
         ]
       }
     ]

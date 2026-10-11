@@ -1,6 +1,6 @@
 {
- "date": "2026-10-08",
- "generated_at": "2026-10-10 01:02:50",
+ "date": "2026-10-09",
+ "generated_at": "2026-10-11 05:36:39",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -8,120 +8,202 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 747.58,
-   "chg_pct": -1.34,
-   "from_high_pct": -2.0,
+   "price": 751.27,
+   "chg_pct": 0.49,
+   "from_high_pct": -1.5,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 607.27,
-   "chg_pct": -2.84,
-   "from_high_pct": -9.6,
+   "price": 603.33,
+   "chg_pct": -0.65,
+   "from_high_pct": -10.2,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 773.93,
-   "chg_pct": -0.42,
-   "from_high_pct": -1.0,
+   "price": 778.57,
+   "chg_pct": 0.6,
+   "from_high_pct": -0.4,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 378.62,
-   "chg_pct": 0.73,
-   "from_high_pct": -25.7,
+   "price": 384.58,
+   "chg_pct": 1.57,
+   "from_high_pct": -24.5,
    "status": null
   }
  ],
  "min_market_cap": null,
- "setups": [],
+ "setups": [
+  {
+   "id": "TMUS|1w|2023-06-02|2025-03-07",
+   "ticker": "TMUS",
+   "name": "T-Mobile US, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 148.58,
+   "L": 118.77475177125268,
+   "H": 268.8267509112243,
+   "L_date": "2023-06-02",
+   "H_date": "2025-03-07",
+   "entry_date": "2026-10-09",
+   "retrace": 0.801,
+   "swing_pct": 126.3,
+   "buy_high": 150.8859,
+   "buy_low": 135.8807,
+   "stop": 118.7748,
+   "t1": 193.8008,
+   "t2": 208.3634,
+   "t3": 242.9484,
+   "t4": 306.314,
+   "stop_pct": -20.1,
+   "position": "구간 안",
+   "t1_pct": 30.4,
+   "signals": [
+    "RSI 과매도 29"
+   ],
+   "base_rate": {
+    "hit": 48.1,
+    "random": 38.0,
+    "n": 801
+   },
+   "earnings_date": "2026-10-28",
+   "earnings_days": 19,
+   "earnings_soon": false
+  },
+  {
+   "id": "TMUS|1d|2023-06-02|2025-03-03",
+   "ticker": "TMUS",
+   "name": "T-Mobile US, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 148.58,
+   "L": 118.77475177125268,
+   "H": 268.8267509112243,
+   "L_date": "2023-06-02",
+   "H_date": "2025-03-03",
+   "entry_date": "2026-10-09",
+   "retrace": 0.801,
+   "swing_pct": 126.3,
+   "buy_high": 150.8859,
+   "buy_low": 135.8807,
+   "stop": 118.7748,
+   "t1": 193.8008,
+   "t2": 208.3634,
+   "t3": 242.9484,
+   "t4": 306.314,
+   "stop_pct": -20.1,
+   "position": "구간 안",
+   "t1_pct": 30.4,
+   "signals": [
+    "RSI 과매도 29"
+   ],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": "2026-10-28",
+   "earnings_days": 19,
+   "earnings_soon": false
+  }
+ ],
  "watch": [
   {
    "ticker": "NXPI",
    "name": "NXP Semiconductors N.V.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 231.07,
-   "buy_high": 227.3732,
-   "distance_pct": 1.6
+   "price": 227.52,
+   "buy_high": 227.3733,
+   "distance_pct": 0.1
   },
   {
    "ticker": "AXON",
    "name": "Axon Enterprise, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 417.31,
+   "price": 422.89,
    "buy_high": 408.7868,
-   "distance_pct": 2.1
+   "distance_pct": 3.5
   },
   {
    "ticker": "ALNY",
    "name": "Alnylam Pharmaceuticals, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 224.53,
+   "price": 232.68,
    "buy_high": 217.644,
-   "distance_pct": 3.2
+   "distance_pct": 6.9
+  },
+  {
+   "ticker": "GEHC",
+   "name": "GE HealthCare Technologies Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 65.74,
+   "buy_high": 64.3656,
+   "distance_pct": 2.1
   },
   {
    "ticker": "STX",
    "name": "Seagate Technology Holdings PLC",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 774.83,
+   "price": 783.0,
    "buy_high": 765.7861,
-   "distance_pct": 1.2
+   "distance_pct": 2.2
   },
   {
-   "ticker": "TTWO",
-   "name": "Take-Two Interactive Software, Inc.",
+   "ticker": "NXPI",
+   "name": "NXP Semiconductors N.V.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 209.37,
-   "buy_high": 204.3883,
-   "distance_pct": 2.4
+   "price": 227.52,
+   "buy_high": 216.1982,
+   "distance_pct": 5.2
   }
  ],
  "summary": {
-  "total": 103,
-  "hit": 8,
-  "stop": 34,
-  "open": 61,
-  "hit_rate": 19.0,
-  "decided": 42,
-  "avg_ret": -1.01,
-  "avg_excess": -0.91,
-  "finished": 37,
+  "total": 105,
+  "hit": 12,
+  "stop": 36,
+  "open": 57,
+  "hit_rate": 25.0,
+  "decided": 48,
+  "avg_ret": -1.46,
+  "avg_excess": -1.43,
+  "finished": 39,
   "by_tf": {
    "1d": {
-    "total": 75,
-    "decided": 33,
-    "hit_rate": 21.2
+    "total": 76,
+    "decided": 38,
+    "hit_rate": 28.9
    },
    "1w": {
-    "total": 28,
-    "decided": 9,
-    "hit_rate": 11.1
+    "total": 29,
+    "decided": 10,
+    "hit_rate": 10.0
    }
   },
   "baseline": {
-   "total": 309,
-   "decided": 131,
-   "hit": 27,
-   "stop": 104,
-   "hit_rate": 20.6
+   "total": 315,
+   "decided": 133,
+   "hit": 28,
+   "stop": 105,
+   "hit_rate": 21.1
   },
   "baseline_matched": {
-   "decided": 81,
-   "hit": 16,
-   "stop": 65,
-   "hit_rate": 19.8
+   "decided": 90,
+   "hit": 20,
+   "stop": 70,
+   "hit_rate": 22.2
   }
  },
- "elapsed_sec": 35.2
+ "elapsed_sec": 24.2
 }
