@@ -1,6 +1,6 @@
 {
- "date": "2026-10-09",
- "generated_at": "2026-10-11 05:36:39",
+ "date": "2026-10-12",
+ "generated_at": "2026-10-13 02:38:34",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -8,33 +8,33 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 751.27,
-   "chg_pct": 0.49,
-   "from_high_pct": -1.5,
+   "price": 746.04,
+   "chg_pct": -0.7,
+   "from_high_pct": -2.2,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 603.33,
-   "chg_pct": -0.65,
-   "from_high_pct": -10.2,
+   "price": 590.99,
+   "chg_pct": -2.05,
+   "from_high_pct": -12.0,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 778.57,
-   "chg_pct": 0.6,
-   "from_high_pct": -0.4,
+   "price": 778.1,
+   "chg_pct": -0.06,
+   "from_high_pct": -0.5,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 384.58,
-   "chg_pct": 1.57,
-   "from_high_pct": -24.5,
+   "price": 382.15,
+   "chg_pct": -0.63,
+   "from_high_pct": -25.0,
    "status": null
   }
  ],
@@ -46,34 +46,68 @@
    "name": "T-Mobile US, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 148.58,
+   "price": 151.87,
    "L": 118.77475177125268,
-   "H": 268.8267509112243,
+   "H": 268.826719984254,
    "L_date": "2023-06-02",
    "H_date": "2025-03-07",
    "entry_date": "2026-10-09",
-   "retrace": 0.801,
+   "retrace": 0.779,
    "swing_pct": 126.3,
    "buy_high": 150.8859,
    "buy_low": 135.8807,
    "stop": 118.7748,
-   "t1": 193.8008,
+   "t1": 193.8007,
    "t2": 208.3634,
    "t3": 242.9484,
    "t4": 306.314,
-   "stop_pct": -20.1,
-   "position": "구간 안",
-   "t1_pct": 30.4,
-   "signals": [
-    "RSI 과매도 29"
-   ],
+   "stop_pct": -21.8,
+   "position": "구간 위",
+   "t1_pct": 27.6,
+   "signals": [],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
    },
    "earnings_date": "2026-10-28",
-   "earnings_days": 19,
+   "earnings_days": 16,
+   "earnings_soon": false
+  },
+  {
+   "id": "AXON|1w|2026-04-10|2026-07-10",
+   "ticker": "AXON",
+   "name": "Axon Enterprise, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 414.43,
+   "L": 339.010009765625,
+   "H": 665.0700073242188,
+   "L_date": "2026-04-10",
+   "H_date": "2026-07-10",
+   "entry_date": "2026-10-02",
+   "retrace": 0.769,
+   "swing_pct": 96.2,
+   "buy_high": 408.7868,
+   "buy_low": 376.1808,
+   "stop": 339.01,
+   "t1": 502.04,
+   "t2": 532.2,
+   "t3": 608.2016,
+   "t4": 747.4494,
+   "stop_pct": -18.2,
+   "position": "구간 위",
+   "t1_pct": 21.1,
+   "signals": [
+    "RSI 상승 다이버전스"
+   ],
+   "base_rate": {
+    "hit": 48.1,
+    "random": 38.0,
+    "n": 801
+   },
+   "earnings_date": "2026-11-03",
+   "earnings_days": 22,
    "earnings_soon": false
   },
   {
@@ -82,81 +116,70 @@
    "name": "T-Mobile US, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 148.58,
+   "price": 151.87,
    "L": 118.77475177125268,
-   "H": 268.8267509112243,
+   "H": 268.826719984254,
    "L_date": "2023-06-02",
    "H_date": "2025-03-03",
    "entry_date": "2026-10-09",
-   "retrace": 0.801,
+   "retrace": 0.779,
    "swing_pct": 126.3,
    "buy_high": 150.8859,
    "buy_low": 135.8807,
    "stop": 118.7748,
-   "t1": 193.8008,
+   "t1": 193.8007,
    "t2": 208.3634,
    "t3": 242.9484,
    "t4": 306.314,
-   "stop_pct": -20.1,
-   "position": "구간 안",
-   "t1_pct": 30.4,
-   "signals": [
-    "RSI 과매도 29"
-   ],
+   "stop_pct": -21.8,
+   "position": "구간 위",
+   "t1_pct": 27.6,
+   "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
    "earnings_date": "2026-10-28",
-   "earnings_days": 19,
+   "earnings_days": 16,
    "earnings_soon": false
   }
  ],
  "watch": [
   {
-   "ticker": "NXPI",
-   "name": "NXP Semiconductors N.V.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 227.52,
-   "buy_high": 227.3733,
-   "distance_pct": 0.1
-  },
-  {
-   "ticker": "AXON",
-   "name": "Axon Enterprise, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 422.89,
-   "buy_high": 408.7868,
-   "distance_pct": 3.5
-  },
-  {
    "ticker": "ALNY",
    "name": "Alnylam Pharmaceuticals, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 232.68,
+   "price": 227.02,
    "buy_high": 217.644,
-   "distance_pct": 6.9
+   "distance_pct": 4.3
   },
   {
-   "ticker": "GEHC",
-   "name": "GE HealthCare Technologies Inc.",
+   "ticker": "NBIS",
+   "name": "Nebius Group N.V.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 65.74,
-   "buy_high": 64.3656,
-   "distance_pct": 2.1
+   "price": 210.06,
+   "buy_high": 207.6272,
+   "distance_pct": 1.2
   },
   {
-   "ticker": "STX",
-   "name": "Seagate Technology Holdings PLC",
+   "ticker": "TTWO",
+   "name": "Take-Two Interactive Software, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 783.0,
-   "buy_high": 765.7861,
+   "price": 208.82,
+   "buy_high": 204.3883,
+   "distance_pct": 2.2
+  },
+  {
+   "ticker": "RKLB",
+   "name": "Rocket Lab Corporation",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 65.71,
+   "buy_high": 64.3268,
    "distance_pct": 2.2
   },
   {
@@ -164,46 +187,46 @@
    "name": "NXP Semiconductors N.V.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 227.52,
+   "price": 225.21,
    "buy_high": 216.1982,
-   "distance_pct": 5.2
+   "distance_pct": 4.2
   }
  ],
  "summary": {
   "total": 105,
-  "hit": 12,
-  "stop": 36,
-  "open": 57,
-  "hit_rate": 25.0,
-  "decided": 48,
-  "avg_ret": -1.46,
-  "avg_excess": -1.43,
-  "finished": 39,
+  "hit": 15,
+  "stop": 39,
+  "open": 51,
+  "hit_rate": 27.8,
+  "decided": 54,
+  "avg_ret": -2.29,
+  "avg_excess": -2.32,
+  "finished": 42,
   "by_tf": {
    "1d": {
     "total": 76,
-    "decided": 38,
-    "hit_rate": 28.9
+    "decided": 43,
+    "hit_rate": 32.6
    },
    "1w": {
     "total": 29,
-    "decided": 10,
-    "hit_rate": 10.0
+    "decided": 11,
+    "hit_rate": 9.1
    }
   },
   "baseline": {
    "total": 315,
-   "decided": 133,
-   "hit": 28,
-   "stop": 105,
-   "hit_rate": 21.1
+   "decided": 144,
+   "hit": 31,
+   "stop": 113,
+   "hit_rate": 21.5
   },
   "baseline_matched": {
-   "decided": 90,
-   "hit": 20,
-   "stop": 70,
-   "hit_rate": 22.2
+   "decided": 102,
+   "hit": 24,
+   "stop": 78,
+   "hit_rate": 23.5
   }
  },
- "elapsed_sec": 24.2
+ "elapsed_sec": 38.1
 }
