@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-13",
-  "updated_at": "2026-10-14 00:25:25",
+  "date": "2026-10-14",
+  "updated_at": "2026-10-15 00:00:45",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -18,13 +18,32 @@
         ]
       },
       {
+        "ticker": "ASML",
+        "name": "ASML",
+        "total_score": 64,
+        "risk_reward_ratio": 1.2,
+        "blockers": [
+          "점수 64/68"
+        ]
+      },
+      {
         "ticker": "XYZ",
         "name": "블록 (구 스퀘어)",
         "total_score": 63,
-        "risk_reward_ratio": 1.03,
+        "risk_reward_ratio": 0.92,
         "blockers": [
           "점수 63/68",
-          "손익비 1.03/1.20"
+          "손익비 0.92/1.20"
+        ]
+      },
+      {
+        "ticker": "LRCX",
+        "name": "램리서치",
+        "total_score": 62,
+        "risk_reward_ratio": 0.6,
+        "blockers": [
+          "점수 62/68",
+          "손익비 0.6/1.20"
         ]
       },
       {
@@ -35,24 +54,6 @@
         "blockers": [
           "점수 59/68",
           "손익비 0.93/1.20"
-        ]
-      },
-      {
-        "ticker": "TXN",
-        "name": "텍사스 인스트루먼트",
-        "total_score": 59,
-        "risk_reward_ratio": 1.41,
-        "blockers": [
-          "점수 59/68"
-        ]
-      },
-      {
-        "ticker": "ASML",
-        "name": "ASML",
-        "total_score": 56,
-        "risk_reward_ratio": 1.62,
-        "blockers": [
-          "점수 56/68"
         ]
       }
     ]
