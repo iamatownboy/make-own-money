@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-15",
-  "updated_at": "2026-10-15 23:44:38",
+  "date": "2026-10-16",
+  "updated_at": "2026-10-16 23:43:25",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -10,50 +10,51 @@
       {
         "ticker": "TSM",
         "name": "TSMC",
-        "total_score": 68,
-        "risk_reward_ratio": 0.84,
+        "total_score": 61,
+        "risk_reward_ratio": 0.92,
         "blockers": [
-          "손익비 0.84/1.20"
-        ]
-      },
-      {
-        "ticker": "GOOGL",
-        "name": "알파벳 (구글)",
-        "total_score": 66,
-        "risk_reward_ratio": 1.15,
-        "blockers": [
-          "점수 66/68",
-          "손익비 1.15/1.20"
+          "점수 61/68",
+          "손익비 0.92/1.20"
         ]
       },
       {
         "ticker": "MU",
         "name": "마이크론",
         "total_score": 61,
-        "risk_reward_ratio": 0.68,
+        "risk_reward_ratio": 0.58,
         "blockers": [
           "점수 61/68",
-          "손익비 0.68/1.20"
+          "손익비 0.58/1.20"
         ]
       },
       {
         "ticker": "XYZ",
         "name": "블록 (구 스퀘어)",
-        "total_score": 61,
-        "risk_reward_ratio": 0.81,
+        "total_score": 58,
+        "risk_reward_ratio": 0.89,
         "blockers": [
-          "점수 61/68",
-          "손익비 0.81/1.20"
+          "점수 58/68",
+          "손익비 0.89/1.20"
         ]
       },
       {
-        "ticker": "PATH",
-        "name": "유아이패스",
-        "total_score": 59,
-        "risk_reward_ratio": 0.94,
+        "ticker": "TXN",
+        "name": "텍사스 인스트루먼트",
+        "total_score": 57,
+        "risk_reward_ratio": 0.95,
         "blockers": [
-          "점수 59/68",
-          "손익비 0.94/1.20"
+          "점수 57/68",
+          "손익비 0.95/1.20"
+        ]
+      },
+      {
+        "ticker": "GOOGL",
+        "name": "알파벳 (구글)",
+        "total_score": 56,
+        "risk_reward_ratio": 1.08,
+        "blockers": [
+          "점수 56/68",
+          "손익비 1.08/1.20"
         ]
       }
     ]
