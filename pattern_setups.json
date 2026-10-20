@@ -1,6 +1,6 @@
 {
- "date": "2026-10-16",
- "generated_at": "2026-10-20 00:28:29",
+ "date": "2026-10-20",
+ "generated_at": "2026-10-20 23:59:25",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -8,33 +8,33 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 709.8,
-   "chg_pct": -2.5,
-   "from_high_pct": -7.0,
+   "price": 717.63,
+   "chg_pct": -0.1,
+   "from_high_pct": -5.9,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 539.79,
-   "chg_pct": -3.41,
-   "from_high_pct": -19.7,
+   "price": 546.36,
+   "chg_pct": -0.38,
+   "from_high_pct": -18.7,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 763.25,
-   "chg_pct": -1.11,
-   "from_high_pct": -2.4,
+   "price": 769.05,
+   "chg_pct": 0.34,
+   "from_high_pct": -1.6,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 382.01,
-   "chg_pct": -0.18,
-   "from_high_pct": -25.1,
+   "price": 377.65,
+   "chg_pct": -0.54,
+   "from_high_pct": -25.9,
    "status": null
   }
  ],
@@ -46,26 +46,27 @@
    "name": "Intel Corporation",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 89.85,
+   "price": 91.69,
    "L": 81.79000091552734,
    "H": 127.44000244140625,
    "L_date": "2026-07-31",
    "H_date": "2026-09-25",
    "entry_date": "2026-10-16",
-   "retrace": 0.823,
+   "retrace": 0.783,
    "swing_pct": 55.8,
    "buy_high": 91.5591,
    "buy_low": 86.9941,
    "stop": 81.79,
    "t1": 104.615,
-   "t2": 108.315,
-   "t3": 119.2545,
-   "t4": 139.2975,
-   "stop_pct": -9.0,
-   "position": "구간 안",
-   "t1_pct": 16.4,
+   "t2": 108.105,
+   "t3": 119.1646,
+   "t4": 139.4277,
+   "stop_pct": -10.8,
+   "position": "구간 위",
+   "t1_pct": 14.1,
    "signals": [
-    "200일선 위"
+    "200일선 위",
+    "반전 캔들"
    ],
    "base_rate": {
     "hit": 48.1,
@@ -73,41 +74,7 @@
     "n": 801
    },
    "earnings_date": "2026-10-29",
-   "earnings_days": 13,
-   "earnings_soon": true
-  },
-  {
-   "id": "TER|1w|2026-07-17|2026-10-02",
-   "ticker": "TER",
-   "name": "Teradyne, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 325.0,
-   "L": 296.7060348292611,
-   "H": 451.8599853515625,
-   "L_date": "2026-07-17",
-   "H_date": "2026-10-02",
-   "entry_date": "2026-10-16",
-   "retrace": 0.818,
-   "swing_pct": 52.3,
-   "buy_high": 329.909,
-   "buy_low": 314.3936,
-   "stop": 296.706,
-   "t1": 374.283,
-   "t2": 387.975,
-   "t3": 424.5172,
-   "t4": 491.4687,
-   "stop_pct": -8.7,
-   "position": "구간 안",
-   "t1_pct": 15.2,
-   "signals": [],
-   "base_rate": {
-    "hit": 48.1,
-    "random": 38.0,
-    "n": 801
-   },
-   "earnings_date": "2026-10-27",
-   "earnings_days": 11,
+   "earnings_days": 9,
    "earnings_soon": true
   },
   {
@@ -116,24 +83,24 @@
    "name": "Nebius Group N.V.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 165.47,
+   "price": 171.45,
    "L": 145.8000030517578,
    "H": 280.8299865722656,
    "L_date": "2026-07-31",
    "H_date": "2026-08-21",
    "entry_date": "2026-10-16",
-   "retrace": 0.854,
+   "retrace": 0.81,
    "swing_pct": 92.6,
    "buy_high": 174.6964,
    "buy_low": 161.1934,
    "stop": 145.8,
    "t1": 213.315,
-   "t2": 222.05,
-   "t3": 255.6722,
-   "t4": 317.2736,
-   "stop_pct": -11.9,
+   "t2": 220.555,
+   "t3": 255.0323,
+   "t4": 318.2005,
+   "stop_pct": -15.0,
    "position": "구간 안",
-   "t1_pct": 28.9,
+   "t1_pct": 24.4,
    "signals": [],
    "base_rate": {
     "hit": 48.1,
@@ -141,7 +108,7 @@
     "n": 801
    },
    "earnings_date": "2026-11-10",
-   "earnings_days": 25,
+   "earnings_days": 21,
    "earnings_soon": false
   },
   {
@@ -150,24 +117,24 @@
    "name": "Axon Enterprise, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 390.29,
+   "price": 392.64,
    "L": 339.010009765625,
    "H": 665.0700073242188,
    "L_date": "2026-04-10",
    "H_date": "2026-07-10",
    "entry_date": "2026-10-02",
-   "retrace": 0.843,
+   "retrace": 0.836,
    "swing_pct": 96.2,
    "buy_high": 408.7868,
    "buy_low": 376.1808,
    "stop": 339.01,
    "t1": 502.04,
-   "t2": 526.815,
-   "t3": 605.8969,
-   "t4": 750.7881,
-   "stop_pct": -13.1,
+   "t2": 521.035,
+   "t3": 603.423,
+   "t4": 754.3717,
+   "stop_pct": -13.7,
    "position": "구간 안",
-   "t1_pct": 28.6,
+   "t1_pct": 27.9,
    "signals": [
     "RSI 상승 다이버전스"
    ],
@@ -177,8 +144,8 @@
     "n": 801
    },
    "earnings_date": "2026-11-03",
-   "earnings_days": 18,
-   "earnings_soon": false
+   "earnings_days": 14,
+   "earnings_soon": true
   },
   {
    "id": "AVGO|1d|2026-03-30|2026-06-03",
@@ -186,13 +153,13 @@
    "name": "Broadcom Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 328.75,
+   "price": 334.37,
    "L": 288.9755799472559,
    "H": 493.3195088404053,
    "L_date": "2026-03-30",
    "H_date": "2026-06-03",
    "entry_date": "2026-10-16",
-   "retrace": 0.805,
+   "retrace": 0.778,
    "swing_pct": 70.7,
    "buy_high": 332.7052,
    "buy_low": 312.2708,
@@ -201,152 +168,120 @@
    "t2": 410.9497,
    "t3": 458.0653,
    "t4": 544.3888,
-   "stop_pct": -12.1,
-   "position": "구간 안",
-   "t1_pct": 19.0,
-   "signals": [],
+   "stop_pct": -13.6,
+   "position": "구간 위",
+   "t1_pct": 17.0,
+   "signals": [
+    "반전 캔들"
+   ],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
    "earnings_date": "2026-12-09",
-   "earnings_days": 54,
+   "earnings_days": 50,
    "earnings_soon": false
-  },
-  {
-   "id": "MPWR|1d|2026-09-16|2026-10-06",
-   "ticker": "MPWR",
-   "name": "Monolithic Power Systems, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 1210.86,
-   "L": 1132.15765347073,
-   "H": 1491.6400146484375,
-   "L_date": "2026-09-16",
-   "H_date": "2026-10-06",
-   "entry_date": "2026-10-15",
-   "retrace": 0.781,
-   "swing_pct": 31.8,
-   "buy_high": 1209.0869,
-   "buy_low": 1173.1386,
-   "stop": 1132.1577,
-   "t1": 1311.8988,
-   "t2": 1343.32,
-   "t3": 1428.1591,
-   "t4": 1583.5984,
-   "stop_pct": -6.5,
-   "position": "구간 위",
-   "t1_pct": 8.3,
-   "signals": [],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-10-29",
-   "earnings_days": 13,
-   "earnings_soon": true
   }
  ],
  "watch": [
   {
-   "ticker": "NXPI",
-   "name": "NXP Semiconductors N.V.",
+   "ticker": "TER",
+   "name": "Teradyne, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 229.33,
-   "buy_high": 227.3732,
-   "distance_pct": 0.9
-  },
-  {
-   "ticker": "ARM",
-   "name": "Arm Holdings plc",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 227.8,
-   "buy_high": 225.8604,
-   "distance_pct": 0.9
+   "price": 336.59,
+   "buy_high": 329.909,
+   "distance_pct": 2.0
   },
   {
    "ticker": "TMUS",
    "name": "T-Mobile US, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 159.1,
+   "price": 157.75,
    "buy_high": 150.8859,
-   "distance_pct": 5.4
+   "distance_pct": 4.5
+  },
+  {
+   "ticker": "NXPI",
+   "name": "NXP Semiconductors N.V.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 237.6,
+   "buy_high": 227.3732,
+   "distance_pct": 4.5
   },
   {
    "ticker": "ALNY",
    "name": "Alnylam Pharmaceuticals, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 231.83,
+   "price": 230.71,
    "buy_high": 217.644,
-   "distance_pct": 6.5
+   "distance_pct": 6.0
+  },
+  {
+   "ticker": "BKNG",
+   "name": "Booking Holdings Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 163.92,
+   "buy_high": 163.825,
+   "distance_pct": 0.1
   },
   {
    "ticker": "TTWO",
    "name": "Take-Two Interactive Software, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 205.28,
+   "price": 206.7,
    "buy_high": 204.3883,
-   "distance_pct": 0.4
+   "distance_pct": 1.1
+  },
+  {
+   "ticker": "TER",
+   "name": "Teradyne, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 336.59,
+   "buy_high": 328.2268,
+   "distance_pct": 2.5
   },
   {
    "ticker": "PEP",
    "name": "PepsiCo, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 131.49,
-   "buy_high": 130.1419,
-   "distance_pct": 1.0
-  },
-  {
-   "ticker": "HON",
-   "name": "Honeywell International Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 211.41,
-   "buy_high": 207.1289,
-   "distance_pct": 2.1
+   "price": 134.02,
+   "buy_high": 130.1418,
+   "distance_pct": 3.0
   },
   {
    "ticker": "TMUS",
    "name": "T-Mobile US, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 159.1,
+   "price": 157.75,
    "buy_high": 150.8859,
-   "distance_pct": 5.4
-  },
-  {
-   "ticker": "NXPI",
-   "name": "NXP Semiconductors N.V.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 229.33,
-   "buy_high": 216.1982,
-   "distance_pct": 6.1
+   "distance_pct": 4.5
   }
  ],
  "summary": {
   "total": 112,
-  "hit": 21,
+  "hit": 23,
   "stop": 49,
-  "open": 42,
-  "hit_rate": 30.0,
-  "decided": 70,
+  "open": 40,
+  "hit_rate": 31.9,
+  "decided": 72,
   "avg_ret": -3.01,
   "avg_excess": -2.62,
   "finished": 54,
   "by_tf": {
    "1d": {
     "total": 79,
-    "decided": 55,
-    "hit_rate": 34.5
+    "decided": 57,
+    "hit_rate": 36.8
    },
    "1w": {
     "total": 33,
@@ -356,17 +291,17 @@
   },
   "baseline": {
    "total": 336,
-   "decided": 190,
-   "hit": 39,
-   "stop": 151,
-   "hit_rate": 20.5
+   "decided": 194,
+   "hit": 41,
+   "stop": 153,
+   "hit_rate": 21.1
   },
   "baseline_matched": {
-   "decided": 149,
-   "hit": 31,
-   "stop": 118,
-   "hit_rate": 20.8
+   "decided": 155,
+   "hit": 32,
+   "stop": 123,
+   "hit_rate": 20.6
   }
  },
- "elapsed_sec": 28.6
+ "elapsed_sec": 34.0
 }

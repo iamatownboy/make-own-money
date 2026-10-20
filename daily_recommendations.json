@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-19",
-  "updated_at": "2026-10-20 00:28:43",
+  "date": "2026-10-20",
+  "updated_at": "2026-10-20 23:59:45",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,53 +8,52 @@
     "qualified": 0,
     "near_miss": [
       {
-        "ticker": "TXN",
-        "name": "텍사스 인스트루먼트",
-        "total_score": 62,
-        "risk_reward_ratio": 0.95,
+        "ticker": "TSM",
+        "name": "TSMC",
+        "total_score": 73,
+        "risk_reward_ratio": 1.07,
         "blockers": [
-          "점수 62/68",
-          "손익비 0.95/1.20"
+          "손익비 1.07/1.20"
         ]
       },
       {
-        "ticker": "TSM",
-        "name": "TSMC",
-        "total_score": 61,
-        "risk_reward_ratio": 0.92,
+        "ticker": "XYZ",
+        "name": "블록 (구 스퀘어)",
+        "total_score": 65,
+        "risk_reward_ratio": 0.86,
         "blockers": [
-          "점수 61/68",
-          "손익비 0.92/1.20"
+          "점수 65/68",
+          "손익비 0.86/1.20"
+        ]
+      },
+      {
+        "ticker": "DDOG",
+        "name": "데이터독",
+        "total_score": 64,
+        "risk_reward_ratio": 0.76,
+        "blockers": [
+          "점수 64/68",
+          "손익비 0.76/1.20"
         ]
       },
       {
         "ticker": "MU",
         "name": "마이크론",
         "total_score": 61,
-        "risk_reward_ratio": 0.58,
+        "risk_reward_ratio": 0.56,
         "blockers": [
           "점수 61/68",
-          "손익비 0.58/1.20"
+          "손익비 0.56/1.20"
         ]
       },
       {
-        "ticker": "XYZ",
-        "name": "블록 (구 스퀘어)",
-        "total_score": 58,
-        "risk_reward_ratio": 0.89,
+        "ticker": "NXPI",
+        "name": "NXP 세미컨덕터",
+        "total_score": 61,
+        "risk_reward_ratio": 0.84,
         "blockers": [
-          "점수 58/68",
-          "손익비 0.89/1.20"
-        ]
-      },
-      {
-        "ticker": "GOOGL",
-        "name": "알파벳 (구글)",
-        "total_score": 56,
-        "risk_reward_ratio": 1.08,
-        "blockers": [
-          "점수 56/68",
-          "손익비 1.08/1.20"
+          "점수 61/68",
+          "손익비 0.84/1.20"
         ]
       }
     ]
