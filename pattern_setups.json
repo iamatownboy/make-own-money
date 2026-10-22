@@ -1,6 +1,6 @@
 {
  "date": "2026-10-20",
- "generated_at": "2026-10-20 23:59:25",
+ "generated_at": "2026-10-22 00:03:48",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -95,9 +95,9 @@
    "buy_low": 161.1934,
    "stop": 145.8,
    "t1": 213.315,
-   "t2": 220.555,
-   "t3": 255.0323,
-   "t4": 318.2005,
+   "t2": 220.54,
+   "t3": 255.0259,
+   "t4": 318.2098,
    "stop_pct": -15.0,
    "position": "구간 안",
    "t1_pct": 24.4,
@@ -200,7 +200,7 @@
    "tf": "1w",
    "tf_label": "주봉",
    "price": 157.75,
-   "buy_high": 150.8859,
+   "buy_high": 150.8858,
    "distance_pct": 4.5
   },
   {
@@ -209,7 +209,7 @@
    "tf": "1w",
    "tf_label": "주봉",
    "price": 237.6,
-   "buy_high": 227.3732,
+   "buy_high": 227.3733,
    "distance_pct": 4.5
   },
   {
@@ -254,7 +254,7 @@
    "tf": "1d",
    "tf_label": "일봉",
    "price": 134.02,
-   "buy_high": 130.1418,
+   "buy_high": 130.1419,
    "distance_pct": 3.0
   },
   {
@@ -263,7 +263,7 @@
    "tf": "1d",
    "tf_label": "일봉",
    "price": 157.75,
-   "buy_high": 150.8859,
+   "buy_high": 150.8858,
    "distance_pct": 4.5
   }
  ],
@@ -303,5 +303,5 @@
    "hit_rate": 20.6
   }
  },
- "elapsed_sec": 34.0
+ "elapsed_sec": 19.1
 }
