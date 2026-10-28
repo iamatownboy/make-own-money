@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-26",
-  "updated_at": "2026-10-27 00:38:00",
+  "date": "2026-10-27",
+  "updated_at": "2026-10-28 00:36:01",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,53 +8,52 @@
     "qualified": 0,
     "near_miss": [
       {
-        "ticker": "PANW",
-        "name": "팔로알토 네트웍스",
-        "total_score": 65,
-        "risk_reward_ratio": 0.73,
+        "ticker": "SNOW",
+        "name": "스노우플레이크",
+        "total_score": 62,
+        "risk_reward_ratio": 1.17,
         "blockers": [
-          "점수 65/68",
-          "손익비 0.73/1.20"
+          "점수 62/68",
+          "손익비 1.17/1.20"
         ]
       },
       {
-        "ticker": "NVDA",
-        "name": "엔비디아",
+        "ticker": "MU",
+        "name": "마이크론",
+        "total_score": 61,
+        "risk_reward_ratio": 0.84,
+        "blockers": [
+          "점수 61/68",
+          "손익비 0.84/1.20"
+        ]
+      },
+      {
+        "ticker": "TSM",
+        "name": "TSMC",
         "total_score": 60,
-        "risk_reward_ratio": 0.89,
+        "risk_reward_ratio": 0.93,
         "blockers": [
           "점수 60/68",
-          "손익비 0.89/1.20"
+          "손익비 0.93/1.20"
         ]
       },
       {
-        "ticker": "TXN",
-        "name": "텍사스 인스트루먼트",
-        "total_score": 58,
-        "risk_reward_ratio": 1.02,
+        "ticker": "PANW",
+        "name": "팔로알토 네트웍스",
+        "total_score": 57,
+        "risk_reward_ratio": 1.5,
         "blockers": [
-          "점수 58/68",
-          "손익비 1.02/1.20"
-        ]
-      },
-      {
-        "ticker": "XYZ",
-        "name": "블록 (구 스퀘어)",
-        "total_score": 58,
-        "risk_reward_ratio": 1.16,
-        "blockers": [
-          "점수 58/68",
-          "손익비 1.16/1.20"
+          "점수 57/68"
         ]
       },
       {
         "ticker": "MRVL",
         "name": "마벨 테크놀로지",
         "total_score": 56,
-        "risk_reward_ratio": 0.79,
+        "risk_reward_ratio": 0.7,
         "blockers": [
           "점수 56/68",
-          "손익비 0.79/1.20"
+          "손익비 0.7/1.20"
         ]
       }
     ]
