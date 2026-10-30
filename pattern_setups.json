@@ -1,6 +1,6 @@
 {
- "date": "2026-10-27",
- "generated_at": "2026-10-29 01:05:30",
+ "date": "2026-10-28",
+ "generated_at": "2026-10-30 01:11:22",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -8,130 +8,62 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 721.25,
-   "chg_pct": 1.27,
-   "from_high_pct": -5.5,
+   "price": 725.61,
+   "chg_pct": 0.6,
+   "from_high_pct": -4.9,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 557.98,
-   "chg_pct": 3.02,
-   "from_high_pct": -16.9,
+   "price": 567.67,
+   "chg_pct": 1.74,
+   "from_high_pct": -15.5,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 769.66,
-   "chg_pct": 0.56,
-   "from_high_pct": -1.5,
+   "price": 772.31,
+   "chg_pct": 0.34,
+   "from_high_pct": -1.2,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 372.28,
-   "chg_pct": 1.21,
-   "from_high_pct": -27.0,
+   "price": 373.51,
+   "chg_pct": 0.33,
+   "from_high_pct": -26.7,
    "status": null
   }
  ],
  "min_market_cap": null,
  "setups": [
   {
-   "id": "TER|1w|2026-07-17|2026-10-02",
-   "ticker": "TER",
-   "name": "Teradyne, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 323.68,
-   "L": 296.7060348292611,
-   "H": 451.8599853515625,
-   "L_date": "2026-07-17",
-   "H_date": "2026-10-02",
-   "entry_date": "2026-10-16",
-   "retrace": 0.826,
-   "swing_pct": 52.3,
-   "buy_high": 329.909,
-   "buy_low": 314.3936,
-   "stop": 296.706,
-   "t1": 374.283,
-   "t2": 378.065,
-   "t3": 420.2757,
-   "t4": 497.6129,
-   "stop_pct": -8.3,
-   "position": "구간 안",
-   "t1_pct": 15.6,
-   "signals": [],
-   "base_rate": {
-    "hit": 48.1,
-    "random": 38.0,
-    "n": 801
-   },
-   "earnings_date": "2027-01-27",
-   "earnings_days": 92,
-   "earnings_soon": false
-  },
-  {
-   "id": "NBIS|1w|2026-07-31|2026-08-21",
-   "ticker": "NBIS",
-   "name": "Nebius Group N.V.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 170.47,
-   "L": 145.8000030517578,
-   "H": 280.8299865722656,
-   "L_date": "2026-07-31",
-   "H_date": "2026-08-21",
-   "entry_date": "2026-10-16",
-   "retrace": 0.817,
-   "swing_pct": 92.6,
-   "buy_high": 174.6964,
-   "buy_low": 161.1934,
-   "stop": 145.8,
-   "t1": 213.315,
-   "t2": 215.155,
-   "t3": 252.7211,
-   "t4": 321.5485,
-   "stop_pct": -14.5,
-   "position": "구간 안",
-   "t1_pct": 25.1,
-   "signals": [],
-   "base_rate": {
-    "hit": 48.1,
-    "random": 38.0,
-    "n": 801
-   },
-   "earnings_date": "2026-11-10",
-   "earnings_days": 14,
-   "earnings_soon": true
-  },
-  {
    "id": "TMUS|1w|2023-06-02|2025-03-07",
    "ticker": "TMUS",
    "name": "T-Mobile US, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 146.83,
-   "L": 118.77472271221059,
+   "price": 148.08,
+   "L": 118.77475903601321,
    "H": 268.8267509112243,
    "L_date": "2023-06-02",
    "H_date": "2025-03-07",
    "entry_date": "2026-10-09",
-   "retrace": 0.813,
+   "retrace": 0.805,
    "swing_pct": 126.3,
    "buy_high": 150.8859,
    "buy_low": 135.8807,
-   "stop": 118.7747,
-   "t1": 193.8007,
-   "t2": 206.3734,
-   "t3": 242.0967,
-   "t4": 307.5478,
-   "stop_pct": -19.1,
+   "stop": 118.7748,
+   "t1": 193.8008,
+   "t2": 206.2884,
+   "t3": 242.0603,
+   "t4": 307.6005,
+   "stop_pct": -19.8,
    "position": "구간 안",
-   "t1_pct": 32.0,
+   "t1_pct": 30.9,
    "signals": [],
    "base_rate": {
     "hit": 48.1,
@@ -139,110 +71,101 @@
     "n": 801
    },
    "earnings_date": "2026-10-28",
-   "earnings_days": 1,
+   "earnings_days": 0,
    "earnings_soon": true
   }
  ],
  "watch": [
   {
-   "ticker": "ARM",
-   "name": "Arm Holdings plc",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 226.6,
-   "buy_high": 225.8604,
-   "distance_pct": 0.3
-  },
-  {
-   "ticker": "INTC",
-   "name": "Intel Corporation",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 93.74,
-   "buy_high": 91.5591,
-   "distance_pct": 2.4
-  },
-  {
    "ticker": "AXON",
    "name": "Axon Enterprise, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 425.87,
+   "price": 423.17,
    "buy_high": 408.7868,
-   "distance_pct": 4.2
-  },
-  {
-   "ticker": "ALNY",
-   "name": "Alnylam Pharmaceuticals, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 226.79,
-   "buy_high": 217.644,
-   "distance_pct": 4.2
+   "distance_pct": 3.5
   },
   {
    "ticker": "DASH",
    "name": "DoorDash, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 170.56,
+   "price": 169.49,
    "buy_high": 163.743,
-   "distance_pct": 4.2
+   "distance_pct": 3.5
+  },
+  {
+   "ticker": "NBIS",
+   "name": "Nebius Group N.V.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 182.34,
+   "buy_high": 174.6964,
+   "distance_pct": 4.4
+  },
+  {
+   "ticker": "ARM",
+   "name": "Arm Holdings plc",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 235.9,
+   "buy_high": 225.8604,
+   "distance_pct": 4.4
+  },
+  {
+   "ticker": "ALNY",
+   "name": "Alnylam Pharmaceuticals, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 232.4,
+   "buy_high": 217.644,
+   "distance_pct": 6.8
   },
   {
    "ticker": "PEP",
    "name": "PepsiCo, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 133.5,
-   "buy_high": 130.1419,
-   "distance_pct": 2.6
-  },
-  {
-   "ticker": "AVGO",
-   "name": "Broadcom Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 342.33,
-   "buy_high": 332.7052,
-   "distance_pct": 2.9
+   "price": 132.63,
+   "buy_high": 130.1418,
+   "distance_pct": 1.9
   }
  ],
  "summary": {
   "total": 112,
   "hit": 24,
-  "stop": 54,
-  "open": 34,
-  "hit_rate": 30.8,
-  "decided": 78,
-  "avg_ret": -3.65,
-  "avg_excess": -2.94,
-  "finished": 59,
+  "stop": 56,
+  "open": 32,
+  "hit_rate": 30.0,
+  "decided": 80,
+  "avg_ret": -3.73,
+  "avg_excess": -3.04,
+  "finished": 61,
   "by_tf": {
    "1d": {
     "total": 79,
-    "decided": 61,
-    "hit_rate": 36.1
+    "decided": 62,
+    "hit_rate": 35.5
    },
    "1w": {
     "total": 33,
-    "decided": 17,
-    "hit_rate": 11.8
+    "decided": 18,
+    "hit_rate": 11.1
    }
   },
   "baseline": {
    "total": 336,
-   "decided": 220,
-   "hit": 58,
-   "stop": 162,
-   "hit_rate": 26.4
+   "decided": 224,
+   "hit": 60,
+   "stop": 164,
+   "hit_rate": 26.8
   },
   "baseline_matched": {
-   "decided": 184,
+   "decided": 190,
    "hit": 48,
-   "stop": 136,
-   "hit_rate": 26.1
+   "stop": 142,
+   "hit_rate": 25.3
   }
  },
- "elapsed_sec": 29.9
+ "elapsed_sec": 22.4
 }
