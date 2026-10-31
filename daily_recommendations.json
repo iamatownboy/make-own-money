@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-29",
-  "updated_at": "2026-10-30 01:11:44",
+  "date": "2026-10-30",
+  "updated_at": "2026-10-31 00:54:12",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,53 +8,53 @@
     "qualified": 0,
     "near_miss": [
       {
+        "ticker": "TSM",
+        "name": "TSMC",
+        "total_score": 65,
+        "risk_reward_ratio": 0.93,
+        "blockers": [
+          "점수 65/68",
+          "손익비 0.93/1.20"
+        ]
+      },
+      {
         "ticker": "ASML",
         "name": "ASML",
         "total_score": 63,
-        "risk_reward_ratio": 1.01,
+        "risk_reward_ratio": 0.87,
         "blockers": [
           "점수 63/68",
-          "손익비 1.01/1.20"
+          "손익비 0.87/1.20"
         ]
       },
       {
         "ticker": "MU",
         "name": "마이크론",
         "total_score": 61,
-        "risk_reward_ratio": 1.11,
+        "risk_reward_ratio": 0.75,
         "blockers": [
           "점수 61/68",
-          "손익비 1.11/1.20"
+          "손익비 0.75/1.20"
         ]
       },
       {
-        "ticker": "AMZN",
-        "name": "아마존",
-        "total_score": 60,
-        "risk_reward_ratio": 1.16,
-        "blockers": [
-          "점수 60/68",
-          "손익비 1.16/1.20"
-        ]
-      },
-      {
-        "ticker": "TSM",
-        "name": "TSMC",
-        "total_score": 60,
-        "risk_reward_ratio": 0.93,
-        "blockers": [
-          "점수 60/68",
-          "손익비 0.93/1.20"
-        ]
-      },
-      {
-        "ticker": "MRVL",
-        "name": "마벨 테크놀로지",
-        "total_score": 56,
+        "ticker": "XYZ",
+        "name": "블록 (구 스퀘어)",
+        "total_score": 58,
         "risk_reward_ratio": 1.06,
         "blockers": [
-          "점수 56/68",
+          "점수 58/68",
           "손익비 1.06/1.20"
+        ]
+      },
+      {
+        "ticker": "SNOW",
+        "name": "스노우플레이크",
+        "total_score": 55,
+        "risk_reward_ratio": 0.7,
+        "blockers": [
+          "점수 55/68",
+          "손익비 0.7/1.20"
         ]
       }
     ]

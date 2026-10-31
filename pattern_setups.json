@@ -1,6 +1,6 @@
 {
- "date": "2026-10-28",
- "generated_at": "2026-10-30 01:11:22",
+ "date": "2026-10-29",
+ "generated_at": "2026-10-31 00:54:02",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -8,62 +8,134 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 725.61,
-   "chg_pct": 0.6,
-   "from_high_pct": -4.9,
+   "price": 715.34,
+   "chg_pct": -1.42,
+   "from_high_pct": -6.2,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 567.67,
-   "chg_pct": 1.74,
-   "from_high_pct": -15.5,
+   "price": 561.67,
+   "chg_pct": -1.06,
+   "from_high_pct": -16.4,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 772.31,
-   "chg_pct": 0.34,
-   "from_high_pct": -1.2,
+   "price": 769.36,
+   "chg_pct": -0.38,
+   "from_high_pct": -1.6,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 373.51,
-   "chg_pct": 0.33,
-   "from_high_pct": -26.7,
+   "price": 368.57,
+   "chg_pct": -1.32,
+   "from_high_pct": -27.7,
    "status": null
   }
  ],
  "min_market_cap": null,
  "setups": [
   {
+   "id": "INTC|1w|2026-07-31|2026-09-25",
+   "ticker": "INTC",
+   "name": "Intel Corporation",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 92.07,
+   "L": 81.79000091552734,
+   "H": 127.44000244140625,
+   "L_date": "2026-07-31",
+   "H_date": "2026-09-25",
+   "entry_date": "2026-10-16",
+   "retrace": 0.775,
+   "swing_pct": 55.8,
+   "buy_high": 91.5591,
+   "buy_low": 86.9941,
+   "stop": 81.79,
+   "t1": 104.615,
+   "t2": 106.045,
+   "t3": 118.2829,
+   "t4": 140.7049,
+   "stop_pct": -11.2,
+   "position": "구간 위",
+   "t1_pct": 13.6,
+   "signals": [
+    "200일선 위"
+   ],
+   "base_rate": {
+    "hit": 48.1,
+    "random": 38.0,
+    "n": 801
+   },
+   "earnings_date": "2027-01-28",
+   "earnings_days": 91,
+   "earnings_soon": false
+  },
+  {
+   "id": "NBIS|1w|2026-07-31|2026-08-21",
+   "ticker": "NBIS",
+   "name": "Nebius Group N.V.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 171.99,
+   "L": 145.8000030517578,
+   "H": 280.8299865722656,
+   "L_date": "2026-07-31",
+   "H_date": "2026-08-21",
+   "entry_date": "2026-10-16",
+   "retrace": 0.806,
+   "swing_pct": 92.6,
+   "buy_high": 174.6964,
+   "buy_low": 161.1934,
+   "stop": 145.8,
+   "t1": 213.315,
+   "t2": 215.155,
+   "t3": 252.7211,
+   "t4": 321.5485,
+   "stop_pct": -15.2,
+   "position": "구간 안",
+   "t1_pct": 24.0,
+   "signals": [
+    "반전 캔들"
+   ],
+   "base_rate": {
+    "hit": 48.1,
+    "random": 38.0,
+    "n": 801
+   },
+   "earnings_date": "2026-11-12",
+   "earnings_days": 14,
+   "earnings_soon": true
+  },
+  {
    "id": "TMUS|1w|2023-06-02|2025-03-07",
    "ticker": "TMUS",
    "name": "T-Mobile US, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 148.08,
-   "L": 118.77475903601321,
-   "H": 268.8267509112243,
+   "price": 147.29,
+   "L": 118.77474450649215,
+   "H": 268.826719984254,
    "L_date": "2023-06-02",
    "H_date": "2025-03-07",
    "entry_date": "2026-10-09",
-   "retrace": 0.805,
+   "retrace": 0.81,
    "swing_pct": 126.3,
    "buy_high": 150.8859,
    "buy_low": 135.8807,
-   "stop": 118.7748,
-   "t1": 193.8008,
+   "stop": 118.7747,
+   "t1": 193.8007,
    "t2": 206.2884,
    "t3": 242.0603,
    "t4": 307.6005,
-   "stop_pct": -19.8,
+   "stop_pct": -19.4,
    "position": "구간 안",
-   "t1_pct": 30.9,
+   "t1_pct": 31.6,
    "signals": [],
    "base_rate": {
     "hit": 48.1,
@@ -71,101 +143,92 @@
     "n": 801
    },
    "earnings_date": "2026-10-28",
-   "earnings_days": 0,
-   "earnings_soon": true
+   "earnings_days": -1,
+   "earnings_soon": false
   }
  ],
  "watch": [
-  {
-   "ticker": "AXON",
-   "name": "Axon Enterprise, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 423.17,
-   "buy_high": 408.7868,
-   "distance_pct": 3.5
-  },
-  {
-   "ticker": "DASH",
-   "name": "DoorDash, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 169.49,
-   "buy_high": 163.743,
-   "distance_pct": 3.5
-  },
-  {
-   "ticker": "NBIS",
-   "name": "Nebius Group N.V.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 182.34,
-   "buy_high": 174.6964,
-   "distance_pct": 4.4
-  },
   {
    "ticker": "ARM",
    "name": "Arm Holdings plc",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 235.9,
+   "price": 228.77,
    "buy_high": 225.8604,
-   "distance_pct": 4.4
+   "distance_pct": 1.3
   },
   {
-   "ticker": "ALNY",
-   "name": "Alnylam Pharmaceuticals, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 232.4,
-   "buy_high": 217.644,
-   "distance_pct": 6.8
+   "ticker": "KLAC",
+   "name": "KLA Corporation",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 167.43,
+   "buy_high": 166.3337,
+   "distance_pct": 0.7
+  },
+  {
+   "ticker": "MELI",
+   "name": "MercadoLibre, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 1660.13,
+   "buy_high": 1617.194,
+   "distance_pct": 2.7
   },
   {
    "ticker": "PEP",
    "name": "PepsiCo, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 132.63,
-   "buy_high": 130.1418,
-   "distance_pct": 1.9
+   "price": 133.79,
+   "buy_high": 130.1419,
+   "distance_pct": 2.8
+  },
+  {
+   "ticker": "AVGO",
+   "name": "Broadcom Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 345.0,
+   "buy_high": 332.7052,
+   "distance_pct": 3.7
   }
  ],
  "summary": {
   "total": 112,
-  "hit": 24,
+  "hit": 26,
   "stop": 56,
-  "open": 32,
-  "hit_rate": 30.0,
-  "decided": 80,
+  "open": 30,
+  "hit_rate": 31.7,
+  "decided": 82,
   "avg_ret": -3.73,
   "avg_excess": -3.04,
   "finished": 61,
   "by_tf": {
    "1d": {
     "total": 79,
-    "decided": 62,
-    "hit_rate": 35.5
+    "decided": 63,
+    "hit_rate": 36.5
    },
    "1w": {
     "total": 33,
-    "decided": 18,
-    "hit_rate": 11.1
+    "decided": 19,
+    "hit_rate": 15.8
    }
   },
   "baseline": {
    "total": 336,
-   "decided": 224,
-   "hit": 60,
-   "stop": 164,
-   "hit_rate": 26.8
+   "decided": 230,
+   "hit": 64,
+   "stop": 166,
+   "hit_rate": 27.8
   },
   "baseline_matched": {
-   "decided": 190,
-   "hit": 48,
-   "stop": 142,
-   "hit_rate": 25.3
+   "decided": 197,
+   "hit": 51,
+   "stop": 146,
+   "hit_rate": 25.9
   }
  },
- "elapsed_sec": 22.4
+ "elapsed_sec": 27.3
 }
