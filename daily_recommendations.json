@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-30",
-  "updated_at": "2026-10-31 00:54:12",
+  "date": "2026-11-01",
+  "updated_at": "2026-11-01 09:48:04",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,53 +8,52 @@
     "qualified": 0,
     "near_miss": [
       {
+        "ticker": "MSFT",
+        "name": "마이크로소프트",
+        "total_score": 56,
+        "risk_reward_ratio": 1.64,
+        "blockers": [
+          "점수 56/68"
+        ]
+      },
+      {
+        "ticker": "SNPS",
+        "name": "시놉시스",
+        "total_score": 52,
+        "risk_reward_ratio": 0.68,
+        "blockers": [
+          "점수 52/68",
+          "손익비 0.68/1.20"
+        ]
+      },
+      {
+        "ticker": "CDNS",
+        "name": "케이던스",
+        "total_score": 50,
+        "risk_reward_ratio": 0.66,
+        "blockers": [
+          "점수 50/68",
+          "손익비 0.66/1.20"
+        ]
+      },
+      {
+        "ticker": "CRM",
+        "name": "세일즈포스",
+        "total_score": 50,
+        "risk_reward_ratio": 0.61,
+        "blockers": [
+          "점수 50/68",
+          "손익비 0.61/1.20"
+        ]
+      },
+      {
         "ticker": "TSM",
         "name": "TSMC",
-        "total_score": 65,
-        "risk_reward_ratio": 0.93,
+        "total_score": 48,
+        "risk_reward_ratio": 0.71,
         "blockers": [
-          "점수 65/68",
-          "손익비 0.93/1.20"
-        ]
-      },
-      {
-        "ticker": "ASML",
-        "name": "ASML",
-        "total_score": 63,
-        "risk_reward_ratio": 0.87,
-        "blockers": [
-          "점수 63/68",
-          "손익비 0.87/1.20"
-        ]
-      },
-      {
-        "ticker": "MU",
-        "name": "마이크론",
-        "total_score": 61,
-        "risk_reward_ratio": 0.75,
-        "blockers": [
-          "점수 61/68",
-          "손익비 0.75/1.20"
-        ]
-      },
-      {
-        "ticker": "XYZ",
-        "name": "블록 (구 스퀘어)",
-        "total_score": 58,
-        "risk_reward_ratio": 1.06,
-        "blockers": [
-          "점수 58/68",
-          "손익비 1.06/1.20"
-        ]
-      },
-      {
-        "ticker": "SNOW",
-        "name": "스노우플레이크",
-        "total_score": 55,
-        "risk_reward_ratio": 0.7,
-        "blockers": [
-          "점수 55/68",
-          "손익비 0.7/1.20"
+          "점수 48/68",
+          "손익비 0.71/1.20"
         ]
       }
     ]
