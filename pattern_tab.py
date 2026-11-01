@@ -158,22 +158,46 @@ def _etf_board_html(board):
             '추천 기록·적중률에는 넣지 않습니다.</div>')
 
 
-def _score_line(summary):
+# 결과가 난 추천이 이보다 적으면 적중률 오차(약 ±10%p 이상)가 커서 참고만 하라고 알린다
+RELIABLE_DECIDED = 100
+
+
+def _score_text(summary, who='지금까지 추천', show_diff=True):
     if not summary or not summary.get('total'):
         return '추천 기록을 쌓기 시작했습니다. 결과가 나오면 여기에 적중률이 표시됩니다.'
     decided = summary.get('decided', 0)
     if not decided:
-        return (f'지금까지 추천 <b>{summary["total"]}건</b> · 아직 결과가 난 추천이 없습니다. '
+        return (f'{who} <b>{summary["total"]}건</b> · 아직 결과가 난 추천이 없습니다. '
                 f'같은 날 무작위 종목 비교군도 함께 기록 중입니다.')
-    line = (f'지금까지 추천 <b>{summary["total"]}건</b> · 결과 난 {decided}건 중 '
+    line = (f'{who} <b>{summary["total"]}건</b> · 결과 난 {decided}건 중 '
             f'<b>1차 목표 먼저 {summary["hit_rate"]}%</b> (적중 {summary["hit"]} · 손절 {summary["stop"]})')
     bm = summary.get('baseline_matched') or {}
     if bm.get('hit_rate') is not None:
-        diff = summary['hit_rate'] - bm['hit_rate']
-        line += (f'<br>같은 날 무작위 종목 비교군 <b>{bm["hit_rate"]}%</b> ({bm["decided"]}건) → '
-                 f'차이 <b>{diff:+.1f}%p</b>')
+        line += f'<br>같은 날 무작위 종목 비교군 <b>{bm["hit_rate"]}%</b> ({bm["decided"]}건)'
+        if show_diff:
+            line += f' → 차이 <b>{summary["hit_rate"] - bm["hit_rate"]:+.1f}%p</b>'
     if summary.get('avg_excess') is not None:
         line += f' · 끝난 추천의 QQQ 대비 평균 {summary["avg_excess"]:+.1f}%p'
+    return line
+
+
+def _score_line(summary, scope=None):
+    """
+    summary['current'](지금 추천 대상 종목만의 성적)가 있으면 그것을 먼저 보여준다.
+    전체 기록에는 대상이 달랐던 시기(소형주 포함 등)의 추천이 섞여 있어, 지금 보는 종목들의 성적이 아니다.
+    """
+    cur = (summary or {}).get('current')
+    if not cur:
+        return _score_text(summary)
+    scope = scope or '현재 대상'
+    small = cur.get('decided', 0) < RELIABLE_DECIDED
+    line = _score_text(cur, f'{scope} 종목 추천', show_diff=not small)     # 표본이 적을 땐 차이를 숨겨 착시를 막는다
+    if cur.get('total') and small:
+        line += (f'<br><span style="color:#9094a6">결과 난 추천이 {cur.get("decided", 0)}건뿐이라 오차가 큽니다. '
+                 f'{RELIABLE_DECIDED}건 이상 쌓이기 전에는 참고만 하세요.</span>')
+    if summary.get('total'):
+        line += (f'<br><span style="color:#6b6f82">전체 기록(대상이 달랐던 이전 추천 포함) · '
+                 f'{_score_text(summary, "추천")}</span>')
     return line
 
 
@@ -198,7 +222,8 @@ def render_pattern_tab():
     if data.get('stale'):
         st.warning(f'최신 거래일({data.get("latest_session")}) 시세가 아직 반영되지 않았습니다. '
                    f'아래 가격과 매수 구간은 {data["date"]} 종가 기준이라 실제와 다를 수 있어요.')
-    st.markdown(f'<div class="pt-score">{_score_line(data.get("summary"))}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="pt-score">{_score_line(data.get("summary"), _universe_label(data))}</div>',
+                unsafe_allow_html=True)
     if data.get('etf'):
         st.markdown(_etf_board_html(data['etf']), unsafe_allow_html=True)
 

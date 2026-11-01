@@ -583,6 +583,15 @@ def history_summary(hist: Optional[List[Dict[str, Any]]] = None,
     return out
 
 
+def universe_subset(hist: List[Dict[str, Any]], placebo: List[Dict[str, Any]],
+                    tickers) -> Any:
+    """지금 추천 대상(tickers)에 속한 종목의 추천 기록과, 그 추천에 딸린 비교군만 남긴다."""
+    keep = set(tickers)
+    sub = [h for h in hist if h['ticker'] in keep]
+    ids = {h['id'] for h in sub}
+    return sub, [p for p in placebo if p['rec_id'] in ids]
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # 전체 실행
 # ─────────────────────────────────────────────────────────────────────────────
@@ -665,6 +674,10 @@ def run_pattern_scan(cache_dir: Optional[str] = None, verbose: bool = True) -> D
     ensure_placebos(hist, full, list(full.keys()))
     placebo = evaluate_placebos(full, bench)
     summary = history_summary(hist, placebo)
+    if ndx_mode:
+        # 추천 대상이 소형주 포함 -> 시총 $10B+ -> 나스닥100 으로 바뀌어 옛 기록이 섞여 있다.
+        # 지금 대상 종목만의 성적을 따로 내서 화면에서 먼저 보여준다.
+        summary['current'] = history_summary(*universe_subset(hist, placebo, liquid))
     if verbose:
         print(f"  [4/4] 새 추천 기록 {added}개, 누적 {summary['total']}개 채점 완료")
 
