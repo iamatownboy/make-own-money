@@ -30,7 +30,7 @@ from typing import Any, Dict, List, Optional
 import numpy as np
 import pandas as pd
 
-from .data_loader import clean_ohlcv
+from .data_loader import clean_ohlcv, last_session_date
 from .indicators import calculate_all_indicators
 from .pattern_setup import (TIMEFRAMES, find_live_setup, supporting_signals, to_weekly,
                             evaluate_recommendation)
@@ -603,6 +603,14 @@ def _select_wide_nasdaq(uni: pd.DataFrame, cache_dir: Optional[str], verbose: bo
     return {'tickers': tickers, 'mode': mode}
 
 
+def data_staleness(rec_date: str, session_fn=last_session_date) -> Dict[str, Any]:
+    """스캔 기준일이 야후가 말하는 마지막 거래일보다 앞서 있으면 stale. 거래일을 모르면 stale 아님."""
+    session = session_fn()
+    if session is None:
+        return {'latest_session': None, 'stale': False}
+    return {'latest_session': str(session.date()), 'stale': bool(pd.Timestamp(rec_date) < session)}
+
+
 def run_pattern_scan(cache_dir: Optional[str] = None, verbose: bool = True) -> Dict[str, Any]:
     """
     매일 스캔 진입점. cache_dir 를 주면 다운로드를 캐시해 이어받는다(개발·로컬 테스트용).
@@ -640,6 +648,9 @@ def run_pattern_scan(cache_dir: Optional[str] = None, verbose: bool = True) -> D
     res = scan_universe(full, names)
     last_dates = [d.index[-1] for d in full.values() if d is not None and len(d)]
     rec_date = str(max(last_dates).date()) if last_dates else datetime.now().strftime('%Y-%m-%d')
+    fresh = data_staleness(rec_date)
+    if fresh['stale'] and verbose:
+        print(f"  ⚠️ 기준일 {rec_date} < 마지막 거래일 {fresh['latest_session']} - 최신 봉이 반영되지 않은 낡은 시세입니다")
     try:
         attach_earnings(res['setups'], rec_date)
     except Exception as exc:
@@ -672,6 +683,7 @@ def run_pattern_scan(cache_dir: Optional[str] = None, verbose: bool = True) -> D
 
     payload = {
         'date': rec_date,
+        **fresh,
         'generated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'universe': int(n_universe), 'universe_name': 'ndx100' if ndx_mode else 'nasdaq',
         'liquid': int(len(liquid)), 'etf': board,

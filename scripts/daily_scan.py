@@ -15,6 +15,22 @@ if PROJECT_ROOT not in sys.path:
 from quant_core.screener import run_full_market_scan
 from quant_core.tracker import evaluate_and_learn_from_history, record_daily_recommendations
 from quant_core.pattern_scanner import run_pattern_scan
+from quant_core.data_loader import wait_for_latest_daily_bars
+
+# 야후 일봉이 마지막 거래일까지 확정되길 기다리는 최대 시간(분). 0 이면 기다리지 않는다.
+FRESH_BAR_MAX_WAIT_MIN = float(os.environ.get('FRESH_BAR_MAX_WAIT_MIN', 90))
+
+
+def wait_for_fresh_bars():
+    """두 스캔 모두 같은 일봉을 쓰므로 시작 전에 한 번만 확인한다. 실패해도 스캔은 계속 진행."""
+    if FRESH_BAR_MAX_WAIT_MIN <= 0:
+        return
+    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 🕐 최신 거래일 일봉 확인 (최대 {FRESH_BAR_MAX_WAIT_MIN:g}분 대기)")
+    try:
+        if wait_for_latest_daily_bars(max_wait_sec=FRESH_BAR_MAX_WAIT_MIN * 60):
+            print("  ✅ 최신 거래일 일봉 확인")
+    except Exception as exc:
+        print(f"  ⚠️ 최신 봉 확인 중 오류, 그대로 진행: {exc}")
 
 
 def run_pattern_part():
@@ -31,6 +47,7 @@ def run_pattern_part():
 
 
 def main():
+    wait_for_fresh_bars()
     try:
         run_pattern_part()
     except Exception as exc:

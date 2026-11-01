@@ -195,6 +195,9 @@ def render_pattern_tab():
     st.markdown(
         f'<div class="pt-head">{escape(data["date"])} 종가 기준 · {_universe_label(data)} {data.get("liquid", 0):,}종목 중 '
         f'<b style="color:#fff">{len(cards)}종목</b>이 매수 구간</div>', unsafe_allow_html=True)
+    if data.get('stale'):
+        st.warning(f'최신 거래일({data.get("latest_session")}) 시세가 아직 반영되지 않았습니다. '
+                   f'아래 가격과 매수 구간은 {data["date"]} 종가 기준이라 실제와 다를 수 있어요.')
     st.markdown(f'<div class="pt-score">{_score_line(data.get("summary"))}</div>', unsafe_allow_html=True)
     if data.get('etf'):
         st.markdown(_etf_board_html(data['etf']), unsafe_allow_html=True)

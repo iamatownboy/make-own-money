@@ -18,7 +18,8 @@ jobs:
   run-daily-scan:
     # ubuntu-latest 는 2026-10-19부터 Ubuntu 26 으로 바뀌므로 검증된 버전으로 고정
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    # 야후 일봉이 마지막 거래일까지 확정되길 최대 90분 기다린 뒤(scripts/daily_scan.py) 스캔(약 8분)이 돈다
+    timeout-minutes: 120
 
     steps:
       - name: Checkout Repository

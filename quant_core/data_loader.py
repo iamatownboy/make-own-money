@@ -5,13 +5,17 @@ quant_core/data_loader.py
 - 2배 레버리지 ETF의 짧은 상장 기간을 보완하기 위한 원자산(본주) 기반 2배 합성 데이터 생성 기능
 """
 
+import time
 import pandas as pd
 import numpy as np
 import yfinance as yf
 from datetime import datetime, timedelta
-from typing import Dict, Tuple, Optional
+from typing import Callable, Dict, Iterable, Tuple, Optional
 
 OHLC_COLUMNS = ['Open', 'High', 'Low', 'Close']
+
+# 일봉이 마지막 거래일까지 올라왔는지 가늠하는 표본 (대형주 + 벤치마크)
+SESSION_PROBE = ('QQQ', 'AAPL', 'MSFT', 'NVDA', 'AMZN', 'GOOGL')
 
 
 def clean_ohlcv(df: pd.DataFrame) -> pd.DataFrame:
@@ -38,6 +42,73 @@ def clean_ohlcv(df: pd.DataFrame) -> pd.DataFrame:
     if present:
         out = out.dropna(subset=present)
     return out
+
+
+def last_session_date(ticker: str = 'QQQ') -> Optional[pd.Timestamp]:
+    """야후가 알려주는 마지막 정규장 거래일(뉴욕 기준 날짜). 조회에 실패하면 None."""
+    try:
+        raw = yf.Ticker(ticker).history_metadata.get('regularMarketTime')
+        if raw is None:
+            return None
+        ts = pd.Timestamp(raw, unit='s', tz='UTC') if isinstance(raw, (int, float)) else pd.Timestamp(raw)
+        if ts.tzinfo is None:
+            ts = ts.tz_localize('UTC')
+        return ts.tz_convert('America/New_York').tz_localize(None).normalize()
+    except Exception:
+        return None
+
+
+def latest_bar_dates(tickers: Iterable[str]) -> Dict[str, pd.Timestamp]:
+    """종목별로 정제된 일봉의 마지막 날짜. 받지 못한 종목은 빠진다."""
+    out: Dict[str, pd.Timestamp] = {}
+    for t in tickers:
+        try:
+            d = clean_ohlcv(yf.Ticker(t).history(period='5d', interval='1d'))
+        except Exception:
+            continue
+        if d is not None and not d.empty:
+            out[t] = d.index[-1].normalize()
+    return out
+
+
+def wait_for_latest_daily_bars(
+    probe: Iterable[str] = SESSION_PROBE,
+    max_wait_sec: float = 5400,
+    poll_sec: float = 300,
+    session_fn: Optional[Callable[[], Optional[pd.Timestamp]]] = None,
+    dates_fn: Optional[Callable[[Iterable[str]], Dict[str, pd.Timestamp]]] = None,
+    sleep: Callable[[float], None] = time.sleep,
+    clock: Callable[[], float] = time.monotonic,
+    log: Callable[[str], None] = print,
+) -> bool:
+    """
+    야후 일봉에 마지막 거래일 봉이 올라올 때까지 기다립니다. 표본 종목의 절반 넘게 올라오면 True.
+
+    [배경] 미국 장 마감 후 일봉이 확정되기까지 시간이 걸려, UTC 자정(뉴욕 20시) 이후에 돈 스캔은
+    마지막 거래일 봉이 빠진 채(clean_ohlcv 가 NaN 행을 지움) 하루 전 종가로 계산되곤 했다.
+    max_wait_sec 안에 올라오지 않으면 False 를 돌려주고, 호출한 쪽은 경고만 남기고 계속 진행한다.
+    마지막 거래일 자체를 알 수 없을 때는 확인할 방법이 없으므로 기다리지 않고 True.
+    """
+    session_fn = session_fn or last_session_date
+    dates_fn = dates_fn or latest_bar_dates
+    probe = list(probe)
+    deadline = clock() + max_wait_sec
+    while True:
+        session = session_fn()
+        if session is None:
+            log("  ⚠️ 마지막 거래일을 확인하지 못해 최신 봉 확인을 건너뜁니다.")
+            return True
+        dates = dates_fn(probe)
+        fresh = sum(1 for d in dates.values() if d >= session)
+        if fresh * 2 > len(probe):
+            return True
+        if clock() + poll_sec > deadline:
+            log(f"  ⚠️ {session.date()} 일봉이 아직 확정되지 않았습니다 "
+                f"({fresh}/{len(probe)}종목 반영). 대기를 마치고 그대로 진행합니다.")
+            return False
+        log(f"  ⏳ {session.date()} 일봉 대기 중 ({fresh}/{len(probe)}종목 반영) - {int(poll_sec // 60)}분 뒤 다시 확인")
+        sleep(poll_sec)
+
 
 # 포트폴리오 종목 기본 메타데이터
 PORTFOLIO_CONFIG = {
