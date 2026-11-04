@@ -1,8 +1,8 @@
 {
- "date": "2026-11-02",
- "latest_session": "2026-11-02",
+ "date": "2026-11-03",
+ "latest_session": "2026-11-03",
  "stale": false,
- "generated_at": "2026-11-03 02:58:36",
+ "generated_at": "2026-11-04 02:25:56",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -10,33 +10,33 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 681.09,
-   "chg_pct": -1.36,
-   "from_high_pct": -10.7,
+   "price": 685.28,
+   "chg_pct": 0.62,
+   "from_high_pct": -10.2,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 508.31,
-   "chg_pct": -2.71,
-   "from_high_pct": -24.3,
+   "price": 518.52,
+   "chg_pct": 2.01,
+   "from_high_pct": -22.8,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 752.1,
-   "chg_pct": -0.48,
-   "from_high_pct": -3.8,
+   "price": 754.35,
+   "chg_pct": 0.3,
+   "from_high_pct": -3.5,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 361.65,
-   "chg_pct": 1.65,
-   "from_high_pct": -29.0,
+   "price": 359.26,
+   "chg_pct": -0.66,
+   "from_high_pct": -29.5,
    "status": null
   }
  ],
@@ -48,33 +48,35 @@
    "name": "Lumentum Holdings Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 684.4,
+   "price": 680.16,
    "L": 594.8400268554688,
    "H": 1143.0,
    "L_date": "2026-07-31",
    "H_date": "2026-10-09",
-   "entry_date": "2026-11-02",
-   "retrace": 0.837,
+   "entry_date": "2026-11-03",
+   "retrace": 0.844,
    "swing_pct": 92.2,
    "buy_high": 712.1463,
    "buy_low": 657.3303,
    "stop": 594.84,
    "t1": 868.92,
-   "t2": 911.0,
-   "t3": 1043.704,
-   "t4": 1286.84,
-   "stop_pct": -13.1,
+   "t2": 905.13,
+   "t3": 1041.1916,
+   "t4": 1290.4794,
+   "stop_pct": -12.5,
    "position": "구간 안",
-   "t1_pct": 27.0,
-   "signals": [],
+   "t1_pct": 27.8,
+   "signals": [
+    "반전 캔들"
+   ],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-02",
-   "earnings_days": 0,
-   "earnings_soon": true
+   "earnings_date": "2027-02-02",
+   "earnings_days": 91,
+   "earnings_soon": false
   },
   {
    "id": "MRVL|1w|2026-07-31|2026-10-09",
@@ -82,26 +84,27 @@
    "name": "Marvell Technology, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 171.41,
+   "price": 171.97,
    "L": 162.8644128003389,
    "H": 301.2041915228062,
    "L_date": "2026-07-31",
    "H_date": "2026-10-09",
    "entry_date": "2026-10-30",
-   "retrace": 0.938,
+   "retrace": 0.934,
    "swing_pct": 84.9,
    "buy_high": 192.4691,
    "buy_low": 178.6351,
    "stop": 162.8644,
    "t1": 232.0343,
-   "t2": 234.8621,
-   "t3": 272.8098,
-   "t4": 342.3363,
-   "stop_pct": -5.0,
+   "t2": 234.3021,
+   "t3": 272.5701,
+   "t4": 342.6835,
+   "stop_pct": -5.3,
    "position": "구간 아래",
-   "t1_pct": 35.4,
+   "t1_pct": 34.9,
    "signals": [
-    "RSI 과매도 29"
+    "RSI 과매도 29",
+    "반전 캔들"
    ],
    "base_rate": {
     "hit": 48.1,
@@ -109,7 +112,7 @@
     "n": 801
    },
    "earnings_date": "2026-12-01",
-   "earnings_days": 29,
+   "earnings_days": 28,
    "earnings_soon": false
   },
   {
@@ -118,13 +121,13 @@
    "name": "Sandisk Corporation",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 1075.08,
+   "price": 1126.52,
    "L": 998.1900024414062,
    "H": 1909.47998046875,
    "L_date": "2026-07-31",
    "H_date": "2026-09-25",
    "entry_date": "2026-10-30",
-   "retrace": 0.916,
+   "retrace": 0.859,
    "swing_pct": 91.3,
    "buy_high": 1193.2061,
    "buy_low": 1102.0771,
@@ -133,12 +136,10 @@
    "t2": 1488.44,
    "t3": 1729.2749,
    "t4": 2170.5248,
-   "stop_pct": -7.2,
-   "position": "구간 아래",
-   "t1_pct": 35.2,
-   "signals": [
-    "RSI 과매도 30"
-   ],
+   "stop_pct": -11.4,
+   "position": "구간 안",
+   "t1_pct": 29.1,
+   "signals": [],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
@@ -149,65 +150,29 @@
    "earnings_soon": false
   },
   {
-   "id": "AMD|1d|2026-07-29|2026-10-06",
-   "ticker": "AMD",
-   "name": "Advanced Micro Devices, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 466.84,
-   "L": 424.0299987792969,
-   "H": 658.52001953125,
-   "L_date": "2026-07-29",
-   "H_date": "2026-10-06",
-   "entry_date": "2026-11-02",
-   "retrace": 0.817,
-   "swing_pct": 55.3,
-   "buy_high": 474.2109,
-   "buy_low": 450.7619,
-   "stop": 424.03,
-   "t1": 541.275,
-   "t2": 562.295,
-   "t3": 617.3357,
-   "t4": 718.1795,
-   "stop_pct": -9.2,
-   "position": "구간 안",
-   "t1_pct": 15.9,
-   "signals": [
-    "200일선 위"
-   ],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-11-03",
-   "earnings_days": 1,
-   "earnings_soon": true
-  },
-  {
    "id": "DDOG|1d|2026-09-08|2026-10-12",
    "ticker": "DDOG",
    "name": "Datadog, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 216.1,
+   "price": 220.52,
    "L": 203.24000549316406,
    "H": 300.67999267578125,
    "L_date": "2026-09-08",
    "H_date": "2026-10-12",
    "entry_date": "2026-11-02",
-   "retrace": 0.868,
+   "retrace": 0.823,
    "swing_pct": 47.9,
    "buy_high": 224.0922,
    "buy_low": 214.3482,
    "stop": 203.24,
    "t1": 251.96,
-   "t2": 258.205,
-   "t3": 282.5007,
-   "t4": 327.0145,
-   "stop_pct": -6.0,
+   "t2": 256.165,
+   "t3": 281.6276,
+   "t4": 328.2793,
+   "stop_pct": -7.8,
    "position": "구간 안",
-   "t1_pct": 16.6,
+   "t1_pct": 14.3,
    "signals": [
     "200일선 위"
    ],
@@ -217,7 +182,7 @@
     "n": 1959
    },
    "earnings_date": "2026-11-04",
-   "earnings_days": 2,
+   "earnings_days": 1,
    "earnings_soon": true
   },
   {
@@ -226,26 +191,27 @@
    "name": "Marvell Technology, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 171.41,
+   "price": 171.97,
    "L": 162.8644128003389,
    "H": 301.2041915228062,
    "L_date": "2026-07-29",
    "H_date": "2026-10-06",
    "entry_date": "2026-10-30",
-   "retrace": 0.938,
+   "retrace": 0.934,
    "swing_pct": 84.9,
    "buy_high": 192.4691,
    "buy_low": 178.6351,
    "stop": 162.8644,
    "t1": 232.0343,
-   "t2": 234.8621,
-   "t3": 272.8098,
-   "t4": 342.3363,
-   "stop_pct": -5.0,
+   "t2": 234.3021,
+   "t3": 272.5701,
+   "t4": 342.6835,
+   "stop_pct": -5.3,
    "position": "구간 아래",
-   "t1_pct": 35.4,
+   "t1_pct": 34.9,
    "signals": [
-    "RSI 과매도 29"
+    "RSI 과매도 29",
+    "반전 캔들"
    ],
    "base_rate": {
     "hit": 46.0,
@@ -253,7 +219,7 @@
     "n": 1959
    },
    "earnings_date": "2026-12-01",
-   "earnings_days": 29,
+   "earnings_days": 28,
    "earnings_soon": false
   },
   {
@@ -262,13 +228,13 @@
    "name": "Sandisk Corporation",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 1075.08,
+   "price": 1126.52,
    "L": 998.1900024414062,
    "H": 1909.47998046875,
    "L_date": "2026-07-29",
    "H_date": "2026-09-22",
    "entry_date": "2026-10-30",
-   "retrace": 0.916,
+   "retrace": 0.859,
    "swing_pct": 91.3,
    "buy_high": 1193.2061,
    "buy_low": 1102.0771,
@@ -277,12 +243,10 @@
    "t2": 1488.44,
    "t3": 1729.2749,
    "t4": 2170.5248,
-   "stop_pct": -7.2,
-   "position": "구간 아래",
-   "t1_pct": 35.2,
-   "signals": [
-    "RSI 과매도 30"
-   ],
+   "stop_pct": -11.4,
+   "position": "구간 안",
+   "t1_pct": 29.1,
+   "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
@@ -295,48 +259,39 @@
  ],
  "watch": [
   {
-   "ticker": "MU",
-   "name": "Micron Technology, Inc.",
+   "ticker": "AXON",
+   "name": "Axon Enterprise, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 833.59,
-   "buy_high": 817.1112,
-   "distance_pct": 2.0
+   "price": 416.57,
+   "buy_high": 408.7868,
+   "distance_pct": 1.9
+  },
+  {
+   "ticker": "TMUS",
+   "name": "T-Mobile US, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 154.41,
+   "buy_high": 150.8859,
+   "distance_pct": 2.3
   },
   {
    "ticker": "QCOM",
    "name": "QUALCOMM Incorporated",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 162.08,
+   "price": 164.43,
    "buy_high": 157.9678,
-   "distance_pct": 2.6
-  },
-  {
-   "ticker": "AXON",
-   "name": "Axon Enterprise, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 425.43,
-   "buy_high": 408.7868,
    "distance_pct": 4.1
   },
   {
-   "ticker": "TMUS",
-   "name": "T-Mobile US, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 160.15,
-   "buy_high": 150.8859,
-   "distance_pct": 6.1
-  },
-  {
-   "ticker": "MU",
-   "name": "Micron Technology, Inc.",
+   "ticker": "AMD",
+   "name": "Advanced Micro Devices, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 833.59,
-   "buy_high": 817.1112,
+   "price": 483.9,
+   "buy_high": 474.2109,
    "distance_pct": 2.0
   },
   {
@@ -344,9 +299,18 @@
    "name": "T-Mobile US, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 160.15,
+   "price": 154.41,
    "buy_high": 150.8859,
-   "distance_pct": 6.1
+   "distance_pct": 2.3
+  },
+  {
+   "ticker": "MELI",
+   "name": "MercadoLibre, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 1662.16,
+   "buy_high": 1617.194,
+   "distance_pct": 2.8
   }
  ],
  "summary": {
@@ -373,16 +337,16 @@
   },
   "baseline": {
    "total": 360,
-   "decided": 252,
-   "hit": 74,
-   "stop": 178,
-   "hit_rate": 29.4
+   "decided": 257,
+   "hit": 76,
+   "stop": 181,
+   "hit_rate": 29.6
   },
   "baseline_matched": {
-   "decided": 217,
-   "hit": 58,
-   "stop": 159,
-   "hit_rate": 26.7
+   "decided": 221,
+   "hit": 60,
+   "stop": 161,
+   "hit_rate": 27.1
   },
   "current": {
    "total": 24,
@@ -408,18 +372,18 @@
    },
    "baseline": {
     "total": 72,
-    "decided": 31,
-    "hit": 5,
-    "stop": 26,
-    "hit_rate": 16.1
+    "decided": 34,
+    "hit": 6,
+    "stop": 28,
+    "hit_rate": 17.6
    },
    "baseline_matched": {
-    "decided": 23,
-    "hit": 3,
-    "stop": 20,
-    "hit_rate": 13.0
+    "decided": 25,
+    "hit": 4,
+    "stop": 21,
+    "hit_rate": 16.0
    }
   }
  },
- "elapsed_sec": 27.8
+ "elapsed_sec": 19.5
 }
