@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-03",
-  "updated_at": "2026-11-04 02:26:15",
+  "date": "2026-11-04",
+  "updated_at": "2026-11-05 02:27:50",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -11,48 +11,49 @@
         "ticker": "MPWR",
         "name": "모놀리식 파워",
         "total_score": 61,
-        "risk_reward_ratio": 0.82,
+        "risk_reward_ratio": 0.66,
         "blockers": [
           "점수 61/68",
-          "손익비 0.82/1.20"
+          "손익비 0.66/1.20"
         ]
       },
       {
-        "ticker": "CDNS",
-        "name": "케이던스",
-        "total_score": 58,
-        "risk_reward_ratio": 0.6,
+        "ticker": "MELI",
+        "name": "메르카도리브레",
+        "total_score": 56,
+        "risk_reward_ratio": 0.67,
         "blockers": [
-          "점수 58/68",
-          "손익비 0.6/1.20"
+          "점수 56/68",
+          "손익비 0.67/1.20"
+        ]
+      },
+      {
+        "ticker": "AVGO",
+        "name": "브로드컴",
+        "total_score": 53,
+        "risk_reward_ratio": 0.74,
+        "blockers": [
+          "점수 53/68",
+          "손익비 0.74/1.20"
+        ]
+      },
+      {
+        "ticker": "APP",
+        "name": "앱러빈",
+        "total_score": 53,
+        "risk_reward_ratio": 0.56,
+        "blockers": [
+          "점수 53/68",
+          "손익비 0.56/1.20"
         ]
       },
       {
         "ticker": "SNPS",
         "name": "시놉시스",
-        "total_score": 57,
-        "risk_reward_ratio": 0.85,
-        "blockers": [
-          "점수 57/68",
-          "손익비 0.85/1.20"
-        ]
-      },
-      {
-        "ticker": "MSFT",
-        "name": "마이크로소프트",
-        "total_score": 54,
-        "risk_reward_ratio": 1.54,
-        "blockers": [
-          "점수 54/68"
-        ]
-      },
-      {
-        "ticker": "AMZN",
-        "name": "아마존",
-        "total_score": 53,
+        "total_score": 49,
         "risk_reward_ratio": 0.87,
         "blockers": [
-          "점수 53/68",
+          "점수 49/68",
           "손익비 0.87/1.20"
         ]
       }
