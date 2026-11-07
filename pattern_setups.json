@@ -1,8 +1,8 @@
 {
- "date": "2026-11-05",
- "latest_session": "2026-11-05",
+ "date": "2026-11-06",
+ "latest_session": "2026-11-06",
  "stale": false,
- "generated_at": "2026-11-06 02:25:52",
+ "generated_at": "2026-11-07 00:59:54",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -10,33 +10,33 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 647.05,
-   "chg_pct": -6.49,
-   "from_high_pct": -15.2,
+   "price": 656.1,
+   "chg_pct": 1.4,
+   "from_high_pct": -14.0,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 447.73,
-   "chg_pct": -11.21,
-   "from_high_pct": -33.4,
+   "price": 463.96,
+   "chg_pct": 3.62,
+   "from_high_pct": -30.9,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 733.0,
-   "chg_pct": -4.41,
-   "from_high_pct": -6.2,
+   "price": 735.29,
+   "chg_pct": 0.31,
+   "from_high_pct": -5.9,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 375.49,
-   "chg_pct": 0.81,
-   "from_high_pct": -26.3,
+   "price": 372.52,
+   "chg_pct": -0.79,
+   "from_high_pct": -26.9,
    "status": null
   }
  ],
@@ -48,69 +48,33 @@
    "name": "Applied Materials, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 319.25,
-   "L": 275.1394408377765,
+   "price": 332.715,
+   "L": 275.1394112003493,
    "H": 738.8798989117877,
    "L_date": "2026-01-09",
    "H_date": "2026-07-02",
    "entry_date": "2026-10-23",
-   "retrace": 0.905,
+   "retrace": 0.876,
    "swing_pct": 168.5,
    "buy_high": 374.3799,
-   "buy_low": 328.0059,
+   "buy_low": 328.0058,
    "stop": 275.1394,
    "t1": 507.0097,
    "t2": 527.915,
    "t3": 648.5869,
    "t4": 869.6782,
-   "stop_pct": -13.8,
-   "position": "구간 아래",
-   "t1_pct": 58.8,
-   "signals": [
-    "RSI 과매도 26"
-   ],
+   "stop_pct": -17.3,
+   "position": "구간 안",
+   "t1_pct": 52.4,
+   "signals": [],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
    },
    "earnings_date": "2026-11-12",
-   "earnings_days": 7,
+   "earnings_days": 6,
    "earnings_soon": true
-  },
-  {
-   "id": "QCOM|1d|2026-08-03|2026-09-25",
-   "ticker": "QCOM",
-   "name": "QUALCOMM Incorporated",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 156.75,
-   "L": 142.11653452249445,
-   "H": 205.85000610351562,
-   "L_date": "2026-08-03",
-   "H_date": "2026-09-25",
-   "entry_date": "2026-11-05",
-   "retrace": 0.77,
-   "swing_pct": 44.8,
-   "buy_high": 155.7555,
-   "buy_low": 149.3822,
-   "stop": 142.1165,
-   "t1": 173.9833,
-   "t2": 177.05,
-   "t3": 193.5236,
-   "t4": 223.706,
-   "stop_pct": -9.3,
-   "position": "구간 위",
-   "t1_pct": 11.0,
-   "signals": [],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2027-02-03",
-   "earnings_days": 90,
-   "earnings_soon": false
   },
   {
    "id": "CEG|1d|2026-07-01|2026-10-06",
@@ -118,13 +82,13 @@
    "name": "Constellation Energy Corporation",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 239.65,
+   "price": 249.95,
    "L": 228.27909278878292,
    "H": 309.79998779296875,
    "L_date": "2026-07-01",
    "H_date": "2026-10-06",
    "entry_date": "2026-11-04",
-   "retrace": 0.861,
+   "retrace": 0.734,
    "swing_pct": 35.7,
    "buy_high": 245.7246,
    "buy_low": 237.5725,
@@ -133,70 +97,59 @@
    "t2": 270.55,
    "t3": 293.001,
    "t4": 334.135,
-   "stop_pct": -4.7,
-   "position": "구간 안",
-   "t1_pct": 12.3,
-   "signals": [
-    "반전 캔들"
-   ],
+   "stop_pct": -8.7,
+   "position": "구간 위",
+   "t1_pct": 7.6,
+   "signals": [],
    "base_rate": {
     "hit": 46.0,
     "random": 39.4,
     "n": 1959
    },
    "earnings_date": "2026-11-09",
-   "earnings_days": 4,
+   "earnings_days": 3,
    "earnings_soon": true
   }
  ],
  "watch": [
   {
-   "ticker": "ASML",
-   "name": "ASML Holding N.V.",
+   "ticker": "QCOM",
+   "name": "QUALCOMM Incorporated",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 1356.65,
-   "buy_high": 1345.5803,
-   "distance_pct": 0.8
+   "price": 165.41,
+   "buy_high": 157.9678,
+   "distance_pct": 4.7
   },
   {
    "ticker": "TMUS",
    "name": "T-Mobile US, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 160.59,
+   "price": 162.01,
    "buy_high": 150.8859,
-   "distance_pct": 6.4
-  },
-  {
-   "ticker": "KLAC",
-   "name": "KLA Corporation",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 129.8,
-   "buy_high": 108.608,
-   "distance_pct": 19.5
+   "distance_pct": 7.4
   },
   {
    "ticker": "TMUS",
    "name": "T-Mobile US, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 160.59,
+   "price": 162.01,
    "buy_high": 150.8859,
-   "distance_pct": 6.4
+   "distance_pct": 7.4
   }
  ],
  "summary": {
   "total": 125,
   "hit": 36,
-  "stop": 70,
-  "open": 19,
-  "hit_rate": 34.0,
-  "decided": 106,
-  "avg_ret": -4.24,
-  "avg_excess": -2.54,
-  "finished": 77,
+  "stop": 71,
+  "open": 18,
+  "hit_rate": 33.6,
+  "decided": 107,
+  "avg_ret": -3.47,
+  "avg_excess": -1.38,
+  "finished": 80,
   "by_tf": {
    "1d": {
     "total": 87,
@@ -205,33 +158,33 @@
    },
    "1w": {
     "total": 38,
-    "decided": 29,
-    "hit_rate": 20.7
+    "decided": 30,
+    "hit_rate": 20.0
    }
   },
   "baseline": {
    "total": 375,
-   "decided": 294,
-   "hit": 83,
-   "stop": 211,
-   "hit_rate": 28.2
+   "decided": 305,
+   "hit": 84,
+   "stop": 221,
+   "hit_rate": 27.5
   },
   "baseline_matched": {
-   "decided": 271,
-   "hit": 74,
-   "stop": 197,
-   "hit_rate": 27.3
+   "decided": 281,
+   "hit": 75,
+   "stop": 206,
+   "hit_rate": 26.7
   },
   "current": {
    "total": 29,
    "hit": 4,
-   "stop": 18,
-   "open": 7,
-   "hit_rate": 18.2,
-   "decided": 22,
-   "avg_ret": -8.06,
-   "avg_excess": -5.06,
-   "finished": 18,
+   "stop": 19,
+   "open": 6,
+   "hit_rate": 17.4,
+   "decided": 23,
+   "avg_ret": -8.37,
+   "avg_excess": -4.83,
+   "finished": 19,
    "by_tf": {
     "1d": {
      "total": 18,
@@ -240,24 +193,24 @@
     },
     "1w": {
      "total": 11,
-     "decided": 8,
+     "decided": 9,
      "hit_rate": 0.0
     }
    },
    "baseline": {
     "total": 87,
-    "decided": 55,
-    "hit": 6,
-    "stop": 49,
-    "hit_rate": 10.9
+    "decided": 59,
+    "hit": 7,
+    "stop": 52,
+    "hit_rate": 11.9
    },
    "baseline_matched": {
-    "decided": 50,
-    "hit": 6,
-    "stop": 44,
-    "hit_rate": 12.0
+    "decided": 55,
+    "hit": 7,
+    "stop": 48,
+    "hit_rate": 12.7
    }
   }
  },
- "elapsed_sec": 20.5
+ "elapsed_sec": 18.9
 }

@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-05",
-  "updated_at": "2026-11-06 02:26:13",
+  "date": "2026-11-06",
+  "updated_at": "2026-11-07 01:00:06",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -11,10 +11,10 @@
         "ticker": "TXN",
         "name": "텍사스 인스트루먼트",
         "total_score": 59,
-        "risk_reward_ratio": 1.07,
+        "risk_reward_ratio": 0.79,
         "blockers": [
           "점수 59/68",
-          "손익비 1.07/1.20"
+          "손익비 0.79/1.20"
         ]
       },
       {
@@ -31,30 +31,29 @@
         "ticker": "AMZN",
         "name": "아마존",
         "total_score": 50,
-        "risk_reward_ratio": 0.8,
+        "risk_reward_ratio": 1.01,
         "blockers": [
           "점수 50/68",
-          "손익비 0.8/1.20"
+          "손익비 1.01/1.20"
         ]
       },
       {
-        "ticker": "ABNB",
-        "name": "에어비앤비",
-        "total_score": 48,
-        "risk_reward_ratio": 0.72,
+        "ticker": "CDNS",
+        "name": "케이던스",
+        "total_score": 50,
+        "risk_reward_ratio": 1.01,
         "blockers": [
-          "점수 48/68",
-          "손익비 0.72/1.20"
+          "점수 50/68",
+          "손익비 1.01/1.20"
         ]
       },
       {
-        "ticker": "MSFT",
-        "name": "마이크로소프트",
-        "total_score": 48,
-        "risk_reward_ratio": 0.99,
+        "ticker": "NXPI",
+        "name": "NXP 세미컨덕터",
+        "total_score": 49,
+        "risk_reward_ratio": 1.39,
         "blockers": [
-          "점수 48/68",
-          "손익비 0.99/1.20"
+          "점수 49/68"
         ]
       }
     ]
