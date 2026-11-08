@@ -1,0 +1,42 @@
+/* Hallmark · shared app foundations · v2.0.0 */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+html { scrollbar-color: var(--color-muted) var(--color-paper); }
+body, .stApp {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  caret-color: var(--color-accent);
+}
+::selection { background: var(--color-accent); color: var(--color-accent-ink); }
+:focus-visible { outline: 2px solid var(--color-focus) !important; outline-offset: 3px; }
+h1, h2, h3 {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.25;
+  min-width: 0;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+  font-synthesis: none;
+}
+p { text-wrap: pretty; }
+a { color: var(--color-link); text-underline-offset: 4px; text-decoration-thickness: 1px; }
+button, input, select, textarea { font-family: var(--font-body); }
+input, textarea { caret-color: var(--color-accent); }
+.num { font-variant-numeric: tabular-nums; }
+@media (max-width: 60rem) { :root { --gutter: 24px; } }
+@media (max-width: 40rem) { :root { --gutter: 16px; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

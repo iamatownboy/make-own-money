@@ -23,6 +23,7 @@ from quant_core.prediction import evaluate_technical_health, predict_price_scena
 from quant_core.screener import run_full_market_scan
 from quant_core.db import is_supabase_enabled, get_supabase_diagnostics
 from pattern_tab import render_pattern_tab
+from ui_styles import render_styles
 
 # 1. 페이지 설정
 st.set_page_config(
@@ -31,6 +32,8 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+
+render_styles("tokens.css", "base.css", "dashboard.css")
 
 # -----------------------------------------------------------------------------
 # 🔒 보안 인증: 등록된 관리자 전용 열람 2중 잠금 (Default Deny + 암호/매직키 지원)
@@ -97,39 +100,28 @@ if hasattr(st, "user") and getattr(st.user, "is_logged_in", False):
 # 2. 클라우드 환경에서 미인증 시 전용 로그인 폼 렌더링 후 정지
 if is_cloud and not st.session_state.get("is_authenticated", False):
     st.markdown("""
-    <style>
-        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-        html, body, [class*="css"], .stApp {
-            background-color: #0f1015 !important;
-            color: #ffffff !important;
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', Roboto, sans-serif !important;
-        }
-    </style>
-    <div style="max-width:440px; margin:70px auto 20px auto; background-color:#17181f; border:1px solid #282a36; border-radius:16px; padding:32px 24px; text-align:center;">
-        <div style="font-size:38px; margin-bottom:12px;">🔒</div>
-        <div style="font-size:20px; font-weight:800; color:#ffffff; margin-bottom:6px;">관리자 전용 인증</div>
-        <div style="font-size:13px; color:#8b90a4; line-height:1.6; margin-bottom:16px;">
-            등록된 관리자 전용 비공개 퀀트 대시보드입니다.<br>
-            Google 관리자 계정 로그인 또는 관리자 암호로 입장하세요.
-        </div>
+    <div class="login-panel">
+        <h1>관리자 전용 인증</h1>
+        <p>등록된 관리자 전용 비공개 퀀트 대시보드입니다.<br>
+        Google 관리자 계정 로그인 또는 관리자 암호로 입장하세요.</p>
     </div>
     """, unsafe_allow_html=True)
-    
+
     col_l, col_center, col_r = st.columns([1, 1.2, 1])
     with col_center:
         if google_login_rejected:
             st.error(f"⛔ 접근 불가: 승인되지 않은 계정({rejected_email})입니다. 등록된 관리자 계정으로 로그인해주세요.")
             if hasattr(st, "logout"):
-                st.button("🔄 다른 계정으로 다시 로그인", on_click=st.logout, use_container_width=True)
+                st.button("다른 계정으로 다시 로그인", on_click=st.logout, use_container_width=True)
 
         if hasattr(st, "login") and check_has_auth_secret():
-            if st.button("🌐 Google 계정으로 로그인", use_container_width=True):
+            if st.button("Google 계정으로 로그인", use_container_width=True):
                 st.login()
-            st.markdown("<div style='text-align:center; margin:10px 0; color:#606478; font-size:12px;'>또는 관리자 암호 입력</div>", unsafe_allow_html=True)
+            st.markdown("<div class='login-divider'>또는 관리자 암호 입력</div>", unsafe_allow_html=True)
 
         with st.form("admin_login_form", clear_on_submit=True):
-            entered_pw = st.text_input("관리자 암호", type="password", placeholder="관리자 비밀번호 입력", label_visibility="collapsed")
-            submit_btn = st.form_submit_button("🔑 대시보드 입장", use_container_width=True)
+            entered_pw = st.text_input("관리자 암호", type="password", placeholder="관리자 비밀번호 입력")
+            submit_btn = st.form_submit_button("대시보드 입장", use_container_width=True)
             if submit_btn:
                 if not ADMIN_PASSWORDS:
                     st.error("⚠️ Streamlit Secrets에 ADMIN_PASSWORD가 설정되지 않았습니다.")
@@ -147,176 +139,6 @@ if is_cloud and not st.session_state.get("is_authenticated", False):
 
     st.stop()
 
-
-
-# 2. 토스증권 프리미엄 미니멀 다크 CSS (눈 피로도 0% 차분한 톤)
-st.markdown("""
-<style>
-    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-
-    html, body, [class*="css"], .stApp {
-        background-color: #0f1015 !important;
-        color: #ffffff !important;
-        font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', Roboto, sans-serif !important;
-        letter-spacing: -0.3px;
-    }
-
-    /* 토스 패널 (차분한 다크 그레이) */
-    .toss-panel {
-        background-color: #17181f;
-        border-radius: 14px;
-        border: 1px solid #23252f;
-        padding: 16px;
-        margin-bottom: 12px;
-    }
-
-    /* 차분하고 세련된 미니멀 태그 (눈이 편안한 톤) */
-    .toss-tag-clean {
-        background-color: #21232d;
-        color: #9ba0b4;
-        border-radius: 6px;
-        padding: 3px 8px;
-        font-size: 11.5px;
-        font-weight: 500;
-        display: inline-block;
-        margin-right: 4px;
-        margin-top: 4px;
-        border: 1px solid #2a2d3a;
-    }
-
-    /* 상태 뱃지 */
-    .status-badge-ready {
-        background-color: rgba(0, 230, 118, 0.12);
-        color: #00e676;
-        border: 1px solid rgba(0, 230, 118, 0.25);
-        border-radius: 6px;
-        padding: 2px 7px;
-        font-size: 11.5px;
-        font-weight: 700;
-    }
-
-    .status-badge-approaching {
-        background-color: rgba(255, 215, 0, 0.12);
-        color: #ffd700;
-        border: 1px solid rgba(255, 215, 0, 0.25);
-        border-radius: 6px;
-        padding: 2px 7px;
-        font-size: 11.5px;
-        font-weight: 700;
-    }
-
-    .status-badge-watching {
-        background-color: #242632;
-        color: #8b90a4;
-        border-radius: 6px;
-        padding: 2px 7px;
-        font-size: 11.5px;
-        font-weight: 600;
-    }
-
-    /* 백테스트 실증 검증 박스 */
-    .backtest-box {
-        background-color: #1a1c25;
-        border-left: 3px solid #3b82f6;
-        border-radius: 8px;
-        padding: 10px 14px;
-        margin-bottom: 12px;
-        font-size: 13px;
-        color: #d1d5db;
-    }
-
-    /* 추천 근거 카드 (깔끔한 다크톤) */
-    .reason-box-clean {
-        background-color: #1a1c24;
-        border: 1px solid #262835;
-        border-radius: 10px;
-        padding: 12px 14px;
-        margin-bottom: 8px;
-        font-size: 13.5px;
-        line-height: 1.6;
-        color: #e2e4ea;
-    }
-
-    /* 탭 메뉴 */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: #14151b;
-        padding: 6px;
-        border-radius: 12px;
-        border: 1px solid #23252e;
-    }
-    .stTabs [data-baseweb="tab"] {
-        color: #8b95a1 !important;
-        font-weight: 700 !important;
-        font-size: 15px !important;
-        border-radius: 8px !important;
-        padding: 8px 18px !important;
-    }
-    .stTabs [aria-selected="true"] {
-        background-color: #262835 !important;
-        color: #ffffff !important;
-    }
-
-    /* 버튼 스타일 */
-    .stButton>button {
-        background-color: #232530 !important;
-        color: #ffffff !important;
-        border: 1px solid #313444 !important;
-        border-radius: 8px !important;
-        font-weight: 600 !important;
-    }
-    .stButton>button:hover {
-        background-color: #313444 !important;
-        border-color: #42465a !important;
-    }
-
-    /* 종목 일체형 클릭 카드 컨테이너 (버튼 오버레이 기법) */
-    div[class*="st-key-card_"] {
-        position: relative !important;
-        margin-bottom: 12px !important;
-    }
-    div[class*="st-key-card_"] div[data-testid="stElementContainer"]:last-child {
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        z-index: 10 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    div[class*="st-key-card_"] div[data-testid="stButton"] {
-        width: 100% !important;
-        height: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    div[class*="st-key-card_"] div[data-testid="stButton"] button {
-        width: 100% !important;
-        height: 100% !important;
-        opacity: 0 !important;
-        cursor: pointer !important;
-        border: none !important;
-        background: transparent !important;
-    }
-    .stock-unified-card {
-        background-color: #17181f;
-        border: 1px solid #23252f;
-        border-radius: 12px;
-        padding: 12px 14px;
-        transition: all 0.2s ease-in-out;
-    }
-    div[class*="st-key-card_"]:hover .stock-unified-card {
-        border-color: #3b82f6 !important;
-        background-color: #1c1e29 !important;
-    }
-    .stock-unified-card.active {
-        background-color: #1d2232 !important;
-        border: 1.8px solid #3b82f6 !important;
-        box-shadow: 0 0 12px rgba(59, 130, 246, 0.15);
-    }
-</style>
-""", unsafe_allow_html=True)
 
 
 # 3. 데이터 로드
@@ -475,7 +297,7 @@ def render_quant_performance_tracker(key_suffix: str = ""):
 
 # ==============================================================================
 has_holdings = bool(holdings)
-_tab_names = ["📐 패턴 구간", "📊 점수제 추천"] + (["💼 포트폴리오"] if has_holdings else [])
+_tab_names = ["패턴 구간", "점수제 추천"] + (["포트폴리오"] if has_holdings else [])
 _tabs = st.tabs(_tab_names)
 tab_pattern, tab_rec = _tabs[0], _tabs[1]
 tab_port = _tabs[2] if has_holdings else None

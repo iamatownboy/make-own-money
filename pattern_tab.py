@@ -12,54 +12,11 @@ from html import escape
 
 import streamlit as st
 
+from ui_styles import render_styles
+
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SETUPS_FILE = os.path.join(ROOT, 'pattern_setups.json')
 HISTORY_FILE = os.path.join(ROOT, 'pattern_history.json')
-
-CSS = """
-<style>
-.pt-head {font-size:13px; color:#9094a6; margin:2px 0 14px 0;}
-.pt-score {background:#17181f; border:1px solid #23252f; border-radius:12px; padding:12px 16px;
-           margin-bottom:16px; font-size:13.5px; color:#cfcfd4;}
-.pt-score b {color:#ffffff;}
-.pt-card {background:#17181f; border:1px solid #23252f; border-radius:14px; padding:14px 16px; margin-bottom:10px;}
-.pt-top {display:flex; justify-content:space-between; align-items:baseline; gap:8px;}
-.pt-tk {font-size:17px; font-weight:700; color:#ffffff;}
-.pt-nm {font-size:12.5px; color:#8b8fa3; margin-left:6px;}
-.pt-px {font-size:15px; font-weight:600; color:#ffffff; white-space:nowrap;}
-.pt-badges {margin-top:6px;}
-.pt-b {display:inline-block; font-size:11.5px; padding:2px 8px; border-radius:6px; margin-right:4px;
-       background:#21232d; color:#9ba0b4; border:1px solid #2a2d3a;}
-.pt-b.in {color:#00e676; border-color:rgba(0,230,118,.3); background:rgba(0,230,118,.08);}
-.pt-b.up {color:#ffd54f; border-color:rgba(255,213,79,.3); background:rgba(255,213,79,.08);}
-.pt-b.dn {color:#ff8a65; border-color:rgba(255,138,101,.3); background:rgba(255,138,101,.08);}
-.pt-grid {display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-top:12px;}
-.pt-cell {background:#1b1d26; border-radius:10px; padding:8px 10px;}
-.pt-lb {font-size:11.5px; color:#8b8fa3;}
-.pt-v {font-size:14.5px; font-weight:700; color:#ffffff; margin-top:2px;}
-.pt-v.red {color:#ff6b6b;} .pt-v.green {color:#4ade80;}
-.pt-sub {font-size:11.5px; color:#8b8fa3; font-weight:500;}
-.pt-sig {margin-top:10px; font-size:12px; color:#9ba0b4;}
-.pt-foot {display:flex; justify-content:space-between; align-items:center; margin-top:10px;}
-.pt-foot a {font-size:12.5px; color:#60a5fa; text-decoration:none;}
-.pt-card details {font-size:12.5px; color:#9ba0b4;}
-.pt-card summary {cursor:pointer; color:#8b8fa3;}
-.pt-card details div {margin-top:6px; line-height:1.7;}
-.pt-note {font-size:11.5px; color:#6b6f82; margin-top:18px; line-height:1.6;}
-.pt-sec {font-size:12.5px; color:#8b8fa3; margin:0 0 6px 2px;}
-.pt-etf {display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-bottom:6px;}
-.pt-ec {display:block; background:#17181f; border:1px solid #23252f; border-radius:12px; padding:10px 12px;}
-.pt-ec, .pt-ec:hover, .pt-ec * {text-decoration:none !important;}
-.pt-ec .pt-tk {font-size:15px;}
-.pt-ec .pt-px {font-size:14px; margin-top:4px;}
-.pt-ec .pt-es {font-size:11.5px; color:#8b8fa3; margin-top:2px; line-height:1.5;}
-.pt-ec .up {color:#4ade80;} .pt-ec .dn {color:#ff6b6b;}
-.pt-etf-note {font-size:11.5px; color:#6b6f82; margin:0 0 16px 2px; line-height:1.6;}
-@media (max-width: 640px) { .pt-grid {grid-template-columns:repeat(3, 1fr); gap:6px;} .pt-v {font-size:13px;}
-                            .pt-etf {grid-template-columns:repeat(2, 1fr);} }
-</style>
-"""
-
 
 @st.cache_data(ttl=600)
 def _load(path):
@@ -102,7 +59,7 @@ def _card_html(s):
 
     sig = ''
     if s.get('signals'):
-        sig = '<div class="pt-sig">참고 근거 · ' + ' · '.join(escape(x) for x in s['signals']) + '</div>'
+        sig = '<div class="pt-sig">참고 근거: ' + ', '.join(escape(x) for x in s['signals']) + '</div>'
 
     br = s.get('base_rate') or {}
     detail = (
@@ -116,23 +73,27 @@ def _card_html(s):
     )
     chart = f'https://www.tradingview.com/chart/?symbol=NASDAQ%3A{escape(s["ticker"])}'
     return f"""
-<div class="pt-card">
-  <div class="pt-top">
-    <div><span class="pt-tk">{escape(s['ticker'])}</span><span class="pt-nm">{escape(s['name'][:34])}</span></div>
-    <div class="pt-px">{_money(s['price'])}</div>
-  </div>
-  <div class="pt-badges">{badges}</div>
-  <div class="pt-grid">
-    <div class="pt-cell"><div class="pt-lb">매수 구간</div>
-      <div class="pt-v">{_money(s['buy_low'])}~{_money(s['buy_high'])}</div></div>
-    <div class="pt-cell"><div class="pt-lb">손절</div>
-      <div class="pt-v red">{_money(s['stop'])} <span class="pt-sub">{s['stop_pct']:+.1f}%</span></div></div>
-    <div class="pt-cell"><div class="pt-lb">1차 목표</div>
-      <div class="pt-v green">{_money(s['t1'])} <span class="pt-sub">{s['t1_pct']:+.1f}%</span></div></div>
+<article class="pt-card" aria-label="{escape(s['ticker'])} 패턴 구간">
+  <div class="pt-row">
+    <div class="pt-identity">
+      <h3 class="pt-tk">{escape(s['ticker'])}</h3>
+      <div class="pt-nm">{escape(s['name'])}</div>
+      <div class="pt-badges">{badges}</div>
+    </div>
+    <div class="pt-current"><div class="pt-lb">현재가</div><div class="pt-px">{_money(s['price'])}</div></div>
+    <dl class="pt-grid">
+      <div class="pt-cell"><dt class="pt-lb">매수 구간</dt>
+        <dd class="pt-v pt-range"><span>{_money(s['buy_low'])}~</span><span>{_money(s['buy_high'])}</span></dd></div>
+      <div class="pt-cell"><dt class="pt-lb">손절</dt>
+        <dd class="pt-v red">{_money(s['stop'])} <span class="pt-sub">{s['stop_pct']:+.1f}%</span></dd></div>
+      <div class="pt-cell"><dt class="pt-lb">1차 목표</dt>
+        <dd class="pt-v green">{_money(s['t1'])} <span class="pt-sub">{s['t1_pct']:+.1f}%</span></dd></div>
+    </dl>
   </div>
   {sig}
-  <div class="pt-foot">{detail}<a href="{chart}" target="_blank">차트 보기 ↗</a></div>
-</div>"""
+  <div class="pt-foot">{detail}<a href="{chart}" target="_blank" rel="noopener noreferrer">차트 보기</a></div>
+</article>"""
+
 
 
 def _etf_board_html(board):
@@ -148,11 +109,11 @@ def _etf_board_html(board):
             extra = (f'<div class="pt-es"><span class="pt-b up">{escape(e["tf_label"])} 구간 근접</span><br>'
                      f'구간 상단 {_money(e["buy_high"])}</div>')
         cells += (
-            f'<a class="pt-ec" href="https://www.tradingview.com/chart/?symbol={escape(e["ticker"])}" target="_blank">'
+            f'<a class="pt-ec" href="https://www.tradingview.com/chart/?symbol={escape(e["ticker"])}" target="_blank" rel="noopener noreferrer">'
             f'<div><span class="pt-tk">{escape(e["ticker"])}</span><span class="pt-nm">{escape(e["name"])}</span></div>'
             f'<div class="pt-px">{_money(e["price"])} <span class="pt-sub {"up" if up else "dn"}">{e["chg_pct"]:+.1f}%</span></div>'
             f'<div class="pt-es">52주 고점 대비 {e["from_high_pct"]:+.1f}%</div>{extra}</a>')
-    return (f'<div class="pt-sec">지수·ETF 현황 (1배)</div><div class="pt-etf">{cells}</div>'
+    return (f'<h2 class="pt-sec">지수·ETF 현황 (1배)</h2><div class="pt-etf">{cells}</div>'
             '<div class="pt-etf-note">주식과 같은 규칙(스윙 +30%·주봉 +50%)에 해당할 때만 구간을 표시합니다. '
             '이 규칙은 1배 지수 ETF에서 거의 뜨지 않고, 기준을 낮춰도 무작위 진입보다 성적이 낮아 '
             '추천 기록·적중률에는 넣지 않습니다.</div>')
@@ -193,10 +154,10 @@ def _score_line(summary, scope=None):
     small = cur.get('decided', 0) < RELIABLE_DECIDED
     line = _score_text(cur, f'{scope} 종목 추천', show_diff=not small)     # 표본이 적을 땐 차이를 숨겨 착시를 막는다
     if cur.get('total') and small:
-        line += (f'<br><span style="color:#9094a6">결과 난 추천이 {cur.get("decided", 0)}건뿐이라 오차가 큽니다. '
+        line += (f'<br><span class="pt-muted">결과 난 추천이 {cur.get("decided", 0)}건뿐이라 오차가 큽니다. '
                  f'{RELIABLE_DECIDED}건 이상 쌓이기 전에는 참고만 하세요.</span>')
     if summary.get('total'):
-        line += (f'<br><span style="color:#6b6f82">전체 기록(대상이 달랐던 이전 추천 포함) · '
+        line += (f'<br><span class="pt-muted">전체 기록(대상이 달랐던 이전 추천 포함) · '
                  f'{_score_text(summary, "추천")}</span>')
     return line
 
@@ -209,7 +170,7 @@ def _universe_label(data):
 
 
 def render_pattern_tab():
-    st.markdown(CSS, unsafe_allow_html=True)
+    render_styles("pattern.css")
     data = _load(SETUPS_FILE)
     if not data:
         st.info('아직 스캔 결과가 없습니다. GitHub Actions의 Daily Quant Scan을 한 번 실행하면 여기에 표시됩니다.')
@@ -217,27 +178,36 @@ def render_pattern_tab():
 
     cards = _group_by_ticker(data.get('setups', []))
     st.markdown(
-        f'<div class="pt-head">{escape(data["date"])} 종가 기준 · {_universe_label(data)} {data.get("liquid", 0):,}종목 중 '
-        f'<b style="color:#fff">{len(cards)}종목</b>이 매수 구간</div>', unsafe_allow_html=True)
+        f'<div class="pt-heading"><div><h1>패턴 구간</h1>'
+        f'<p class="pt-head">{escape(data["date"])} 종가 기준<br>'
+        f'{_universe_label(data)} {data.get("liquid", 0):,}종목 중</p></div>'
+        f'<div class="pt-count"><strong>{len(cards)}종목</strong>매수 구간</div></div>',
+        unsafe_allow_html=True)
     if data.get('stale'):
         st.warning(f'최신 거래일({data.get("latest_session")}) 시세가 아직 반영되지 않았습니다. '
                    f'아래 가격과 매수 구간은 {data["date"]} 종가 기준이라 실제와 다를 수 있어요.')
-    st.markdown(f'<div class="pt-score">{_score_line(data.get("summary"), _universe_label(data))}</div>',
-                unsafe_allow_html=True)
+    st.markdown('<h2 class="pt-section-title">매수 구간</h2>', unsafe_allow_html=True)
+    if not cards:
+        st.markdown('<div class="pt-empty">오늘은 매수 구간에 들어온 종목이 없습니다.</div>', unsafe_allow_html=True)
+    for s in cards:
+        st.markdown(_card_html(s), unsafe_allow_html=True)
+
     if data.get('etf'):
         st.markdown(_etf_board_html(data['etf']), unsafe_allow_html=True)
 
-    if not cards:
-        st.markdown('<div class="pt-score">오늘은 매수 구간에 들어온 종목이 없습니다.</div>', unsafe_allow_html=True)
-    for s in cards:
-        st.markdown(_card_html(s), unsafe_allow_html=True)
+    score = _score_line(data.get("summary"), _universe_label(data))
+    st.markdown('<section class="pt-performance"><h2 class="pt-sec">추천 성과</h2>'
+                f'<div class="pt-score">{score}</div></section>', unsafe_allow_html=True)
 
     watch = data.get('watch') or []
     if watch:
         with st.expander(f'곧 구간에 들어올 종목 ({len(watch)})'):
             for w in watch:
-                st.markdown(f"**{w['ticker']}** · {w['tf_label']} · 현재 {_money(w['price'])} · "
-                            f"구간 상단 {_money(w['buy_high'])}까지 {-w['distance_pct']:.1f}%")
+                st.markdown(
+                    f'<div class="pt-watch-row"><div><b>{escape(w["ticker"])}</b>'
+                    f'<span>{escape(w["tf_label"])}</span></div><div>현재 {_money(w["price"])}</div>'
+                    f'<div>구간 상단 {_money(w["buy_high"])}까지 {-w["distance_pct"]:.1f}%</div></div>',
+                    unsafe_allow_html=True)
 
     hist = _load(HISTORY_FILE) or []
     if hist:
