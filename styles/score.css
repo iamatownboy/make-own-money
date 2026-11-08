@@ -1,0 +1,88 @@
+/* Hallmark · shape: app screen · genre: modern-minimal · theme: brand · redesign: full
+ * nav: existing tabs · signature: stock selector and investment risk ledger
+ * states: existing scan loading, no candidates, results, performance loading error · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R5 V4 · weakest: H, put the stock selector before the selected stock on small screens */
+/* Hallmark · answered F7 · the repeated small containers are tags and real database status badges, sharing the existing app vocabulary */
+/* Hallmark · reworded "오늘의 나스닥 퀀트 유망주 Top 7 Strategy v1.0.0 로컬 스토리지 모드 (Secrets 키 미인식)" to "점수제 추천" · 63 separates the title from its concatenated status labels, retained as metadata and list copy */
+/* Hallmark · dropped #top-7-strategy-v1-0-0-secrets · the auto-generated title anchor contained database status and changes with the separated page title; no application route or external destination is removed */
+/* Hallmark · dropped #top-7-strategy-v1-0-0-supabase · the production title also included live database status; its generated anchor changes while database information remains visible */
+/* Hallmark · finish-review: in-thread · ship · 0 required findings · subagent unavailable; mobile selector density is an intentional tradeoff */
+.stApp h1.qs-title { color: var(--color-ink); font-size: var(--text-2xl); padding: 0; margin: 0 0 var(--space-sm); }
+.qs-meta { display: flex; flex-wrap: wrap; gap: var(--space-xs); align-items: center; }
+.qs-badge { display: inline-block; padding: 4px var(--space-xs); border-radius: 4px; color: var(--color-muted); background: var(--color-paper-3); font-size: var(--text-xs); }
+.qs-badge.positive { color: var(--color-success); background: var(--color-success-bg); }
+.qs-badge.negative { color: var(--color-error); background: var(--color-error-bg); }
+.qs-badge.warning { color: var(--color-warning); background: var(--color-warning-bg); }
+.qs-intro { color: var(--color-muted); font-size: var(--text-sm); line-height: 1.7; margin: var(--space-md) 0 var(--space-lg); max-width: 75ch; }
+.stApp h2.qs-section, .stApp h3.qs-section { color: var(--color-ink-2); font-size: var(--text-md); font-weight: 700; padding: 0; margin: 0 0 var(--space-md); }
+.stApp h3.qs-section { margin-top: var(--space-lg); }
+.qs-detail { border-bottom: 1px solid var(--color-rule); padding: 0 0 var(--space-lg); margin-bottom: var(--space-lg); }
+.stApp h2.qs-detail-title { color: var(--color-ink); font-size: var(--text-xl); font-weight: 700; padding: 0; margin: 0 0 var(--space-sm); }
+.qs-detail-title span { display: inline-block; color: var(--color-muted); font-size: var(--text-md); font-weight: 400; margin-left: var(--space-xs); }
+.qs-context { display: flex; flex-wrap: wrap; gap: var(--space-sm); color: var(--color-muted); font-size: var(--text-sm); }
+.qs-overview { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-lg); margin-top: var(--space-lg); }
+.qs-price { color: var(--color-ink); font-size: var(--text-2xl); font-weight: 700; font-variant-numeric: tabular-nums; }
+.qs-price small { display: block; color: var(--color-muted); font-size: var(--text-sm); font-weight: 400; }
+.qs-overview dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-lg); margin: 0; }
+.qs-overview dt, .qs-levels dt, .qs-performance-grid dt { color: var(--color-muted); font-size: var(--text-sm); font-weight: 400; }
+.qs-overview dd { color: var(--color-ink); font-size: var(--text-md); font-weight: 700; font-variant-numeric: tabular-nums; margin: var(--space-xs) 0 0; }
+.qs-analyst { color: var(--color-muted); font-size: var(--text-sm); line-height: 1.7; margin-top: var(--space-md); }
+.qs-analyst b { color: var(--color-ink-2); }
+.qs-copy { color: var(--color-ink-2); font-size: var(--text-md); line-height: 1.7; max-width: 65ch; margin: var(--space-md) 0; }
+.qs-caption { color: var(--color-muted); font-size: var(--text-sm); line-height: 1.7; margin: var(--space-xs) 0 var(--space-md); max-width: 75ch; }
+.qs-levels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-lg); margin: var(--space-lg) 0; }
+.qs-levels > div { border-top: 1px solid var(--color-rule); padding-top: var(--space-md); min-width: 0; }
+.qs-levels dd { color: var(--color-ink); font-size: var(--text-lg); font-weight: 700; font-variant-numeric: tabular-nums; margin: var(--space-xs) 0; }
+.qs-levels small { display: block; color: var(--color-muted); font-size: var(--text-sm); line-height: 1.7; }
+.qs-levels .qs-outcome { color: var(--color-ink-2); font-size: var(--text-md); font-weight: 700; font-variant-numeric: tabular-nums; margin-top: var(--space-xs); }
+.qs-positive, .qs-levels .qs-positive, .qs-overview .qs-positive { color: var(--color-success); }
+.qs-negative, .qs-levels .qs-negative { color: var(--color-error); }
+.qs-warning, .qs-overview .qs-warning { color: var(--color-warning); }
+.qs-stock { padding: var(--space-md); min-width: 0; }
+.stApp div[class*="st-key-card_"]:has(.qs-stock) { border: 1px solid var(--color-rule); border-radius: var(--radius-control); background: var(--color-paper-2); color: var(--color-ink-2); }
+.stApp div[class*="st-key-card_"]:has(.qs-stock.active) { border-color: var(--color-accent); }
+.stApp .qs-stock, .stApp .qs-stock.active { border: 0; border-radius: 0; background: transparent; color: var(--color-ink-2); }
+.stApp div[class*="st-key-card_"]:has(.qs-stock) div[data-testid="stElementContainer"]:last-child { position: static; inset: auto; z-index: auto; width: auto; height: auto; }
+.stApp div[class*="st-key-card_"]:has(.qs-stock) div[data-testid="stButton"] { height: auto; padding: 0 var(--space-md) var(--space-md); }
+.stApp div[class*="st-key-card_"]:has(.qs-stock) div[data-testid="stButton"] button { height: 44px; min-height: 44px; padding: var(--space-xs) var(--space-md); color: var(--color-ink); border: 1px solid var(--color-input-rule); background: var(--color-paper-3); }
+.stApp div[class*="st-key-card_"]:has(.qs-stock) div[data-testid="stButton"] button p { color: var(--color-ink); }
+.qs-stock-top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-xs); color: var(--color-ink); font-size: var(--text-md); font-weight: 700; overflow-wrap: anywhere; }
+.qs-stock-ticker { color: var(--color-muted); font-size: var(--text-sm); font-weight: 400; white-space: nowrap; }
+.qs-stock-status { font-size: var(--text-sm); margin-top: var(--space-xs); }
+.qs-stock-values { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-xs); color: var(--color-ink-2); font-size: var(--text-sm); font-variant-numeric: tabular-nums; margin-top: var(--space-sm); }
+.qs-stock-notes { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-xs); color: var(--color-muted); font-size: var(--text-xs); margin-top: var(--space-xs); }
+.qs-stock-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: var(--space-sm); }
+.qs-stock-tags span { color: var(--color-muted); font-size: var(--text-xs); }
+.qs-reason { border-top: 1px solid var(--color-rule); padding: var(--space-md) 0; }
+.stApp h4.qs-reason-title { color: var(--color-ink-2); font-size: var(--text-sm); font-weight: 700; padding: 0; margin: 0 0 var(--space-xs); }
+.qs-reason p { color: var(--color-ink-2); font-size: var(--text-md); line-height: 1.7; margin: 0; max-width: 65ch; overflow-wrap: anywhere; }
+.qs-empty { padding: var(--space-lg) 0; border-top: 1px solid var(--color-rule); border-bottom: 1px solid var(--color-rule); margin-bottom: var(--space-lg); }
+.stApp h2.qs-empty-title { color: var(--color-ink); font-size: var(--text-xl); padding: 0; margin: 0 0 var(--space-md); }
+.qs-empty p { color: var(--color-ink-2); font-size: var(--text-md); line-height: 1.7; max-width: 65ch; margin: var(--space-sm) 0; }
+.qs-trust { border-bottom: 1px solid var(--color-rule); padding: var(--space-sm) 0 var(--space-md); margin-bottom: var(--space-lg); }
+.qs-trust p { color: var(--color-ink-2); font-size: var(--text-md); line-height: 1.7; margin: 0 0 var(--space-xs); }
+.qs-trust .qs-caption { color: var(--color-muted); font-size: var(--text-sm); }
+.qs-performance-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-lg); margin: 0 0 var(--space-lg); }
+.qs-performance-grid dd { font-size: var(--text-lg); font-weight: 700; font-variant-numeric: tabular-nums; margin: var(--space-xs) 0; }
+.qs-performance-grid small { display: block; color: var(--color-muted); font-size: var(--text-sm); }
+.stApp .stSelectbox [data-baseweb="select"] > div { min-height: 44px; }
+.stApp .stSelectbox [data-baseweb="select"]:focus-within > div { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.stApp .stSelectbox input[role="combobox"] { min-height: 32px; font-size: var(--text-md); }
+.qs-feedback { color: var(--color-ink-2); font-size: var(--text-sm); line-height: 1.8; margin: var(--space-xs) 0; }
+.qs-audit { color: var(--color-ink-2); border-top: 1px solid var(--color-rule); padding: var(--space-md) 0; font-size: var(--text-sm); line-height: 1.8; }
+@media (hover: hover) {
+  .stApp div[class*="st-key-card_"]:has(.qs-stock) div[data-testid="stButton"] button:hover { border-color: var(--color-focus); }
+}
+@media (max-width: 60rem) {
+  .qs-overview { align-items: flex-start; }
+  .qs-overview dl { gap: var(--space-md); }
+  .qs-performance-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 40rem) {
+  .stApp h1.qs-title { font-size: var(--text-xl); }
+  .qs-overview { display: block; }
+  .qs-overview dl { margin-top: var(--space-lg); }
+  .qs-overview dt { font-size: var(--text-xs); }
+  .qs-levels { gap: var(--space-md); }
+  .qs-levels dt { font-size: var(--text-xs); }
+}
