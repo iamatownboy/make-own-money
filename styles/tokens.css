@@ -1,0 +1,48 @@
+/* Hallmark · shape: app screen · genre: modern-minimal · theme: brand · redesign: full
+ * paper: #0f1015 · accent: #3182f6 · display: Pretendard · body: Pretendard
+ * nav: existing tabs · signature: entry, stop and target ledger · states: existing loading, empty, error, full
+ * axes: dark/grotesk-sans/cool · posture: restrained · contrast: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R5 V3 · weakest: V, retained the app shell and replaced nested cards with price rows */
+/* Hallmark · finish-review: subagent · ship · 0 required findings · gap: none */
+:root {
+  --color-paper: #0f1015;
+  --color-paper-2: #17181f;
+  --color-paper-3: #21232d;
+  --color-ink: #f2f4f8;
+  --color-ink-2: #c8ced9;
+  --color-muted: #a1a9b9;
+  --color-rule: #303440;
+  --color-input-rule: #747e90;
+  --color-accent: #3182f6;
+  --color-accent-ink: var(--color-paper);
+  --color-link: #8ab9ff;
+  --color-focus: #a8cbff;
+  --color-success: #6cdda7;
+  --color-error: #ff939d;
+  --color-warning: #f2cf7e;
+  --color-success-bg: #192d27;
+  --color-error-bg: #342027;
+  --color-warning-bg: #302b20;
+  --font-body: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+  --font-display: var(--font-body);
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.2rem;
+  --text-xl: 1.44rem;
+  --text-2xl: 1.728rem;
+  --text-display: var(--text-2xl);
+  --text-section: var(--text-lg);
+  --text-title: var(--text-md);
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --container: 1280px;
+  --gutter: 40px;
+  --radius-card: 12px;
+  --radius-control: 8px;
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+}
