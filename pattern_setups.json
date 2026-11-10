@@ -1,8 +1,8 @@
 {
- "date": "2026-11-06",
- "latest_session": "2026-11-06",
+ "date": "2026-11-09",
+ "latest_session": "2026-11-09",
  "stale": false,
- "generated_at": "2026-11-07 00:59:54",
+ "generated_at": "2026-11-10 03:39:47",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -10,33 +10,33 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 656.1,
-   "chg_pct": 1.4,
-   "from_high_pct": -14.0,
+   "price": 679.35,
+   "chg_pct": 3.54,
+   "from_high_pct": -10.9,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 463.96,
-   "chg_pct": 3.62,
-   "from_high_pct": -30.9,
+   "price": 487.41,
+   "chg_pct": 5.05,
+   "from_high_pct": -27.5,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 735.29,
-   "chg_pct": 0.31,
-   "from_high_pct": -5.9,
+   "price": 752.69,
+   "chg_pct": 2.37,
+   "from_high_pct": -3.7,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 372.52,
-   "chg_pct": -0.79,
-   "from_high_pct": -26.9,
+   "price": 379.53,
+   "chg_pct": 1.88,
+   "from_high_pct": -25.5,
    "status": null
   }
  ],
@@ -48,24 +48,24 @@
    "name": "Applied Materials, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 332.715,
-   "L": 275.1394112003493,
+   "price": 370.55,
+   "L": 275.1394408377765,
    "H": 738.8798989117877,
    "L_date": "2026-01-09",
    "H_date": "2026-07-02",
    "entry_date": "2026-10-23",
-   "retrace": 0.876,
+   "retrace": 0.794,
    "swing_pct": 168.5,
    "buy_high": 374.3799,
-   "buy_low": 328.0058,
+   "buy_low": 328.0059,
    "stop": 275.1394,
    "t1": 507.0097,
    "t2": 527.915,
    "t3": 648.5869,
    "t4": 869.6782,
-   "stop_pct": -17.3,
+   "stop_pct": -25.7,
    "position": "구간 안",
-   "t1_pct": 52.4,
+   "t1_pct": 36.8,
    "signals": [],
    "base_rate": {
     "hit": 48.1,
@@ -73,88 +73,26 @@
     "n": 801
    },
    "earnings_date": "2026-11-12",
-   "earnings_days": 6,
-   "earnings_soon": true
-  },
-  {
-   "id": "CEG|1d|2026-07-01|2026-10-06",
-   "ticker": "CEG",
-   "name": "Constellation Energy Corporation",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 249.95,
-   "L": 228.27909278878292,
-   "H": 309.79998779296875,
-   "L_date": "2026-07-01",
-   "H_date": "2026-10-06",
-   "entry_date": "2026-11-04",
-   "retrace": 0.734,
-   "swing_pct": 35.7,
-   "buy_high": 245.7246,
-   "buy_low": 237.5725,
-   "stop": 228.2791,
-   "t1": 269.0395,
-   "t2": 270.55,
-   "t3": 293.001,
-   "t4": 334.135,
-   "stop_pct": -8.7,
-   "position": "구간 위",
-   "t1_pct": 7.6,
-   "signals": [],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-11-09",
    "earnings_days": 3,
    "earnings_soon": true
   }
  ],
- "watch": [
-  {
-   "ticker": "QCOM",
-   "name": "QUALCOMM Incorporated",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 165.41,
-   "buy_high": 157.9678,
-   "distance_pct": 4.7
-  },
-  {
-   "ticker": "TMUS",
-   "name": "T-Mobile US, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 162.01,
-   "buy_high": 150.8859,
-   "distance_pct": 7.4
-  },
-  {
-   "ticker": "TMUS",
-   "name": "T-Mobile US, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 162.01,
-   "buy_high": 150.8859,
-   "distance_pct": 7.4
-  }
- ],
+ "watch": [],
  "summary": {
   "total": 125,
-  "hit": 36,
+  "hit": 38,
   "stop": 71,
-  "open": 18,
-  "hit_rate": 33.6,
-  "decided": 107,
+  "open": 16,
+  "hit_rate": 34.9,
+  "decided": 109,
   "avg_ret": -3.47,
   "avg_excess": -1.38,
   "finished": 80,
   "by_tf": {
    "1d": {
     "total": 87,
-    "decided": 77,
-    "hit_rate": 39.0
+    "decided": 79,
+    "hit_rate": 40.5
    },
    "1w": {
     "total": 38,
@@ -164,32 +102,32 @@
   },
   "baseline": {
    "total": 375,
-   "decided": 305,
-   "hit": 84,
-   "stop": 221,
-   "hit_rate": 27.5
+   "decided": 307,
+   "hit": 85,
+   "stop": 222,
+   "hit_rate": 27.7
   },
   "baseline_matched": {
-   "decided": 281,
-   "hit": 75,
-   "stop": 206,
+   "decided": 285,
+   "hit": 76,
+   "stop": 209,
    "hit_rate": 26.7
   },
   "current": {
    "total": 29,
-   "hit": 4,
+   "hit": 6,
    "stop": 19,
-   "open": 6,
-   "hit_rate": 17.4,
-   "decided": 23,
+   "open": 4,
+   "hit_rate": 24.0,
+   "decided": 25,
    "avg_ret": -8.37,
    "avg_excess": -4.83,
    "finished": 19,
    "by_tf": {
     "1d": {
      "total": 18,
-     "decided": 14,
-     "hit_rate": 28.6
+     "decided": 16,
+     "hit_rate": 37.5
     },
     "1w": {
      "total": 11,
@@ -199,18 +137,18 @@
    },
    "baseline": {
     "total": 87,
-    "decided": 59,
-    "hit": 7,
-    "stop": 52,
-    "hit_rate": 11.9
+    "decided": 61,
+    "hit": 8,
+    "stop": 53,
+    "hit_rate": 13.1
    },
    "baseline_matched": {
-    "decided": 55,
-    "hit": 7,
-    "stop": 48,
-    "hit_rate": 12.7
+    "decided": 59,
+    "hit": 8,
+    "stop": 51,
+    "hit_rate": 13.6
    }
   }
  },
- "elapsed_sec": 18.9
+ "elapsed_sec": 23.2
 }

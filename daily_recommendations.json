@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-06",
-  "updated_at": "2026-11-07 01:00:06",
+  "date": "2026-11-09",
+  "updated_at": "2026-11-10 03:40:05",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,52 +8,52 @@
     "qualified": 0,
     "near_miss": [
       {
+        "ticker": "META",
+        "name": "메타 플랫폼스",
+        "total_score": 66,
+        "risk_reward_ratio": 0.93,
+        "blockers": [
+          "점수 66/68",
+          "손익비 0.93/1.20"
+        ]
+      },
+      {
+        "ticker": "MPWR",
+        "name": "모놀리식 파워",
+        "total_score": 65,
+        "risk_reward_ratio": 1.2,
+        "blockers": [
+          "점수 65/68"
+        ]
+      },
+      {
         "ticker": "TXN",
         "name": "텍사스 인스트루먼트",
-        "total_score": 59,
-        "risk_reward_ratio": 0.79,
+        "total_score": 63,
+        "risk_reward_ratio": 0.69,
         "blockers": [
-          "점수 59/68",
-          "손익비 0.79/1.20"
+          "점수 63/68",
+          "손익비 0.69/1.20"
         ]
       },
       {
-        "ticker": "XYZ",
-        "name": "블록 (구 스퀘어)",
-        "total_score": 51,
-        "risk_reward_ratio": 0.72,
+        "ticker": "AMD",
+        "name": "AMD",
+        "total_score": 56,
+        "risk_reward_ratio": 0.88,
         "blockers": [
-          "점수 51/68",
-          "손익비 0.72/1.20"
+          "점수 56/68",
+          "손익비 0.88/1.20"
         ]
       },
       {
-        "ticker": "AMZN",
-        "name": "아마존",
-        "total_score": 50,
-        "risk_reward_ratio": 1.01,
+        "ticker": "VST",
+        "name": "비스트라",
+        "total_score": 56,
+        "risk_reward_ratio": 0.66,
         "blockers": [
-          "점수 50/68",
-          "손익비 1.01/1.20"
-        ]
-      },
-      {
-        "ticker": "CDNS",
-        "name": "케이던스",
-        "total_score": 50,
-        "risk_reward_ratio": 1.01,
-        "blockers": [
-          "점수 50/68",
-          "손익비 1.01/1.20"
-        ]
-      },
-      {
-        "ticker": "NXPI",
-        "name": "NXP 세미컨덕터",
-        "total_score": 49,
-        "risk_reward_ratio": 1.39,
-        "blockers": [
-          "점수 49/68"
+          "점수 56/68",
+          "손익비 0.66/1.20"
         ]
       }
     ]
