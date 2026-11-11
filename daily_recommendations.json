@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-09",
-  "updated_at": "2026-11-10 03:40:05",
+  "date": "2026-11-10",
+  "updated_at": "2026-11-11 01:35:35",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -18,32 +18,23 @@
         ]
       },
       {
-        "ticker": "MPWR",
-        "name": "모놀리식 파워",
-        "total_score": 65,
-        "risk_reward_ratio": 1.2,
-        "blockers": [
-          "점수 65/68"
-        ]
-      },
-      {
-        "ticker": "TXN",
-        "name": "텍사스 인스트루먼트",
-        "total_score": 63,
-        "risk_reward_ratio": 0.69,
-        "blockers": [
-          "점수 63/68",
-          "손익비 0.69/1.20"
-        ]
-      },
-      {
         "ticker": "AMD",
         "name": "AMD",
-        "total_score": 56,
-        "risk_reward_ratio": 0.88,
+        "total_score": 63,
+        "risk_reward_ratio": 0.78,
         "blockers": [
-          "점수 56/68",
-          "손익비 0.88/1.20"
+          "점수 63/68",
+          "손익비 0.78/1.20"
+        ]
+      },
+      {
+        "ticker": "MPWR",
+        "name": "모놀리식 파워",
+        "total_score": 63,
+        "risk_reward_ratio": 0.79,
+        "blockers": [
+          "점수 63/68",
+          "손익비 0.79/1.20"
         ]
       },
       {
@@ -54,6 +45,15 @@
         "blockers": [
           "점수 56/68",
           "손익비 0.66/1.20"
+        ]
+      },
+      {
+        "ticker": "RGTI",
+        "name": "리게티 컴퓨팅",
+        "total_score": 55,
+        "risk_reward_ratio": 2.3,
+        "blockers": [
+          "점수 55/68"
         ]
       }
     ]

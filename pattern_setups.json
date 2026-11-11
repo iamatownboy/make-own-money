@@ -1,8 +1,8 @@
 {
- "date": "2026-11-09",
- "latest_session": "2026-11-09",
+ "date": "2026-11-10",
+ "latest_session": "2026-11-10",
  "stale": false,
- "generated_at": "2026-11-10 03:39:47",
+ "generated_at": "2026-11-11 01:35:14",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -10,33 +10,33 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 679.35,
-   "chg_pct": 3.54,
-   "from_high_pct": -10.9,
+   "price": 674.76,
+   "chg_pct": -0.68,
+   "from_high_pct": -11.5,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 487.41,
-   "chg_pct": 5.05,
-   "from_high_pct": -27.5,
+   "price": 483.63,
+   "chg_pct": -0.78,
+   "from_high_pct": -28.0,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 752.69,
-   "chg_pct": 2.37,
-   "from_high_pct": -3.7,
+   "price": 749.92,
+   "chg_pct": -0.37,
+   "from_high_pct": -4.1,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 379.53,
-   "chg_pct": 1.88,
-   "from_high_pct": -25.5,
+   "price": 369.36,
+   "chg_pct": -2.68,
+   "from_high_pct": -27.5,
    "status": null
   }
  ],
@@ -48,24 +48,24 @@
    "name": "Applied Materials, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 370.55,
-   "L": 275.1394408377765,
+   "price": 372.53,
+   "L": 275.1394112003493,
    "H": 738.8798989117877,
    "L_date": "2026-01-09",
    "H_date": "2026-07-02",
    "entry_date": "2026-10-23",
-   "retrace": 0.794,
+   "retrace": 0.79,
    "swing_pct": 168.5,
    "buy_high": 374.3799,
-   "buy_low": 328.0059,
+   "buy_low": 328.0058,
    "stop": 275.1394,
    "t1": 507.0097,
    "t2": 527.915,
    "t3": 648.5869,
    "t4": 869.6782,
-   "stop_pct": -25.7,
+   "stop_pct": -26.1,
    "position": "구간 안",
-   "t1_pct": 36.8,
+   "t1_pct": 36.1,
    "signals": [],
    "base_rate": {
     "hit": 48.1,
@@ -73,7 +73,7 @@
     "n": 801
    },
    "earnings_date": "2026-11-12",
-   "earnings_days": 3,
+   "earnings_days": 2,
    "earnings_soon": true
   }
  ],
@@ -102,16 +102,16 @@
   },
   "baseline": {
    "total": 375,
-   "decided": 307,
+   "decided": 309,
    "hit": 85,
-   "stop": 222,
-   "hit_rate": 27.7
+   "stop": 224,
+   "hit_rate": 27.5
   },
   "baseline_matched": {
-   "decided": 285,
+   "decided": 286,
    "hit": 76,
-   "stop": 209,
-   "hit_rate": 26.7
+   "stop": 210,
+   "hit_rate": 26.6
   },
   "current": {
    "total": 29,
@@ -137,18 +137,18 @@
    },
    "baseline": {
     "total": 87,
-    "decided": 61,
+    "decided": 62,
     "hit": 8,
-    "stop": 53,
-    "hit_rate": 13.1
+    "stop": 54,
+    "hit_rate": 12.9
    },
    "baseline_matched": {
-    "decided": 59,
+    "decided": 60,
     "hit": 8,
-    "stop": 51,
-    "hit_rate": 13.6
+    "stop": 52,
+    "hit_rate": 13.3
    }
   }
  },
- "elapsed_sec": 23.2
+ "elapsed_sec": 15.0
 }
