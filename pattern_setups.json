@@ -1,8 +1,8 @@
 {
- "date": "2026-11-10",
- "latest_session": "2026-11-10",
+ "date": "2026-11-11",
+ "latest_session": "2026-11-11",
  "stale": false,
- "generated_at": "2026-11-11 01:35:14",
+ "generated_at": "2026-11-12 02:35:24",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -10,74 +10,58 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 674.76,
-   "chg_pct": -0.68,
-   "from_high_pct": -11.5,
+   "price": 690.38,
+   "chg_pct": 2.31,
+   "from_high_pct": -9.5,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 483.63,
-   "chg_pct": -0.78,
-   "from_high_pct": -28.0,
+   "price": 506.96,
+   "chg_pct": 4.82,
+   "from_high_pct": -24.5,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 749.92,
-   "chg_pct": -0.37,
-   "from_high_pct": -4.1,
+   "price": 759.81,
+   "chg_pct": 1.32,
+   "from_high_pct": -2.8,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 369.36,
-   "chg_pct": -2.68,
-   "from_high_pct": -27.5,
+   "price": 365.17,
+   "chg_pct": -1.13,
+   "from_high_pct": -28.4,
    "status": null
   }
  ],
  "min_market_cap": null,
- "setups": [
+ "setups": [],
+ "watch": [
   {
-   "id": "AMAT|1w|2026-01-09|2026-07-02",
    "ticker": "AMAT",
    "name": "Applied Materials, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 372.53,
-   "L": 275.1394112003493,
-   "H": 738.8798989117877,
-   "L_date": "2026-01-09",
-   "H_date": "2026-07-02",
-   "entry_date": "2026-10-23",
-   "retrace": 0.79,
-   "swing_pct": 168.5,
+   "price": 395.08,
    "buy_high": 374.3799,
-   "buy_low": 328.0058,
-   "stop": 275.1394,
-   "t1": 507.0097,
-   "t2": 527.915,
-   "t3": 648.5869,
-   "t4": 869.6782,
-   "stop_pct": -26.1,
-   "position": "구간 안",
-   "t1_pct": 36.1,
-   "signals": [],
-   "base_rate": {
-    "hit": 48.1,
-    "random": 38.0,
-    "n": 801
-   },
-   "earnings_date": "2026-11-12",
-   "earnings_days": 2,
-   "earnings_soon": true
+   "distance_pct": 5.5
+  },
+  {
+   "ticker": "AVGO",
+   "name": "Broadcom Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 345.22,
+   "buy_high": 332.7052,
+   "distance_pct": 3.8
   }
  ],
- "watch": [],
  "summary": {
   "total": 125,
   "hit": 38,
@@ -102,16 +86,16 @@
   },
   "baseline": {
    "total": 375,
-   "decided": 309,
-   "hit": 85,
+   "decided": 311,
+   "hit": 87,
    "stop": 224,
-   "hit_rate": 27.5
+   "hit_rate": 28.0
   },
   "baseline_matched": {
-   "decided": 286,
-   "hit": 76,
+   "decided": 288,
+   "hit": 78,
    "stop": 210,
-   "hit_rate": 26.6
+   "hit_rate": 27.1
   },
   "current": {
    "total": 29,
@@ -137,18 +121,18 @@
    },
    "baseline": {
     "total": 87,
-    "decided": 62,
-    "hit": 8,
+    "decided": 63,
+    "hit": 9,
     "stop": 54,
-    "hit_rate": 12.9
+    "hit_rate": 14.3
    },
    "baseline_matched": {
-    "decided": 60,
-    "hit": 8,
+    "decided": 61,
+    "hit": 9,
     "stop": 52,
-    "hit_rate": 13.3
+    "hit_rate": 14.8
    }
   }
  },
- "elapsed_sec": 15.0
+ "elapsed_sec": 21.4
 }

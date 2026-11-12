@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-10",
-  "updated_at": "2026-11-11 01:35:35",
+  "date": "2026-11-11",
+  "updated_at": "2026-11-12 02:35:39",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,52 +8,52 @@
     "qualified": 0,
     "near_miss": [
       {
+        "ticker": "KLAC",
+        "name": "KLA",
+        "total_score": 68,
+        "risk_reward_ratio": 0.64,
+        "blockers": [
+          "손익비 0.64/1.20"
+        ]
+      },
+      {
         "ticker": "META",
         "name": "메타 플랫폼스",
         "total_score": 66,
-        "risk_reward_ratio": 0.93,
+        "risk_reward_ratio": 0.75,
         "blockers": [
           "점수 66/68",
-          "손익비 0.93/1.20"
+          "손익비 0.75/1.20"
+        ]
+      },
+      {
+        "ticker": "AVGO",
+        "name": "브로드컴",
+        "total_score": 58,
+        "risk_reward_ratio": 0.58,
+        "blockers": [
+          "점수 58/68",
+          "손익비 0.58/1.20"
+        ]
+      },
+      {
+        "ticker": "TSM",
+        "name": "TSMC",
+        "total_score": 58,
+        "risk_reward_ratio": 0.59,
+        "blockers": [
+          "점수 58/68",
+          "손익비 0.59/1.20"
         ]
       },
       {
         "ticker": "AMD",
         "name": "AMD",
-        "total_score": 63,
-        "risk_reward_ratio": 0.78,
-        "blockers": [
-          "점수 63/68",
-          "손익비 0.78/1.20"
-        ]
-      },
-      {
-        "ticker": "MPWR",
-        "name": "모놀리식 파워",
-        "total_score": 63,
-        "risk_reward_ratio": 0.79,
-        "blockers": [
-          "점수 63/68",
-          "손익비 0.79/1.20"
-        ]
-      },
-      {
-        "ticker": "VST",
-        "name": "비스트라",
         "total_score": 56,
-        "risk_reward_ratio": 0.66,
+        "risk_reward_ratio": 0.9,
         "blockers": [
           "점수 56/68",
-          "손익비 0.66/1.20"
-        ]
-      },
-      {
-        "ticker": "RGTI",
-        "name": "리게티 컴퓨팅",
-        "total_score": 55,
-        "risk_reward_ratio": 2.3,
-        "blockers": [
-          "점수 55/68"
+          "손익비 0.9/1.20"
         ]
       }
     ]
