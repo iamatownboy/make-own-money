@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-11",
-  "updated_at": "2026-11-12 02:35:39",
+  "date": "2026-11-12",
+  "updated_at": "2026-11-13 02:34:15",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,52 +8,51 @@
     "qualified": 0,
     "near_miss": [
       {
-        "ticker": "KLAC",
-        "name": "KLA",
-        "total_score": 68,
-        "risk_reward_ratio": 0.64,
-        "blockers": [
-          "손익비 0.64/1.20"
-        ]
-      },
-      {
         "ticker": "META",
         "name": "메타 플랫폼스",
-        "total_score": 66,
-        "risk_reward_ratio": 0.75,
+        "total_score": 71,
+        "risk_reward_ratio": 0.9,
         "blockers": [
-          "점수 66/68",
-          "손익비 0.75/1.20"
+          "손익비 0.9/1.20"
         ]
       },
       {
-        "ticker": "AVGO",
-        "name": "브로드컴",
-        "total_score": 58,
-        "risk_reward_ratio": 0.58,
+        "ticker": "KLAC",
+        "name": "KLA",
+        "total_score": 63,
+        "risk_reward_ratio": 0.88,
         "blockers": [
-          "점수 58/68",
-          "손익비 0.58/1.20"
+          "점수 63/68",
+          "손익비 0.88/1.20"
         ]
       },
       {
-        "ticker": "TSM",
-        "name": "TSMC",
-        "total_score": 58,
-        "risk_reward_ratio": 0.59,
+        "ticker": "VST",
+        "name": "비스트라",
+        "total_score": 56,
+        "risk_reward_ratio": 0.66,
         "blockers": [
-          "점수 58/68",
-          "손익비 0.59/1.20"
+          "점수 56/68",
+          "손익비 0.66/1.20"
         ]
       },
       {
         "ticker": "AMD",
         "name": "AMD",
-        "total_score": 56,
-        "risk_reward_ratio": 0.9,
+        "total_score": 54,
+        "risk_reward_ratio": 1.2,
         "blockers": [
-          "점수 56/68",
-          "손익비 0.9/1.20"
+          "점수 54/68"
+        ]
+      },
+      {
+        "ticker": "XYZ",
+        "name": "블록 (구 스퀘어)",
+        "total_score": 54,
+        "risk_reward_ratio": 0.7,
+        "blockers": [
+          "점수 54/68",
+          "손익비 0.7/1.20"
         ]
       }
     ]
