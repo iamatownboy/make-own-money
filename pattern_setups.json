@@ -1,8 +1,8 @@
 {
- "date": "2026-11-12",
- "latest_session": "2026-11-12",
+ "date": "2026-11-13",
+ "latest_session": "2026-11-13",
  "stale": false,
- "generated_at": "2026-11-13 02:34:01",
+ "generated_at": "2026-11-14 01:36:16",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -10,33 +10,33 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 688.17,
-   "chg_pct": -0.32,
-   "from_high_pct": -9.8,
+   "price": 679.89,
+   "chg_pct": -1.2,
+   "from_high_pct": -10.9,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 501.73,
-   "chg_pct": -1.03,
-   "from_high_pct": -25.3,
+   "price": 486.75,
+   "chg_pct": -2.99,
+   "from_high_pct": -27.5,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 757.12,
-   "chg_pct": -0.35,
-   "from_high_pct": -3.1,
+   "price": 754.37,
+   "chg_pct": -0.36,
+   "from_high_pct": -3.5,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 354.89,
-   "chg_pct": -2.82,
-   "from_high_pct": -30.4,
+   "price": 355.45,
+   "chg_pct": 0.16,
+   "from_high_pct": -30.3,
    "status": null
   }
  ],
@@ -48,36 +48,48 @@
    "name": "Applied Materials, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 380.95,
-   "L": 275.1394112003493,
+   "price": 370.5,
+   "L": 275.1394408377765,
    "H": 738.8798989117877,
    "L_date": "2026-01-09",
    "H_date": "2026-07-02",
    "entry_date": "2026-10-23",
-   "retrace": 0.772,
+   "retrace": 0.794,
    "swing_pct": 168.5,
    "buy_high": 374.3799,
-   "buy_low": 328.0058,
+   "buy_low": 328.0059,
    "stop": 275.1394,
    "t1": 507.0097,
    "t2": 527.915,
    "t3": 648.5869,
    "t4": 869.6782,
-   "stop_pct": -27.8,
-   "position": "구간 위",
-   "t1_pct": 33.1,
-   "signals": [],
+   "stop_pct": -25.7,
+   "position": "구간 안",
+   "t1_pct": 36.8,
+   "signals": [
+    "반전 캔들"
+   ],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
    },
-   "earnings_date": "2026-11-12",
-   "earnings_days": 0,
-   "earnings_soon": true
+   "earnings_date": "2027-02-11",
+   "earnings_days": 90,
+   "earnings_soon": false
   }
  ],
- "watch": [],
+ "watch": [
+  {
+   "ticker": "AVGO",
+   "name": "Broadcom Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 347.01,
+   "buy_high": 332.7052,
+   "distance_pct": 4.3
+  }
+ ],
  "summary": {
   "total": 125,
   "hit": 38,
@@ -150,5 +162,5 @@
    }
   }
  },
- "elapsed_sec": 12.8
+ "elapsed_sec": 13.9
 }

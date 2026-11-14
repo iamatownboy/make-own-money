@@ -357,7 +357,6 @@ BEEM,Beam Global
 BEEP,Mobile Infrastructure Corporation
 BELFA,Bel Fuse Inc.
 BELFB,Bel Fuse Inc.
-BENF,Beneficient
 BFC,Bank First Corporation
 BFRI,Biofrontera Inc.
 BFST,"Business First Bancshares, Inc."
@@ -621,7 +620,6 @@ CLBK,"Columbia Financial, Inc."
 CLBT,Cellebrite DI Ltd.
 CLDX,"Celldex Therapeutics, Inc."
 CLFD,"Clearfield, Inc."
-CLGN,CollPlant Biotechnologies Ltd.
 CLIK,Click Holdings Limited
 CLIR,ClearSign Technologies Corporation
 CLLS,Cellectis S.A.
@@ -1668,6 +1666,7 @@ LOGI,Logitech International S.A.
 LONA,"LeonaBio, Inc."
 LOPE,"Grand Canyon Education, Inc."
 LOVE,The Lovesac Company
+LOVI,Live Oak Acquisition Corp. VI
 LPAA,Launch One Acquisition Corp.
 LPBB,Launch Two Acquisition Corp.
 LPCN,Lipocine Inc.
@@ -2050,13 +2049,14 @@ OKUR,"OnKure Therapeutics, Inc."
 OKYO,OKYO Pharma Limited
 OLED,Universal Display Corporation
 OLLI,"Ollie's Bargain Outlet Holdings, Inc."
-OLMA,"Olema Pharmaceuticals, Inc."
+OLMA,"Olema Oncology, Inc."
 OLOX,Olenox Industries Inc.
 OM,"Outset Medical, Inc."
 OMAB,Grupo Aeroportuario del Centro Norte S.A.B. de C.V.
 OMCL,"Omnicell, Inc."
 OMDA,"Omada Health, Inc."
 OMER,Omeros Corporation
+OMEX,"Odyssey Marine Exploration, Inc."
 OMH,Ohmyhome Limited
 OMSE,OMS Energy Technologies Inc.
 ON,ON Semiconductor Corporation
@@ -2074,6 +2074,7 @@ OPAL,OPAL Fuels Inc.
 OPBK,OP Bancorp
 OPCH,"Option Care Health, Inc."
 OPEN,Opendoor Technologies Inc
+OPHI,CollPlant Biotechnologies Ltd.
 OPK,"Opko Health, Inc."
 OPRA,Opera Limited
 OPRT,Oportun Financial Corporation
@@ -2273,7 +2274,6 @@ PTC,PTC Inc.
 PTCT,"PTC Therapeutics, Inc."
 PTEN,"Patterson-UTI Energy, Inc."
 PTGX,"Protagonist Therapeutics, Inc."
-PTLE,PTL LTD
 PTLO,Portillo's Inc.
 PTN,"Palatin Technologies, Inc."
 PTON,"Peloton Interactive, Inc."
@@ -2773,6 +2773,7 @@ TNDM,"Tandem Diabetes Care, Inc."
 TNGX,"Tango Therapeutics, Inc."
 TNON,"Tenon Medical, Inc."
 TNXP,Tonix Pharmaceuticals Holding Corp.
+TOMZ,"TOMI Environmental Solutions, Inc."
 TONX,TON Strategy Company
 TOP,TOP Financial Group Limited
 TORO,Toro Corp.
@@ -2991,7 +2992,7 @@ WETO,Wetour Robotics Limited
 WEYS,"Weyco Group, Inc."
 WFCF,"Where Food Comes From, Inc."
 WFF,WF Holding Limited
-WFRD,Weatherford International plc
+WFRD,Weatherford International Corp
 WGS,GeneDx Holdings Corp.
 WHF,"WhiteHorse Finance, Inc."
 WHLR,"Wheeler Real Estate Investment Trust, Inc."
@@ -3034,6 +3035,7 @@ WULF,TeraWulf Inc.
 WVE,"Wave Life Sciences, Inc."
 WVVI,"Willamette Valley Vineyards, Inc."
 WW,"WW International, Inc."
+WWB,Windward Bio Group AG
 WWD,"Woodward, Inc."
 WXM,WF International Limited
 WYFI,"WhiteFiber, Inc."
@@ -3123,3 +3125,4 @@ ZURA,Zura Bio Limited
 ZVRA,"Zevra Therapeutics, Inc."
 ZYBT,Zhengye Biotechnology Holding Limited
 ZYME,Zymeworks Inc.
+ZYN,PTL LTD
