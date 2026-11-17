@@ -1,8 +1,8 @@
 {
- "date": "2026-11-13",
- "latest_session": "2026-11-13",
+ "date": "2026-11-16",
+ "latest_session": "2026-11-16",
  "stale": false,
- "generated_at": "2026-11-14 01:36:16",
+ "generated_at": "2026-11-17 04:01:01",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -10,91 +10,134 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 679.89,
-   "chg_pct": -1.2,
-   "from_high_pct": -10.9,
+   "price": 661.75,
+   "chg_pct": -2.67,
+   "from_high_pct": -13.3,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 486.75,
-   "chg_pct": -2.99,
-   "from_high_pct": -27.5,
+   "price": 461.9,
+   "chg_pct": -5.11,
+   "from_high_pct": -31.2,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 754.37,
-   "chg_pct": -0.36,
-   "from_high_pct": -3.5,
+   "price": 739.95,
+   "chg_pct": -1.91,
+   "from_high_pct": -5.3,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 355.45,
-   "chg_pct": 0.16,
-   "from_high_pct": -30.3,
+   "price": 352.93,
+   "chg_pct": -0.71,
+   "from_high_pct": -30.8,
    "status": null
   }
  ],
  "min_market_cap": null,
  "setups": [
   {
-   "id": "AMAT|1w|2026-01-09|2026-07-02",
-   "ticker": "AMAT",
-   "name": "Applied Materials, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 370.5,
-   "L": 275.1394408377765,
-   "H": 738.8798989117877,
-   "L_date": "2026-01-09",
-   "H_date": "2026-07-02",
-   "entry_date": "2026-10-23",
-   "retrace": 0.794,
-   "swing_pct": 168.5,
-   "buy_high": 374.3799,
-   "buy_low": 328.0059,
-   "stop": 275.1394,
-   "t1": 507.0097,
-   "t2": 527.915,
-   "t3": 648.5869,
-   "t4": 869.6782,
-   "stop_pct": -25.7,
-   "position": "구간 안",
-   "t1_pct": 36.8,
-   "signals": [
-    "반전 캔들"
-   ],
+   "id": "LITE|1d|2026-11-05|2026-11-11",
+   "ticker": "LITE",
+   "name": "Lumentum Holdings Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 546.0,
+   "L": 506.6889953613281,
+   "H": 678.6699829101562,
+   "L_date": "2026-11-05",
+   "H_date": "2026-11-11",
+   "entry_date": "2026-11-16",
+   "retrace": 0.771,
+   "swing_pct": 33.9,
+   "buy_high": 543.4929,
+   "buy_low": 526.2948,
+   "stop": 506.689,
+   "t1": 592.6795,
+   "t2": 608.885,
+   "t3": 648.802,
+   "t4": 721.9367,
+   "stop_pct": -7.2,
+   "position": "구간 위",
+   "t1_pct": 8.5,
+   "signals": [],
    "base_rate": {
-    "hit": 48.1,
-    "random": 38.0,
-    "n": 801
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
    },
-   "earnings_date": "2027-02-11",
-   "earnings_days": 90,
+   "earnings_date": "2027-02-02",
+   "earnings_days": 78,
    "earnings_soon": false
   }
  ],
  "watch": [
   {
+   "ticker": "MSTR",
+   "name": "Strategy Inc",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 103.03,
+   "buy_high": 100.9373,
+   "distance_pct": 2.1
+  },
+  {
+   "ticker": "DASH",
+   "name": "DoorDash, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 169.78,
+   "buy_high": 163.743,
+   "distance_pct": 3.7
+  },
+  {
+   "ticker": "ASML",
+   "name": "ASML Holding N.V.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 1406.79,
+   "buy_high": 1345.5803,
+   "distance_pct": 4.5
+  },
+  {
+   "ticker": "QCOM",
+   "name": "QUALCOMM Incorporated",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 168.52,
+   "buy_high": 157.9678,
+   "distance_pct": 6.7
+  },
+  {
    "ticker": "AVGO",
    "name": "Broadcom Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 347.01,
+   "price": 333.4,
    "buy_high": 332.7052,
-   "distance_pct": 4.3
+   "distance_pct": 0.2
+  },
+  {
+   "ticker": "MSTR",
+   "name": "Strategy Inc",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 103.03,
+   "buy_high": 100.9373,
+   "distance_pct": 2.1
   }
  ],
  "summary": {
-  "total": 125,
+  "total": 126,
   "hit": 38,
   "stop": 71,
-  "open": 16,
+  "open": 17,
   "hit_rate": 34.9,
   "decided": 109,
   "avg_ret": -3.47,
@@ -102,7 +145,7 @@
   "finished": 80,
   "by_tf": {
    "1d": {
-    "total": 87,
+    "total": 88,
     "decided": 79,
     "hit_rate": 40.5
    },
@@ -113,23 +156,23 @@
    }
   },
   "baseline": {
-   "total": 375,
-   "decided": 313,
+   "total": 378,
+   "decided": 314,
    "hit": 87,
-   "stop": 226,
-   "hit_rate": 27.8
+   "stop": 227,
+   "hit_rate": 27.7
   },
   "baseline_matched": {
-   "decided": 290,
+   "decided": 291,
    "hit": 78,
-   "stop": 212,
-   "hit_rate": 26.9
+   "stop": 213,
+   "hit_rate": 26.8
   },
   "current": {
-   "total": 29,
+   "total": 30,
    "hit": 6,
    "stop": 19,
-   "open": 4,
+   "open": 5,
    "hit_rate": 24.0,
    "decided": 25,
    "avg_ret": -8.37,
@@ -137,7 +180,7 @@
    "finished": 19,
    "by_tf": {
     "1d": {
-     "total": 18,
+     "total": 19,
      "decided": 16,
      "hit_rate": 37.5
     },
@@ -148,7 +191,7 @@
     }
    },
    "baseline": {
-    "total": 87,
+    "total": 90,
     "decided": 64,
     "hit": 9,
     "stop": 55,
@@ -162,5 +205,5 @@
    }
   }
  },
- "elapsed_sec": 13.9
+ "elapsed_sec": 11.9
 }

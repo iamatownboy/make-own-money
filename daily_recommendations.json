@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-13",
-  "updated_at": "2026-11-14 01:36:28",
+  "date": "2026-11-16",
+  "updated_at": "2026-11-17 04:01:13",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,52 +8,52 @@
     "qualified": 0,
     "near_miss": [
       {
-        "ticker": "META",
-        "name": "메타 플랫폼스",
-        "total_score": 71,
-        "risk_reward_ratio": 0.9,
+        "ticker": "TXN",
+        "name": "텍사스 인스트루먼트",
+        "total_score": 68,
+        "risk_reward_ratio": 0.8,
         "blockers": [
-          "손익비 0.9/1.20"
+          "손익비 0.8/1.20"
         ]
       },
       {
         "ticker": "AVGO",
         "name": "브로드컴",
-        "total_score": 58,
-        "risk_reward_ratio": 0.7,
+        "total_score": 66,
+        "risk_reward_ratio": 0.75,
         "blockers": [
-          "점수 58/68",
-          "손익비 0.7/1.20"
+          "점수 66/68",
+          "손익비 0.75/1.20"
         ]
       },
       {
-        "ticker": "VST",
-        "name": "비스트라",
+        "ticker": "META",
+        "name": "메타 플랫폼스",
         "total_score": 56,
-        "risk_reward_ratio": 0.66,
+        "risk_reward_ratio": 0.68,
         "blockers": [
           "점수 56/68",
-          "손익비 0.66/1.20"
+          "손익비 0.68/1.20"
         ]
       },
       {
-        "ticker": "XYZ",
-        "name": "블록 (구 스퀘어)",
-        "total_score": 54,
-        "risk_reward_ratio": 0.7,
+        "ticker": "AMD",
+        "name": "AMD",
+        "total_score": 56,
+        "risk_reward_ratio": 1.07,
         "blockers": [
-          "점수 54/68",
-          "손익비 0.7/1.20"
+          "점수 56/68",
+          "손익비 1.07/1.20"
         ]
       },
       {
-        "ticker": "TSM",
-        "name": "TSMC",
+        "ticker": "KLAC",
+        "name": "KLA",
         "total_score": 53,
-        "risk_reward_ratio": 0.67,
+        "risk_reward_ratio": 0.71,
         "blockers": [
           "점수 53/68",
-          "손익비 0.67/1.20"
+          "손익비 0.71/1.20"
         ]
       }
     ]

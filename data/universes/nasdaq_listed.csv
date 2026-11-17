@@ -278,6 +278,7 @@ ATRO,Astronics Corporation
 ATTO,"Attovia Therapeutics, Inc."
 ATTT,Atlas Trinity Tech Limited
 ATXG,Addentax Group Corp.
+ATYR,"aTyr Pharma, Inc."
 AUBN,"Auburn National Bancorporation, Inc."
 AUC,ATIF Holdings Limited
 AUDC,AudioCodes Ltd.
@@ -392,7 +393,6 @@ BLIV,BeLive Holdings
 BLKB,"Blackbaud, Inc."
 BLLN,"BillionToOne, Inc."
 BLMN,"Bloomin' Brands, Inc."
-BLNE,"Beeline Holdings, Inc."
 BLRK,Bluerock Acquisition Corp.
 BLRX,BioLineRx Ltd.
 BLSM,"BlossomHill Therapeutics, Inc."
@@ -441,6 +441,7 @@ BRKH,Burtech Acquisition Corp II
 BRKR,Bruker Corporation
 BRLT,"Brilliant Earth Group, Inc."
 BRNX,BrenX Ltd.
+BRRK,Bluerock Acquisition Corp. II
 BRTM,B&R Technology Merger Corp.
 BRUN,Boost Run Inc.
 BRVE,"Braveheart Bio, Inc."
@@ -856,6 +857,7 @@ DTST,Data Storage Corporation
 DUKR,DUKE Robotics Corp.
 DUOL,"Duolingo, Inc."
 DUOT,"Duos Technologies Group, Inc."
+DVLT,Datavault AI Inc.
 DWSN,Dawson Geophysical Company
 DWTX,"Dogwood Therapeutics, Inc."
 DXCM,"DexCom, Inc."
@@ -1284,6 +1286,7 @@ HIMX,"Himax Technologies, Inc."
 HIND,"Vyome Holdings, Inc."
 HITI,High Tide Inc.
 HIVE,HIVE Digital Technologies Ltd
+HKPD,"Cellyan Biotechnology Co., Ltd"
 HLIT,Harmonic Inc.
 HLMN,Hillman Solutions Corp.
 HLNE,Hamilton Lane Incorporated
@@ -1667,7 +1670,6 @@ LONA,"LeonaBio, Inc."
 LOPE,"Grand Canyon Education, Inc."
 LOVE,The Lovesac Company
 LOVI,Live Oak Acquisition Corp. VI
-LPAA,Launch One Acquisition Corp.
 LPBB,Launch Two Acquisition Corp.
 LPCN,Lipocine Inc.
 LPCV,Launchpad Cadenza Acquisition Corp I
@@ -1714,6 +1716,7 @@ MAMO,Massimo Group
 MANH,"Manhattan Associates, Inc."
 MAR,Marriott International
 MARA,"MARA Holdings, Inc."
+MASK,3 E Network Technology Group Ltd
 MASS,908 Devices Inc.
 MAT,"Mattel, Inc."
 MATH,Metalpha Technology Holding Limited
@@ -1845,7 +1848,6 @@ MSTR,Strategy Inc
 MTAK,Market Technology Acquisition Corp
 MTC,"MMTec, Inc."
 MTCH,"Match Group, Inc."
-MTEK,Maris-Tech Ltd.
 MTEN,Mingteng International Corporation Inc.
 MTEX,"Mannatech, Incorporated"
 MTLS,Materialise NV
@@ -1996,7 +1998,6 @@ NVTS,Navitas Semiconductor Corporation
 NVX,NOVONIX Limited
 NWBI,"Northwest Bancshares, Inc."
 NWCL,newcleo plc
-NWE,"NorthWestern Energy Group, Inc."
 NWFL,Norwood Financial Corp.
 NWGL,CL Workshop Group Limited
 NWL,Newell Brands Inc.
@@ -2127,6 +2128,7 @@ PANL,Pangaea Logistics Solutions Ltd.
 PANW,"Palo Alto Networks, Inc."
 PARK,"Park Dental Partners, Inc."
 PASG,"Passage Bio, Inc."
+PASW,"Ping An Biomedical Co., Ltd."
 PATK,"Patrick Industries, Inc."
 PAVM,PAVmed Inc.
 PAVS,Paranovus Entertainment Technology Ltd.
@@ -2197,7 +2199,6 @@ PLAY,"Dave & Buster's Entertainment, Inc."
 PLBC,Plumas Bancorp
 PLBL,Polibeli Group Ltd
 PLBY,"Playboy, Inc."
-PLCE,"Children's Place, Inc. (The)"
 PLCI,Pelican Acquisition II Corporation
 PLMR,"Palomar Holdings, Inc."
 PLPC,Preformed Line Products Company
@@ -2235,6 +2236,7 @@ POWL,"Powell Industries, Inc."
 POWW,Outdoor Holding Company
 PPBT,Purple Biotech Ltd.
 PPC,Pilgrim's Pride Corporation
+PPCB,"Propanc Biopharma, Inc."
 PPHC,"Public Policy Holding Company, Inc."
 PPIH,"Perma-Pipe International Holdings, Inc."
 PPLI,People Incorporated
@@ -2246,7 +2248,6 @@ PRCH,"Porch Group, Inc."
 PRCT,PROCEPT BioRobotics Corporation
 PRDO,Perdoceo Education Corporation
 PRE,Prenetics Global Limited
-PRFX,PRF Technologies Ltd.
 PRGS,Progress Software Corporation
 PRHI,"Presurance Holdings, Inc."
 PRLD,Prelude Therapeutics Incorporated
@@ -2295,7 +2296,6 @@ PYXS,"Pyxis Oncology, Inc."
 PZZA,"Papa John's International, Inc."
 QADR,QDRO Acquisition Corp.
 QBTS,D-Wave Quantum Inc.
-QCLS,"Q/C Technologies, Inc."
 QCOM,QUALCOMM Incorporated
 QCRH,"QCR Holdings, Inc."
 QDEL,QuidelOrtho Corporation
@@ -2771,6 +2771,7 @@ TMTS,Spartacus Acquisition Corp. II
 TMUS,"T-Mobile US, Inc."
 TNDM,"Tandem Diabetes Care, Inc."
 TNGX,"Tango Therapeutics, Inc."
+TNMG,TNL Mediagene
 TNON,"Tenon Medical, Inc."
 TNXP,Tonix Pharmaceuticals Holding Corp.
 TOMZ,"TOMI Environmental Solutions, Inc."
@@ -2848,7 +2849,6 @@ UAL,"United Airlines Holdings, Inc."
 UBCP,"United Bancorp, Inc."
 UBSI,"United Bankshares, Inc."
 UCAR,U Power Limited
-UCFI,CN Healthy Food Tech Group Corp.
 UCTT,"Ultra Clean Holdings, Inc."
 UEIC,Universal Electronics Inc.
 UFCS,"United Fire Group, Inc"
