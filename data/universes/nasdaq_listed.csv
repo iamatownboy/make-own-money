@@ -557,7 +557,6 @@ CEG,Constellation Energy Corporation
 CELC,Celcuity Inc.
 CELH,"Celsius Holdings, Inc."
 CELU,Celularity Inc.
-CELZ,"Creative Medical Technology Holdings, Inc."
 CENN,Cenntro Inc.
 CENT,Central Garden & Pet Company
 CENTA,Central Garden & Pet Company
@@ -702,7 +701,6 @@ CRDO,Credo Technology Group Holding Ltd
 CRE,Cre8 Enterprise Limited
 CRESY,Cresud S.A.C.I.F. y A.
 CREX,"Creative Realities, Inc."
-CRGO,Freightos Limited
 CRMD,CorMedix Inc.
 CRML,Critical Metals Corp.
 CRMN,Skyline Builders Group Holding Limited
@@ -857,7 +855,6 @@ DTST,Data Storage Corporation
 DUKR,DUKE Robotics Corp.
 DUOL,"Duolingo, Inc."
 DUOT,"Duos Technologies Group, Inc."
-DVLT,Datavault AI Inc.
 DWSN,Dawson Geophysical Company
 DWTX,"Dogwood Therapeutics, Inc."
 DXCM,"DexCom, Inc."
@@ -1134,7 +1131,6 @@ GASS,"StealthGas, Inc."
 GBC,"Georgia Banking Company, Inc."
 GBDC,"Golub Capital BDC, Inc."
 GBFH,GBank Financial Holdings Inc.
-GBLI,"Global Indemnity Group, LLC"
 GCBC,"Greene Bancorp, Inc."
 GCGR,General Catalyst Global Resilience Merger Corp.
 GCMG,GCM Grosvenor Inc.
@@ -1185,6 +1181,7 @@ GLSI,"Greenwich LifeSciences, Inc."
 GLUE,"Monte Rosa Therapeutics, Inc."
 GLXG,Galaxy Payroll Group Limited
 GLXY,Galaxy Digital Inc.
+GM,General Motors Company
 GMAB,Genmab A/S
 GMEX,GMEX ROBOTICS CORPORATION
 GMM,Global Mofy AI Limited
@@ -1232,7 +1229,6 @@ GSRF,GSR IV Acquisition Corp.
 GSRV,GSR V Acquisition Corp.
 GT,The Goodyear Tire & Rubber Company
 GTBP,"GT Biopharma, Inc."
-GTEC,Greenland Technologies Holding Corporation
 GTEN,"Gores Holdings X, Inc."
 GTIM,Good Times Restaurants Inc.
 GTLB,GitLab Inc.
@@ -1581,7 +1577,6 @@ KYIV,Kyivstar Group Ltd.
 KYMR,"Kymera Therapeutics, Inc."
 KYTX,"Kyverna Therapeutics, Inc."
 KZIA,Kazia Therapeutics Limited
-LABT,Lakewood-Amedex Biotherapeutics Inc.
 LAES,SEALSQ Corp
 LAFA,LaFayette Acquisition Corp.
 LAKE,"Lakeland Industries, Inc."
@@ -1984,7 +1979,6 @@ NTWK,NETSOL Technologies Inc.
 NTWO,Newbury Street II Acquisition Corp
 NUAI,"New Era Energy & Digital, Inc."
 NUCL,Eagle Nuclear Energy Corp.
-NUR,Nuran Wireless Inc.
 NUTX,Nutex Health Inc.
 NUWE,"Nuwellis, Inc."
 NVAX,"Novavax, Inc."
@@ -2219,7 +2213,6 @@ PMTR,Perimeter Acquisition Corp. I
 PMTS,CPI Card Group Inc.
 PMVP,"PMV Pharmaceuticals, Inc."
 PN,PN Smart Energy Limited
-PNBK,Patriot National Bancorp Inc.
 PNRG,PrimeEnergy Resources Corporation
 PNTG,"The Pennant Group, Inc."
 POCI,"Precision Optics Corporation, Inc."
@@ -2515,7 +2508,6 @@ SGA,"Saga Communications, Inc."
 SGC,"Superior Group of Companies, Inc."
 SGHT,"Sight Sciences, Inc."
 SGLD,Scorpio Gold Corporation
-SGLY,Singularity Future Technology Ltd.
 SGML,Sigma Lithium Corporation
 SGMT,Sagimet Biosciences Inc.
 SGP,"SpyGlass Pharma, Inc."
@@ -2525,6 +2517,7 @@ SHAZ,"SharonAI Holdings, Inc."
 SHBI,"Shore Bancshares, Inc."
 SHC,Sotera Health Company
 SHEN,Shenandoah Telecommunications Co
+SHFS,"SHF Holdings, Inc."
 SHIM,Shimmick Corporation
 SHIP,Seanergy Maritime Holdings Corp.
 SHLS,"Shoals Technologies Group, Inc."
@@ -2852,6 +2845,7 @@ UCAR,U Power Limited
 UCTT,"Ultra Clean Holdings, Inc."
 UEIC,Universal Electronics Inc.
 UFCS,"United Fire Group, Inc"
+UFG,Uni-Fuels Holdings Limited
 UFPI,"UFP Industries, Inc."
 UFPT,"UFP Technologies, Inc."
 UG,"United-Guardian, Inc."
@@ -2895,7 +2889,6 @@ VALN,Valneva SE
 VALU,"Value Line, Inc."
 VANI,"Vivani Medical, Inc."
 VBIO,"Valion Bio, Inc."
-VBNK,VersaBank
 VC,Visteon Corporation
 VCEL,Vericel Corporation
 VCIG,VCI Global Limited
@@ -2951,6 +2944,7 @@ VREX,Varex Imaging Corporation
 VRM,"Vroom, Inc."
 VRNS,"Varonis Systems, Inc."
 VRRM,Verra Mobility Corporation
+VRSA,Versa Bancorp
 VRSK,"Verisk Analytics, Inc."
 VRSN,"VeriSign, Inc."
 VRTX,Vertex Pharmaceuticals Incorporated
@@ -3095,7 +3089,6 @@ YORW,The York Water Company
 YQ,17 Education & Technology Group Inc.
 YSWY,"Yesway, Inc."
 YSXT,"YSX Tech. Co., Ltd"
-YTRA,"Yatra Online, Inc."
 YXT,YXT.COM GROUP HOLDING LIMITED
 YYAI,AiRWA Inc.
 Z,"Zillow Group, Inc."
