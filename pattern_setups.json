@@ -1,8 +1,8 @@
 {
- "date": "2026-11-17",
- "latest_session": "2026-11-17",
+ "date": "2026-11-18",
+ "latest_session": "2026-11-18",
  "stale": false,
- "generated_at": "2026-11-18 02:59:01",
+ "generated_at": "2026-11-19 02:41:01",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -10,33 +10,33 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 656.95,
-   "chg_pct": -0.73,
-   "from_high_pct": -13.9,
+   "price": 659.51,
+   "chg_pct": 0.39,
+   "from_high_pct": -13.5,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 460.1,
-   "chg_pct": -0.39,
-   "from_high_pct": -31.5,
+   "price": 459.54,
+   "chg_pct": -0.12,
+   "from_high_pct": -31.6,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 732.44,
-   "chg_pct": -1.01,
-   "from_high_pct": -6.3,
+   "price": 730.2,
+   "chg_pct": -0.31,
+   "from_high_pct": -6.6,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 352.48,
-   "chg_pct": -0.13,
-   "from_high_pct": -30.8,
+   "price": 341.19,
+   "chg_pct": -3.2,
+   "from_high_pct": -33.1,
    "status": null
   }
  ],
@@ -48,26 +48,26 @@
    "name": "Strategy Inc",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 96.5,
+   "price": 90.32,
    "L": 81.80999755859375,
    "H": 171.19000244140625,
    "L_date": "2026-06-26",
    "H_date": "2026-09-25",
-   "entry_date": "2026-11-17",
-   "retrace": 0.836,
+   "entry_date": "2026-11-18",
+   "retrace": 0.905,
    "swing_pct": 109.3,
    "buy_high": 100.9373,
    "buy_low": 91.9993,
    "stop": 81.81,
    "t1": 126.5,
-   "t2": 133.77,
-   "t3": 155.1742,
-   "t4": 194.3904,
-   "stop_pct": -15.2,
-   "position": "구간 안",
-   "t1_pct": 31.1,
+   "t2": 130.695,
+   "t3": 153.8581,
+   "t4": 196.2969,
+   "stop_pct": -9.4,
+   "position": "구간 아래",
+   "t1_pct": 40.1,
    "signals": [
-    "RSI 과매도 26"
+    "RSI 과매도 24"
    ],
    "base_rate": {
     "hit": 48.1,
@@ -79,31 +79,68 @@
    "earnings_soon": false
   },
   {
-   "id": "MSTR|1d|2026-06-26|2026-09-22",
-   "ticker": "MSTR",
-   "name": "Strategy Inc",
+   "id": "WDAY|1d|2026-08-06|2026-08-13",
+   "ticker": "WDAY",
+   "name": "Workday, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 96.5,
-   "L": 81.80999755859375,
-   "H": 171.19000244140625,
-   "L_date": "2026-06-26",
-   "H_date": "2026-09-22",
-   "entry_date": "2026-11-17",
-   "retrace": 0.836,
-   "swing_pct": 109.3,
-   "buy_high": 100.9373,
-   "buy_low": 91.9993,
-   "stop": 81.81,
-   "t1": 126.5,
-   "t2": 133.77,
-   "t3": 155.1742,
-   "t4": 194.3904,
-   "stop_pct": -15.2,
-   "position": "구간 안",
-   "t1_pct": 31.1,
+   "price": 177.45,
+   "L": 163.0500030517578,
+   "H": 227.49000549316406,
+   "L_date": "2026-08-06",
+   "H_date": "2026-08-13",
+   "entry_date": "2026-11-18",
+   "retrace": 0.777,
+   "swing_pct": 39.5,
+   "buy_high": 176.8402,
+   "buy_low": 170.3962,
+   "stop": 163.05,
+   "t1": 195.27,
+   "t2": 201.4,
+   "t3": 216.3235,
+   "t4": 243.6658,
+   "stop_pct": -8.1,
+   "position": "구간 위",
+   "t1_pct": 10.0,
    "signals": [
-    "RSI 과매도 26"
+    "200일선 위"
+   ],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": "2026-11-24",
+   "earnings_days": 6,
+   "earnings_soon": true
+  },
+  {
+   "id": "MRNA|1d|2026-10-27|2026-11-09",
+   "ticker": "MRNA",
+   "name": "Moderna, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 196.79,
+   "L": 179.52999877929688,
+   "H": 280.79998779296875,
+   "L_date": "2026-10-27",
+   "H_date": "2026-11-09",
+   "entry_date": "2026-11-18",
+   "retrace": 0.83,
+   "swing_pct": 56.4,
+   "buy_high": 201.2018,
+   "buy_low": 191.0748,
+   "stop": 179.53,
+   "t1": 230.165,
+   "t2": 238.66,
+   "t3": 262.7641,
+   "t4": 306.9268,
+   "stop_pct": -8.8,
+   "position": "구간 안",
+   "t1_pct": 17.0,
+   "signals": [
+    "RSI 상승 다이버전스",
+    "200일선 위"
    ],
    "base_rate": {
     "hit": 46.0,
@@ -113,77 +150,138 @@
    "earnings_date": null,
    "earnings_days": null,
    "earnings_soon": false
+  },
+  {
+   "id": "MSTR|1d|2026-06-26|2026-09-22",
+   "ticker": "MSTR",
+   "name": "Strategy Inc",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 90.32,
+   "L": 81.80999755859375,
+   "H": 171.19000244140625,
+   "L_date": "2026-06-26",
+   "H_date": "2026-09-22",
+   "entry_date": "2026-11-17",
+   "retrace": 0.905,
+   "swing_pct": 109.3,
+   "buy_high": 100.9373,
+   "buy_low": 91.9993,
+   "stop": 81.81,
+   "t1": 126.5,
+   "t2": 130.695,
+   "t3": 153.8581,
+   "t4": 196.2969,
+   "stop_pct": -9.4,
+   "position": "구간 아래",
+   "t1_pct": 40.1,
+   "signals": [
+    "RSI 과매도 24"
+   ],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": null,
+   "earnings_days": null,
+   "earnings_soon": false
+  },
+  {
+   "id": "LITE|1d|2026-11-05|2026-11-11",
+   "ticker": "LITE",
+   "name": "Lumentum Holdings Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 551.07,
+   "L": 506.6889953613281,
+   "H": 678.6699829101562,
+   "L_date": "2026-11-05",
+   "H_date": "2026-11-11",
+   "entry_date": "2026-11-16",
+   "retrace": 0.742,
+   "swing_pct": 33.9,
+   "buy_high": 543.4929,
+   "buy_low": 526.2948,
+   "stop": 506.689,
+   "t1": 592.6795,
+   "t2": 606.68,
+   "t3": 647.8583,
+   "t4": 723.3038,
+   "stop_pct": -8.1,
+   "position": "구간 위",
+   "t1_pct": 7.6,
+   "signals": [],
+   "base_rate": {
+    "hit": 46.0,
+    "random": 39.4,
+    "n": 1959
+   },
+   "earnings_date": "2027-02-02",
+   "earnings_days": 76,
+   "earnings_soon": false
   }
  ],
  "watch": [
+  {
+   "ticker": "QCOM",
+   "name": "QUALCOMM Incorporated",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 159.81,
+   "buy_high": 157.9678,
+   "distance_pct": 1.2
+  },
   {
    "ticker": "DASH",
    "name": "DoorDash, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 164.91,
+   "price": 166.8,
    "buy_high": 163.743,
-   "distance_pct": 0.7
+   "distance_pct": 1.9
   },
   {
    "ticker": "ASML",
    "name": "ASML Holding N.V.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 1383.11,
+   "price": 1395.27,
    "buy_high": 1345.5803,
-   "distance_pct": 2.8
+   "distance_pct": 3.7
   },
   {
    "ticker": "QCOM",
    "name": "QUALCOMM Incorporated",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 166.67,
-   "buy_high": 157.9678,
-   "distance_pct": 5.5
-  },
-  {
-   "ticker": "AVGO",
-   "name": "Broadcom Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 341.6,
-   "buy_high": 332.7052,
-   "distance_pct": 2.7
-  },
-  {
-   "ticker": "MRNA",
-   "name": "Moderna, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 206.8,
-   "buy_high": 201.2018,
-   "distance_pct": 2.8
+   "price": 159.81,
+   "buy_high": 155.7555,
+   "distance_pct": 2.6
   },
   {
    "ticker": "CDNS",
    "name": "Cadence Design Systems, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 306.97,
+   "price": 305.82,
    "buy_high": 295.6932,
-   "distance_pct": 3.8
+   "distance_pct": 3.4
   }
  ],
  "summary": {
-  "total": 128,
+  "total": 130,
   "hit": 38,
   "stop": 71,
-  "open": 19,
+  "open": 21,
   "hit_rate": 34.9,
   "decided": 109,
-  "avg_ret": -3.47,
-  "avg_excess": -1.38,
-  "finished": 80,
+  "avg_ret": -2.98,
+  "avg_excess": -0.68,
+  "finished": 82,
   "by_tf": {
    "1d": {
-    "total": 89,
+    "total": 91,
     "decided": 79,
     "hit_rate": 40.5
    },
@@ -194,23 +292,23 @@
    }
   },
   "baseline": {
-   "total": 384,
-   "decided": 316,
+   "total": 390,
+   "decided": 319,
    "hit": 87,
-   "stop": 229,
-   "hit_rate": 27.5
+   "stop": 232,
+   "hit_rate": 27.3
   },
   "baseline_matched": {
-   "decided": 293,
+   "decided": 295,
    "hit": 78,
-   "stop": 215,
-   "hit_rate": 26.6
+   "stop": 217,
+   "hit_rate": 26.4
   },
   "current": {
-   "total": 32,
+   "total": 34,
    "hit": 6,
    "stop": 19,
-   "open": 7,
+   "open": 9,
    "hit_rate": 24.0,
    "decided": 25,
    "avg_ret": -8.37,
@@ -218,7 +316,7 @@
    "finished": 19,
    "by_tf": {
     "1d": {
-     "total": 20,
+     "total": 22,
      "decided": 16,
      "hit_rate": 37.5
     },
@@ -229,19 +327,19 @@
     }
    },
    "baseline": {
-    "total": 96,
-    "decided": 65,
+    "total": 102,
+    "decided": 67,
     "hit": 9,
-    "stop": 56,
-    "hit_rate": 13.8
+    "stop": 58,
+    "hit_rate": 13.4
    },
    "baseline_matched": {
-    "decided": 63,
+    "decided": 64,
     "hit": 9,
-    "stop": 54,
-    "hit_rate": 14.3
+    "stop": 55,
+    "hit_rate": 14.1
    }
   }
  },
- "elapsed_sec": 19.0
+ "elapsed_sec": 21.2
 }
