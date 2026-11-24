@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-20",
-  "updated_at": "2026-11-21 02:35:49",
+  "date": "2026-11-24",
+  "updated_at": "2026-11-24 05:23:26",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,53 +8,52 @@
     "qualified": 0,
     "near_miss": [
       {
-        "ticker": "APP",
-        "name": "앱러빈",
-        "total_score": 58,
-        "risk_reward_ratio": 0.75,
+        "ticker": "AMD",
+        "name": "AMD",
+        "total_score": 63,
+        "risk_reward_ratio": 1.18,
         "blockers": [
-          "점수 58/68",
-          "손익비 0.75/1.20"
+          "점수 63/68",
+          "손익비 1.18/1.20"
         ]
       },
       {
-        "ticker": "ABNB",
-        "name": "에어비앤비",
-        "total_score": 54,
-        "risk_reward_ratio": 0.78,
+        "ticker": "MPWR",
+        "name": "모놀리식 파워",
+        "total_score": 63,
+        "risk_reward_ratio": 1.68,
         "blockers": [
-          "점수 54/68",
-          "손익비 0.78/1.20"
+          "점수 63/68"
         ]
       },
       {
         "ticker": "AMZN",
         "name": "아마존",
-        "total_score": 53,
-        "risk_reward_ratio": 0.62,
+        "total_score": 60,
+        "risk_reward_ratio": 0.78,
         "blockers": [
-          "점수 53/68",
-          "손익비 0.62/1.20"
+          "점수 60/68",
+          "손익비 0.78/1.20"
         ]
       },
       {
-        "ticker": "MELI",
-        "name": "메르카도리브레",
-        "total_score": 51,
-        "risk_reward_ratio": 0.66,
+        "ticker": "PANW",
+        "name": "팔로알토 네트웍스",
+        "total_score": 59,
+        "risk_reward_ratio": 0.72,
         "blockers": [
-          "점수 51/68",
-          "손익비 0.66/1.20"
+          "점수 59/68",
+          "손익비 0.72/1.20"
         ]
       },
       {
-        "ticker": "VRTX",
-        "name": "버텍스 파마슈티컬",
-        "total_score": 51,
-        "risk_reward_ratio": 0.98,
+        "ticker": "TXN",
+        "name": "텍사스 인스트루먼트",
+        "total_score": 58,
+        "risk_reward_ratio": 0.82,
         "blockers": [
-          "점수 51/68",
-          "손익비 0.98/1.20"
+          "점수 58/68",
+          "손익비 0.82/1.20"
         ]
       }
     ]

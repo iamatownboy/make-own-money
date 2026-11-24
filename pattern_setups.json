@@ -1,8 +1,8 @@
 {
- "date": "2026-11-20",
- "latest_session": "2026-11-20",
+ "date": "2026-11-23",
+ "latest_session": "2026-11-23",
  "stale": false,
- "generated_at": "2026-11-21 02:35:37",
+ "generated_at": "2026-11-24 05:23:15",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -10,88 +10,51 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 608.45,
-   "chg_pct": -5.67,
-   "from_high_pct": -20.2,
+   "price": 651.03,
+   "chg_pct": 7.0,
+   "from_high_pct": -14.7,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 400.06,
-   "chg_pct": -10.6,
-   "from_high_pct": -40.5,
+   "price": 460.18,
+   "chg_pct": 15.03,
+   "from_high_pct": -31.5,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 689.81,
-   "chg_pct": -3.64,
-   "from_high_pct": -11.7,
+   "price": 722.29,
+   "chg_pct": 4.71,
+   "from_high_pct": -7.6,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 322.87,
-   "chg_pct": -3.67,
-   "from_high_pct": -36.7,
+   "price": 333.02,
+   "chg_pct": 3.14,
+   "from_high_pct": -34.7,
    "status": null
   }
  ],
  "min_market_cap": null,
  "setups": [
   {
-   "id": "ASML|1w|2026-01-09|2026-07-02",
-   "ticker": "ASML",
-   "name": "ASML Holding N.V.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 1266.22,
-   "L": 1168.8356072633433,
-   "H": 1994.745152515441,
-   "L_date": "2026-01-09",
-   "H_date": "2026-07-02",
-   "entry_date": "2026-11-20",
-   "retrace": 0.882,
-   "swing_pct": 70.7,
-   "buy_high": 1345.5802,
-   "buy_low": 1262.9893,
-   "stop": 1168.8356,
-   "t1": 1581.7904,
-   "t2": 1626.6376,
-   "t3": 1837.1951,
-   "t4": 2222.9718,
-   "stop_pct": -7.7,
-   "position": "구간 안",
-   "t1_pct": 24.9,
-   "signals": [
-    "RSI 과매도 29",
-    "RSI 상승 다이버전스"
-   ],
-   "base_rate": {
-    "hit": 48.1,
-    "random": 38.0,
-    "n": 801
-   },
-   "earnings_date": "2027-01-27",
-   "earnings_days": 68,
-   "earnings_soon": false
-  },
-  {
    "id": "RKLB|1w|2026-11-06|2026-11-13",
    "ticker": "RKLB",
    "name": "Rocket Lab Corporation",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 45.42,
+   "price": 49.63,
    "L": 43.88999938964844,
    "H": 68.26000213623047,
    "L_date": "2026-11-06",
    "H_date": "2026-11-13",
    "entry_date": "2026-11-20",
-   "retrace": 0.937,
+   "retrace": 0.764,
    "swing_pct": 55.5,
    "buy_high": 49.1052,
    "buy_low": 46.6682,
@@ -100,82 +63,14 @@
    "t2": 56.6825,
    "t3": 63.3048,
    "t4": 75.4381,
-   "stop_pct": -3.4,
-   "position": "구간 아래",
-   "t1_pct": 23.5,
+   "stop_pct": -11.6,
+   "position": "구간 위",
+   "t1_pct": 13.0,
    "signals": [],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
-   },
-   "earnings_date": null,
-   "earnings_days": null,
-   "earnings_soon": false
-  },
-  {
-   "id": "AMD|1d|2026-11-05|2026-11-12",
-   "ticker": "AMD",
-   "name": "Advanced Micro Devices, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 424.39,
-   "L": 402.1000061035156,
-   "H": 594.0,
-   "L_date": "2026-11-05",
-   "H_date": "2026-11-12",
-   "entry_date": "2026-11-20",
-   "retrace": 0.884,
-   "swing_pct": 47.7,
-   "buy_high": 443.1666,
-   "buy_low": 423.9766,
-   "stop": 402.1,
-   "t1": 498.05,
-   "t2": 506.38,
-   "t3": 556.4986,
-   "t4": 648.3244,
-   "stop_pct": -5.3,
-   "position": "구간 안",
-   "t1_pct": 17.4,
-   "signals": [],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2027-02-02",
-   "earnings_days": 74,
-   "earnings_soon": false
-  },
-  {
-   "id": "MPWR|1d|2026-11-05|2026-11-11",
-   "ticker": "MPWR",
-   "name": "Monolithic Power Systems, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 1142.05,
-   "L": 1125.0,
-   "H": 1513.489990234375,
-   "L_date": "2026-11-05",
-   "H_date": "2026-11-11",
-   "entry_date": "2026-11-20",
-   "retrace": 0.956,
-   "swing_pct": 34.5,
-   "buy_high": 1208.1369,
-   "buy_low": 1169.2879,
-   "stop": 1125.0,
-   "t1": 1319.245,
-   "t2": 1323.135,
-   "t3": 1432.0181,
-   "t4": 1631.5101,
-   "stop_pct": -1.5,
-   "position": "구간 아래",
-   "t1_pct": 15.5,
-   "signals": [],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
    },
    "earnings_date": null,
    "earnings_days": null,
@@ -187,13 +82,13 @@
    "name": "Rocket Lab Corporation",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 45.42,
+   "price": 49.63,
    "L": 43.88999938964844,
    "H": 68.26000213623047,
    "L_date": "2026-11-05",
    "H_date": "2026-11-11",
    "entry_date": "2026-11-20",
-   "retrace": 0.937,
+   "retrace": 0.764,
    "swing_pct": 55.5,
    "buy_high": 49.1052,
    "buy_low": 46.6682,
@@ -202,9 +97,9 @@
    "t2": 56.6825,
    "t3": 63.3048,
    "t4": 75.4381,
-   "stop_pct": -3.4,
-   "position": "구간 아래",
-   "t1_pct": 23.5,
+   "stop_pct": -11.6,
+   "position": "구간 위",
+   "t1_pct": 13.0,
    "signals": [],
    "base_rate": {
     "hit": 46.0,
@@ -221,13 +116,13 @@
    "name": "Workday, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 174.52,
+   "price": 176.08,
    "L": 163.0500030517578,
    "H": 227.49000549316406,
    "L_date": "2026-08-06",
    "H_date": "2026-08-13",
    "entry_date": "2026-11-18",
-   "retrace": 0.822,
+   "retrace": 0.798,
    "swing_pct": 39.5,
    "buy_high": 176.8402,
    "buy_low": 170.3962,
@@ -236,9 +131,9 @@
    "t2": 200.06,
    "t3": 215.75,
    "t4": 244.4966,
-   "stop_pct": -6.6,
+   "stop_pct": -7.4,
    "position": "구간 안",
-   "t1_pct": 11.9,
+   "t1_pct": 10.9,
    "signals": [
     "200일선 위"
    ],
@@ -248,163 +143,81 @@
     "n": 1959
    },
    "earnings_date": "2026-11-24",
-   "earnings_days": 4,
+   "earnings_days": 1,
    "earnings_soon": true
-  },
-  {
-   "id": "MRNA|1d|2026-10-27|2026-11-09",
-   "ticker": "MRNA",
-   "name": "Moderna, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 195.0,
-   "L": 179.52999877929688,
-   "H": 280.79998779296875,
-   "L_date": "2026-10-27",
-   "H_date": "2026-11-09",
-   "entry_date": "2026-11-18",
-   "retrace": 0.847,
-   "swing_pct": 56.4,
-   "buy_high": 201.2018,
-   "buy_low": 191.0748,
-   "stop": 179.53,
-   "t1": 230.165,
-   "t2": 235.39,
-   "t3": 261.3645,
-   "t4": 308.9542,
-   "stop_pct": -7.9,
-   "position": "구간 안",
-   "t1_pct": 18.0,
-   "signals": [
-    "RSI 상승 다이버전스",
-    "200일선 위"
-   ],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": null,
-   "earnings_days": null,
-   "earnings_soon": false
   }
  ],
  "watch": [
   {
-   "ticker": "ADBE",
-   "name": "Adobe Inc.",
+   "ticker": "ASML",
+   "name": "ASML Holding N.V.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 217.71,
-   "buy_high": 212.4637,
-   "distance_pct": 2.5
+   "price": 1383.78,
+   "buy_high": 1345.5802,
+   "distance_pct": 2.8
   },
   {
-   "ticker": "META",
-   "name": "Meta Platforms, Inc.",
+   "ticker": "QCOM",
+   "name": "QUALCOMM Incorporated",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 560.84,
-   "buy_high": 545.0125,
-   "distance_pct": 2.9
-  },
-  {
-   "ticker": "NXPI",
-   "name": "NXP Semiconductors N.V.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 235.15,
-   "buy_high": 227.3732,
-   "distance_pct": 3.4
-  },
-  {
-   "ticker": "NVDA",
-   "name": "NVIDIA Corporation",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 125.53,
-   "buy_high": 119.9932,
-   "distance_pct": 4.6
-  },
-  {
-   "ticker": "DDOG",
-   "name": "Datadog, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 157.37,
-   "buy_high": 141.3814,
-   "distance_pct": 11.3
-  },
-  {
-   "ticker": "MELI",
-   "name": "MercadoLibre, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 1355.0,
-   "buy_high": 1207.343,
-   "distance_pct": 12.2
+   "price": 165.38,
+   "buy_high": 157.9678,
+   "distance_pct": 4.7
   },
   {
    "ticker": "NFLX",
    "name": "Netflix, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 56.73,
+   "price": 58.1,
    "buy_high": 50.1906,
-   "distance_pct": 13.0
+   "distance_pct": 15.8
   },
   {
-   "ticker": "KLAC",
-   "name": "KLA Corporation",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 126.87,
-   "buy_high": 108.4441,
-   "distance_pct": 17.0
-  },
-  {
-   "ticker": "SNPS",
-   "name": "Synopsys, Inc.",
+   "ticker": "AMD",
+   "name": "Advanced Micro Devices, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 396.17,
-   "buy_high": 394.6371,
-   "distance_pct": 0.4
+   "price": 453.46,
+   "buy_high": 443.1666,
+   "distance_pct": 2.3
   },
   {
-   "ticker": "ADBE",
-   "name": "Adobe Inc.",
+   "ticker": "CEG",
+   "name": "Constellation Energy Corporation",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 217.71,
-   "buy_high": 212.4637,
-   "distance_pct": 2.5
+   "price": 251.72,
+   "buy_high": 245.3501,
+   "distance_pct": 2.6
   },
   {
-   "ticker": "NVDA",
-   "name": "NVIDIA Corporation",
+   "ticker": "CDNS",
+   "name": "Cadence Design Systems, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 125.53,
-   "buy_high": 119.9932,
-   "distance_pct": 4.6
+   "price": 304.13,
+   "buy_high": 295.6932,
+   "distance_pct": 2.9
   }
  ],
  "summary": {
   "total": 135,
-  "hit": 38,
+  "hit": 39,
   "stop": 74,
-  "open": 23,
-  "hit_rate": 33.9,
-  "decided": 112,
+  "open": 22,
+  "hit_rate": 34.5,
+  "decided": 113,
   "avg_ret": -3.09,
   "avg_excess": -0.26,
   "finished": 87,
   "by_tf": {
    "1d": {
     "total": 94,
-    "decided": 81,
-    "hit_rate": 39.5
+    "decided": 82,
+    "hit_rate": 40.2
    },
    "1w": {
     "total": 41,
@@ -414,10 +227,10 @@
   },
   "baseline": {
    "total": 405,
-   "decided": 338,
-   "hit": 87,
-   "stop": 251,
-   "hit_rate": 25.7
+   "decided": 340,
+   "hit": 88,
+   "stop": 252,
+   "hit_rate": 25.9
   },
   "baseline_matched": {
    "decided": 305,
@@ -427,19 +240,19 @@
   },
   "current": {
    "total": 39,
-   "hit": 6,
+   "hit": 7,
    "stop": 22,
-   "open": 11,
-   "hit_rate": 21.4,
-   "decided": 28,
+   "open": 10,
+   "hit_rate": 24.1,
+   "decided": 29,
    "avg_ret": -8.62,
    "avg_excess": -4.53,
    "finished": 22,
    "by_tf": {
     "1d": {
      "total": 25,
-     "decided": 18,
-     "hit_rate": 33.3
+     "decided": 19,
+     "hit_rate": 36.8
     },
     "1w": {
      "total": 14,
@@ -449,10 +262,10 @@
    },
    "baseline": {
     "total": 117,
-    "decided": 83,
-    "hit": 10,
-    "stop": 73,
-    "hit_rate": 12.0
+    "decided": 85,
+    "hit": 11,
+    "stop": 74,
+    "hit_rate": 12.9
    },
    "baseline_matched": {
     "decided": 73,
@@ -462,5 +275,5 @@
    }
   }
  },
- "elapsed_sec": 20.1
+ "elapsed_sec": 11.4
 }

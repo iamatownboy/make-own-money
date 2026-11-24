@@ -141,6 +141,7 @@ ALNY,"Alnylam Pharmaceuticals, Inc."
 ALOV,"Aldabra 4 Liquidity Opportunity Vehicle, Inc."
 ALOY,REalloys Inc.
 ALP,Alpha Compute Corp
+ALPS,ALPS Group Inc
 ALPX,Alpex Acquisition Corporation
 ALRM,"Alarm.com Holdings, Inc."
 ALRS,Alerus Financial Corporation
@@ -304,6 +305,7 @@ AVT,"Avnet, Inc."
 AVTX,"Avalo Therapeutics, Inc."
 AVX,Avax One Technology Ltd.
 AVXL,Anavex Life Sciences Corp.
+AVZO,"Avenzo Therapeutics, Inc."
 AWRE,"Aware, Inc."
 AXG,Solowin Holdings
 AXGN,"Axogen, Inc."
@@ -359,7 +361,6 @@ BEEP,Mobile Infrastructure Corporation
 BELFA,Bel Fuse Inc.
 BELFB,Bel Fuse Inc.
 BFC,Bank First Corporation
-BFRI,Biofrontera Inc.
 BFST,"Business First Bancshares, Inc."
 BGC,"BGC Group, Inc."
 BGDE,"Big Digital Energy, Inc."
@@ -382,7 +383,6 @@ BIXI,Bitcoin Infrastructure Acquisition Corp Ltd.
 BIYA,Baiya International Group Inc.
 BJDX,"Bluejay Diagnostics, Inc."
 BJRI,"BJ's Restaurants, Inc."
-BKHA,Black Hawk Acquisition Corporation
 BKNG,Booking Holdings Inc.
 BKR,Baker Hughes Company
 BKYI,"BIO-key International, Inc."
@@ -634,6 +634,7 @@ CLRB,"Cellectar Biosciences, Inc."
 CLSK,"CleanSpark, Inc."
 CLST,"Catalyst Bancorp, Inc."
 CLWT,Euro Tech Holdings Company Limited
+CLYD,"Clywedog Therapeutics Holdings, Inc."
 CLYM,"Climb Bio, Inc."
 CMCO,Columbus McKinnon Corporation
 CMCSA,Comcast Corporation
@@ -958,6 +959,7 @@ EVLV,"Evolv Technologies Holdings, Inc."
 EVO,Evotec SE
 EVOX,Evolution Global Acquisition Corp
 EVRG,"Evergy, Inc."
+EVRL,Everli Global Holdings
 EWAV,East West Ave Acquisition Corp.
 EWBC,"East West Bancorp, Inc."
 EWTX,"Edgewise Therapeutics, Inc."
@@ -1134,6 +1136,7 @@ GBDC,"Golub Capital BDC, Inc."
 GBFH,GBank Financial Holdings Inc.
 GCBC,"Greene Bancorp, Inc."
 GCGR,General Catalyst Global Resilience Merger Corp.
+GCL,GCL Global Holdings Ltd
 GCMG,GCM Grosvenor Inc.
 GCT,GigaCloud Technology Inc
 GDC,GD Culture Group Limited
@@ -1347,6 +1350,7 @@ IAM,"Iambic Therapeutics, Inc."
 IART,Integra LifeSciences Holdings Corporation
 IBCP,Independent Bank Corporation
 IBEX,IBEX Limited
+IBG,Innovation Beverage Group Limited
 IBIO,"iBio, Inc."
 IBKR,"Interactive Brokers Group, Inc."
 IBRX,"ImmunityBio, Inc."
@@ -1705,7 +1709,6 @@ LYTS,LSI Industries Inc.
 LZ,"LegalZoom.com, Inc."
 LZMH,LZ Technology Holdings Limited
 MAAS,Maase Inc.
-MACI,Melar Acquisition Corp. I
 MAKO,Mako Mining Corp
 MAMA,"Mama's Creations, Inc."
 MAMO,Massimo Group
@@ -1751,7 +1754,6 @@ MDWD,MediWound Ltd.
 MDXG,"MiMedx Group, Inc"
 MEDP,"Medpace Holdings, Inc."
 MEDS,"DataMeds AI, Inc."
-MEGL,Magic Empire Global Limited
 MELI,"MercadoLibre, Inc."
 MENS,Jyong Biotech Ltd.
 MEOH,Methanex Corporation
@@ -1865,6 +1867,7 @@ MYGN,"Myriad Genetics, Inc."
 MYPS,"PLAYSTUDIOS, Inc."
 MYRG,"MYR Group, Inc."
 MYSE,"Myseum.AI, Inc."
+MYSZ,"My Size, Inc."
 MYX,Maywood Acquisition Corp. 2
 MZTI,The Marzetti Company
 NAAS,NaaS Technology Inc.
@@ -1923,7 +1926,6 @@ NGEN,NervGen Pharma Corp.
 NGNE,Neurogene Inc.
 NHIV,NewHold Investment Corp IV
 NHP,"National Healthcare Properties, Inc."
-NHTC,Natural Health Trends Corp.
 NICE,NICE Ltd
 NICM,Nicola Mining Inc.
 NIKI,"Niki BioSolutions, Inc."
@@ -2007,7 +2009,6 @@ NXPI,NXP Semiconductors N.V.
 NXPL,NextPlat Corp
 NXST,"Nexstar Media Group, Inc."
 NXT,Nextpower Inc.
-NXTC,"NextCure, Inc."
 NXTT,Next Technology Holding Inc.
 NYAX,Nayax Ltd.
 NYXH,Nyxoah SA
@@ -2176,7 +2177,6 @@ PGNY,"Progyny, Inc."
 PGY,Pagaya Technologies Ltd.
 PHAR,Pharming Group N.V.
 PHAT,"Phathom Pharmaceuticals, Inc."
-PHIO,Phio Pharmaceuticals Corp.
 PHOE,Phoenix Asia Holdings Limited
 PHOS,First Phosphate Corp.
 PHUN,"Phunware, Inc."
@@ -2381,7 +2381,6 @@ RJET,Republic Airways Holdings Inc.
 RKLB,Rocket Lab Corporation
 RLAY,"Relay Therapeutics, Inc."
 RLMD,"Relmada Therapeutics, Inc."
-RLYB,Rallybio Corporation
 RMBI,"Richmond Mutual Bancorporation, Inc."
 RMBS,"Rambus, Inc."
 RMCF,"Rocky Mountain Chocolate Factory, Inc."
@@ -2409,7 +2408,6 @@ ROST,"Ross Stores, Inc."
 RPAY,Repay Holdings Corporation
 RPD,"Rapid7, Inc."
 RPGL,Republic Power Group Limited
-RPID,"Rapid Micro Biosystems, Inc."
 RPRX,Royalty Pharma plc
 RR,Richtech Robotics Inc.
 RRBI,"Red River Bancshares, Inc."
@@ -2897,9 +2895,9 @@ VEEE,Twin Vee PowerCats Co.
 VELO,"Velo3D, Inc."
 VEON,VEON Ltd.
 VERA,"Vera Therapeutics, Inc."
-VERI,"Veritone, Inc."
 VERU,Veru Inc.
 VERX,"Vertex, Inc."
+VESI,"Vesicor Therapeutics Holdings, Inc."
 VFF,"Village Farms International, Inc."
 VFS,VinFast Auto Ltd.
 VGAS,"Verde Clean Fuels, Inc."
