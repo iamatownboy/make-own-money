@@ -118,7 +118,6 @@ AKTX,Akari Therapeutics Plc
 ALAB,"Astera Labs, Inc."
 ALAR,Alarum Technologies Ltd.
 ALCO,"Alico, Inc."
-ALDX,"Aldeyra Therapeutics, Inc."
 ALEC,"Alector, Inc."
 ALF,Centurion Acquisition Corp.
 ALGM,"Allegro MicroSystems, Inc."
@@ -214,6 +213,7 @@ APYX,Apyx Medical Corporation
 AQB,"AquaBounty Technologies, Inc."
 AQMS,"Aqua Metals, Inc."
 AQST,"Aquestive Therapeutics, Inc."
+ARAY,Accuray Incorporated
 ARBB,ARB IOT Group Limited
 ARBK,Argo Blockchain plc
 ARCB,ArcBest Corporation
@@ -794,7 +794,6 @@ DERM,Journey Medical Corporation
 DETX,"Liberty Defense Holdings, Ltd."
 DFDV,DeFi Development Corp.
 DFNS,T3 Defense Inc.
-DFSC,DEFSEC Technologies Inc.
 DFTX,"Definium Therapeutics, Inc."
 DGICA,"Donegal Group, Inc."
 DGICB,"Donegal Group, Inc."
@@ -866,7 +865,6 @@ DYN,"Dyne Therapeutics, Inc."
 DYOR,Insight Digital Partners II
 EBAY,eBay Inc.
 EBC,"Eastern Bankshares, Inc."
-EBMT,"Eagle Bancorp Montana, Inc."
 EBON,Ebang International Holdings Inc.
 ECBK,"ECB Bancorp, Inc."
 ECHO,EchoStar Corporation
@@ -915,6 +913,7 @@ EMPD,Empery Digital Inc.
 ENGN,enGene Therapeutics Inc.
 ENGS,Energys Group Limited
 ENLT,Enlight Renewable Energy Ltd.
+ENLV,Enlivex Ltd.
 ENPH,"Enphase Energy, Inc."
 ENRD,Einride AB
 ENSG,"The Ensign Group, Inc."
@@ -1142,7 +1141,6 @@ GCT,GigaCloud Technology Inc
 GDC,GD Culture Group Limited
 GDEV,GDEV Inc.
 GDHG,Golden Heaven Group Holdings Ltd.
-GDRX,"GoodRx Holdings, Inc."
 GDS,GDS Holdings Limited
 GDYN,"Grid Dynamics Holdings, Inc."
 GECC,Great Elm Capital Corp.
@@ -1441,7 +1439,6 @@ IOTR,iOThree Limited
 IOVA,"Iovance Biotherapeutics, Inc."
 IPAR,"Interparfums, Inc."
 IPDN,"Professional Diversity Network, Inc."
-IPFX,Inflection Point Acquisition Corp. VI
 IPGP,IPG Photonics Corporation
 IPHA,Innate Pharma S.A.
 IPHX,Inflection Point Acquisition Corp. VIII
@@ -1728,6 +1725,7 @@ MBBC,"Marathon Bancorp, Inc."
 MBIN,Merchants Bancorp
 MBLY,Mobileye Global Inc.
 MBOT,Microbot Medical Inc.
+MBRX,"Moleculin Biotech, Inc."
 MBUU,"Malibu Boats, Inc."
 MBVI,M3-Brigade Acquisition VI Corp.
 MBWM,Mercantile Bank Corporation
@@ -1850,9 +1848,9 @@ MTCH,"Match Group, Inc."
 MTEN,Mingteng International Corporation Inc.
 MTEX,"Mannatech, Incorporated"
 MTLS,Materialise NV
+MTRI,"Mentari Therapeutics, Inc."
 MTRX,Matrix Service Company
 MTSI,"MACOM Technology Solutions Holdings, Inc."
-MTVA,MetaVia Inc.
 MU,"Micron Technology, Inc."
 MUZE,Muzero Acquisition Corp
 MVBF,MVB Financial Corp.
@@ -2009,6 +2007,7 @@ NXPI,NXP Semiconductors N.V.
 NXPL,NextPlat Corp
 NXST,"Nexstar Media Group, Inc."
 NXT,Nextpower Inc.
+NXTS,Nexentis Technologies Inc.
 NXTT,Next Technology Holding Inc.
 NYAX,Nayax Ltd.
 NYXH,Nyxoah SA
@@ -2016,6 +2015,7 @@ OABI,"OmniAb, Inc."
 OACC,Oaktree Acquisition Corp. III Life Sciences
 OBA,Oxley Bridge Acquisition Limited
 OBIO,"Orchestra BioMed Holdings, Inc."
+OBMT,"Opportunity Bancorp, Inc."
 OBT,"Orange County Bancorp, Inc."
 OBX,"Obsidian Therapeutics, Inc."
 OCC,Optical Cable Corporation
@@ -2033,6 +2033,7 @@ ODFL,"Old Dominion Freight Line, Inc."
 ODTX,"Odyssey Therapeutics, Inc."
 ODYS,Odysight.ai Inc.
 OESX,"Orion Energy Systems, Inc."
+OFAL,OFA Group
 OFIX,Orthofix Medical Inc.
 OFLX,"Omega Flex, Inc."
 OFS,OFS Capital Corporation
@@ -2441,6 +2442,7 @@ SAAQ,Space Asset Acquisition Corp.
 SABR,Sabre Corporation
 SABS,"SAB Biotherapeutics, Inc."
 SAFT,"Safety Insurance Group, Inc."
+SAFX,"XCF Global, Inc."
 SAIA,"Saia, Inc."
 SAIC,Science Applications International Corporation
 SAIH,SAIHEAT Limited
@@ -2463,7 +2465,6 @@ SBUX,Starbucks Corporation
 SCAT,Southern Cross Acquisition II Corp.
 SCHL,Scholastic Corporation
 SCII,SC II Acquisition Corp.
-SCLX,Scilex Holding Company
 SCNI,Scinai Immunotherapeutics Ltd.
 SCNX,"Scienture Holdings, Inc."
 SCOR,"comScore, Inc."
@@ -2853,8 +2854,6 @@ UNB,"Union Bankshares, Inc."
 UNCY,"Unicycive Therapeutics, Inc."
 UNIT,Uniti Group Inc.
 UNTY,"Unity Bancorp, Inc."
-UONE,"Urban One, Inc."
-UONEK,"Urban One, Inc."
 UPB,"Upstream Bio, Inc."
 UPBD,"Upbound Group, Inc."
 UPC,Universe Pharmaceuticals Inc
@@ -3047,6 +3046,7 @@ XHLD,"TEN Holdings, Inc."
 XIII,Churchill Capital Corp XIII
 XLAB,Exascale Labs Holdings Inc.
 XLO,"Xilio Therapeutics, Inc."
+XMAX,"XMAX, Inc."
 XMTR,"Xometry, Inc."
 XNCR,"Xencor, Inc."
 XNDU,Xanadu Quantum Technologies Limited
