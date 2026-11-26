@@ -1,8 +1,8 @@
 {
- "date": "2026-11-24",
- "latest_session": "2026-11-24",
+ "date": "2026-11-25",
+ "latest_session": "2026-11-25",
  "stale": false,
- "generated_at": "2026-11-25 04:22:57",
+ "generated_at": "2026-11-26 03:40:19",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -10,33 +10,33 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 638.1,
-   "chg_pct": -1.99,
-   "from_high_pct": -16.4,
+   "price": 633.93,
+   "chg_pct": -0.65,
+   "from_high_pct": -16.9,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 426.75,
-   "chg_pct": -7.26,
-   "from_high_pct": -36.5,
+   "price": 422.46,
+   "chg_pct": -1.01,
+   "from_high_pct": -37.1,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 718.78,
-   "chg_pct": -0.49,
-   "from_high_pct": -8.0,
+   "price": 716.7,
+   "chg_pct": -0.29,
+   "from_high_pct": -8.3,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 325.45,
-   "chg_pct": -2.27,
-   "from_high_pct": -36.1,
+   "price": 327.45,
+   "chg_pct": 0.61,
+   "from_high_pct": -35.8,
    "status": null
   }
  ],
@@ -48,24 +48,24 @@
    "name": "ASML Holding N.V.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 1336.0601,
-   "L": 1168.8357274611915,
-   "H": 1994.745152515441,
+   "price": 1303.08,
+   "L": 1168.8356072633433,
+   "H": 1994.745275231253,
    "L_date": "2026-01-09",
    "H_date": "2026-07-02",
    "entry_date": "2026-11-20",
-   "retrace": 0.798,
+   "retrace": 0.837,
    "swing_pct": 70.7,
    "buy_high": 1345.5803,
-   "buy_low": 1262.9894,
-   "stop": 1168.8357,
+   "buy_low": 1262.9893,
+   "stop": 1168.8356,
    "t1": 1581.7904,
-   "t2": 1626.6376,
-   "t3": 1837.1951,
-   "t4": 2222.9718,
-   "stop_pct": -12.5,
+   "t2": 1614.9226,
+   "t3": 1832.1812,
+   "t4": 2230.2353,
+   "stop_pct": -10.3,
    "position": "구간 안",
-   "t1_pct": 18.4,
+   "t1_pct": 21.4,
    "signals": [],
    "base_rate": {
     "hit": 48.1,
@@ -73,303 +73,128 @@
     "n": 801
    },
    "earnings_date": "2027-01-27",
-   "earnings_days": 64,
+   "earnings_days": 63,
    "earnings_soon": false
-  },
-  {
-   "id": "RKLB|1w|2026-11-06|2026-11-13",
-   "ticker": "RKLB",
-   "name": "Rocket Lab Corporation",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 45.98,
-   "L": 43.88999938964844,
-   "H": 68.26000213623047,
-   "L_date": "2026-11-06",
-   "H_date": "2026-11-13",
-   "entry_date": "2026-11-20",
-   "retrace": 0.914,
-   "swing_pct": 55.5,
-   "buy_high": 49.1052,
-   "buy_low": 46.6682,
-   "stop": 43.89,
-   "t1": 56.075,
-   "t2": 56.415,
-   "t3": 63.1903,
-   "t4": 75.6039,
-   "stop_pct": -4.5,
-   "position": "구간 아래",
-   "t1_pct": 22.0,
-   "signals": [],
-   "base_rate": {
-    "hit": 48.1,
-    "random": 38.0,
-    "n": 801
-   },
-   "earnings_date": null,
-   "earnings_days": null,
-   "earnings_soon": false
-  },
-  {
-   "id": "NBIS|1d|2026-11-20|2026-11-23",
-   "ticker": "NBIS",
-   "name": "Nebius Group N.V.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 87.31,
-   "L": 80.66999816894531,
-   "H": 110.05000305175781,
-   "L_date": "2026-11-20",
-   "H_date": "2026-11-23",
-   "entry_date": "2026-11-24",
-   "retrace": 0.774,
-   "swing_pct": 36.4,
-   "buy_high": 86.9573,
-   "buy_low": 84.0193,
-   "stop": 80.67,
-   "t1": 95.36,
-   "t2": 97.175,
-   "t3": 104.5395,
-   "t4": 118.0325,
-   "stop_pct": -7.6,
-   "position": "구간 위",
-   "t1_pct": 9.2,
-   "signals": [],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2027-02-11",
-   "earnings_days": 79,
-   "earnings_soon": false
-  },
-  {
-   "id": "CRWV|1d|2026-11-20|2026-11-23",
-   "ticker": "CRWV",
-   "name": "CoreWeave, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 42.605,
-   "L": 39.279998779296875,
-   "H": 51.900001525878906,
-   "L_date": "2026-11-20",
-   "H_date": "2026-11-23",
-   "entry_date": "2026-11-24",
-   "retrace": 0.737,
-   "swing_pct": 32.1,
-   "buy_high": 41.9807,
-   "buy_low": 40.7187,
-   "stop": 39.28,
-   "t1": 45.59,
-   "t2": 46.56,
-   "t3": 49.6145,
-   "t4": 55.2108,
-   "stop_pct": -7.8,
-   "position": "구간 위",
-   "t1_pct": 7.0,
-   "signals": [
-    "RSI 상승 다이버전스"
-   ],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": null,
-   "earnings_days": null,
-   "earnings_soon": false
-  },
-  {
-   "id": "RKLB|1d|2026-11-05|2026-11-11",
-   "ticker": "RKLB",
-   "name": "Rocket Lab Corporation",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 45.98,
-   "L": 43.88999938964844,
-   "H": 68.26000213623047,
-   "L_date": "2026-11-05",
-   "H_date": "2026-11-11",
-   "entry_date": "2026-11-20",
-   "retrace": 0.914,
-   "swing_pct": 55.5,
-   "buy_high": 49.1052,
-   "buy_low": 46.6682,
-   "stop": 43.89,
-   "t1": 56.075,
-   "t2": 56.415,
-   "t3": 63.1903,
-   "t4": 75.6039,
-   "stop_pct": -4.5,
-   "position": "구간 아래",
-   "t1_pct": 22.0,
-   "signals": [],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": null,
-   "earnings_days": null,
-   "earnings_soon": false
-  },
-  {
-   "id": "WDAY|1d|2026-08-06|2026-08-13",
-   "ticker": "WDAY",
-   "name": "Workday, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 179.23,
-   "L": 163.0500030517578,
-   "H": 227.49000549316406,
-   "L_date": "2026-08-06",
-   "H_date": "2026-08-13",
-   "entry_date": "2026-11-18",
-   "retrace": 0.749,
-   "swing_pct": 39.5,
-   "buy_high": 176.8402,
-   "buy_low": 170.3962,
-   "stop": 163.05,
-   "t1": 195.27,
-   "t2": 200.06,
-   "t3": 215.75,
-   "t4": 244.4966,
-   "stop_pct": -9.0,
-   "position": "구간 위",
-   "t1_pct": 8.9,
-   "signals": [
-    "200일선 위",
-    "반전 캔들"
-   ],
-   "base_rate": {
-    "hit": 46.0,
-    "random": 39.4,
-    "n": 1959
-   },
-   "earnings_date": "2026-11-24",
-   "earnings_days": 0,
-   "earnings_soon": true
   }
  ],
  "watch": [
+  {
+   "ticker": "DASH",
+   "name": "DoorDash, Inc.",
+   "tf": "1w",
+   "tf_label": "주봉",
+   "price": 166.4,
+   "buy_high": 163.743,
+   "distance_pct": 1.6
+  },
   {
    "ticker": "QCOM",
    "name": "QUALCOMM Incorporated",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 164.96,
+   "price": 168.66,
    "buy_high": 157.9678,
-   "distance_pct": 4.4
+   "distance_pct": 6.8
   },
   {
-   "ticker": "ADI",
-   "name": "Analog Devices, Inc.",
+   "ticker": "DDOG",
+   "name": "Datadog, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 312.95,
-   "buy_high": 298.5231,
-   "distance_pct": 4.8
+   "price": 158.25,
+   "buy_high": 141.3814,
+   "distance_pct": 11.9
   },
   {
-   "ticker": "NFLX",
-   "name": "Netflix, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 58.87,
-   "buy_high": 50.1906,
-   "distance_pct": 17.3
-  },
-  {
-   "ticker": "CDNS",
-   "name": "Cadence Design Systems, Inc.",
+   "ticker": "WDAY",
+   "name": "Workday, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 296.6,
-   "buy_high": 295.6932,
-   "distance_pct": 0.3
+   "price": 180.44,
+   "buy_high": 176.8402,
+   "distance_pct": 2.0
   },
   {
-   "ticker": "INTU",
-   "name": "Intuit Inc.",
+   "ticker": "SNPS",
+   "name": "Synopsys, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 279.42,
-   "buy_high": 276.3844,
-   "distance_pct": 1.1
+   "price": 405.09,
+   "buy_high": 394.6371,
+   "distance_pct": 2.6
   }
  ],
  "summary": {
   "total": 137,
   "hit": 39,
-  "stop": 75,
-  "open": 23,
-  "hit_rate": 34.2,
-  "decided": 114,
-  "avg_ret": -3.12,
-  "avg_excess": -0.37,
-  "finished": 88,
+  "stop": 80,
+  "open": 18,
+  "hit_rate": 32.8,
+  "decided": 119,
+  "avg_ret": -3.21,
+  "avg_excess": -0.64,
+  "finished": 94,
   "by_tf": {
    "1d": {
     "total": 96,
-    "decided": 83,
-    "hit_rate": 39.8
+    "decided": 87,
+    "hit_rate": 37.9
    },
    "1w": {
     "total": 41,
-    "decided": 31,
-    "hit_rate": 19.4
+    "decided": 32,
+    "hit_rate": 18.8
    }
   },
   "baseline": {
    "total": 411,
-   "decided": 340,
+   "decided": 351,
    "hit": 88,
-   "stop": 252,
-   "hit_rate": 25.9
+   "stop": 263,
+   "hit_rate": 25.1
   },
   "baseline_matched": {
-   "decided": 307,
+   "decided": 318,
    "hit": 79,
-   "stop": 228,
-   "hit_rate": 25.7
+   "stop": 239,
+   "hit_rate": 24.8
   },
   "current": {
    "total": 41,
    "hit": 7,
-   "stop": 23,
-   "open": 11,
-   "hit_rate": 23.3,
-   "decided": 30,
-   "avg_ret": -8.47,
-   "avg_excess": -4.77,
-   "finished": 23,
+   "stop": 28,
+   "open": 6,
+   "hit_rate": 20.0,
+   "decided": 35,
+   "avg_ret": -7.66,
+   "avg_excess": -4.75,
+   "finished": 29,
    "by_tf": {
     "1d": {
      "total": 27,
-     "decided": 20,
-     "hit_rate": 35.0
+     "decided": 24,
+     "hit_rate": 29.2
     },
     "1w": {
      "total": 14,
-     "decided": 10,
+     "decided": 11,
      "hit_rate": 0.0
     }
    },
    "baseline": {
     "total": 123,
-    "decided": 85,
+    "decided": 96,
     "hit": 11,
-    "stop": 74,
-    "hit_rate": 12.9
+    "stop": 85,
+    "hit_rate": 11.5
    },
    "baseline_matched": {
-    "decided": 75,
+    "decided": 86,
     "hit": 11,
-    "stop": 64,
-    "hit_rate": 14.7
+    "stop": 75,
+    "hit_rate": 12.8
    }
   }
  },
- "elapsed_sec": 19.2
+ "elapsed_sec": 12.4
 }
