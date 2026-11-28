@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-26",
-  "updated_at": "2026-11-27 03:41:58",
+  "date": "2026-11-27",
+  "updated_at": "2026-11-28 03:23:25",
   "recommendations": [],
   "scan_diagnostics": {
     "scanned": 82,
@@ -8,53 +8,49 @@
     "qualified": 0,
     "near_miss": [
       {
-        "ticker": "PANW",
-        "name": "팔로알토 네트웍스",
-        "total_score": 59,
-        "risk_reward_ratio": 0.68,
+        "ticker": "PLTR",
+        "name": "팔란티어",
+        "total_score": 68,
+        "risk_reward_ratio": 0.74,
         "blockers": [
-          "점수 59/68",
-          "손익비 0.68/1.20"
+          "손익비 0.74/1.20"
         ]
       },
       {
-        "ticker": "ABNB",
-        "name": "에어비앤비",
-        "total_score": 56,
-        "risk_reward_ratio": 0.76,
+        "ticker": "AMZN",
+        "name": "아마존",
+        "total_score": 60,
+        "risk_reward_ratio": 1.35,
         "blockers": [
-          "점수 56/68",
-          "손익비 0.76/1.20"
+          "점수 60/68"
+        ]
+      },
+      {
+        "ticker": "MPWR",
+        "name": "모놀리식 파워",
+        "total_score": 60,
+        "risk_reward_ratio": 2.46,
+        "blockers": [
+          "점수 60/68"
         ]
       },
       {
         "ticker": "XYZ",
         "name": "블록 (구 스퀘어)",
-        "total_score": 55,
-        "risk_reward_ratio": 0.58,
+        "total_score": 60,
+        "risk_reward_ratio": 1.51,
         "blockers": [
-          "점수 55/68",
-          "손익비 0.58/1.20"
+          "점수 60/68"
         ]
       },
       {
-        "ticker": "SYM",
-        "name": "심볼릭",
-        "total_score": 55,
-        "risk_reward_ratio": 0.72,
+        "ticker": "PANW",
+        "name": "팔로알토 네트웍스",
+        "total_score": 59,
+        "risk_reward_ratio": 0.66,
         "blockers": [
-          "점수 55/68",
-          "손익비 0.72/1.20"
-        ]
-      },
-      {
-        "ticker": "META",
-        "name": "메타 플랫폼스",
-        "total_score": 53,
-        "risk_reward_ratio": 0.78,
-        "blockers": [
-          "점수 53/68",
-          "손익비 0.78/1.20"
+          "점수 59/68",
+          "손익비 0.66/1.20"
         ]
       }
     ]

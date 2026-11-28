@@ -212,6 +212,7 @@ APYX,Apyx Medical Corporation
 AQB,"AquaBounty Technologies, Inc."
 AQMS,"Aqua Metals, Inc."
 AQST,"Aquestive Therapeutics, Inc."
+ARAI,Arrive AI Inc.
 ARAY,Accuray Incorporated
 ARBB,ARB IOT Group Limited
 ARBK,Argo Blockchain plc
@@ -642,7 +643,6 @@ CMMB,Chemomab Therapeutics Ltd.
 CMND,Clearmind Medicine Inc.
 CMPR,Cimpress plc
 CMPS,COMPASS Pathways Plc
-CMPX,"Compass Therapeutics, Inc."
 CMRC,"Commerce.com, Inc."
 CMTL,Comtech Telecommunications Corp.
 CMTV,Community Bancorp.
@@ -982,7 +982,6 @@ FANG,"Diamondback Energy, Inc."
 FAST,Fastenal Company
 FATE,"Fate Therapeutics, Inc."
 FATN,"FatPipe, Inc."
-FBDT,First Breach Inc.
 FBGL,FBS Global Limited
 FBIO,"Fortress Biotech, Inc."
 FBIZ,"First Business Financial Services, Inc."
@@ -996,6 +995,7 @@ FCCO,First Community Corporation
 FCDH,Forcendra Holding Limited
 FCEL,"FuelCell Energy, Inc."
 FCFS,"FirstCash Holdings, Inc."
+FCHL,Fitness Champs Holdings Limited
 FCNCA,"First Citizens BancShares, Inc."
 FCUV,Focus Universal Inc.
 FDBC,"Fidelity D & D Bancorp, Inc."
@@ -1082,7 +1082,6 @@ FRPH,"FRP Holdings, Inc."
 FRPT,"Freshpet, Inc."
 FRSH,Freshworks Inc.
 FRST,Primis Financial Corp.
-FRSX,Foresight Autonomous Holdings Ltd.
 FRVO,Fervo Energy Company
 FSBC,Five Star Bancorp
 FSBW,"FS Bancorp, Inc."
@@ -1139,6 +1138,7 @@ GCT,GigaCloud Technology Inc
 GDC,GD Culture Group Limited
 GDEV,GDEV Inc.
 GDHG,Golden Heaven Group Holdings Ltd.
+GDRX,"GoodRx Holdings, Inc."
 GDS,GDS Holdings Limited
 GDYN,"Grid Dynamics Holdings, Inc."
 GECC,Great Elm Capital Corp.
@@ -1207,7 +1207,7 @@ GRAB,Grab Holdings Limited
 GRAL,"GRAIL, Inc."
 GRAN,Grande Group Limited
 GRCE,"Grace Therapeutics, Inc."
-GRDX,GridAI Technologies Corp.
+GRDX,GridAI Power Corp.
 GRFS,"Grifols, S.A."
 GRI,"GRI Bio, Inc."
 GRML,Greenland Mines Ltd
@@ -1264,7 +1264,6 @@ HCKT,"The Hackett Group, Inc."
 HCM,HUTCHMED (China) Limited
 HCMA,HCM III Acquisition Corp.
 HCSG,"Healthcare Services Group, Inc."
-HCTI,"Healthcare Triangle, Inc."
 HCWB,HCW Biologics Inc.
 HDL,SUPER HI INTERNATIONAL HOLDING LTD.
 HDRN,"Hadron Energy, Inc."
@@ -1348,7 +1347,6 @@ IART,Integra LifeSciences Holdings Corporation
 IBCP,Independent Bank Corporation
 IBEX,IBEX Limited
 IBG,Innovation Beverage Group Limited
-IBIO,"iBio, Inc."
 IBKR,"Interactive Brokers Group, Inc."
 IBRX,"ImmunityBio, Inc."
 ICCC,ImmuCell Corporation
@@ -2021,7 +2019,6 @@ OCC,Optical Cable Corporation
 OCCI,"OFS Credit Company, Inc."
 OCFC,OceanFirst Financial Corp.
 OCG,Oriental Culture Holding LTD
-OCGN,"Ocugen, Inc."
 OCLT,OceanLight Acquisition Corporation
 OCS,Oculis Holding AG
 OCSL,Oaktree Specialty Lending Corporation
@@ -2142,7 +2139,6 @@ PCAP,ProCap Acquisition Corp
 PCAR,PACCAR Inc.
 PCB,PCB Bancorp
 PCLA,PicoCELA Inc.
-PCSA,"Processa Pharmaceuticals, Inc."
 PCT,"PureCycle Technologies, Inc."
 PCTY,Paylocity Holding Corporation
 PCVX,"Vaxcyte, Inc."
@@ -2338,6 +2334,7 @@ RCKT,"Rocket Pharmaceuticals, Inc."
 RCKY,"Rocky Brands, Inc."
 RCMT,"RCM Technologies, Inc."
 RCON,"Recon Technology, Ltd."
+RDAC,Rising Dragon Acquisition Corp.
 RDAG,Republic Digital Acquisition Company
 RDCM,Radcom Ltd.
 RDGT,"Ridgetech, Inc."
@@ -2407,7 +2404,6 @@ ROP,"Roper Technologies, Inc."
 ROST,"Ross Stores, Inc."
 RPAY,Repay Holdings Corporation
 RPD,"Rapid7, Inc."
-RPGL,Republic Power Group Limited
 RPRX,Royalty Pharma plc
 RR,Richtech Robotics Inc.
 RRBI,"Red River Bancshares, Inc."
@@ -2553,7 +2549,6 @@ SLM,SLM Corporation
 SLMT,Solmate Infrastructure Public Limited Company
 SLN,Silence Therapeutics Plc
 SLNG,"Stabilis Solutions, Inc."
-SLNH,"Soluna Holdings, Inc."
 SLRC,SLR Investment Corp.
 SLS,"SELLAS Life Sciences Group, Inc."
 SMBC,"Southern Missouri Bancorp, Inc."
@@ -2670,7 +2665,6 @@ SWMR,"Swarmer, Inc"
 SWRD,Stewards Inc
 SWVL,Swvl Holdings Corp
 SXTC,"China SXT Pharmaceuticals, Inc."
-SXTP,"60 Degrees Pharmaceuticals, Inc."
 SY,So-Young International Inc.
 SYBT,"Stock Yards Bancorp, Inc."
 SYM,Symbotic Inc.
@@ -2949,7 +2943,6 @@ VTRS,Viatris Inc.
 VTSI,"VirTra, Inc."
 VTVT,vTv Therapeutics Inc.
 VUZI,Vuzix Corporation
-VVOS,"Vivos Therapeutics, Inc."
 VWAV,"VisionWave Holdings, Inc."
 VYGR,"Voyager Therapeutics, Inc."
 WABC,Westamerica Bancorporation

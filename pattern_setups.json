@@ -1,8 +1,8 @@
 {
- "date": "2026-11-25",
- "latest_session": "2026-11-25",
+ "date": "2026-11-27",
+ "latest_session": "2026-11-27",
  "stale": false,
- "generated_at": "2026-11-27 03:41:47",
+ "generated_at": "2026-11-28 03:23:13",
  "universe": 101,
  "universe_name": "ndx100",
  "liquid": 101,
@@ -10,33 +10,33 @@
   {
    "ticker": "QQQ",
    "name": "나스닥100",
-   "price": 633.93,
-   "chg_pct": -0.65,
-   "from_high_pct": -16.9,
+   "price": 650.99,
+   "chg_pct": 2.69,
+   "from_high_pct": -14.7,
    "status": null
   },
   {
    "ticker": "SMH",
    "name": "반도체",
-   "price": 422.46,
-   "chg_pct": -1.01,
-   "from_high_pct": -37.1,
+   "price": 440.06,
+   "chg_pct": 4.17,
+   "from_high_pct": -34.5,
    "status": null
   },
   {
    "ticker": "SPY",
    "name": "S&P 500",
-   "price": 716.7,
-   "chg_pct": -0.29,
-   "from_high_pct": -8.3,
+   "price": 728.32,
+   "chg_pct": 1.62,
+   "from_high_pct": -6.8,
    "status": null
   },
   {
    "ticker": "GLD",
    "name": "금",
-   "price": 327.45,
-   "chg_pct": 0.61,
-   "from_high_pct": -35.8,
+   "price": 334.4,
+   "chg_pct": 2.12,
+   "from_high_pct": -34.4,
    "status": null
   }
  ],
@@ -48,32 +48,34 @@
    "name": "ASML Holding N.V.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 1303.08,
-   "L": 1168.8356072633433,
-   "H": 1994.745275231253,
+   "price": 1325.8199,
+   "L": 1168.8357274611915,
+   "H": 1994.745152515441,
    "L_date": "2026-01-09",
    "H_date": "2026-07-02",
    "entry_date": "2026-11-20",
-   "retrace": 0.837,
+   "retrace": 0.81,
    "swing_pct": 70.7,
    "buy_high": 1345.5803,
-   "buy_low": 1262.9893,
-   "stop": 1168.8356,
+   "buy_low": 1262.9894,
+   "stop": 1168.8357,
    "t1": 1581.7904,
    "t2": 1614.9226,
-   "t3": 1832.1812,
-   "t4": 2230.2353,
-   "stop_pct": -10.3,
+   "t3": 1832.1811,
+   "t4": 2230.2352,
+   "stop_pct": -11.8,
    "position": "구간 안",
-   "t1_pct": 21.4,
-   "signals": [],
+   "t1_pct": 19.3,
+   "signals": [
+    "반전 캔들"
+   ],
    "base_rate": {
     "hit": 48.1,
     "random": 38.0,
     "n": 801
    },
    "earnings_date": "2027-01-27",
-   "earnings_days": 63,
+   "earnings_days": 61,
    "earnings_soon": false
   }
  ],
@@ -83,45 +85,27 @@
    "name": "DoorDash, Inc.",
    "tf": "1w",
    "tf_label": "주봉",
-   "price": 166.4,
+   "price": 167.9,
    "buy_high": 163.743,
-   "distance_pct": 1.6
+   "distance_pct": 2.5
   },
   {
-   "ticker": "QCOM",
-   "name": "QUALCOMM Incorporated",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 168.66,
-   "buy_high": 157.9678,
-   "distance_pct": 6.8
-  },
-  {
-   "ticker": "DDOG",
-   "name": "Datadog, Inc.",
-   "tf": "1w",
-   "tf_label": "주봉",
-   "price": 158.25,
-   "buy_high": 141.3814,
-   "distance_pct": 11.9
+   "ticker": "CDNS",
+   "name": "Cadence Design Systems, Inc.",
+   "tf": "1d",
+   "tf_label": "일봉",
+   "price": 303.91,
+   "buy_high": 295.6932,
+   "distance_pct": 2.8
   },
   {
    "ticker": "WDAY",
    "name": "Workday, Inc.",
    "tf": "1d",
    "tf_label": "일봉",
-   "price": 180.44,
+   "price": 181.93,
    "buy_high": 176.8402,
-   "distance_pct": 2.0
-  },
-  {
-   "ticker": "SNPS",
-   "name": "Synopsys, Inc.",
-   "tf": "1d",
-   "tf_label": "일봉",
-   "price": 405.09,
-   "buy_high": 394.6371,
-   "distance_pct": 2.6
+   "distance_pct": 2.9
   }
  ],
  "summary": {
@@ -148,16 +132,16 @@
   },
   "baseline": {
    "total": 411,
-   "decided": 351,
-   "hit": 88,
+   "decided": 352,
+   "hit": 89,
    "stop": 263,
-   "hit_rate": 25.1
+   "hit_rate": 25.3
   },
   "baseline_matched": {
-   "decided": 318,
-   "hit": 79,
+   "decided": 319,
+   "hit": 80,
    "stop": 239,
-   "hit_rate": 24.8
+   "hit_rate": 25.1
   },
   "current": {
    "total": 41,
@@ -183,18 +167,18 @@
    },
    "baseline": {
     "total": 123,
-    "decided": 96,
-    "hit": 11,
+    "decided": 97,
+    "hit": 12,
     "stop": 85,
-    "hit_rate": 11.5
+    "hit_rate": 12.4
    },
    "baseline_matched": {
-    "decided": 86,
-    "hit": 11,
+    "decided": 87,
+    "hit": 12,
     "stop": 75,
-    "hit_rate": 12.8
+    "hit_rate": 13.8
    }
   }
  },
- "elapsed_sec": 12.4
+ "elapsed_sec": 13.5
 }
